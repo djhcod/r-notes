@@ -403,14 +403,14 @@
     "href": "quarto_foundation/github_pages.html#配置git",
     "title": "11  发布到GitHub Pages",
     "section": "\n11.3 配置Git",
-    "text": "11.3 配置Git\n在终端（RStudio的终端面板或系统的终端）中逐个运行下面的命令，把其中的user.name和user.email替换成自己的用户名和GItHub账户的邮箱。这里的用户名不一定要和GitHub账户的的用户名一致，它会给本的Git仓库提供一个便于识别的标记。\n\ngit config --global user.name \"dujunhong\"\ngit config --global user.email \"du.jh@icloud.com\"\n\n或者，通过usethis包在R中进行配置：\n\nlibrary(usethis)\nuse_git_config(user.name = \"djhcod\", user.email = \"du.jh@icloud.com\")\n\n\n\n\n\n\n\nNote\n\n\n\nusethis is a package that facilitates interactive workflows for R project creation and development\n\n\n然后通过在终端中运行git config –global –list查看配好的Git信息。或者通过usethis包的git_sitrep函数查看：\n\ngit_sitrep()"
+    "text": "11.3 配置Git\n在终端（RStudio的终端面板或系统的终端）中逐个运行下面的命令，把其中的user.name和user.email替换成自己的用户名和GItHub账户的邮箱。这里的用户名不一定要和GitHub账户的的用户名一致，它会给本的Git仓库提供一个便于识别的标记。\n\ngit config --global user.name \"dujunhong\"\ngit config --global user.email \"du.jh@icloud.com\"\n\n或者，通过usethis包在R中进行配置：\n\nlibrary(usethis)\nuse_git_config(user.name = \"djhcod\", user.email = \"du.jh@icloud.com\")\n\n\n\n\n\n\n\nNote\n\n\n\nusethis is a package that facilitates interactive workflows for R project creation and development\n\n\n然后通过在终端中运行git config –global –list查看配好的Git信息。或者通过usethis包的git_sitrep函数查看：\n\nusethis::git_sitrep()"
   },
   {
     "objectID": "quarto_foundation/github_pages.html#获取github个人访问令牌personal-access-tokenpat",
     "href": "quarto_foundation/github_pages.html#获取github个人访问令牌personal-access-tokenpat",
     "title": "11  发布到GitHub Pages",
     "section": "\n11.4 获取GitHub个人访问令牌（personal access token，PAT）",
-    "text": "11.4 获取GitHub个人访问令牌（personal access token，PAT）\nPAT相当于GitHub账户的密码，所以通过PAT才能让本地的Git仓库和远程的GitHub个人仓库建立连接。需要为每台想连接GitHub的电脑配置一个专属PAT。可以通过https://github.com/settings/tokens进行配置，或者运行下面的代码直接进入配置页面：\n\ncreate_github_token()\n\n在配置页面的”NOTE”中填写这个PAT的备注，建议写此PAT将要应用的设备的名称。在它的下方可以选择该PAT的到期时间：\n\n其他的设置保持默认，然后滑到页面最下方，点击”Generate token”：\n\n现在就会看到我们生成的PAT，记得把它即时复制下来，因为只要关闭了这个页面就无法再查看该密钥了：\n\n接下来，通过运行gitcreds包内的gitcreds_set函数来将PAT存储到本地：\n\ngitcreds::gitcreds_set()\n\n运行该函数后会在Console中要求我们输入token，输入刚刚获取的PAT密钥点击回车即可。\n\n如果此前已经存储了PAT，运行这个函数后会出现如下的对话框，可以选择更新已到期的PAT也可以查看已经存储的PAT。\n\n接下来我们再次运行git_sitrep函数，\n\ngit_sitrep()\n\n如果看到如下红框内的信息，证明已经成功连接到了GitHub：\n\n\n\n\n\n\n\nNote\n\n\n\n更多关于PAT的获取指南，参考：https://ucsb-meds.github.io/meds-install-mac.html。"
+    "text": "11.4 获取GitHub个人访问令牌（personal access token，PAT）\nPAT相当于GitHub账户的密码，所以通过PAT才能让本地的Git仓库和远程的GitHub个人仓库建立连接。需要为每台想连接GitHub的电脑配置一个专属PAT。可以通过https://github.com/settings/tokens进行配置，或者运行下面的代码直接进入配置页面：\n\ncreate_github_token()\n\n在配置页面的”NOTE”中填写这个PAT的备注，建议写此PAT将要应用的设备的名称。在它的下方可以选择该PAT的到期时间：\n\n其他的设置保持默认，然后滑到页面最下方，点击”Generate token”：\n\n现在就会看到我们生成的PAT，记得把它即时复制下来，因为只要关闭了这个页面就无法再查看该密钥了：\n\n接下来，通过运行gitcreds包内的gitcreds_set函数来将PAT存储到本地：\n\ngitcreds::gitcreds_set()\n\n运行该函数后会在Console中要求我们输入token，输入刚刚获取的PAT密钥点击回车即可。\n\n如果此前已经存储了PAT，运行这个函数后会出现如下的对话框，可以选择更新已到期的PAT也可以查看已经存储的PAT。\n\n接下来我们再次运行git_sitrep函数，\n\nusethis::git_sitrep()\n\n如果看到如下红框内的信息，证明已经成功连接到了GitHub：\n\n\n\n\n\n\n\nNote\n\n\n\n更多关于PAT的获取指南，参考：https://ucsb-meds.github.io/meds-install-mac.html。"
   },
   {
     "objectID": "quarto_foundation/github_pages.html#将r-project文件夹初始化为git存储库",
