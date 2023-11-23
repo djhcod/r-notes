@@ -607,7 +607,7 @@ Note
 <p>原文：<a href="https://www.freecodecamp.org/news/gitignore-file-how-to-ignore-files-and-folders-in-git/"><em>.gitignore File – How to Ignore Files and Folders in Git</em></a><strong>。</strong></p>
 </div>
 </div>
-<p>如上面的@sec-将本地静态html文件发布到github-pages 所述，我们通过<code>git add .</code>命令将项目中的新文件或有变动的文件信息暂存到Git库，然后用<em><code>git commit -m "my commit message"</code></em>命令提交文件。其中<code>git add</code>后面跟的是需要提交的文件目录，这里我们用了"."，表示把Git文件夹内的<strong>所有文件</strong>变动信息都记录下来。当继续使用<code>git commit</code>命令时，每一个文件都会被添加。但是，我们有时候<strong>不想将某些特定的文件或文件夹上传</strong>，或者<strong>某些文件超出了GitHub允许的单个文件容量上限（100MB）</strong>，这个时候我们就需要通过新建一个<code>.gitignore</code>隐藏文件来告诉Git<strong>忽略和不要追踪某些特定文件</strong>。</p>
+<p>如上面的@sec-将本地静态html文件发布到github-pages 所述，我们通过<code>git add .</code>命令将项目中的新文件或有变动的文件信息暂存到Git库，然后用<em><code>git commit -m "my commit message"</code></em>命令提交文件。其中<code>git add</code>后面跟的是需要提交的文件目录，这里我们用了”.”，表示把Git文件夹内的<strong>所有文件</strong>变动信息都记录下来。当继续使用<code>git commit</code>命令时，每一个文件都会被添加。但是，我们有时候<strong>不想将某些特定的文件或文件夹上传</strong>，或者<strong>某些文件超出了GitHub允许的单个文件容量上限（100MB）</strong>，这个时候我们就需要通过新建一个<code>.gitignore</code>隐藏文件来告诉Git<strong>忽略和不要追踪某些特定文件</strong>。</p>
 <p><code>.gitignore</code>文件是一个纯文本文件，里面列出我们要求Git忽略和不追踪的的文件的列表。在<code>.gitignore</code>中，可以通过提及特定文件或文件夹的名称或模式来告诉Git只忽略一个文件或一个文件夹。也可以用同样的方法告诉Git忽略多个文件或文件夹。</p>
 <p>通常，将<code>.gitignore</code>文件放在仓库的根目录下。我们可以通过命令行工具来创建一个<code>.gitignore</code>文件。要在基于 Unix 的系统（如 macOS 或 Linux）上用命令行创建一个<code>.gitignore</code>文件，打开终端程序（如 macOS 上的 Terminal.app）。然后，用<code>cd</code>命令导航到包含项目的根文件夹（或者通过RStudio打开.Rproject项目文件，然后打开RStudio内的终端面板）。然后输入以下命令：</p>
 <div class="cell" data-hash="github_pages_cache/html/unnamed-chunk-15_9e6d51299441b77c50786f6503db6b87">
@@ -618,11 +618,11 @@ Note
 <p>我们用文本编辑工具或者RStudio打开这个文件。会发现里面已经有一些自动帮我们填好的文件列表：</p>
 <p><img src="images/截屏2023-11-23 11.50.56.png" class="img-fluid" width="328"></p>
 <section id="在-git-中忽略一个文件和文件夹" class="level3"><h3 class="anchored" data-anchor-id="在-git-中忽略一个文件和文件夹"><strong>在 Git 中忽略一个文件和文件夹</strong></h3>
-<p>如果只忽略一个特定的文件，需要<strong>提供该文件在项目根目录下的完整路径</strong>。例如，如果想忽略位于根目录下的"text.txt"文件，可以将以下信息添加到<code>.gitignore</code>文件中：</p>
+<p>如果只忽略一个特定的文件，需要<strong>提供该文件在项目根目录下的完整路径</strong>。例如，如果想忽略位于根目录下的”text.txt”文件，可以将以下信息添加到<code>.gitignore</code>文件中：</p>
 <div class="cell" data-hash="github_pages_cache/html/unnamed-chunk-16_e757e4271e508b719e09b07d4d7485f8">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span>text.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>而如果想忽略一个位于根目录下的"test"文件夹中的"text.txt"文件，添加的信息是：</p>
+<p>而如果想忽略一个位于根目录下的”test”文件夹中的”text.txt”文件，添加的信息是：</p>
 <div class="cell" data-hash="github_pages_cache/html/unnamed-chunk-17_2d6de2361cd66d39b65036680765eab3">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span>test<span class="sc">/</span>text.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -631,30 +631,30 @@ Note
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">test</span><span class="op">/</span><span class="va">text.txt</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="忽略多个具有特定名称的文件和文件夹" class="level3"><h3 class="anchored" data-anchor-id="忽略多个具有特定名称的文件和文件夹">忽略多个具有特定名称的文件和文件夹</h3>
-<p>如果想忽略整个项目内所有具有特定名称的文件，只需要写出该文件的<strong>文件名及其后缀</strong>。例如，如果想忽略任何文件名为"text.txt"的文件，可以在<code>.gitignore</code>中添加以下内容：</p>
+<p>如果想忽略整个项目内所有具有特定名称的文件，只需要写出该文件的<strong>文件名及其后缀</strong>。例如，如果想忽略任何文件名为”text.txt”的文件，可以在<code>.gitignore</code>中添加以下内容：</p>
 <div class="cell" data-hash="github_pages_cache/html/unnamed-chunk-19_bc6e25bb9fcd043d4f663b3a29c47019">
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">text.txt</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>注意区别<code>/text.txt</code>。如果前面有<code>/</code>表示只忽略根目录下文件名为"text.txt"的文件。</p>
+<p>注意区别<code>/text.txt</code>。如果前面有<code>/</code>表示只忽略根目录下文件名为”text.txt”的文件。</p>
 <p>如果要忽略某个文件夹，需要包括文件夹的位置及名称，<strong>并在最后加上斜线<code>/</code></strong>：</p>
 <div class="cell" data-hash="github_pages_cache/html/unnamed-chunk-20_f1e420c30e9b0dad35b142638b4c0646">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>test<span class="sc">/</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>这个命令将忽略项目中所有位置的名为"test"的文件夹。如前所述，如果我们写成下面这样：</p>
+<p>这个命令将忽略项目中所有位置的名为”test”的文件夹。如前所述，如果我们写成下面这样：</p>
 <div class="cell" data-hash="github_pages_cache/html/unnamed-chunk-21_ec0b9a5d35add5d6148ee42db085d50c">
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">test</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>那么就会忽略项目中所有名称中含有"test"的文件和文件夹。</p>
-<p>忽略任何以特定单词开头的文件或目录。例如，忽略所有名称以"img"开头的文件和文件夹。需要指定想忽略的名称，后面跟着<code>*</code>通配符选择器，像这样：</p>
+<p>那么就会忽略项目中所有名称中含有”test”的文件和文件夹。</p>
+<p>忽略任何以特定单词开头的文件或目录。例如，忽略所有名称以”img”开头的文件和文件夹。需要指定想忽略的名称，后面跟着<code>*</code>通配符选择器，像这样：</p>
 <div class="cell" data-hash="github_pages_cache/html/unnamed-chunk-22_615fc9b526a24adbd4ff6391864811af">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>img<span class="sc">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>如果想忽略所有以特定文件扩展名结尾的文件，同样需要使用<code>*</code>通配符选择器，后面跟你想忽略的文件扩展名。例如，如果你想忽略所有以".md"文件扩展名结尾的markdown文件，你可以在你的<code>.gitignore</code>文件中添加以下内容：</p>
+<p>如果想忽略所有以特定文件扩展名结尾的文件，同样需要使用<code>*</code>通配符选择器，后面跟你想忽略的文件扩展名。例如，如果你想忽略所有以”.md”文件扩展名结尾的markdown文件，你可以在你的<code>.gitignore</code>文件中添加以下内容：</p>
 <div class="cell" data-hash="github_pages_cache/html/unnamed-chunk-23_4fab6b3a7536af76fa69ffa0d67a9721">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="sc">*</span>.md</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="忽略以前提交的文件" class="level3"><h3 class="anchored" data-anchor-id="忽略以前提交的文件"><strong>忽略以前提交的文件</strong></h3>
-<p>当你创建一个新的仓库时，最好的做法是创建一个<code>.gitignore</code>文件，包含所有你想忽略的文件和不同的文件模式--在提交之前。Git 只能忽略尚未提交到仓库的未被追踪的文件。如果你过去已经提交了一个文件，但希望没有提交，会发生什么？比如你不小心提交了一个存储环境变量的".env"文件。你首先需要更新<code>.gitignore</code>文件以包括".env"文件：</p>
+<p>当你创建一个新的仓库时，最好的做法是创建一个<code>.gitignore</code>文件，包含所有你想忽略的文件和不同的文件模式--在提交之前。Git 只能忽略尚未提交到仓库的未被追踪的文件。如果你过去已经提交了一个文件，但希望没有提交，会发生什么？比如你不小心提交了一个存储环境变量的”.env”文件。你首先需要更新<code>.gitignore</code>文件以包括”.env”文件：</p>
 <div class="cell" data-hash="github_pages_cache/html/unnamed-chunk-24_9f40848d79a1256e256448cc35a2878f">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 给 .gitignore 添加 .env 文件</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>echo <span class="st">".env"</span> <span class="sc">&gt;</span><span class="er">&gt;</span> .gitignore</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -688,7 +688,7 @@ Note
 <ul>
 <li><p><code>.Rproj.user</code>、<code>.Rhistory</code>、<code>.Rdata</code>、<code>.httr-oauth</code>、<code>.DS_Store</code>、<code>.quarto</code>、<code>/.quarto/</code>都是项目的隐藏文件。</p></li>
 <li>
-<p><code>*_cache</code>是编译后的缓存文件，它们的后缀为"_cache"：</p>
+<p><code>*_cache</code>是编译后的缓存文件，它们的后缀为”_cache”：</p>
 <p><img src="images/截屏2023-11-23 12.20.44.png" class="img-fluid" width="265"></p>
 </li>
 <li><p><code>data/</code>是放置代码运行所需的数据文件的文件夹。</p></li>
@@ -1369,7 +1369,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb30-274"><a href="#cb30-274" aria-hidden="true" tabindex="-1"></a>原文：<span class="co">[</span><span class="ot">*.gitignore File -- How to Ignore Files and Folders in Git*</span><span class="co">](https://www.freecodecamp.org/news/gitignore-file-how-to-ignore-files-and-folders-in-git/)</span>**。**</span>
 <span id="cb30-275"><a href="#cb30-275" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb30-276"><a href="#cb30-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-277"><a href="#cb30-277" aria-hidden="true" tabindex="-1"></a>如上面的@sec-将本地静态html文件发布到github-pages 所述，我们通过<span class="in">`git add .`</span>命令将项目中的新文件或有变动的文件信息暂存到Git库，然后用*`git commit -m "my commit message"`*命令提交文件。其中`git add`后面跟的是需要提交的文件目录，这里我们用了\".\"，表示把Git文件夹内的**所有文件**变动信息都记录下来。当继续使用`git commit`命令时，每一个文件都会被添加。但是，我们有时候**不想将某些特定的文件或文件夹上传**，或者**某些文件超出了GitHub允许的单个文件容量上限（100MB）**，这个时候我们就需要通过新建一个`.gitignore`隐藏文件来告诉Git**忽略和不要追踪某些特定文件**。</span>
+<span id="cb30-277"><a href="#cb30-277" aria-hidden="true" tabindex="-1"></a>如上面的\@sec-将本地静态html文件发布到github-pages 所述，我们通过<span class="in">`git add .`</span>命令将项目中的新文件或有变动的文件信息暂存到Git库，然后用*`git commit -m "my commit message"`*命令提交文件。其中`git add`后面跟的是需要提交的文件目录，这里我们用了"."，表示把Git文件夹内的**所有文件**变动信息都记录下来。当继续使用`git commit`命令时，每一个文件都会被添加。但是，我们有时候**不想将某些特定的文件或文件夹上传**，或者**某些文件超出了GitHub允许的单个文件容量上限（100MB）**，这个时候我们就需要通过新建一个`.gitignore`隐藏文件来告诉Git**忽略和不要追踪某些特定文件**。</span>
 <span id="cb30-278"><a href="#cb30-278" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-279"><a href="#cb30-279" aria-hidden="true" tabindex="-1"></a><span class="in">`.gitignore`</span>文件是一个纯文本文件，里面列出我们要求Git忽略和不追踪的的文件的列表。在<span class="in">`.gitignore`</span>中，可以通过提及特定文件或文件夹的名称或模式来告诉Git只忽略一个文件或一个文件夹。也可以用同样的方法告诉Git忽略多个文件或文件夹。</span>
 <span id="cb30-280"><a href="#cb30-280" aria-hidden="true" tabindex="-1"></a></span>
@@ -1381,21 +1381,21 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb30-288"><a href="#cb30-288" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-289"><a href="#cb30-289" aria-hidden="true" tabindex="-1"></a>这和 @sec-将本地静态html文件发布到github-pages 一样，不会返回任何信息，但是会在项目根目录中生成一个文件名为<span class="in">`.gitignore`</span>的隐藏文件：</span>
 <span id="cb30-290"><a href="#cb30-290" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-291"><a href="#cb30-291" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-11-23 11.49.07.png)</span>{width="335"}</span>
+<span id="cb30-291"><a href="#cb30-291" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-11-23%2011.49.07.png)</span>{width="335"}</span>
 <span id="cb30-292"><a href="#cb30-292" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-293"><a href="#cb30-293" aria-hidden="true" tabindex="-1"></a>我们用文本编辑工具或者RStudio打开这个文件。会发现里面已经有一些自动帮我们填好的文件列表：</span>
 <span id="cb30-294"><a href="#cb30-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-295"><a href="#cb30-295" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-11-23 11.50.56.png)</span>{width="328"}</span>
+<span id="cb30-295"><a href="#cb30-295" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-11-23%2011.50.56.png)</span>{width="328"}</span>
 <span id="cb30-296"><a href="#cb30-296" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-297"><a href="#cb30-297" aria-hidden="true" tabindex="-1"></a><span class="fu">### **在 Git 中忽略一个文件和文件夹**</span></span>
 <span id="cb30-298"><a href="#cb30-298" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-299"><a href="#cb30-299" aria-hidden="true" tabindex="-1"></a>如果只忽略一个特定的文件，需要**提供该文件在项目根目录下的完整路径**。例如，如果想忽略位于根目录下的\"text.txt\"文件，可以将以下信息添加到<span class="in">`.gitignore`</span>文件中：</span>
+<span id="cb30-299"><a href="#cb30-299" aria-hidden="true" tabindex="-1"></a>如果只忽略一个特定的文件，需要**提供该文件在项目根目录下的完整路径**。例如，如果想忽略位于根目录下的"text.txt"文件，可以将以下信息添加到<span class="in">`.gitignore`</span>文件中：</span>
 <span id="cb30-300"><a href="#cb30-300" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-303"><a href="#cb30-303" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb30-304"><a href="#cb30-304" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span>text.txt</span>
 <span id="cb30-305"><a href="#cb30-305" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb30-306"><a href="#cb30-306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-307"><a href="#cb30-307" aria-hidden="true" tabindex="-1"></a>而如果想忽略一个位于根目录下的\"test\"文件夹中的\"text.txt\"文件，添加的信息是：</span>
+<span id="cb30-307"><a href="#cb30-307" aria-hidden="true" tabindex="-1"></a>而如果想忽略一个位于根目录下的"test"文件夹中的"text.txt"文件，添加的信息是：</span>
 <span id="cb30-308"><a href="#cb30-308" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-311"><a href="#cb30-311" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb30-312"><a href="#cb30-312" aria-hidden="true" tabindex="-1"></a><span class="sc">/</span>test<span class="sc">/</span>text.txt</span>
@@ -1409,13 +1409,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb30-322"><a href="#cb30-322" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-323"><a href="#cb30-323" aria-hidden="true" tabindex="-1"></a><span class="fu">### 忽略多个具有特定名称的文件和文件夹</span></span>
 <span id="cb30-324"><a href="#cb30-324" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-325"><a href="#cb30-325" aria-hidden="true" tabindex="-1"></a>如果想忽略整个项目内所有具有特定名称的文件，只需要写出该文件的**文件名及其后缀**。例如，如果想忽略任何文件名为\"text.txt\"的文件，可以在<span class="in">`.gitignore`</span>中添加以下内容：</span>
+<span id="cb30-325"><a href="#cb30-325" aria-hidden="true" tabindex="-1"></a>如果想忽略整个项目内所有具有特定名称的文件，只需要写出该文件的**文件名及其后缀**。例如，如果想忽略任何文件名为"text.txt"的文件，可以在<span class="in">`.gitignore`</span>中添加以下内容：</span>
 <span id="cb30-326"><a href="#cb30-326" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-329"><a href="#cb30-329" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb30-330"><a href="#cb30-330" aria-hidden="true" tabindex="-1"></a>text.txt</span>
 <span id="cb30-331"><a href="#cb30-331" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb30-332"><a href="#cb30-332" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-333"><a href="#cb30-333" aria-hidden="true" tabindex="-1"></a>注意区别<span class="in">`/text.txt`</span>。如果前面有<span class="in">`/`</span>表示只忽略根目录下文件名为\"text.txt\"的文件。</span>
+<span id="cb30-333"><a href="#cb30-333" aria-hidden="true" tabindex="-1"></a>注意区别<span class="in">`/text.txt`</span>。如果前面有<span class="in">`/`</span>表示只忽略根目录下文件名为"text.txt"的文件。</span>
 <span id="cb30-334"><a href="#cb30-334" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-335"><a href="#cb30-335" aria-hidden="true" tabindex="-1"></a>如果要忽略某个文件夹，需要包括文件夹的位置及名称，**并在最后加上斜线`/`**：</span>
 <span id="cb30-336"><a href="#cb30-336" aria-hidden="true" tabindex="-1"></a></span>
@@ -1423,21 +1423,21 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb30-340"><a href="#cb30-340" aria-hidden="true" tabindex="-1"></a>test<span class="sc">/</span></span>
 <span id="cb30-341"><a href="#cb30-341" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb30-342"><a href="#cb30-342" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-343"><a href="#cb30-343" aria-hidden="true" tabindex="-1"></a>这个命令将忽略项目中所有位置的名为\"test\"的文件夹。如前所述，如果我们写成下面这样：</span>
+<span id="cb30-343"><a href="#cb30-343" aria-hidden="true" tabindex="-1"></a>这个命令将忽略项目中所有位置的名为"test"的文件夹。如前所述，如果我们写成下面这样：</span>
 <span id="cb30-344"><a href="#cb30-344" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-347"><a href="#cb30-347" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb30-348"><a href="#cb30-348" aria-hidden="true" tabindex="-1"></a>test</span>
 <span id="cb30-349"><a href="#cb30-349" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb30-350"><a href="#cb30-350" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-351"><a href="#cb30-351" aria-hidden="true" tabindex="-1"></a>那么就会忽略项目中所有名称中含有\"test\"的文件和文件夹。</span>
+<span id="cb30-351"><a href="#cb30-351" aria-hidden="true" tabindex="-1"></a>那么就会忽略项目中所有名称中含有"test"的文件和文件夹。</span>
 <span id="cb30-352"><a href="#cb30-352" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-353"><a href="#cb30-353" aria-hidden="true" tabindex="-1"></a>忽略任何以特定单词开头的文件或目录。例如，忽略所有名称以\"img\"开头的文件和文件夹。需要指定想忽略的名称，后面跟着<span class="in">`*`</span>通配符选择器，像这样：</span>
+<span id="cb30-353"><a href="#cb30-353" aria-hidden="true" tabindex="-1"></a>忽略任何以特定单词开头的文件或目录。例如，忽略所有名称以"img"开头的文件和文件夹。需要指定想忽略的名称，后面跟着<span class="in">`*`</span>通配符选择器，像这样：</span>
 <span id="cb30-354"><a href="#cb30-354" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-357"><a href="#cb30-357" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb30-358"><a href="#cb30-358" aria-hidden="true" tabindex="-1"></a>img<span class="sc">*</span></span>
 <span id="cb30-359"><a href="#cb30-359" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb30-360"><a href="#cb30-360" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-361"><a href="#cb30-361" aria-hidden="true" tabindex="-1"></a>如果想忽略所有以特定文件扩展名结尾的文件，同样需要使用<span class="in">`*`</span>通配符选择器，后面跟你想忽略的文件扩展名。例如，如果你想忽略所有以\".md\"文件扩展名结尾的markdown文件，你可以在你的<span class="in">`.gitignore`</span>文件中添加以下内容：</span>
+<span id="cb30-361"><a href="#cb30-361" aria-hidden="true" tabindex="-1"></a>如果想忽略所有以特定文件扩展名结尾的文件，同样需要使用<span class="in">`*`</span>通配符选择器，后面跟你想忽略的文件扩展名。例如，如果你想忽略所有以".md"文件扩展名结尾的markdown文件，你可以在你的<span class="in">`.gitignore`</span>文件中添加以下内容：</span>
 <span id="cb30-362"><a href="#cb30-362" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-365"><a href="#cb30-365" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb30-366"><a href="#cb30-366" aria-hidden="true" tabindex="-1"></a><span class="sc">*</span>.md</span>
@@ -1445,7 +1445,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb30-368"><a href="#cb30-368" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-369"><a href="#cb30-369" aria-hidden="true" tabindex="-1"></a><span class="fu">### **忽略以前提交的文件**</span></span>
 <span id="cb30-370"><a href="#cb30-370" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-371"><a href="#cb30-371" aria-hidden="true" tabindex="-1"></a>当你创建一个新的仓库时，最好的做法是创建一个<span class="in">`.gitignore`</span>文件，包含所有你想忽略的文件和不同的文件模式<span class="sc">\-</span>-在提交之前。Git 只能忽略尚未提交到仓库的未被追踪的文件。如果你过去已经提交了一个文件，但希望没有提交，会发生什么？比如你不小心提交了一个存储环境变量的\".env\"文件。你首先需要更新<span class="in">`.gitignore`</span>文件以包括\".env\"文件：</span>
+<span id="cb30-371"><a href="#cb30-371" aria-hidden="true" tabindex="-1"></a>当你创建一个新的仓库时，最好的做法是创建一个<span class="in">`.gitignore`</span>文件，包含所有你想忽略的文件和不同的文件模式<span class="sc">\-</span>-在提交之前。Git 只能忽略尚未提交到仓库的未被追踪的文件。如果你过去已经提交了一个文件，但希望没有提交，会发生什么？比如你不小心提交了一个存储环境变量的".env"文件。你首先需要更新<span class="in">`.gitignore`</span>文件以包括".env"文件：</span>
 <span id="cb30-372"><a href="#cb30-372" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-375"><a href="#cb30-375" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb30-376"><a href="#cb30-376" aria-hidden="true" tabindex="-1"></a><span class="co"># 给 .gitignore 添加 .env 文件</span></span>
@@ -1489,9 +1489,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb30-422"><a href="#cb30-422" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-423"><a href="#cb30-423" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`.Rproj.user`</span>、<span class="in">`.Rhistory`</span>、<span class="in">`.Rdata`</span>、<span class="in">`.httr-oauth`</span>、<span class="in">`.DS_Store`</span>、<span class="in">`.quarto`</span>、<span class="in">`/.quarto/`</span>都是项目的隐藏文件。</span>
 <span id="cb30-424"><a href="#cb30-424" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-425"><a href="#cb30-425" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`*_cache`</span>是编译后的缓存文件，它们的后缀为\"<span class="sc">\_</span>cache\"：</span>
+<span id="cb30-425"><a href="#cb30-425" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`*_cache`</span>是编译后的缓存文件，它们的后缀为"<span class="sc">\_</span>cache"：</span>
 <span id="cb30-426"><a href="#cb30-426" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-427"><a href="#cb30-427" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/截屏2023-11-23 12.20.44.png)</span>{width="265"}</span>
+<span id="cb30-427"><a href="#cb30-427" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/截屏2023-11-23%2012.20.44.png)</span>{width="265"}</span>
 <span id="cb30-428"><a href="#cb30-428" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-429"><a href="#cb30-429" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`data/`</span>是放置代码运行所需的数据文件的文件夹。</span>
 <span id="cb30-430"><a href="#cb30-430" aria-hidden="true" tabindex="-1"></a></span>

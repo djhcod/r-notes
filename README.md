@@ -1,6 +1,6 @@
 # R语言学习笔记
 杜俊宏
-2023-11-15
+2023-11-23
 
 **网址：**<https://djhcod.github.io/r-notes/>**。**
 
@@ -13,6 +13,8 @@ Program（TCGA）](https://www.cancer.gov/ccg/research/genome-sequencing/tcga)�
 Markdown——的编写和发布进行简单总结。目前该项目处于最开始的阶段，这本书也处于刚刚搭建好框架的阶段，后续会不断更新和完善，最终实现上述的目标。敬请批评指正！
 
 本书基于Quarto创建。
+
+本书涉及的原始数据文件可在[此处](https://www.icloud.com.cn/iclouddrive/018ENTDGZBLoJOI1Dgvh8c_4w#data)下载。
 
 ## R学习资源推荐
 
