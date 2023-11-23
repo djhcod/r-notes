@@ -1,0 +1,245 @@
+---
+execute:
+      eval: false
+      warning: false
+editor_options: 
+  chunk_output_type: console
+---
+
+# 发布到GitHub Pages {#sec-发布到github-pages}
+
+::: callout-note
+本节内容参考[*Creating your personal website using Quarto*](https://ucsb-meds.github.io/creating-quarto-websites/) *和 [Happy Git and GitHub for the useR](https://happygitwithr.com)。*
+
+本节内容基于macOS，在Windows系统下的具体操作存在较大差异。
+:::
+
+## 注册GitHub账户
+
+关于注册GitHub账户的详细指南，参考：<https://happygitwithr.com/github-acct>。
+
+## 安装Git
+
+在终端APP或者RStudio的终端面板输入：
+
+```{r}
+which git
+```
+
+如果返回"/usr/bin/git"，则表示Git已被安装到电脑上。如果返回"git: command not found"则表示Git未安装，则参阅《[*Happy Git and GitHub for the useR*](https://happygitwithr.com/install-git)》进行安装。
+
+可以通过运行下面的命令进一步查看Git的版本：
+
+```{r}
+git --version
+```
+
+会返回"git version 2.39.3 (Apple Git-145)"这样的信息。
+
+## 配置Git
+
+在终端（RStudio的终端面板或系统的终端）中逐个运行下面的命令，把其中的`user.name`和`user.email`替换成自己的用户名和GItHub账户的邮箱。这里的用户名不一定要和GitHub账户的的用户名一致，它会给本的Git仓库提供一个便于识别的标记。
+
+```{r}
+git config --global user.name "dujunhong"
+git config --global user.email "du.jh@icloud.com"
+```
+
+或者，通过[usethis](https://usethis.r-lib.org/)包在R中进行配置：
+
+```{r}
+library(usethis)
+use_git_config(user.name = "djhcod", user.email = "du.jh@icloud.com")
+```
+
+::: callout-note
+`usethis` is a package that facilitates interactive workflows for R project creation and development
+:::
+
+然后通过在终端中运行`git config –global –list`查看配好的Git信息。或者通过usethis包的`git_sitrep`函数查看：
+
+```{r}
+usethis::git_sitrep()
+```
+
+## 获取GitHub个人访问令牌（personal access token，PAT）
+
+PAT相当于GitHub账户的密码，所以通过PAT才能让本地的Git仓库和远程的GitHub个人仓库建立连接。需要为每台想连接GitHub的电脑配置一个专属PAT。可以通过<https://github.com/settings/tokens>进行配置，或者运行下面的代码直接进入配置页面：
+
+```{r}
+create_github_token()
+```
+
+在配置页面的"NOTE"中填写这个PAT的备注，建议写此PAT将要应用的设备的名称。在它的下方可以选择该PAT的到期时间：
+
+![](images/pat_ac.png){width="900"}
+
+其他的设置保持默认，然后滑到页面最下方，点击"Generate token"：
+
+![](images/pat_confirm.png){width="800"}
+
+现在就会看到我们生成的PAT，记得把它即时复制下来，因为只要关闭了这个页面就无法再查看该密钥了：
+
+![](images/pac_token.png){width="707"}
+
+接下来，通过运行`gitcreds`包内的`gitcreds_set`函数来将PAT存储到本地：
+
+```{r}
+gitcreds::gitcreds_set()
+```
+
+运行该函数后会在Console中要求我们输入token，输入刚刚获取的PAT密钥点击回车即可。
+
+![](images/gitcreds-set.png){width="546"}
+
+如果此前已经存储了PAT，运行这个函数后会出现如下的对话框，可以选择更新已到期的PAT也可以查看已经存储的PAT。
+
+![](images/pat_store.png){width="433"}
+
+接下来我们再次运行`git_sitrep`函数，
+
+```{r}
+usethis::git_sitrep()
+```
+
+如果看到如下红框内的信息，证明已经成功连接到了GitHub：
+
+![](images/git_sitrep.png){width="419"}
+
+::: callout-note
+更多关于PAT的获取指南，参考：<https://ucsb-meds.github.io/meds-install-mac.html>。
+:::
+
+## 将R Project文件夹初始化为Git存储库
+
+创建Quarto Books项目的内容参考 @sec-quarto-books 。
+
+::: callout-caution
+项目文件夹的名称就是最终上传到GitHub库的名称，所以**不要使用中文和空格**，并起一个简单和有意义的名字。
+
+对于Quarto Books或者Quarto Websites项目，为了方便项目管理和GitHub Pages的转换应该在项目的YAML配置文件中**将编译文件的输出文件夹设置为"docs"**（ @sec-quarto-books ）：
+
+```         
+project:
+  type: book
+  output-dir: "book" 
+```
+
+这样qmd文件编译后生成的HTML文件、脚本文件以及图片等文件都被存放在docs文件夹内。后面我们就可以指定GitHub Pages将这个docs文件夹作为构建网页的依据。
+
+![](images/docs_file.png){width="290"}
+:::
+
+通过运行`use_git`函数以将R Project文件夹初始化为Git存储库：
+
+```{r}
+usethis::use_git()
+```
+
+Console中会提示已经将当前项目文件夹设置为了Git存储库。当系统询问是否可以提交任何未提交的文件时，请选择是，则会将所有文件进行上传。如果要求重新启动R，请选择是。
+
+![](images/use_git.png){width="288"}
+
+重启后，会看到RStudio的右下角窗格中出现了一个新的Git选项卡。里面列出了Git存储库，也就是我们的项目文件夹里面的所有文件，左侧用不同的颜色标注了文件的状态。
+
+![](images/git_pane.png){width="461"}
+
+这个函数的原理是在项目文件夹中生成了一个名为".git"的隐藏文件夹，从而将其认定为Git本地存储库。在Mac上通过快捷键`Command`+`Shift`+`句号`可以显示/隐藏这些隐藏文件。
+
+![](images/git_file.png){width="287"}
+
+[![Git存储库的结构](images/git-repo-ex.png){width="578"}](https://ucsb-meds.github.io/creating-quarto-websites/#fa-edit-titlepencil-and-paper-where-you-should-start-changing-stuff)
+
+## 连接本地Git仓库和远程GitHub仓库
+
+运行`use_github`函数后会首先创建一个项目同名的GitHub仓库，然后将所有本地Git库的文件上传到这个GitHub库中，完成后会自动打开浏览器并导航到建好的GitHub项目仓库。
+
+```{r}
+usethis::use_github()
+```
+
+![](images/use_github.png){width="491"}
+
+为了和GitHub统一，现在需要通过在RStusio的终端中运行下面的命令来检查一下当前项目的主分枝的名称是不是"main"。
+
+```{r}
+git branch
+```
+
+或者在RStudio中检查Git面板右上角的标签是不是"main"：
+
+![](images/git_pane2.png){width="500"}
+
+同时，GitHub项目主页左上角的默认分枝也应该是"main"：
+
+![](images/default_branch.png){width="502"}
+
+如果是，则可以直接进入下一步。否则，如果当前分支的名称为"master"，需要通过运行`git_default_branch_rename`函数将默认分枝的名称更新为"main"。
+
+```{r}
+usethis::git_default_branch_rename(from = "master", to = "main")
+```
+
+或者在终端中输入：
+
+```{r}
+git config --global init.defaultBranch main
+```
+
+然后通过`git status`再次检查默认分枝的名称，并回到GitHub项目主页刷新后查看默认分枝的名称是否已同步更改为"main"。
+
+## 将本地静态HTML文件发布到GitHub Pages
+
+首先，在项目根目录中创建一个名为`.nojekyll`的文件，该文件告诉GitHub Pages不要使用Jekyll（GitHub默认网页生成工具）对我们的文件进行额外处理。有两种方法可以做到这一点：
+
+1.  在RStudio终端中运行下面的命令：
+
+    ```{r}
+    touch .nojekyll
+    ```
+
+    该命令运行后不会有任何提示，但是在项目的根目录中会创建一个名为`.nojekyll`的隐藏文件：
+
+    ![](images/nojekyll_file.png){width="189"}
+
+2.  在RStudio中依次点击File\>New File\>Text File，然后点击保存，文件名写成".nojekyll"即可。
+
+![](images/nojekyll_file1.png){width="217"}
+
+![](images/nojekyll_file2.png){width="342"}
+
+然后在Git面板中选中所有的文件（Git面板中列出的都是监测到有变动的文件）。这一操作等价于在终端输入：`git add .`。之后点击"Commit"（等价：*`git commit -m "my commit message"`*）。
+
+![](images/2023-11-15%2015.41.39-01.png){width="513"}
+
+这会打开commit说明窗口，填写右侧的commit说明后点击右下角的"Commit"就会上传所有的文件更改。
+
+![](images/2023-11-15%2015.42.43.png){width="533"}
+
+上传完成后关闭窗口，这时Git面板中不会有任何文件，是因为我们已经提交了所有更改。最后点击"Push"，就会把所有文件上传到GitHub仓库（等价：*`git push`*）。
+
+![](images/push-01.png){width="508"}
+
+完成上述操作后，我们打开浏览器进入GitHub项目主页，点击设置按钮。
+
+![](images/2023-11-15%2015.44.55.png){width="669"}
+
+点击左侧导航栏的"Pages"选项，然后将GitHub Pages的创建来源选择为docs文件夹。
+
+![](images/2023-11-15%2015.45.12.png){width="665"}
+
+一段时间的等待后，我们就会在这个页面的上方看到已经生成的GitHub Pages的链接。
+
+![](images/2023-11-15%2015.47.03.png){width="656"}
+
+点击进去之后就可以看到我们的在线网页了。
+
+![](images/2023-11-15%2016.05.27.png){width="657"}
+
+## GitHub仓库/网页的更新和维护
+
+::: callout-warning
+不要更改docs文件夹内的任何内容。
+
+不要更改index.qmd文件的名称。
+:::

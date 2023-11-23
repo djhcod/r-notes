@@ -1,0 +1,145 @@
+---
+execute: 
+  eval: false
+editor_options: 
+  chunk_output_type: console
+---
+
+# Rstudio环境配置
+
+## 更新R
+
+在R原软件中逐个运行下面的代码（仅适用Windows系统）。macOS直接打开<https://cran.r-project.org/bin/macosx/>下载最新版本的R覆盖安装，重启RStudio即可完成R的更新，原R包都在。
+
+```{r}
+install.packages("installr")
+library(installr)
+updateR()
+```
+
+## 更新R包
+
+运行下面的代码或通过右下角的Packages选项卡进行R包的更新
+
+```{r}
+old.packages() # 检查是否有需要更新的R包
+update.packages(ask = F) # 更新所有R包
+news(package = "limma") # 参看R包的更新内容
+BiocManager::valid() # 查看是否有需要更新的bioconductor包。根据提示安装更新
+```
+
+## 从bioconductor安装R包
+
+```{r}
+BiocManager::install("biomaRt",update = TRUE,ask = FALSE)
+```
+
+## 更改当前R脚本运行目录
+
+```{r}
+setwd("/Users/totoshihiro/Library/Mobile Documents/com~apple~CloudDocs/Documents/科研/医学统计学/数据基本处理与标准化")
+getwd()#查看当前R脚本运行目录
+```
+
+## 环境查看和清理
+
+```{r}
+rm(mydata)
+rm(list = ls())#移除当前环境中的所有对象
+cat("\014")#清空所有输出结果
+sessionInfo()#收集有关当前R项目的信息
+detach("package:dplyr", unload=TRUE) #清除当前加载的程序包
+```
+
+## 自动安装所需的R包
+
+```{r}
+packages <-c("GEOquery", "limma","ggplot2", "pheatmap")#列出所需的R包
+
+#检查所需的R包是否已安装，若未安装则从CRAN或Bioconductor安装包
+packagecheck <- function(x) {
+  if (!require("BiocManager")) {
+    install.packages("BiocManager")
+  } else if (!require(x, character.only = T)) {
+    CRANpackages <- available.packages()
+    if (x %in% rownames(CRANpackages)) {
+      install.packages(x)
+    } else {
+      BiocManager::install(x, update = TRUE, ask = FALSE)
+    }
+  }
+}
+lapply(packages, packagecheck)
+```
+
+## 自动整理代码
+
+[The tidyverse style guide](https://style.tidyverse.org/index.html)**对代码编写时的规范格式进行了详细说明。通过**[styler包](https://styler.r-lib.org)可以实现对代码的自动整理，有助于保持不同项目之间的代码风格一致，并促进协作。安装styler后通过运行下面的命令即可自动整理当前打开的文档的代码。
+
+```{r}
+install.packages("styler")
+styler:::style_active_file()
+```
+
+也可以用通过打开Rstudio的插件（Addins），选择"Style active file"来实现对当前R脚本的代码整理。或者选择一段代码后，点击"Style selection"来对选中的代码进行整理。
+
+![Rstudio插件](images/screenshot_2023-11-14%2011.44.02.png){#fig-插件 width="219"}
+
+## Rstudio主题
+
+[`rsthemes`](https://www.garrickadenbuie.com/project/rsthemes/#installation)包提供了多种额外的主题。
+
+![](images/rsthemes.gif)
+
+该包通过[r-universe](https://gadenbuie.r-universe.dev/)进行安装：
+
+```{r}
+install.packages(
+  "rsthemes",
+  repos = c(gadenbuie = 'https://gadenbuie.r-universe.dev', getOption("repos"))
+)
+```
+
+然后安装主题：
+
+```{r}
+rsthemes::install_rsthemes()
+```
+
+使用：
+
+```{r}
+# 列出所有来自rsthemes的主题
+rsthemes::list_rsthemes()
+
+# 依次尝试所有主题
+rsthemes::try_rsthemes()
+
+# 只尝试浅色主题
+rsthemes::try_rsthemes("light")
+```
+
+通过Tools \> Global Options \> Appearance也可以浏览和应用这些主题。
+
+安装该包后还会在Rstudio的插件中显示，可以方便的进行深色和浅色模式的切换。要实现这一点，需要打开R的配置文件（\~/.Rprofile），可以通过下面的方式快速打开：
+
+```{r}
+usethis::edit_r_profile()
+```
+
+然后将下面的代码粘贴进配置文件：
+
+```{r}
+if (interactive()) {
+  rsthemes::set_theme_light("Chrome") # 默认的浅色主题
+  rsthemes::set_theme_dark("Cobalt") # 默认的深色主题
+  rsthemes::set_theme_favorite( # 再添加一些主题作为备选
+    c(
+      "GitHub {rsthemes}",
+      "Material Palenight {rsthemes}"
+    )
+  )
+}
+```
+
+现在就可以通过点击插件中的"Toggle Dark Mode"来一键切换深色和浅色主题了（@fig-插件 ）。同时，点击"Next Favorite Theme"可以切换上面设置的`set_theme_favorite()`里面的主题。

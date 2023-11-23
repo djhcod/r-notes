@@ -1,0 +1,202 @@
+---
+execute: 
+  eval: false
+---
+
+# Quarto Books {#sec-quarto-books}
+
+Quarto Books能够将多个Quarto文档（章节）组合成一份文档。Quarto Books可以以各种格式创建：
+
+-   HTML
+
+-   PDF
+
+-   MS Word
+
+-   EPub
+
+-   AsciiDoc
+
+HTML books实际上是一种特殊类型的[Quarto Website](https://quarto.org/docs/websites/)，因此支持包括全文搜索在内的网站功能。这两者最重要的一个区别是，**HTML books能够使用章节编号，因此支持不同章节之间的交叉引用**。
+
+要实现按照一定的格式将各个Quarto文档组合成一个完整的网页或Quarto Books，定义YAML配置文件是核心。**YAML配置文件一般以"\_quarto.yml"命名**，并保存在项目的根目录中，在每次编译书籍时都会读取这个配置文件。下面是一个Quarto Books的YAML配置文件的主要内容：
+
+```{r}
+project:
+  type: book
+  output-dir: "book" # 更改Quarto Book的默认输出文件夹（需要重启项目）
+number-sections: true # 是否开启章节编号
+number-depth: 3 # 标题编号级数
+crossref:
+  appendix-title: "附录" # 附录的标签
+  appendix-delim: ":" # 附录标签和附录标题的分隔符
+  fig-title: 图     # 图的默认标签（默认是"Figure"）
+  tbl-title: 表     # 表的默认标签（默认是"Table"）
+  fig-prefix: 图   # 图的默认引用样式（默认是"Figure"）
+  tbl-prefix: 表    # 表的默认引用样式（默认是"Table"）
+  fig-labels: arabic    # 图片的编号类型（默认是阿拉伯数字：arabic)
+  tbl-labels: arabic    # 表格的编号类型（默认是阿拉伯数字：arabic）
+  subref-labels: alpha A # 次级引用编号类型，如组图中的小图（默认是小写字母：alpha a）
+fig-cap-location: bottom
+tbl-cap-location: top
+reference-location: margin # 脚注的默认展示位置。默认为文档最后 (document)。
+citation-location: document # 参考文献的默认展示位置。默认为文档最后。
+
+bibliography: references.bib # 参考文献目录
+editor: visual
+
+format:
+  html:
+    theme:
+      light: flatly # 分别设置暗色主题和亮色主题
+      dark: darkly
+    embed-resources: false # 是否将所有源文件嵌入HTML文件
+    code-tools: true
+    anchor-sections: true # 是否显示章节锚点图标（便于复制直接定位到某个章节的链接）
+    link-external-icon: true # 是否在外部链接后显示图标
+    link-external-newwindow: true # 是否在新窗口打开链接
+
+book:
+  title: "R语言数据科学"
+  subtitle: "从数据清洗到高级统计学和生物信息学"
+  author: "杜俊宏"
+  date: 2023/11/10
+  date-format: "YYYY[年]M[月]D[日]"
+  cover-image: images/book_cover.png
+
+
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - part: Quarto基础.qmd
+      chapters:
+        - YAML设置总览.qmd
+        - 页面样式设置.qmd
+        - 代码块设置.qmd
+        - 图片设置.qmd
+        - 交叉引用.qmd
+        - 插入其他内容.qmd
+        - 输出.qmd
+        - 发布到GitHub Pages.qmd
+    - part: 数据清洗
+    - text: "---" # 添加分割线
+    - part: "参考文献"
+      chapters:
+        - references.qmd
+
+  # navbar:
+  #   search: true
+  #   logo: images/logo.png
+  #   background: "gray"
+  #   foreground: "white" # 导航栏字体颜色
+  #   right:
+  #     - icon: github
+  #       href: https://github.com/djhcod/Quarto-foundation.github.io
+
+  # 设置侧边栏（https://quarto.org/docs/websites/website-navigation.html#side-navigation）
+  sidebar:
+    style: "docked" # “docked” and “floating”
+    collapse-level: 1 # 导航栏的初始显示多少级标题
+    search: true # 是否打开导航栏上的搜索框
+    #logo: images/logo.png # 在左侧导航栏上方显示logo
+    # 定制侧边栏工具
+    tools:
+      - icon: twitter # 添加logo（https://icons.getbootstrap.com）
+        href: https://twitter.com # logo对应的链接
+      - icon: youtube
+        href: https://youtube.com
+
+  page-navigation: true # 打开右侧的页内标签
+  repo-actions: [edit, issue, source] # 在页面右侧显示导航到GitHub仓库的链接
+  repo-url: https://github.com/djhcod/Quarto-foundation.github.io # GitHub仓库的链接
+
+  # 搜索框设置
+  search:
+    location: sidebar
+    type: textbox
+
+  #页脚设置
+  page-footer:
+    left:
+      - text: "首页"
+        href: index.qmd
+    center: "Copyright 2021, Norah Jones"
+    right:
+      - icon: github
+        href: https://github.com/djhcod
+      - icon: twitter
+        href: https://twitter.com/
+    border: true
+
+  favicon: images/logo.png # 网页的logo
+  twitter-card: true
+  site-url: https://example.com
+
+  sharing: [twitter, facebook] # 显示分享到社交网络图标
+  # downloads: [pdf, epub] # 显示下载按钮
+  comments:
+    # 配置Hypothesis标注功能（https://web.hypothes.is）
+    hypothesis:
+      theme: classic
+      openSidebar: false
+      showHighlights: always
+      enableExperimentalNewNoteButton: true
+    # 配置页面底部的留言框
+    utterances:
+      repo: djhcod/Quarto-foundation.github.io
+```
+
+::: callout-tip
+关于Quarto Books的详细指南，参考：<https://quarto.org/docs/books/book-structure.html>。
+:::
+
+## 制作About Pages
+
+**index.qmd**文件会编译形成首页/封面文件（index.html），如果我们将书籍/网页发布（详见： @sec-发布到github-pages ），这是打开网站链接后首先看到的页面。我们可以通过Quarto提供的About Pages模板来快速创建一个美观的首页。下面是一个采用了About Pages模板的index.qmd文件的示例：
+
+```{r}
+---
+title: "关于这本笔记"
+sidebar: false # 关闭左侧栏
+toc: false # 关闭右侧的页面目录
+number-sections: false # 取消对标题的编号
+code-tools: false # 关闭代码工具
+about:
+  template: trestles # 模板
+  image: images/book_cover.jpg # 封面图片
+  # 添加链接
+  links:
+    - icon: book-fill # 添加图标（https://icons.getbootstrap.com）
+      text: Bookdown # 图标的文字
+      href: https://bookdown.org # 图标的链接
+    - icon: github
+      text: Github
+      href: https://github.com/djhcod/r-notes
+    - text: Email
+      href: mailto::du.jh@icloud.com
+---
+
+Finley Malloc is the Chief Data Scientist at Wengo Analytics. When not innovating on data platforms, Finley enjoys spending time unicycling and playing with her pet iguana.
+
+------------------------------------------------------------------------ # 分割线
+
+## Education
+
+University of California, San Diego \| San Diego, CA PhD in Mathematics \| Sept 2011 - June 2015
+
+Macalester College \| St. Paul MA B.A in Economics \| Sept 2007 - June 2011
+
+------------------------------------------------------------------------
+
+## Experience
+
+Wengo Analytics \| Head Data Scientist \| April 2018 - present
+
+GeoScynce \| Chief Analyst \| Spet 2012 - April 2018
+```
+
+::: callout-tip
+`mailto`是一种特殊的超链接，其语法是`mailto::youremail.com`。点击`mailto::`后的邮箱地址之后会打开设备的邮件应用，并且自动填写邮箱地址。
+
+更多关于Quarto网页的技巧，参考：[*Creating your personal website using Quarto*](https://ucsb-meds.github.io/creating-quarto-websites/#fa-edit-titlepencil-and-paper-where-you-should-start-changing-stuff)**。**
+:::

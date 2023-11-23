@@ -1,0 +1,450 @@
+[
+  {
+    "objectID": "intro.html#本书编写环境概况",
+    "href": "intro.html#本书编写环境概况",
+    "title": "前言",
+    "section": "本书编写环境概况",
+    "text": "本书编写环境概况\n\nR版本：R 4.3.2\nRStudio版本：2023.09.1+494\n操作系统：macOS 14.1.1\n硬件：MacBook Pro (14-inch, 2023)\n\n本书基于Quarto创建。"
+  },
+  {
+    "objectID": "intro.html#r学习资源推荐",
+    "href": "intro.html#r学习资源推荐",
+    "title": "前言",
+    "section": "R学习资源推荐",
+    "text": "R学习资源推荐\n\n在线书籍：\n\nR Graphics Cookbook, 2nd edition：https://r-graphics.org\nR for Data Science (2e)：https://r4ds.hadley.nz\nQuarto Guide：https://quarto.org/docs/guide/\nHappy Git and GitHub for the useR：https://happygitwithr.com\nBookdown：https://bookdown.org\n\n\n\n论坛/网站：\n\nR CODER：https://r-coder.com\nStack Overflow：https://stackoverflow.com\nR-Bloggers：https://www.r-bloggers.com\nPosit Cheatsheets：https://posit.co/resources/cheatsheets/\nKaggle：https://www.kaggle.com/code?language=R\nThe R Graph Gallery：https://r-graph-gallery.com\nPosit Community：https://community.rstudio.com"
+  },
+  {
+    "objectID": "r_basic/r_basics.html",
+    "href": "r_basic/r_basics.html",
+    "title": "R语言基础",
+    "section": "",
+    "text": "本章主要介绍R语言的环境配置以及数据的导入、导出等R语言的基本操作。"
+  },
+  {
+    "objectID": "r_basic/environment_configuration.html#更新r",
+    "href": "r_basic/environment_configuration.html#更新r",
+    "title": "\n2  Rstudio环境配置\n",
+    "section": "\n2.1 更新R",
+    "text": "2.1 更新R\n在R原软件中逐个运行下面的代码（仅适用Windows系统）。macOS直接打开https://cran.r-project.org/bin/macosx/下载最新版本的R覆盖安装，重启RStudio即可完成R的更新，原R包都在。\n\ninstall.packages(\"installr\")\nlibrary(installr)\nupdateR()"
+  },
+  {
+    "objectID": "r_basic/environment_configuration.html#更新r包",
+    "href": "r_basic/environment_configuration.html#更新r包",
+    "title": "\n2  Rstudio环境配置\n",
+    "section": "\n2.2 更新R包",
+    "text": "2.2 更新R包\n运行下面的代码或通过右下角的Packages选项卡进行R包的更新\n\nold.packages() # 检查是否有需要更新的R包\nupdate.packages(ask = F) # 更新所有R包\nnews(package = \"limma\") # 参看R包的更新内容\nBiocManager::valid() # 查看是否有需要更新的bioconductor包。根据提示安装更新"
+  },
+  {
+    "objectID": "r_basic/environment_configuration.html#从bioconductor安装r包",
+    "href": "r_basic/environment_configuration.html#从bioconductor安装r包",
+    "title": "\n2  Rstudio环境配置\n",
+    "section": "\n2.3 从bioconductor安装R包",
+    "text": "2.3 从bioconductor安装R包\n\nBiocManager::install(\"biomaRt\",update = TRUE,ask = FALSE)"
+  },
+  {
+    "objectID": "r_basic/environment_configuration.html#更改当前r脚本运行目录",
+    "href": "r_basic/environment_configuration.html#更改当前r脚本运行目录",
+    "title": "\n2  Rstudio环境配置\n",
+    "section": "\n2.4 更改当前R脚本运行目录",
+    "text": "2.4 更改当前R脚本运行目录\n\nsetwd(\"/Users/totoshihiro/Library/Mobile Documents/com~apple~CloudDocs/Documents/科研/医学统计学/数据基本处理与标准化\")\ngetwd()#查看当前R脚本运行目录"
+  },
+  {
+    "objectID": "r_basic/environment_configuration.html#环境查看和清理",
+    "href": "r_basic/environment_configuration.html#环境查看和清理",
+    "title": "\n2  Rstudio环境配置\n",
+    "section": "\n2.5 环境查看和清理",
+    "text": "2.5 环境查看和清理\n\nrm(mydata)\nrm(list = ls())#移除当前环境中的所有对象\ncat(\"\\014\")#清空所有输出结果\nsessionInfo()#收集有关当前R项目的信息\ndetach(\"package:dplyr\", unload=TRUE) #清除当前加载的程序包"
+  },
+  {
+    "objectID": "r_basic/environment_configuration.html#自动安装所需的r包",
+    "href": "r_basic/environment_configuration.html#自动安装所需的r包",
+    "title": "\n2  Rstudio环境配置\n",
+    "section": "\n2.6 自动安装所需的R包",
+    "text": "2.6 自动安装所需的R包\n\npackages &lt;-c(\"GEOquery\", \"limma\",\"ggplot2\", \"pheatmap\")#列出所需的R包\n\n#检查所需的R包是否已安装，若未安装则从CRAN或Bioconductor安装包\npackagecheck &lt;- function(x) {\n  if (!require(\"BiocManager\")) {\n    install.packages(\"BiocManager\")\n  } else if (!require(x, character.only = T)) {\n    CRANpackages &lt;- available.packages()\n    if (x %in% rownames(CRANpackages)) {\n      install.packages(x)\n    } else {\n      BiocManager::install(x, update = TRUE, ask = FALSE)\n    }\n  }\n}\nlapply(packages, packagecheck)"
+  },
+  {
+    "objectID": "r_basic/environment_configuration.html#自动整理代码",
+    "href": "r_basic/environment_configuration.html#自动整理代码",
+    "title": "\n2  Rstudio环境配置\n",
+    "section": "\n2.7 自动整理代码",
+    "text": "2.7 自动整理代码\nThe tidyverse style guide对代码编写时的规范格式进行了详细说明。通过styler包可以实现对代码的自动整理，有助于保持不同项目之间的代码风格一致，并促进协作。安装styler后通过运行下面的命令即可自动整理当前打开的文档的代码。\n\ninstall.packages(\"styler\")\nstyler:::style_active_file()\n\n也可以用通过打开Rstudio的插件（Addins），选择”Style active file”来实现对当前R脚本的代码整理。或者选择一段代码后，点击”Style selection”来对选中的代码进行整理。\n\n\nFigure 2.1: Rstudio插件"
+  },
+  {
+    "objectID": "r_basic/environment_configuration.html#rstudio主题",
+    "href": "r_basic/environment_configuration.html#rstudio主题",
+    "title": "\n2  Rstudio环境配置\n",
+    "section": "\n2.8 Rstudio主题",
+    "text": "2.8 Rstudio主题\nrsthemes包提供了多种额外的主题。\n\n该包通过r-universe进行安装：\n\ninstall.packages(\n  \"rsthemes\",\n  repos = c(gadenbuie = 'https://gadenbuie.r-universe.dev', getOption(\"repos\"))\n)\n\n然后安装主题：\n\nrsthemes::install_rsthemes()\n\n使用：\n\n# 列出所有来自rsthemes的主题\nrsthemes::list_rsthemes()\n\n# 依次尝试所有主题\nrsthemes::try_rsthemes()\n\n# 只尝试浅色主题\nrsthemes::try_rsthemes(\"light\")\n\n通过Tools &gt; Global Options &gt; Appearance也可以浏览和应用这些主题。\n安装该包后还会在Rstudio的插件中显示，可以方便的进行深色和浅色模式的切换。要实现这一点，需要打开R的配置文件（~/.Rprofile），可以通过下面的方式快速打开：\n\nusethis::edit_r_profile()\n\n然后将下面的代码粘贴进配置文件：\n\nif (interactive()) {\n  rsthemes::set_theme_light(\"Chrome\") # 默认的浅色主题\n  rsthemes::set_theme_dark(\"Cobalt\") # 默认的深色主题\n  rsthemes::set_theme_favorite( # 再添加一些主题作为备选\n    c(\n      \"GitHub {rsthemes}\",\n      \"Material Palenight {rsthemes}\"\n    )\n  )\n}\n\n现在就可以通过点击插件中的”Toggle Dark Mode”来一键切换深色和浅色主题了（Figure 2.1 ）。同时，点击”Next Favorite Theme”可以切换上面设置的set_theme_favorite()里面的主题。"
+  },
+  {
+    "objectID": "r_basic/data_input_output.html",
+    "href": "r_basic/data_input_output.html",
+    "title": "\n3  数据的读取与输出\n",
+    "section": "",
+    "text": "4"
+  },
+  {
+    "objectID": "r_basic/data_input_output.html#读取csv数据文件",
+    "href": "r_basic/data_input_output.html#读取csv数据文件",
+    "title": "\n3  数据的读取与输出\n",
+    "section": "\n3.1 读取CSV数据文件",
+    "text": "3.1 读取CSV数据文件\nread.csv或read.table均可\n\ncsvdata&lt;-read.csv(\"ovary_data.csv\",#相对路径\n                  header=T,#第一行是否是列名\n                  sep=\",\",#字段分隔符。文件每行上的值由此字符分隔。read.table的默认值为sep=“”，表示分隔符为‘空白’，即一个或多个空格、制表符、换行符或回车。read.csv的默认值为sep=\",\"，表示分隔符为英文逗号\n                  stringsAsFactors=F)#是否将字符向量转换为因子\ncsvdata&lt;-read.table(\"ovary_data.csv\",header=T,sep=\",\", \n                    row.names=\"patientID\", \n                    colClasses=c(\"character\", \"character\", \"character\",\"numeric\", \"numeric\", \"numeric\")) #指定每一列的变量类型"
+  },
+  {
+    "objectID": "r_basic/data_input_output.html#读取spss文件",
+    "href": "r_basic/data_input_output.html#读取spss文件",
+    "title": "\n3  数据的读取与输出\n",
+    "section": "\n3.2 读取SPSS文件",
+    "text": "3.2 读取SPSS文件\n\nlibrary(foreign)\nsavdata&lt;-read.spss(\"lweight.sav\",to.data.frame=T)#需要将.sav格式数据转换成数据框"
+  },
+  {
+    "objectID": "r_basic/data_input_output.html#读取excel文件",
+    "href": "r_basic/data_input_output.html#读取excel文件",
+    "title": "\n3  数据的读取与输出\n",
+    "section": "\n3.3 读取Excel文件",
+    "text": "3.3 读取Excel文件\nMacOS 首选 gdata 包（因自带perl语言）；Windows首选 xlsx 包\n\nlibrary(gdata)\nxlsdata&lt;-read.xls(\"ovary_data.xlsx\",\n                  sheet=1)#要读取的工作表的名称或编号"
+  },
+  {
+    "objectID": "r_basic/data_input_output.html#读取txt文件",
+    "href": "r_basic/data_input_output.html#读取txt文件",
+    "title": "\n3  数据的读取与输出\n",
+    "section": "\n3.4 读取txt文件",
+    "text": "3.4 读取txt文件\n\nrefGene&lt;-read.table(\"refGene.txt\",header=F,sep = \"\\t\")"
+  },
+  {
+    "objectID": "r_basic/data_input_output.html#读取自带数据集",
+    "href": "r_basic/data_input_output.html#读取自带数据集",
+    "title": "\n3  数据的读取与输出\n",
+    "section": "\n3.5 读取自带数据集",
+    "text": "3.5 读取自带数据集\n\ndata(Arthritis, package=\"vcd\")\n#或\nmydata &lt;- vcd::Arthritis"
+  },
+  {
+    "objectID": "r_basic/data_input_output.html#下载和读取压缩包",
+    "href": "r_basic/data_input_output.html#下载和读取压缩包",
+    "title": "\n3  数据的读取与输出\n",
+    "section": "\n3.6 下载和读取压缩包",
+    "text": "3.6 下载和读取压缩包\n解压.zip文件\n\nunzip(\"test.zip\",#压缩包的位置及文件名\n      files = \"ferroptosis_suppressor.csv\",\n      overwrite = T)#解压后是否覆盖同名文件\n\n解压.tar文件\n\nuntar(\"test.tar\",#压缩包的位置及文件名\n      files = \"ferroptosis_suppressor.csv\")#提取指定文件，忽略则解压压缩包内的所有文件\n\n下载和解压.gz或.bz2文件\n这两个压缩文件与前面的相比，是最与众不同的，因为这两种后缀的文件，可以称之为压缩文件，也可以直接作为一个数据文件进行读取。\n\n#下载gz文件\ndownload.file(\"http://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/refGene.txt.gz\"#下载地址\n              ,destfile=\"refGene.txt.gz\")#文件名，注意需要添加后缀名\n#直接以数据的形式读取.gz文件\nmydata&lt;-read.table(\"refGene.txt.gz\")"
+  },
+  {
+    "objectID": "r_basic/data_input_output.html#列出指定目录中的文件",
+    "href": "r_basic/data_input_output.html#列出指定目录中的文件",
+    "title": "\n3  数据的读取与输出\n",
+    "section": "\n3.7 列出指定目录中的文件",
+    "text": "3.7 列出指定目录中的文件\n\nlist.files(\"folder_name\",#需要列出的文件所在的路径,若忽略此项则列出当前工作路径下的所有文件\n          pattern = \"\\\\.docx$\",#列出当前目录中以.docx结尾的文件（列出以G开头的文件\"^G\"）\n          full.names = T)#FALSE：仅输出文件名；TRUE(默认)：输出路径+文件名"
+  },
+  {
+    "objectID": "r_basic/data_input_output.html#生成数据框",
+    "href": "r_basic/data_input_output.html#生成数据框",
+    "title": "\n3  数据的读取与输出\n",
+    "section": "\n3.8 生成数据框",
+    "text": "3.8 生成数据框\n\nframdata &lt;- data.frame(y=c(6, 8, 12, 14, 14, 15, 17, 22, 24, 23),\n                       x1=c(2, 5, 4, 3, 4, 6, 7, 5, 8, 9),\n                       x2=c(14, 12, 12, 13, 7, 8, 7, 4, 6, 5))\nframdata\n\n#使用文本编辑器直接在窗口中编辑数据。macOS需要安装XQuartz（www.xquartz.org）才能运行此代码。\nframdata &lt;- edit(framdata)"
+  },
+  {
+    "objectID": "r_basic/data_input_output.html#导出表格",
+    "href": "r_basic/data_input_output.html#导出表格",
+    "title": "\n3  数据的读取与输出\n",
+    "section": "\n3.9 导出表格",
+    "text": "3.9 导出表格\n导出csv文件\n\nwrite.csv(mydata,\n          row.names=F,#是否输出行名称\n          \"mydata.csv\")\n\n导出excel文件\n\nlibrary(openxlsx2)\nwrite_xlsx(coxtable1,\"coxtable1.xlsx\")"
+  },
+  {
+    "objectID": "bioinformatics/single_cell/r_single_cell.html",
+    "href": "bioinformatics/single_cell/r_single_cell.html",
+    "title": "R语言单细胞数据分析",
+    "section": "",
+    "text": "本节介绍R语言单细胞数据挖掘。"
+  },
+  {
+    "objectID": "bioinformatics/single_cell/seurat_tutorial.html#seurat对象构建",
+    "href": "bioinformatics/single_cell/seurat_tutorial.html#seurat对象构建",
+    "title": "\n4  Seurat细胞分群官方教程\n",
+    "section": "\n4.1 Seurat对象构建",
+    "text": "4.1 Seurat对象构建\n数据源是来自10X Genomics的外周血单核细胞（peripheral blood mononuclear cells，PBMC）数据集。该数据集基于Illumina NextSeq 500平台对2700个单细胞进行了测序。数据可在此链接下载。\n\n\n10X数据的标准文件\n\n该数据已经通过cellranger上游数据处理流程的处理，返回的数据是一个由唯一分子识别（unique molecular identified，UMI）构成的count矩阵。该矩阵中的值表示在每个细胞（列）中检测到的每个特征（即基因；行）的分子数量。数据以10X的标准形式储存，包括：\n\n\nbarcode文件：细胞条码。\n\n\n\ngenes文件：基因名文件。\n\n\nmatrix文件：表达矩阵（稀疏矩阵）。\n\n\nlibrary(Seurat)\n\n# 读取PBMC数据集\npbmc.data &lt;- Read10X(data.dir = \"data/filtered_gene_bc_matrices/hg19\")\n# Initialize the Seurat object with the raw (non-normalized data).\npbmc &lt;- CreateSeuratObject(counts = pbmc.data, \n                           project = \"pbmc3k\", \n                           min.cells = 3, \n                           min.features = 200)\npbmc\n\nAn object of class Seurat \n13714 features across 2700 samples within 1 assay \nActive assay: RNA (13714 features, 0 variable features)\n 1 layer present: counts\n\n\n\n\n\n\n\n\nCaution\n\n\n\n有的cellranger处理数据以h5文件格式输出，需要使用seurat中的Read10X_h5()函数读取该格式。"
+  },
+  {
+    "objectID": "bioinformatics/single_cell/seurat_tutorial.html#质控",
+    "href": "bioinformatics/single_cell/seurat_tutorial.html#质控",
+    "title": "\n4  Seurat细胞分群官方教程\n",
+    "section": "\n4.2 质控",
+    "text": "4.2 质控\n在 (Ilicic et al. 2016) 中概括了目前常用的单细胞数据分析中识别低质量细胞的标准，包括：\n\n\nThe number of unique genes detected in each cell.\n\nLow-quality cells or empty droplets will often have very few genes\nCell doublets or multiplets may exhibit an aberrantly high gene count\n\n\nSimilarly, the total number of molecules detected within a cell (correlates strongly with unique genes)\n\nThe percentage of reads that map to the mitochondrial genome\n\nLow-quality / dying cells often exhibit extensive mitochondrial contamination\nWe calculate mitochondrial QC metrics with the PercentageFeatureSet() function, which calculates the percentage of counts originating from a set of features\nWe use the set of all genes starting with MT- as a set of mitochondrial genes\n\n\n\n计算线粒体基因比例\n通过PercentageFeatureSet函数计算每个细胞中线粒体基因的比例，并将其返回到Seurat对象的meta.data中，形成一个新列”percent.mt”。\n\npbmc[[\"percent.mt\"]] &lt;- PercentageFeatureSet(pbmc, pattern = \"^MT-\")\n# Show QC metrics for the first 5 cells\nhead(pbmc@meta.data, 5)\n\n                 orig.ident nCount_RNA nFeature_RNA percent.mt\nAAACATACAACCAC-1     pbmc3k       2419          779  3.0177759\nAAACATTGAGCTAC-1     pbmc3k       4903         1352  3.7935958\nAAACATTGATCAGC-1     pbmc3k       3147         1129  0.8897363\nAAACCGTGCTTCCG-1     pbmc3k       2639          960  1.7430845\nAAACCGTGTATGCG-1     pbmc3k        980          521  1.2244898\n\n\n可视化质控指标\n通过VlnPlot函数绘制小提琴图展示每个细胞中UMI（nCount_RNA）、基因（percent.mt）和线粒体基因（percent.mt）的数量。\n\n# Visualize QC metrics as a violin plot\nVlnPlot(pbmc, \n        features = c(\"nFeature_RNA\", \"nCount_RNA\", \"percent.mt\"), \n        ncol = 3)\n\n\n\n\n通过FeatureScatter函数展示UMI和线粒体基因数量多关系、UMI和总基因数量多关系。\n\nplot1 &lt;- FeatureScatter(pbmc, \n                        feature1 = \"nCount_RNA\", \n                        feature2 = \"percent.mt\")\nplot2 &lt;- FeatureScatter(pbmc, \n                        feature1 = \"nCount_RNA\", \n                        feature2 = \"nFeature_RNA\")\nplot1 + plot2\n\n\n\n\n过滤细胞\n在本案例中使用的质控标准：\n\nfilter cells that have unique feature counts over 2,500 or less than 200\nfilter cells that have &gt;5% mitochondrial counts\n\n\npbmc &lt;- subset(pbmc, \n               subset = nFeature_RNA &gt; 200 & nFeature_RNA &lt; 2500 & percent.mt &lt; 5)\npbmc\n\nAn object of class Seurat \n13714 features across 2638 samples within 1 assay \nActive assay: RNA (13714 features, 0 variable features)\n 1 layer present: counts"
+  },
+  {
+    "objectID": "bioinformatics/single_cell/seurat_tutorial.html#标准化normalizing",
+    "href": "bioinformatics/single_cell/seurat_tutorial.html#标准化normalizing",
+    "title": "\n4  Seurat细胞分群官方教程\n",
+    "section": "\n4.3 标准化（Normalizing）",
+    "text": "4.3 标准化（Normalizing）\nAfter removing unwanted cells from the dataset, the next step is to normalize the data. By default, we employ a global-scaling normalization method “LogNormalize” that normalizes the feature expression measurements for each cell by the total expression, multiplies this by a scale factor (10,000 by default), and log-transforms the result. 标准化的方法是每个细胞中的基因表达量除以该细胞的基因总表达量，然后乘以比例因子（通常是1000），最后将这个结果取对数。\n\npbmc &lt;- NormalizeData(pbmc, \n                      normalization.method = \"LogNormalize\", \n                      scale.factor = 10000)\n\nIn Seurat v5, Normalized values are stored in pbmc[[\"RNA\"]]$data：\n\nWhile this method of normalization is standard and widely used in scRNA-seq analysis, global-scaling relies on an assumption that each cell originally contains the same number of RNA molecules. We and others have developed alternative workflows for the single cell preprocessing that do not make these assumptions.\nSCTransform() normalization workflow 就是这样的一种工作流. 针对这一方法的原始文献：(Choudhary and Satija 2022a) 。基于SCTransform的数据标准化流程中，无需使用上面的NormalizeData, 和下面的FindVariableFeatures和ScaleData函数。"
+  },
+  {
+    "objectID": "bioinformatics/single_cell/seurat_tutorial.html#识别高变基因highly-variable-features",
+    "href": "bioinformatics/single_cell/seurat_tutorial.html#识别高变基因highly-variable-features",
+    "title": "\n4  Seurat细胞分群官方教程\n",
+    "section": "\n4.4 识别高变基因（highly variable features）",
+    "text": "4.4 识别高变基因（highly variable features）\nWe next calculate a subset of features that exhibit high cell-to-cell variation in the dataset (i.e, they are highly expressed in some cells, and lowly expressed in others). We and others (Brennecke et al. 2013) have found that focusing on these genes in downstream analysis helps to highlight biological signal in single-cell datasets.\nOur procedure in Seurat is described in detail here (Stuart et al. 2019) , and improves on previous versions by directly modeling the mean-variance relationship inherent in single-cell data, and is implemented in the FindVariableFeatures() function. By default, we return 2,000 features per dataset. These will be used in downstream analysis, like PCA.\n\npbmc &lt;- FindVariableFeatures(pbmc, \n                             selection.method = \"vst\", \n                             nfeatures = 2000)\n\n# Identify the 10 most highly variable genes\ntop10 &lt;- head(VariableFeatures(pbmc), 10)\n\n# plot variable features with and without labels\nplot1 &lt;- VariableFeaturePlot(pbmc)\nplot1\nLabelPoints(plot = plot1, points = top10, repel = TRUE)\n\n\n\n\n\n(A) 前2000个高变基因\n\n\n\n\n\n(B) 前2000个高变基因（标注了前10个高变基因）\n\n\n\nFigure 4.1: 识别高变基因"
+  },
+  {
+    "objectID": "bioinformatics/single_cell/seurat_tutorial.html#归一化scaling",
+    "href": "bioinformatics/single_cell/seurat_tutorial.html#归一化scaling",
+    "title": "\n4  Seurat细胞分群官方教程\n",
+    "section": "\n4.5 归一化（Scaling）",
+    "text": "4.5 归一化（Scaling）\nNext, we apply a linear transformation (‘scaling’) that is a standard pre-processing step prior to dimensional reduction techniques like PCA. The ScaleData() function:\n\nShifts the expression of each gene, so that the mean expression across cells is 0（每个基因在所有细胞的平均表达量为0）\nScales the expression of each gene, so that the variance across cells is 1. This step gives equal weight in downstream analyses, so that highly-expressed genes do not dominate\n\n\npbmc &lt;- ScaleData(pbmc)\n\nThe results of this are stored in pbmc[[\"RNA\"]]$scale.data:\n\nScaleData函数默认情况下使用FindVariableFeatures函数确定的高变基因作为scale依据。可以通过features参数来自定义scale依据，比如这里我们可以让所有基因都参与scale：\n\n# 不运行\nall.genes &lt;- rownames(pbmc)\npbmc &lt;- ScaleData(pbmc, features = all.genes)\n\n\n\n\n\n\n\n去除单细胞数据中的非期望变异来源。\nIn Seurat, we also use the ScaleData() function to remove unwanted sources of variation from a single-cell dataset. For example, we could ‘regress out’ heterogeneity associated with (for example) cell cycle stage, or mitochondrial contamination i.e.:\n\npbmc &lt;- ScaleData(pbmc, vars.to.regress = \"percent.mt\")\n\nHowever, particularly for advanced users who would like to use this functionality, we strongly recommend the use of our new normalization workflow, SCTransform(). The method is described in our paper (Choudhary and Satija 2022b). As with ScaleData(), the function SCTransform() also includes a vars.to.regress parameter."
+  },
+  {
+    "objectID": "bioinformatics/single_cell/seurat_tutorial.html#线性降维",
+    "href": "bioinformatics/single_cell/seurat_tutorial.html#线性降维",
+    "title": "\n4  Seurat细胞分群官方教程\n",
+    "section": "\n4.6 线性降维",
+    "text": "4.6 线性降维\nNext we perform PCA on the scaled data. By default, only the previously determined variable features are used as input, but can be defined using features argument if you wish to choose a different subset (if you do want to use a custom subset of features, make sure you pass these to ScaleData first).\n\npbmc &lt;- RunPCA(pbmc, \n               features = VariableFeatures(object = pbmc))\n\nFor the first principal components, Seurat outputs a list of genes with the most positive and negative loadings, representing modules of genes that exhibit either correlation (or anti-correlation) across single-cells in the dataset.\n\n# PC_ 1 \n# Positive:  CST3, TYROBP, LST1, AIF1, FTL, FTH1, LYZ, FCN1, S100A9, TYMP \n#      FCER1G, CFD, LGALS1, LGALS2, SERPINA1, S100A8, CTSS, IFITM3, SPI1, CFP \n#      PSAP, IFI30, COTL1, SAT1, S100A11, NPC2, GRN, LGALS3, GSTP1, PYCARD \n# Negative:  MALAT1, LTB, IL32, IL7R, CD2, B2M, ACAP1, CTSW, STK17A, CD27 \n#      CD247, CCL5, GIMAP5, GZMA, AQP3, CST7, TRAF3IP3, SELL, GZMK, HOPX \n#      MAL, MYC, ITM2A, ETS1, LYAR, GIMAP7, KLRG1, NKG7, ZAP70, BEX2 \n\n完成PCA分析的Seurat对象：\n\n降维可视化\nSeurat provides several useful ways of visualizing both cells and features that define the PCA, including VizDimReduction(), DimPlot(), and DimHeatmap() .\n\nVizDimLoadings(pbmc, dims = 1:2, reduction = \"pca\")\n\n\n\n\n\nDimPlot(pbmc, reduction = \"pca\") + NoLegend()\n\n\n\n\nIn particular DimHeatmap() allows for easy exploration of the primary sources of heterogeneity in a dataset, and can be useful when trying to decide which PCs to include for further downstream analyses. Both cells and features are ordered according to their PCA scores.\nSetting cells to a number, will plot the ‘extreme’ cells on both ends of the spectrum, which dramatically speeds plotting for large datasets. Though clearly a supervised analysis, we find this to be a valuable tool for exploring correlated feature sets.\n\nDimHeatmap(pbmc, dims = 1, cells = 1000, balanced = TRUE)\n\n\n\n\n通过dims参数指定一个范围内的主成分，可以用来决定在后续的分析中应该包括哪些主成分。\n\nDimHeatmap(pbmc, dims = 1:15, cells = 1000, balanced = TRUE)\n\n\n\n\n决定后续分析的主成分\nTo overcome the extensive technical noise in any single feature for scRNA-seq data, Seurat clusters cells based on their PCA scores, with each PC essentially representing a ‘metafeature’ that combines information across a correlated feature set. The top principal components therefore represent a robust compression of the dataset. However, how many components should we choose to include? 10? 20? 100?\nIn Macosko et al (Macosko et al. 2015a), we implemented a resampling test inspired by the JackStraw procedure. While still available in Seurat, this is a slow and computationally expensive procedure, and we is no longer routinely used in single cell analysis.\nAn alternative heuristic method generates an ‘Elbow plot’: a ranking of principle components based on the percentage of variance explained by each one. In this example, we can observe an ‘elbow’ around PC9-10, suggesting that the majority of true signal is captured in the first 10 PCs.\n\nElbowPlot(pbmc)\n\n\n\n\nIdentifying the true dimensionality of a dataset – can be challenging/uncertain for the user. We therefore suggest these multiple approaches for users. The first is more supervised, exploring PCs to determine relevant sources of heterogeneity, and could be used in conjunction with GSEA for example. The second (ElbowPlot). The third is a heuristic that is commonly used, and can be calculated instantly. In this example, we might have been justified in choosing anything between PC 7-12 as a cutoff.\nWe chose 10 here, but encourage users to consider the following:\n\nDendritic cell and NK aficionados may recognize that genes strongly associated with PCs 12 and 13 define rare immune subsets (i.e. MZB1 is a marker for plasmacytoid DCs). However, these groups are so rare, they are difficult to distinguish from background noise for a dataset of this size without prior knowledge.\nWe encourage users to repeat downstream analyses with a different number of PCs (10, 15, or even 50!). As you will observe, the results often do not differ dramatically.\nWe advise users to err on the higher side when choosing this parameter（建议选择偏高的主成分数量）. For example, performing downstream analyses with only 5 PCs does significantly and adversely affect results."
+  },
+  {
+    "objectID": "bioinformatics/single_cell/seurat_tutorial.html#细胞聚类cluster",
+    "href": "bioinformatics/single_cell/seurat_tutorial.html#细胞聚类cluster",
+    "title": "\n4  Seurat细胞分群官方教程\n",
+    "section": "\n4.7 细胞聚类（cluster）",
+    "text": "4.7 细胞聚类（cluster）\nSeurat applies a graph-based clustering approach, building upon initial strategies in Macosko et al (Macosko et al. 2015b). Importantly, the distance metric which drives the clustering analysis (based on previously identified PCs) remains the same. However, our approach to partitioning the cellular distance matrix into clusters has dramatically improved. Our approach was heavily inspired by recent manuscripts which applied graph-based clustering approaches to scRNA-seq data and CyTOF data (Levine et al. 2015). Briefly, these methods embed cells in a graph structure - for example a K-nearest neighbor (KNN) graph, with edges drawn between cells with similar feature expression patterns, and then attempt to partition this graph into highly interconnected ‘quasi-cliques’ or ‘communities’.\nAs in PhenoGraph, we first construct a KNN graph based on the euclidean distance in PCA space, and refine the edge weights between any two cells based on the shared overlap in their local neighborhoods (Jaccard similarity). This step is performed using the FindNeighbors() function, and takes as input the previously defined dimensionality of the dataset (first 10 PCs).\nTo cluster the cells, we next apply modularity optimization techniques such as the Louvain algorithm (default) or SLM (Blondel et al. 2008), to iteratively group cells together, with the goal of optimizing the standard modularity function. The FindClusters() function implements this procedure, and contains a resolution parameter that sets the ‘granularity’ of the downstream clustering, with increased values leading to a greater number of clusters. We find that setting this parameter between 0.4-1.2 typically returns good results for single-cell datasets of around 3K cells. Optimal resolution often increases for larger datasets.\n\npbmc &lt;- FindNeighbors(pbmc, dims = 1:10)\npbmc &lt;- FindClusters(pbmc, resolution = 0.5)\n\nModularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck\n\nNumber of nodes: 2638\nNumber of edges: 95905\n\nRunning Louvain algorithm...\nMaximum modularity in 10 random starts: 0.8735\nNumber of communities: 9\nElapsed time: 0 seconds\n\n\nThe clusters can be found using the Idents() function. 或者通过seurat@active.ident获取。\n\n# Look at cluster IDs of the first 5 cells\nhead(Idents(pbmc), 5)\n\nAAACATACAACCAC-1 AAACATTGAGCTAC-1 AAACATTGATCAGC-1 AAACCGTGCTTCCG-1 \n               0                3                2                1 \nAAACCGTGTATGCG-1 \n               6 \nLevels: 0 1 2 3 4 5 6 7 8\n\n# 等价于：head(pbmc@active.ident, 5)\n# 类似于：pbmc@meta.data[[\"seurat_clusters\"]][1:5]\n\n现在的meta.data中出现了RNA_snn_res.0.5列和seurat_clusters列，分别代表了在分辨率为0.5的情况下的细胞cluster id以及目前激活的cluster id。由于目前只有一个0.5的分辨率，所以这两列是一样的。\n\nhead(pbmc@meta.data)\n\n                 orig.ident nCount_RNA nFeature_RNA percent.mt RNA_snn_res.0.5\nAAACATACAACCAC-1     pbmc3k       2419          779  3.0177759               0\nAAACATTGAGCTAC-1     pbmc3k       4903         1352  3.7935958               3\nAAACATTGATCAGC-1     pbmc3k       3147         1129  0.8897363               2\nAAACCGTGCTTCCG-1     pbmc3k       2639          960  1.7430845               1\nAAACCGTGTATGCG-1     pbmc3k        980          521  1.2244898               6\nAAACGCACTGGTAC-1     pbmc3k       2163          781  1.6643551               2\n                 seurat_clusters\nAAACATACAACCAC-1               0\nAAACATTGAGCTAC-1               3\nAAACATTGATCAGC-1               2\nAAACCGTGCTTCCG-1               1\nAAACCGTGTATGCG-1               6\nAAACGCACTGGTAC-1               2"
+  },
+  {
+    "objectID": "bioinformatics/single_cell/seurat_tutorial.html#非线性降维",
+    "href": "bioinformatics/single_cell/seurat_tutorial.html#非线性降维",
+    "title": "\n4  Seurat细胞分群官方教程\n",
+    "section": "\n4.8 非线性降维",
+    "text": "4.8 非线性降维\nSeurat offers several non-linear dimensional reduction techniques, such as tSNE and UMAP, to visualize and explore these datasets. The goal of these algorithms is to learn underlying structure in the dataset, in order to place similar cells together in low-dimensional space. Therefore, cells that are grouped together within graph-based clusters determined above should co-localize on these dimension reduction plots.\nWhile we and others have routinely found 2D visualization techniques like tSNE and UMAP to be valuable tools for exploring datasets, all visualization techniques have limitations, and cannot fully represent the complexity of the underlying data. In particular, these methods aim to preserve local distances in the dataset (i.e. ensuring that cells with very similar gene expression profiles co-localize), but often do not preserve more global relationships. We encourage users to leverage techniques like UMAP for visualization, but to avoid drawing biological conclusions solely on the basis of visualization techniques.\n\n\n\n\n\n\nCaution\n\n\n\n需要先进行线性降维RunPCA，再进行非线性降维RunUMAP。因为RunUMAP默认将PCA的结果作为输入（reduction = \"pca\"）。\n\n\n\npbmc &lt;- RunUMAP(pbmc, reduction = \"pca\", dims = 1:10)\n\n可以看到在Seurat对象的reductions中多了umap项：\n\n非线性降维可视化\n\nDimPlot(pbmc, reduction = \"umap\")\n\n\n\n\nYou can save the object at this point so that it can easily be loaded back in without having to rerun the computationally intensive steps performed above, or easily shared with collaborators.\n\nsaveRDS(pbmc, file = \"output/pbmc_tutorial.rds\")"
+  },
+  {
+    "objectID": "bioinformatics/single_cell/seurat_tutorial.html#寻找细胞群间的差异表达基因cluster-biomarkers",
+    "href": "bioinformatics/single_cell/seurat_tutorial.html#寻找细胞群间的差异表达基因cluster-biomarkers",
+    "title": "\n4  Seurat细胞分群官方教程\n",
+    "section": "\n4.9 寻找细胞群间的差异表达基因（cluster biomarkers）",
+    "text": "4.9 寻找细胞群间的差异表达基因（cluster biomarkers）\nSeurat can help you find markers that define clusters via differential expression (DE). By default, it identifies positive and negative markers of a single cluster (specified in ident.1), compared to all other cells. FindAllMarkers() automates this process for all clusters, but you can also test groups of clusters vs. each other, or against all cells.\nIn Seurat v5, we use the presto package (as described here and available for installation here), to dramatically improve the speed of DE analysis, particularly for large datasets. For users who are not using presto, you can examine the documentation for this function (?FindMarkers) to explore the min.pct and logfc.threshold parameters, which can be increased in order to increase the speed of DE testing.\nFind all markers of cluster 2：\n\ncluster2.markers &lt;- FindMarkers(pbmc, ident.1 = 2)\nhead(cluster2.markers, n = 5)\n\n            p_val avg_log2FC pct.1 pct.2    p_val_adj\nLTB  1.709675e-83   1.330256 0.982 0.647 2.344648e-79\nIL32 5.076510e-83   1.242930 0.947 0.471 6.961926e-79\nLDHB 2.467055e-68   1.044820 0.967 0.615 3.383320e-64\nCD3D 1.817480e-66   1.058609 0.920 0.438 2.492492e-62\nIL7R 8.698894e-61   1.389909 0.744 0.333 1.192966e-56\n\n\nFind all markers distinguishing cluster 5 from clusters 0 and 3：\n\ncluster5.markers &lt;- FindMarkers(pbmc, ident.1 = 5, ident.2 = c(0, 3))\nhead(cluster5.markers, n = 5)\n\n                      p_val avg_log2FC pct.1 pct.2     p_val_adj\nFCGR3A        5.972471e-204   6.795991 0.975 0.041 8.190647e-200\nIFITM3        5.671364e-195   6.201036 0.975 0.048 7.777708e-191\nCFD           2.389538e-193   6.081028 0.937 0.038 3.277012e-189\nCD68          1.800066e-189   5.472200 0.925 0.036 2.468611e-185\nRP11-290F20.3 6.852416e-189   6.390800 0.843 0.015 9.397404e-185\n\n\nFind markers for every cluster compared to all remaining cells, report only the positive ones：\n\npbmc.markers &lt;- FindAllMarkers(pbmc, only.pos = TRUE)\nlibrary(dplyr)\npbmc.markers %&gt;%\n    group_by(cluster) %&gt;%\n    filter(avg_log2FC &gt; 1)\n\n# A tibble: 7,024 × 7\n# Groups:   cluster [9]\n       p_val avg_log2FC pct.1 pct.2 p_val_adj cluster gene     \n       &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;   &lt;chr&gt;    \n 1 5.32e-114       1.19 0.912 0.591 7.29e-110 0       LDHB     \n 2 1.31e- 83       2.35 0.439 0.11  1.79e- 79 0       CCR7     \n 3 2.61e- 78       1.06 0.85  0.403 3.58e- 74 0       CD3D     \n 4 5.89e- 55       1.03 0.731 0.398 8.07e- 51 0       CD3E     \n 5 3.91e- 50       2.11 0.338 0.104 5.36e- 46 0       LEF1     \n 6 2.53e- 47       1.23 0.624 0.36  3.47e- 43 0       NOSIP    \n 7 5.11e- 46       2.04 0.335 0.109 7.01e- 42 0       PRKCQ-AS1\n 8 5.49e- 43       1.51 0.438 0.186 7.52e- 39 0       PIK3IP1  \n 9 9.17e- 41       2.73 0.199 0.04  1.26e- 36 0       FHIT     \n10 1.26e- 33       1.32 0.39  0.177 1.72e- 29 0       TCF7     \n# ℹ 7,014 more rows\n\n\nSeurat has several tests for differential expression which can be set with the test.use parameter (see our DE vignette for details). 默认是用的”wilcox”方法。For example, the ROC test（test.use = \"roc\"） returns the ‘classification power’ for any individual marker (ranging from 0 - random, to 1 - perfect)：\n\ncluster0.markers &lt;- FindMarkers(pbmc, \n                                ident.1 = 0, \n                                logfc.threshold = 0.25, \n                                test.use = \"roc\", \n                                only.pos = TRUE)\nhead(cluster0.markers)\n\n      myAUC  avg_diff power avg_log2FC pct.1 pct.2\nRPS6  0.828 0.4737648 0.656  0.6898595 1.000 0.995\nRPS12 0.827 0.5065637 0.654  0.7396535 1.000 0.991\nRPL32 0.822 0.4338741 0.644  0.6330085 0.999 0.995\nRPS27 0.819 0.4971128 0.638  0.7261693 0.999 0.992\nRPS14 0.814 0.4354967 0.628  0.6367519 1.000 0.994\nRPS25 0.809 0.5345947 0.618  0.7911714 0.997 0.975"
+  },
+  {
+    "objectID": "bioinformatics/single_cell/seurat_tutorial.html#可视化marker基因的表达",
+    "href": "bioinformatics/single_cell/seurat_tutorial.html#可视化marker基因的表达",
+    "title": "\n4  Seurat细胞分群官方教程\n",
+    "section": "\n4.10 可视化marker基因的表达",
+    "text": "4.10 可视化marker基因的表达\n对各种经典的细胞类型marker基因在不同的细胞cluster中的表达进行可视化。We include several tools for visualizing marker expression. VlnPlot() (shows expression probability distributions across clusters), and FeaturePlot() (visualizes feature expression on a tSNE or PCA plot) are our most commonly used visualizations. We also suggest exploring RidgePlot(), CellScatter(), and DotPlot() as additional methods to view your dataset.\n小提琴图：\n\nVlnPlot(pbmc, features = c(\"MS4A1\", \"CD79A\"))\n\n\n\n\nYou can plot raw counts as well（layer = \"counts\"）：\n\nVlnPlot(pbmc, \n        features = c(\"NKG7\", \"PF4\"), \n        layer = \"counts\", # Layer to pull expression data from (e.g. \"counts\" or \"data\")\n        log = TRUE)\n\n\n\n\nUMAP图：\n\nFeaturePlot(pbmc,\n            features = c(\"MS4A1\", \"GNLY\", \"CD3E\", \"CD14\", \"FCER1A\", \"FCGR3A\", \"LYZ\",\n                         \"PPBP\", \"CD8A\"))\n\n\n\n\n热图：\nDoHeatmap() generates an expression heatmap for given cells and features. In this case, we are plotting the top 20 markers (or all markers if less than 20) for each cluster.\n\npbmc.markers %&gt;%\n  group_by(cluster) %&gt;%\n  filter(avg_log2FC &gt; 1) %&gt;%\n  slice_head(n = 10) %&gt;% # 选取开头的10行\n  ungroup() -&gt; top10\nDoHeatmap(pbmc, features = top10$gene) + NoLegend()"
+  },
+  {
+    "objectID": "bioinformatics/single_cell/seurat_tutorial.html#细胞注释",
+    "href": "bioinformatics/single_cell/seurat_tutorial.html#细胞注释",
+    "title": "\n4  Seurat细胞分群官方教程\n",
+    "section": "\n4.11 细胞注释",
+    "text": "4.11 细胞注释\n本案例使用的细胞注释：\n\n\nCluster ID\nMarkers\nCell Type\n\n\n\n0\nIL7R, CCR7\nNaive CD4+ T\n\n\n1\nCD14, LYZ\nCD14+ Mono\n\n\n2\nIL7R, S100A4\nMemory CD4+\n\n\n3\nMS4A1\nB\n\n\n4\nCD8A\nCD8+ T\n\n\n5\nFCGR3A, MS4A7\nFCGR3A+ Mono\n\n\n6\nGNLY, NKG7\nNK\n\n\n7\nFCER1A, CST3\nDC\n\n\n8\nPPBP\nPlatelet\n\n\n\n目前的pbmc@active.ident（或Idents(pbmc)）和meta.data中的”seurat_clusters”列储存了激活的分群信息：\n\nIdents(pbmc) %&gt;% head()\n\nAAACATACAACCAC-1 AAACATTGAGCTAC-1 AAACATTGATCAGC-1 AAACCGTGCTTCCG-1 \n               0                3                2                1 \nAAACCGTGTATGCG-1 AAACGCACTGGTAC-1 \n               6                2 \nLevels: 0 1 2 3 4 5 6 7 8\n\n\n通过上面表格的注释依据对细胞群重命名，将命名信息储存在”new.cluster.ids”中，然后返回到meta.data中，形成新的”new.cluster.ids”列：\n\nnew.cluster.ids &lt;- c(\"Naive CD4 T\", \"CD14+ Mono\", \"Memory CD4 T\", \"B\", \"CD8 T\", \n                     \"FCGR3A+ Mono\", \"NK\", \"DC\", \"Platelet\")\nnames(new.cluster.ids) &lt;- levels(pbmc)\npbmc &lt;- RenameIdents(pbmc, new.cluster.ids)\nDimPlot(pbmc, \n        reduction = \"umap\", \n        label = TRUE, \n        pt.size = 0.5) + \n  NoLegend()\n\n\n\n\n目前的分群信息：\n\nIdents(pbmc) %&gt;% head()\n\nAAACATACAACCAC-1 AAACATTGAGCTAC-1 AAACATTGATCAGC-1 AAACCGTGCTTCCG-1 \n     Naive CD4 T                B     Memory CD4 T       CD14+ Mono \nAAACCGTGTATGCG-1 AAACGCACTGGTAC-1 \n              NK     Memory CD4 T \n9 Levels: Naive CD4 T CD14+ Mono Memory CD4 T B CD8 T FCGR3A+ Mono NK ... Platelet\n\n\nDimPlot基于ggplot2绘图框架，所以可以用ggplot2语法对图像进行自定义调整：\n\nlibrary(ggplot2)\nDimPlot(pbmc, \n        reduction = \"umap\", \n        label = TRUE, \n        label.size = 4.5) + \n  xlab(\"UMAP 1\") + \n  ylab(\"UMAP 2\") +\n  theme(axis.title = element_text(size = 18), \n        legend.text = element_text(size = 18)) + \n  guides(colour = guide_legend(override.aes = list(size = 10)))\n\n\n\n\n保存Seurat对象：\n\nsaveRDS(pbmc, file = \"output/pbmc3k_final.rds\")\n\n\n\n\n\n\n\nSession Info\n\n\n\n\n\n\nsessionInfo()\n\nR version 4.3.2 (2023-10-31)\nPlatform: aarch64-apple-darwin20 (64-bit)\nRunning under: macOS Sonoma 14.1.1\n\nMatrix products: default\nBLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib \nLAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0\n\nlocale:\n[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8\n\ntime zone: Asia/Shanghai\ntzcode source: internal\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nother attached packages:\n[1] ggplot2_3.4.4      dplyr_1.1.4        Seurat_5.0.1       SeuratObject_5.0.1\n[5] sp_2.1-1          \n\nloaded via a namespace (and not attached):\n  [1] deldir_1.0-9           pbapply_1.7-2          gridExtra_2.3         \n  [4] rlang_1.1.1            magrittr_2.0.3         RcppAnnoy_0.0.21      \n  [7] spatstat.geom_3.2-7    matrixStats_1.1.0      ggridges_0.5.4        \n [10] compiler_4.3.2         png_0.1-8              vctrs_0.6.4           \n [13] reshape2_1.4.4         stringr_1.5.0          pkgconfig_2.0.3       \n [16] fastmap_1.1.1          ellipsis_0.3.2         labeling_0.4.3        \n [19] utf8_1.2.4             promises_1.2.1         rmarkdown_2.25        \n [22] purrr_1.0.2            xfun_0.41              jsonlite_1.8.7        \n [25] goftest_1.2-3          later_1.3.1            spatstat.utils_3.0-4  \n [28] irlba_2.3.5.1          parallel_4.3.2         cluster_2.1.4         \n [31] R6_2.5.1               ica_1.0-3              stringi_1.7.12        \n [34] RColorBrewer_1.1-3     spatstat.data_3.0-3    reticulate_1.34.0     \n [37] parallelly_1.36.0      lmtest_0.9-40          scattermore_1.2       \n [40] Rcpp_1.0.11            knitr_1.45             tensor_1.5            \n [43] future.apply_1.11.0    zoo_1.8-12             R.utils_2.12.2        \n [46] sctransform_0.4.1      httpuv_1.6.12          Matrix_1.6-3          \n [49] splines_4.3.2          igraph_1.5.1           tidyselect_1.2.0      \n [52] abind_1.4-5            rstudioapi_0.15.0      yaml_2.3.7            \n [55] spatstat.random_3.2-1  codetools_0.2-19       miniUI_0.1.1.1        \n [58] spatstat.explore_3.2-5 listenv_0.9.0          lattice_0.21-9        \n [61] tibble_3.2.1           plyr_1.8.9             withr_2.5.2           \n [64] shiny_1.8.0            ROCR_1.0-11            evaluate_0.23         \n [67] Rtsne_0.16             future_1.33.0          fastDummies_1.7.3     \n [70] survival_3.5-7         polyclip_1.10-6        fitdistrplus_1.1-11   \n [73] pillar_1.9.0           KernSmooth_2.23-22     plotly_4.10.3         \n [76] generics_0.1.3         RcppHNSW_0.5.0         munsell_0.5.0         \n [79] scales_1.2.1           globals_0.16.2         xtable_1.8-4          \n [82] glue_1.6.2             lazyeval_0.2.2         tools_4.3.2           \n [85] data.table_1.14.8      RSpectra_0.16-1        RANN_2.6.1            \n [88] leiden_0.4.3.1         dotCall64_1.1-0        cowplot_1.1.1         \n [91] grid_4.3.2             tidyr_1.3.0            colorspace_2.1-0      \n [94] nlme_3.1-163           patchwork_1.1.3        cli_3.6.1             \n [97] spatstat.sparse_3.0-3  spam_2.10-0            fansi_1.0.5           \n[100] viridisLite_0.4.2      uwot_0.1.16            gtable_0.3.4          \n[103] R.methodsS3_1.8.2      digest_0.6.33          progressr_0.14.0      \n[106] ggrepel_0.9.4          farver_2.1.1           htmlwidgets_1.6.2     \n[109] R.oo_1.25.0            htmltools_0.5.7        lifecycle_1.0.3       \n[112] httr_1.4.7             mime_0.12              MASS_7.3-60           \n\n\n\n\n\n\n\n\n\n\n\nBlondel, Vincent D, Jean-Loup Guillaume, Renaud Lambiotte, and Etienne Lefebvre. 2008. “Fast Unfolding of Communities in Large Networks.” Journal of Statistical Mechanics: Theory and Experiment 2008 (10): P10008. https://doi.org/10.1088/1742-5468/2008/10/p10008.\n\n\nBrennecke, Philip, Simon Anders, Jong Kyoung Kim, Aleksandra A Kołodziejczyk, Xiuwei Zhang, Valentina Proserpio, Bianka Baying, et al. 2013. “Accounting for Technical Noise in Single-Cell RNA-Seq Experiments.” Nature Methods 10 (11): 1093–95. https://doi.org/10.1038/nmeth.2645.\n\n\nChoudhary, Saket, and Rahul Satija. 2022a. “Comparison and Evaluation of Statistical Error Models for scRNA-Seq.” Genome Biology 23 (1). https://doi.org/10.1186/s13059-021-02584-9.\n\n\n———. 2022b. “Comparison and Evaluation of Statistical Error Models for scRNA-Seq.” Genome Biology 23 (1). https://doi.org/10.1186/s13059-021-02584-9.\n\n\nIlicic, Tomislav, Jong Kyoung Kim, Aleksandra A. Kolodziejczyk, Frederik Otzen Bagger, Davis James McCarthy, John C. Marioni, and Sarah A. Teichmann. 2016. “Classification of Low Quality Cells from Single-Cell RNA-Seq Data.” Genome Biology 17 (1). https://doi.org/10.1186/s13059-016-0888-1.\n\n\nLevine, Jacob H., Erin F. Simonds, Sean C. Bendall, Kara L. Davis, El-ad D. Amir, Michelle D. Tadmor, Oren Litvin, et al. 2015. “Data-Driven Phenotypic Dissection of AML Reveals Progenitor-Like Cells That Correlate with Prognosis.” Cell 162 (1): 184–97. https://doi.org/10.1016/j.cell.2015.05.047.\n\n\nMacosko, Evan Z., Anindita Basu, Rahul Satija, James Nemesh, Karthik Shekhar, Melissa Goldman, Itay Tirosh, et al. 2015a. “Highly Parallel Genome-Wide Expression Profiling of Individual Cells Using Nanoliter Droplets.” Cell 161 (5): 1202–14. https://doi.org/10.1016/j.cell.2015.05.002.\n\n\n———, et al. 2015b. “Highly Parallel Genome-Wide Expression Profiling of Individual Cells Using Nanoliter Droplets.” Cell 161 (5): 1202–14. https://doi.org/10.1016/j.cell.2015.05.002.\n\n\nStuart, Tim, Andrew Butler, Paul Hoffman, Christoph Hafemeister, Efthymia Papalexi, William M. Mauck, Yuhan Hao, Marlon Stoeckius, Peter Smibert, and Rahul Satija. 2019. “Comprehensive Integration of Single-Cell Data.” Cell 177 (7): 1888–1902.e21. https://doi.org/10.1016/j.cell.2019.05.031."
+  },
+  {
+    "objectID": "bioinformatics/single_cell/data_visualization_methods_in_seurat.html#种可视化marker-gene的方法",
+    "href": "bioinformatics/single_cell/data_visualization_methods_in_seurat.html#种可视化marker-gene的方法",
+    "title": "\n5  Seurat中的数据可视化方法\n",
+    "section": "\n5.1 5种可视化marker gene的方法",
+    "text": "5.1 5种可视化marker gene的方法\n定义要检查的marker gene：\n\nfeatures &lt;- c(\"LYZ\", \"CCL5\", \"IL32\", \"PTPRCAP\", \"FCGR3A\", \"PF4\")\n\nRidge plots\nRidge plots - from ggridges. Visualize single cell expression distributions in each cluster\n\nlibrary(Seurat)\nRidgePlot(pbmc3k.final, features = features, ncol = 2)\n\n\n\n\nViolin plot\n\nVlnPlot(pbmc3k.final, features = features)\n\n\n\n\nViolin plots can be split on some variable. Simply add the splitting variable to object metadata and pass it to the split.by argument. 通过添加split.by参数，展示marker gene在不同的样本组别中的表达。\n\nVlnPlot(pbmc3k.final, \n        features = \"percent.mt\", \n        split.by = \"groups\")\n\n\n\n\nFeature plot\nVisualize feature expression in low-dimensional space\n\nFeaturePlot(pbmc3k.final, features = features)\n\n\n\n\n对FeaturePlot的进一步修饰\n原始图像：\n\nFeaturePlot(pbmc3k.final, features = \"MS4A1\")\n\n\n\n\nAdjust the contrast in the plot。通过min.cutoff和max.cutoff调整颜色范围。\n\nFeaturePlot(pbmc3k.final, features = \"MS4A1\", \n            min.cutoff = 1, max.cutoff = 3)\n\n\n\n\nCalculate feature-specific contrast levels based on quantiles of non-zero expression. Particularly useful when plotting multiple markers。\n\nFeaturePlot(pbmc3k.final, \n            features = c(\"MS4A1\", \"PTPRCAP\"), \n            min.cutoff = \"q10\", \n            max.cutoff = \"q90\")\n\n\n\n\nVisualize co-expression of two features simultaneously。添加blend = TRUE。\n\nFeaturePlot(pbmc3k.final, \n            features = c(\"MS4A1\", \"CD79A\"), \n            blend = TRUE)\n\n\n\n\n通过添加split.by参数，来按照不同的样本组别来分别展示marker gene的表达。\n\nFeaturePlot(pbmc3k.final, \n            features = c(\"MS4A1\", \"CD79A\"), \n            split.by = \"groups\")\n\n\n\n\nDot plots\nThe size of the dot corresponds to the percentage of cells expressing the feature in each cluster. The color represents the average expression level\n\nDotPlot(pbmc3k.final, \n        features = features) + \n  RotatedAxis()\n\n\n\n\n通过添加split.by参数，来按照不同的样本组别来分别展示marker gene的表达。\n\nDotPlot(pbmc3k.final, \n        features = features, \n        split.by = \"groups\") + \n  RotatedAxis()\n\n\n\n\nHeatmap\n\nDoHeatmap(subset(pbmc3k.final, downsample = 100), \n          features = features, \n          size = 3)\n\n\n\n\nDoHeatmap now shows a grouping bar, splitting the heatmap into groups or clusters. This can be changed with the group.by parameter. 默认的group.by为细胞分群信息，即按照细胞的分群作为分组依据来绘制热图：\n\nDoHeatmap(pbmc3k.final, \n          features = VariableFeatures(pbmc3k.final)[1:30], \n          cells = 1:1000, \n          size = 4, # 分组文字的大小\n          angle = 45) +  # 分组文字角度\n  NoLegend()\n\n\n\n\n我们用meta.data中的任何列作为分群依据。例如这里的”groups”列：\n\ncolnames(pbmc3k.final@meta.data)\n\n[1] \"orig.ident\"         \"nCount_RNA\"         \"nFeature_RNA\"      \n[4] \"seurat_annotations\" \"percent.mt\"         \"RNA_snn_res.0.5\"   \n[7] \"seurat_clusters\"    \"groups\"            \n\nDoHeatmap(pbmc3k.final, \n          features = VariableFeatures(pbmc3k.final)[1:30], \n          group.by = \"groups\",\n          cells = 1:1000, \n          size = 4, # 分组文字的大小\n          angle = 0) +  # 分组文字角度\n  NoLegend()"
+  },
+  {
+    "objectID": "bioinformatics/single_cell/data_visualization_methods_in_seurat.html#细胞分群图",
+    "href": "bioinformatics/single_cell/data_visualization_methods_in_seurat.html#细胞分群图",
+    "title": "\n5  Seurat中的数据可视化方法\n",
+    "section": "\n5.2 细胞分群图",
+    "text": "5.2 细胞分群图\n\nDimPlot(pbmc3k.final, reduction = \"pca\")\n\n\n\nDimPlot(pbmc3k.final, reduction = \"umap\")\n\n\n\n\n进一步修饰\n\nlibrary(ggplot2)\nDimPlot(pbmc3k.final, reduction = \"umap\") + \n  labs(title = \"Clustering of 2,700 PBMCs\") +\n  theme_bw()"
+  },
+  {
+    "objectID": "quarto_foundation/quarto_foundation.html",
+    "href": "quarto_foundation/quarto_foundation.html",
+    "title": "Quarto基础",
+    "section": "",
+    "text": "Quarto是一个支持多种编程语言的新一代R Markdown，拥有多个新的特性和功能，同时能够兼容和渲染大多数现有的.rmd文件，而无需额外修改。Quarto可通过多种IDEs编辑，包括VS Code和RStudio。文档的后缀为.qmd。\n\n目前，Quarto还处于起步和不断发展的阶段，针对其的学习资源还十分有限，尤其是中文资源更加匮乏，因此有了汇总和编写本章的动机。本章内容主要参考了Quarto的官方指南，并提取了其中我认为在将来的编写中会经常使用的技巧并加以汇总。这本学习笔记即全程采用Quarto编写。\n本章的逻辑结构：首先介绍Quarto文档的全局设置，即YAML语法（Chapter 6）；然后介绍图片的设置（Chapter 7 ），包括插入的图片和代码块运行后产生的图片；随后介绍如何实现对图、表等的交叉引用（Chapter 8 ）；随后介绍其他几种内容的插入（Chapter 9 ）；随后，介绍创建和编辑Quarto Books的方法（Chapter 10 ）；最后，介绍如何将Quarto项目的源代码通过Git上传到GitHub以及如何将编译好的Quarto Book通过GitHub Pages进行发布（@sec-发布到github-pages ）。\n有关Quarto的详细信息，参考：https://quarto.org.\n\n\n\n\n\n\n\nTip\n\n\n\n快捷键：\n\n插入代码块：Option+Command+I（macOS）；Ctrl+Alt+I（Windows）。\n插入各类对象：Command+/；或者当光标位于新的一行开头时，直接输入/。"
+  },
+  {
+    "objectID": "quarto_foundation/yaml_settings.html#project设置",
+    "href": "quarto_foundation/yaml_settings.html#project设置",
+    "title": "6  YAML设置",
+    "section": "\n6.1 project设置",
+    "text": "6.1 project设置\nproject在编写Quarto Book或者Quarto Websites时使用，因为要创建这些类型的Quarto项目需要通过新建一个Quarto Project来进行，因此YAML中的project项就定义了项目的类型是Quarto Book还是Quarto Websites，以及其他项目的基本设定。并且这些类型的Quarto项目会在根目录中生成一个”_quarto.yml”文件，对于YAML的配置在这个独立的文件中进行，从而将项目内的多个.qmd文档合并编译成一个Quarto Book或者Quarto Websites。\n\n---\nproject:\n  type: book\n  output-dir: \"docs\" \n  execute-dir: project \n---\n\n\n\nproject：项目类型。定义了项目编译后的文档类型，包括”default”, “website”（Quarto Websites）和”book”（Quarto Book）。这里我们在新建项目时选择了Quarto Books，所以这里自动填写了”books”。\n\n\noutput-dir：输出文件夹。编译后的HTML文件、PDF文件以及运行code chunk后产生的图像、数据等的输出文件夹。上面的例子中将输出文件夹指定为”docs”文件夹可以方便将输出的HTML文件通过GitHub Pages发布（详见 Chapter 11 ）。\nexecute-dir：在编译时，各个qmd文件内的code chunk脚本运行的根目录，默认是”file”，即当前qmd文档所在目录，可设置为 “project”，这样在编译过程中执行代码块时会将运行根目录设置为项目根目录。"
+  },
+  {
+    "objectID": "quarto_foundation/yaml_settings.html#标题作者日期信息",
+    "href": "quarto_foundation/yaml_settings.html#标题作者日期信息",
+    "title": "6  YAML设置",
+    "section": "\n6.2 标题/作者/日期信息",
+    "text": "6.2 标题/作者/日期信息\n对于HTML的编译，这些信息会展示在文档的开头部分。\n\n---\ntitle: Quarto学习笔记\nsubtitle: 面向多编程语言的新一代R Markdown\nauthor: 杜俊宏\ndate: 2023/11/10\ndate-modified: now\ndate-format: \"YYYY[年]M[月]D[日] HH:mm\"\nauthor-title: 作者\npublished-title: 写作日期\n---\n\n\ntitle：标题。\nsubtitle：副标题。在标题下方以较小字号展示。\nauthor：作者姓名。\nauthor-title：作者栏的标签。默认标签为”AUTHOR”\ndate：文档发行日期。日期既可以手动添加，如”2023/11/10”，也可以通过now（输出样式：2023年11月11日 19:01）或today（输出样式：2023年11月11日）自动生成日期。\ndate-modified：文档的修改日期。\ndate-format：日期格式。\npublished-title：修改date的标签，默认是”PUBLISHED DATE”。\n\n\ndate-format的设置\ndate-format通过以下关键词来定义日期格式：\n\n\n\n\n\n\n\nStyle\nDescription\nExample\n\n\n\nfull\nA full date that includes the weekday name\nMonday, March 7, 2005\n\n\nlong\nA long date that includes a wide month name\nMarch 7, 2005\n\n\nmedium\nA medium date\nMar 7, 2005\n\n\nshort\nA short date with a numeric month\n3/7/05\n\n\niso\nA short date in ISO format\n2005-03-07\n\n\n\n也可以通过以下语法更加灵活的定义日期格式：\n\n\n\n\n\n\n\normat String\nOutput\nDescription\n\n\n\nYY\n18\nTwo-digit year\n\n\nYYYY\n2018\n四位数年份\n\n\nM\n1-12\nThe month, beginning at 1\n\n\nMM\n01-12\n两位数月份\n\n\nMMM\nJan-Dec\nThe abbreviated month name\n\n\nMMMM\nJanuary-December\nThe full month name\n\n\nD\n1-31\nThe day of the month\n\n\nDD\n01-31\n两位数日期\n\n\nd\n0-6\nThe day of the week, with Sunday as 0\n\n\ndd\nSu-Sa\nThe min name of the day of the week\n\n\nddd\nSun-Sat\nThe short name of the day of the week\n\n\ndddd\nSunday-Saturday\nThe name of the day of the week\n\n\nH\n0-23\nThe hour\n\n\nHH\n00-23\n两位数小时，24小时制\n\n\nh\n1-12\nThe hour, 12-hour clock\n\n\nhh\n01-12\nThe hour, 12-hour clock, 2-digits\n\n\nm\n0-59\nThe minute\n\n\nmm\n00-59\n两位数分钟\n\n\ns\n0-59\nThe second\n\n\nss\n00-59\nThe second, 2-digits\n\n\nSSS\n000-999\nThe millisecond, 3-digits\n\n\nZ\n+05:00\nThe offset from UTC, ±HH:mm\n\n\nA\nAM PM\n\n\n\na\nam pm\n\n\n\nDo\n1st 2nd … 31st\nDay of Month with ordinal\n\n\n\n可以通过”[]“添加自定义字符。通过这些语法，可以定制符合中文语法的日期格式，如：date-format: \"YYYY[年]M[月]D[日] HH:mm\"\n\n\n\n\n\n\nTip\n\n\n\n关于日期的详细指南，详见：https://quarto.org/docs/reference/dates.html。"
+  },
+  {
+    "objectID": "quarto_foundation/yaml_settings.html#sec-theme主题设置",
+    "href": "quarto_foundation/yaml_settings.html#sec-theme主题设置",
+    "title": "6  YAML设置",
+    "section": "\n6.3 theme主题设置",
+    "text": "6.3 theme主题设置\ntheme定义了编译文档的主题。可以直接调用Quarto内置的Bootswatch主题，如”default”、“cerulean”和”cosmo”等，也可以通过Sassy Cascading Style Sheets (SCSS)文件来自定义主题。theme参数既可以在YAML中直接定义，也可以在不同的format内定义，这样可以对不同的编译格式应用不同的主题。关于Quarto主题的详细指南，参考Quarto Guide。\n\n---\nformat: \n  html:\n    theme: flatly\n---\n\nQuarto的HTML文档默认使用Bootstrap 5样式输出（theme: default）。Quarto内置了来自Bootswatch项目的25个主题。下面列出了可用的主题。关于这些主题的介绍详见：https://bootswatch.com。\n\n个人认为比较美观、清晰的主题有：Cosmo、Flatly、Lux和Darkly。可以通过light和dark分别设置一套亮色主题和一套深色主题，如：\n\n---\nformat: \n  html:\n    theme:\n      light: flatly\n      dark: darkly\n---\n\n这样，在输出的HTML网页的右上角会出现一个亮色/深色模式的切换开关。"
+  },
+  {
+    "objectID": "quarto_foundation/yaml_settings.html#sec-toc目录设置",
+    "href": "quarto_foundation/yaml_settings.html#sec-toc目录设置",
+    "title": "6  YAML设置",
+    "section": "\n6.4 toc目录设置",
+    "text": "6.4 toc目录设置\n和theme一样toc同样可以在YAML中直接定义，也可以在不同的format内定义。\n\n---\ntoc: true\ntoc-title: Contents\ntoc-depth: 2 \ntoc-expand: 2 \ntoc-location: left\n---\n\n\ntoc：是否显示目录。\ntoc-title：目录的标题。\ntoc-depth：设置目录显示的最低层级（默认为显示到3级标题）。\ntoc-expand：在一开始目录显示到多少级，默认显示到一级标题。当向下浏览内容时目录会自动展开到toc-depth所设置的层级。设置为true时，则在一开始就展开所有目录；设置为false则在一开始折叠所有目录。\ntoc-location：设置目录的位置。默认在右侧（right）,可以设置为left或body（在文稿最开头显示）。"
+  },
+  {
+    "objectID": "quarto_foundation/yaml_settings.html#sec-number-sections标题编号设置",
+    "href": "quarto_foundation/yaml_settings.html#sec-number-sections标题编号设置",
+    "title": "6  YAML设置",
+    "section": "\n6.5 number-sections标题编号设置",
+    "text": "6.5 number-sections标题编号设置\n和theme一样number-sections同样可以在YAML中直接定义，也可以在不同的format内定义。\n\nnumber-sections: true\nnumber-depth: 3\n\n\nnumber-sections：设置为true时会给各级标题编号。默认为false。\nnumber-depth：编号的最低标题层级。默认给所有级别的标题编号。\n{.unnumbered}：如果想要某一个标题不编号，则把这行命令粘贴到该标题后面。如”第三章{.unnumbered}“。\n{.unlisted}：将某个标题设置为不在目录中列出。如”第三章{.unlisted}“。如果想要某个标题既不编号也不在目录中列出就可以这样写：”标题{.unnumbered .unlisted}“。"
+  },
+  {
+    "objectID": "quarto_foundation/yaml_settings.html#排版设置",
+    "href": "quarto_foundation/yaml_settings.html#排版设置",
+    "title": "6  YAML设置",
+    "section": "\n6.6 排版设置",
+    "text": "6.6 排版设置\n主要定义了图/表标题的位置、参考文献/脚注的位置、页面大小和页边距等。可以在YAML中直接定义，也可以在不同的format内定义。\n\n---\nfig-cap-location: bottom\ntbl-cap-location: top\nreference-location: margin \ncitation-location: document  \n---\n\n\n\nfig-cap-location：图片标题的位置。默认在图片底部（bottom）。\n\ntbl-cap-location：表格标题的位置。默认在表格上方（top）。\n\nreference-location：脚注的默认展示位置。默认为文档最后 (document)。\n\ncitation-location：参考文献的默认展示位置。默认为文档最后 (document)。\n\n\n\nTable 6.1: 图/表标题位置、参考文献/脚注的位置设置\n\n\n\n\n\nOption\nDescription\n\n\n\nreference-location\nWhere to place footnotes. Defaults to document.\n[document | section | block | margin ]\n\n\ncitation-location\nWhere to place citations. Defaults to document.\n[document | margin ]\n\n\ncap-location\nWhere to place figure and table captions. Defaults to bottom for figures and top for tables. | [top | bottom | margin]\n\n\nfig-cap-location\nWhere to place figure captions. Defaults to bottom.\n[top | bottom | margin]\n\n\ntbl-cap-location\nWhere to place table captions. Defaults to top.\n[top | bottom | margin]"
+  },
+  {
+    "objectID": "quarto_foundation/yaml_settings.html#execute代码块执行设置",
+    "href": "quarto_foundation/yaml_settings.html#execute代码块执行设置",
+    "title": "6  YAML设置",
+    "section": "\n6.7 execute代码块执行设置",
+    "text": "6.7 execute代码块执行设置\nexecute用来指定代码块的执行行为，例如是否运行、是否显示警告信息和是否缓存运行结果等。\n\n---\nexecute:\n      eval: false\n      warning: false\n      cache: true\n---\n\n\neval：设置为false时只显示代码，不运行。默认为true。\necho：设置为false时在输出文件中不显示代码，仅显示代码的运行结果。设置为fenced，会将代码块的设置，即”#|“符号后的内容，也展示出来。Figure 6.1 这个代码块就用了echo: fenced这个设定，可以看一下效果。默认为true。\noutput：设置为false时，只运行代码不显示运行结果。默认为true。\nwarning：是否显示代码运行的警告信息。默认为true。\ncache：是否开启运算结果缓存。默认为false。如果设置为true，就会在编译时将源代码的运算结果保存到文件目录中后缀为”_cache”的文件夹中。这样在重新编译同一个文档时会加快编译速度。\n\n除了对代码执行行为的全局设置，我们也可以针对每个代码块设置其执行行为。许多参数和YAML中的语法相似，只不过需要在每个参数前加上”#|”符号。如：\n\n```{r}\n#| eval: true\n#| warning: false\n#| output: true\n#| label: fig-箱型图\n#| fig-cap: 箱型图\nboxplot(1:100)\n```\n\n\n\nFigure 6.1: 箱型图"
+  },
+  {
+    "objectID": "quarto_foundation/yaml_settings.html#crossref交叉引用设置",
+    "href": "quarto_foundation/yaml_settings.html#crossref交叉引用设置",
+    "title": "6  YAML设置",
+    "section": "\n6.8 crossref交叉引用设置",
+    "text": "6.8 crossref交叉引用设置\ncrossref定义了图/表的标签、默认引用样式、编号类型等。\n\n---\ncrossref:\n  fig-title: 图     \n  tbl-title: 表     \n  title-delim: \"：\"  \n  fig-prefix: 图   \n  tbl-prefix: 表    \n  sec-prefix: 章节 \n  ref-hyperlink: true \n  fig-labels: arabic    \n  tbl-labels: arabic   \n  subref-labels: alpha A \n---\n\n\nfig-title: 图的默认标签文字（默认是”Figure”）\ntbl-title: 表的默认标签文字（默认是”Table”）\ntitle-delim: 图、表标签文字和后面的图、表标题之间的连接符（默认是”:“）\nfig-prefix: 图的默认引用样式（默认是”Figure”）\ntbl-prefix: 表的默认引用样式（默认是”Table”）\nsec-prefix: 章节的默认引用样式（默认是”Section”）\nref-hyperlink: 是否为交叉引用加上内部链接（默认是”true”）\nfig-labels: 图片的编号类型（默认是阿拉伯数字：arabic)\ntbl-labels: 表格的编号类型（默认是阿拉伯数字：arabic）\nsubref-labels: 次级引用编号类型，如组图中的小图（默认是小写字母：alpha a）\n\n可用的编号类型包括：\n\narabic (1, 2, 3)\nroman (I, II, III, IV)\nroman i (i, ii, iii, iv)\nalpha x (start from letter ‘x’)\nalpha X (start from letter ‘X’)"
+  },
+  {
+    "objectID": "quarto_foundation/yaml_settings.html#参考文献设置",
+    "href": "quarto_foundation/yaml_settings.html#参考文献设置",
+    "title": "6  YAML设置",
+    "section": "\n6.9 参考文献设置",
+    "text": "6.9 参考文献设置\n只要在编辑qmd文档时插入了参考文献，YAML中会新增参考文献的配置选项：bibliography: references.bib。同时根目录下会生成一个名为”references.bib”的参考文献配置文件。该配置文件包括了qmd文档中所插入的所有参考文献的列表。以BibTeX/Citation风格语言编写。bibliography指定了这个参考文献配置文件所在的路径。\n\n---\nbibliography: references.bib\n---"
+  },
+  {
+    "objectID": "quarto_foundation/yaml_settings.html#format编译设置",
+    "href": "quarto_foundation/yaml_settings.html#format编译设置",
+    "title": "6  YAML设置",
+    "section": "\n6.10 format编译设置",
+    "text": "6.10 format编译设置\nformat定义了qmd文档编译后的文件类型，例如：“html”, “pdf”, “docx”, “odt”, “pptx”, “revealjs”, “beamer”, “gfm”（GitHub风格的Markdown文档）, “commonmark”, “mediawiki”, “epub”, “ipynb”。不同的编译格式对应的子项设置各不相同，有些参数适用于某些格式但是在另一些格式中则无法兼容。所有支持的编译格式详见Quarto官方文档。下面的案例为编译HTML和GFM的常用设置。\n\n---\nformat: \n  html:\n    theme: \n      light: flatly \n      dark: darkly \n  gfm:\n    toc: true\n    toc-depth: 1\n    number-sections: true\n    citation-location: document\n    output-file: \"README.md\" \n---\n\n编译Quarto文档时，首先knitr将运行所有代码块，并创建一个新的markdown（.md）文档，其中包括源代码及其输出结果。接下来，生成的markdown文件经过pandoc（RStudio内置了pandoc）处理后，被转换成HTML、PDF或者Word等我们需要的文档格式。RStudio封装了这些操作，当我们完成Quarto编辑，点击渲染时，就会完成上述过程。\nQuarto的渲染工作流\n\n编译HTML\n\n---\nformat: \n  html:\n    theme: \n      light: flatly \n      dark: darkly \n    embed-resources: false\n    code-tools: true\n    title-block-banner: images/banner.jpg \n    title-block-banner-color: \"black\"\n    toc: true\n    toc-title: 目录\n    toc-location: left\n    toc-depth: 2\n    toc-expand: 1\n    number-sections: true\n    number-depth: 3\n    anchor-sections: true\n    link-external-icon: true\n    link-external-newwindow: true\n    df-print: kable \n    code-link: true\n---\n\n\ntheme：主题。同 Section 6.3 。\nembed-resources：是否将所有源文件嵌入HTML文件以方便分享。默认为”false”。\ncode-tools：是否在网页右上角显示”&lt;code&gt;“按钮。点击该按钮可以看到Quarto文档的原始markdown代码。\n\ntitle-block-banner：标题横幅设置。title-block-banner有以下选项：\n\ntrue：将标题以网页横幅的形式展示，样式为them中所选样式的默认样式。\n具体颜色：如title-block-banner: \"#003262\"。\n图片路径：如title-block-banner: images/banner.jpeg。\n\n\ntoc相关设置：同 Section 6.4 。\nnumber-sections、number-depth：同 Section 6.5 。\nanchor-sections: 设置为true时，当鼠标移到各级标题上时会显示anchor link，方便我们复制直接定位到该标题的超链接。\nlink-external-icon：设置为true时会在外部链接上显示一个小图标。\nlink-external-newwindow：是否在新标签页打开外部链接。\ndf-print：表格输出样式\n\ncode-copy：设置代码复制按钮：\n\ntrue: 总是在代码块右上角显示代码复制按钮。\nfalse: 隐藏代码复制按钮。\nhover：（默认）当鼠标移过时显示代码复制按钮。\n\n\ncode-fold: 是否折叠代码。\ncode-link: 是否自动为函数加上超链接。该功能基于downlit包，可以自动为识别到的函数加上一个链接到官方文档的超链接。\n编译GitHub Flavored Markdown（GFM）\n我们可以将Quarto文档转换为GitHub风格的Markdown文档（GitHub Flavored Markdown，GFM）。这可以用来生成GitHub项目的README.md文档。\n\n---\ntitle: \"My Project\"\nformat: \n  gfm:\n    identifier-prefix: readme # 标识符\n    # preview-mode: raw # 预览原始markdown\n    keep-yaml: true\n    toc: true\n    toc-depth: 1\n    number-sections: true\n    citation-location: document\n    output-file: \"README.md\" # 输出文档的文件名\n---\n\n编译PDF\n如果要在rmarkdown、bookdown中使用PDF输出功能， 可以在在R中安装tinytex扩展包并安装TinyTeX编译软件：\n\ninstall.packages('tinytex')\ntinytex::install_tinytex()\n\n其中上面第一行命令安装R的tinytex扩展包， 第二行将下载LaTeX编译程序的服务器设置为清华大学tuna镜像站， 第三行安装LaTeX编译程序。\n如果安装成功， TinyTeX软件包在MS Windows系统中一般会安装在 C:\\Users\\用户名\\AppData\\Roaming\\TinyTeX目录中， 其中”用户名”应替换成系统当前用户名。 如果需要删除TinyTeX软件包， 只要直接删除那个子目录就可以。\n为了判断TinyTeX是否安装成功， 在RStudio中运行：\n\ntinytex::is_tinytex()\n\n结果应为TRUE, 出错或者结果为FALSE都说明安装不成功。\n当用户使用RMarkdown和tinytex包转换latex并编译为PDF时， 如果缺少某些latex宏包， tinytex会自动安装缺少的宏包。"
+  },
+  {
+    "objectID": "quarto_foundation/images_settings.html#sec-插入图片的设置",
+    "href": "quarto_foundation/images_settings.html#sec-插入图片的设置",
+    "title": "7  图片设置",
+    "section": "\n7.1 插入图片的设置",
+    "text": "7.1 插入图片的设置\n图片可以通过复制粘贴直接插入，Quarto定义图像的基本语法是：\n![图片标题](images/crossref-figure.png){#fig-elephant width=\"290\"}。\n其中，方括号内的是对象的caption（可选），小括号内是图像所在目录，“{}”内的内容是图像的label以及其他可选设置，各参数间用空格进行分割。常用的图像设置如下：\n\nwidth和height：图像的宽、高。默认单位为像素。\nfig-align：图片的对齐方式，如”left”，“right”。\n可以在小括号内添加超链接，如[![](``images/crossref-figure.png``)](https://en.wikipedia.org/wiki/Elephant)，当点击该图像时会跳转该网站。\ncaption和label的设置会使该图像能够被交叉引用（详见 Chapter 8 ）。\n\n.column-page：让图片以整个文档的宽度展示。需要首先建立一个Pandoc Div块（Figure 7.1）。然后在Pandoc Div块的参数项内填上{.column-page}。如下所示：\n\n:::{.column-page}\n![](images/elephant.jpg)\n:::\n\n这样这张图片就会以文档最大宽度显示：\n\n\n\n\n\n\n\n\n\n\n\n应用于代码块时为：#| column: page\n\n\n\n\n\n.column-screen：让图片占满整个网页的宽度。应用于代码块时为：#| column: screen。\n\n\n\n\n\n\ncolumn-screen-inset-shaded：让图片以整个文档的宽度展示，但是在后方加上一个网页宽度的阴影。应用于代码块时为：#| column: screen-inset-shaded。\n\n\n\n\n组图的设置\n要容纳和排版组图，需要首先建立一个Pandoc Div块（Figure 7.1）。\n\n\nFigure 7.1: 建立Div块\n\nDiv块的图像排版基本语法如下：\n\n\nFigure 7.2: Div块的基本语法\n\n\n“{}”内为组图的label、排版设置。\n在所有图片最后可输入组图的总标题，如上图中的”交叉引用的设置”。\n\n设置图片的排版方式。\nlayout-ncol和layout-nrow：设置组图的行和列分别排多少张图片。如::: {layout-ncol=\"2\"}。\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nLayout复杂排版\n其基本语法和 Section 7.2.1 一致。不同点在于需要在Div块开头的”{}“内设置，同时layout后要接”=“，并且注意加引号，例如：layout=\"[[1，1]，[1]]\"。通过设置layout可以完成对多图的复杂排版。layout属性是一个二维数组，其中第一维定义行，第二维定义列。layout=\"[[1，1]，[1]]\"表示：创建两行，第一行有两列大小相等的列，第二行只有一列。\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n组图复杂排版设置\n\n\n\n\n\n\n\n\n\nNote\n\n\n\n关于图片设置的详细指南，参考：https://quarto.org/docs/authoring/figures.html。"
+  },
+  {
+    "objectID": "quarto_foundation/images_settings.html#代码块图片输出设置",
+    "href": "quarto_foundation/images_settings.html#代码块图片输出设置",
+    "title": "7  图片设置",
+    "section": "\n7.2 代码块图片输出设置",
+    "text": "7.2 代码块图片输出设置\n对于代码块运行后生成的图片，我们也可以对其进行各种设置以使其在编译后的文档中符合理想的展示要求。基本语法和 Section 7.1 中类似，只不过需要在前面加上”#|”符号，然后将其放置在代码块开头。常用的参数有：\n\n#| lable：图片标签。\n#| fig-cap：图片标题（caption）。fig-cap和lable共同用于图片的交叉引用，详见 Chapter 8。\n#| fig-width：图片的宽度。\n#| fig-height：图片的高度。\n\n其他设置包括#| fig-align、#| fig-cap-location等，见 Chapter 7 。\n\n```{r}\n#| eval: true\n#| label: fig-散点图\n#| fig-cap: \"38种流行车型的城市和高速公路里程\"\n#| fig-width: 6\n#| fig-height: 3.5\nlibrary(ggplot2)\nggplot(mpg, aes(x = hwy, y = cty, color = cyl)) +\n  geom_point(alpha = 0.5, size = 2) +\n  scale_color_viridis_c() +\n  theme_minimal()\n```\n\n\n\nFigure 7.3: 38种流行车型的城市和高速公路里程\n\n\n\n代码块组图输出设置\n如果一个代码块运行后可以生成多张图像，那么我们也可以和 Section 7.1.1 中一样，对这些图片进行组图排版。常用的参数包括：\n\nlayout-ncol和layout-nrow：设置组图的行和列分别排多少张图片。如layout-ncol: \"2\"。\nlabel：组图的标签。\nfig-cap：每张图的标题。通过”-“符号分别设置。效果如下所示：\n\n\n```{r}\n#| eval: true\n#| layout-ncol: 2\n#| label: fig-组图输出\n#| fig-cap:\n#|   - \"车辆的速度和停车距离\"\n#|   - \"汽压与温度的关系\"\n\nplot(cars)\nplot(pressure)\n```\n\n\n\n\n\nFigure 7.4: 车辆的速度和停车距离\n\n\n\n\n\nFigure 7.5: 汽压与温度的关系\n\n\n\n\n\n\n\nfig-subcap：每张图以小标题进行标注，如”(a) sub caption”、“(b) sub caption”。效果如下所示：\n\n\n```{r}\n#| eval: true\n#| label: fig-小标题组图输出\n#| fig-cap: \"小标题组图输出\"\n#| fig-subcap:\n#|   - \"汽车\"\n#|   - \"压力\"\n#| layout-ncol: 2\n\nplot(cars)\nplot(pressure)\n```\n\n\n\n\n\n(A) 汽车\n\n\n\n\n\n(B) 压力\n\n\n\nFigure 7.6: 小标题组图输出\n\n\n\n用layout进行复杂排版\nlayout属性是一个二维数组，其中第一维定义行，第二维定义列。如layout: \"[[1，1]，[1]]表示：创建两行，第一行有两列大小相等的列，第二行只有一列。\n\n```{r}\n#| eval: true\n#| label: fig-输出复杂排版图片\n#| fig-cap: 复杂排版组图输出\n#| fig-subcap:\n#|   - 汽车\n#|   - 压力\n#|   - mtcars\n#| layout: [[1], [1, 1]]\n\nplot(cars)\nplot(pressure)\nplot(mtcars)\n```\n\n\n\n\n\n(A) 汽车\n\n\n\n\n\n\n\n(B) 压力\n\n\n\n\n\n(C) mtcars\n\n\n\nFigure 7.7: 复杂排版组图输出\n\n\n\nlayout后的”[]“中的数字大小表示各个图像的相对大小。所以可以用任何值来自定义：\n\n```{r}\n#| eval: true\n#| label: fig-输出复杂排版图片2\n#| fig-cap: 复杂排版组图输出2\n#| fig-subcap:\n#|   - 汽车\n#|   - 压力\n#|   - mtcars\n#| layout: [[100], [30, 70]]\n\nplot(cars)\nplot(pressure)\nplot(mtcars)\n```\n\n\n\n\n\n(A) 汽车\n\n\n\n\n\n\n\n(B) 压力\n\n\n\n\n\n(C) mtcars\n\n\n\nFigure 7.8: 复杂排版组图输出2\n\n\n\n如果我们输入负数，如下面的”-10”，则会在两个图之间加上相应的间距：\n\n```{r}\n#| eval: true\n#| label: fig-输出复杂排版图片3\n#| fig-cap: 复杂排版组图输出3\n#| fig-subcap:\n#|   - 汽车\n#|   - 压力\n#|   - mtcars\n#| layout: [[45,-10, 45], [100]]\n\nplot(cars)\nplot(pressure)\nplot(mtcars)\n```\n\n\n\n\n\n(A) 汽车\n\n\n\n \n\n\n\n\n(B) 压力\n\n\n\n\n\n\n\n(C) mtcars\n\n\n\nFigure 7.9: 复杂排版组图输出3"
+  },
+  {
+    "objectID": "quarto_foundation/cross_references.html#标题节的交叉引用",
+    "href": "quarto_foundation/cross_references.html#标题节的交叉引用",
+    "title": "8  交叉引用",
+    "section": "\n8.1 标题/节的交叉引用",
+    "text": "8.1 标题/节的交叉引用\n只需通过sec-定义label，基本语法：Introduction {#sec-introduction}。注意：要使用节的引用，需要在YAML开启标题编号（number-sections: true），以便读者能够看到这些编号。"
+  },
+  {
+    "objectID": "quarto_foundation/cross_references.html#图片的交叉引用",
+    "href": "quarto_foundation/cross_references.html#图片的交叉引用",
+    "title": "8  交叉引用",
+    "section": "\n8.2 图片的交叉引用",
+    "text": "8.2 图片的交叉引用\n实现的方法：\n\n方法一：在源代码模式下修改被引用对象的属性，如：![Example for cross reference](images/crossref-figure.png){#fig-elephant width=\"290\"}。其中，方括号内的是对象的caption，小括号内是图片所在的目录，“{}”内的内容是图像的label以及其他可选设置。\n方法二：点击待引用对象右上角的三个点，进入对象设置。分别输入caption和ID（即label）（Figure 8.1 )。\n\n\n\n\n\n\n\n\n\n\nFigure 8.1: 交叉引用的设置\n\n\n例如下面的图片，可以被引用：Figure 8.2 。\n\n\nFigure 8.2: Example for cross reference\n\n组图的交叉引用\n基本语法：\n\n案例：\n\n\n\n\n\n(A) 素描大象\n\n\n\n\n\n(B) 油画大象\n\n\n\nFigure 8.3: 组图的交叉引用\n\n\n现在，我们就可以将组图一起引用（Figure 8.3 ），或是单独引用组图内的某一张图（Figure 8.3 (B) ，Figure 8.3 (A) ）。"
+  },
+  {
+    "objectID": "quarto_foundation/cross_references.html#表格的交叉引用",
+    "href": "quarto_foundation/cross_references.html#表格的交叉引用",
+    "title": "8  交叉引用",
+    "section": "\n8.3 表格的交叉引用",
+    "text": "8.3 表格的交叉引用\nMarkdown表格的引用\n只需在表格后加上: My Caption {#tbl-letters}即可使该表格能够被引用。如下面的表格 Table 8.1 。\n\n\nTable 8.1: 表格的交叉引用示例\n\nCol1\nCol2\nCol3\n\n\n\nA\nB\nC\n\n\nE\nF\nG\n\n\nA\nG\nG\n\n\n\n\n代码输出表格的引用\n\nlabel：tbl-：表格的标签。\ntbl-cap：表格的标题。\nknitr包提供了一个 kable() 函数可以用来把数据框或矩阵转化成有格式的表格，支持HTML、docx、LaTeX等格式。\n\n\n```{r}\n#| eval: true\n#| label: tbl-iris\n#| tbl-cap: \"Iris数据\"\n\nlibrary(knitr)\nkable(head(iris))\n```\n\n\n\nTable 8.2: Iris数据\n\nSepal.Length\nSepal.Width\nPetal.Length\nPetal.Width\nSpecies\n\n\n\n5.1\n3.5\n1.4\n0.2\nsetosa\n\n\n4.9\n3.0\n1.4\n0.2\nsetosa\n\n\n4.7\n3.2\n1.3\n0.2\nsetosa\n\n\n4.6\n3.1\n1.5\n0.2\nsetosa\n\n\n5.0\n3.6\n1.4\n0.2\nsetosa\n\n\n5.4\n3.9\n1.7\n0.4\nsetosa\n\n\n\n\n\n\n现在，就可以通过 Table 8.2 来引用该表格了。\n\n\n\n\n\n\nNote\n\n\n\n关于表格的详细指南，参考：https://quarto.org/docs/authoring/tables.html。"
+  },
+  {
+    "objectID": "quarto_foundation/insert_other_content.html#插入参考文献",
+    "href": "quarto_foundation/insert_other_content.html#插入参考文献",
+    "title": "9  插入其他内容",
+    "section": "\n9.1 插入参考文献",
+    "text": "9.1 插入参考文献\n在插入菜单中选择”Citation”：\n\n\nFigure 9.1: 参考文献的引用\n\n然后通过DOI或标题检索参考文献，选择目标文献：\n\n\nFigure 9.2: 参考文献的选择\n\n现在就会出现参考文献的交叉引用，如： (Fujii et al. 2023) 、(Sprumont et al. 2023)。并且会在文档最后生成参考文献列表，同时YAML中会新增参考文献的配置选项：bibliography: references.bib。同时根目录下会生成一个名为”references.bib”的参考文献配置文件。\n如果想改变参考文献展示的位置，可以在YAML中设置，如：\n\n---\ncitation-location: margin\n---\n\n可用的值参见 Table 6.1 。这份文档的参考文献就设置为了在页面最后展示（citation-location: document）。\n\n\n\n\n\n\nNote\n\n\n\n关于参考文献和脚注的详细指南，参考：https://quarto.org/docs/authoring/footnotes-and-citations.html。"
+  },
+  {
+    "objectID": "quarto_foundation/insert_other_content.html#插入callouts",
+    "href": "quarto_foundation/insert_other_content.html#插入callouts",
+    "title": "9  插入其他内容",
+    "section": "\n9.2 插入Callouts",
+    "text": "9.2 插入Callouts\nCallouts会生成一个标注框，可以用来标注重要内容：\n\n例如：\n\n\n\n\n\n\nTip\n\n\n\n这是一个Callouts示例。\n\n\n其样式包括：\n\n\ncallout-note\n\n\n\ncallout-tip\n\n\n\ncallout-important\n\n\n\ncallout-caution\n\n\n\ncallout-warning"
+  },
+  {
+    "objectID": "quarto_foundation/insert_other_content.html#插入在线视频",
+    "href": "quarto_foundation/insert_other_content.html#插入在线视频",
+    "title": "9  插入其他内容",
+    "section": "\n9.3 插入在线视频",
+    "text": "9.3 插入在线视频\n通过以下语法可以在输出文档中插入可直接播放的在线视频：\n\n{{&lt; video https://www.youtube.com/embed/wo9vZccmqwc &gt;}}\n\n\n\n\n\n\n\nFujii, Kouichi, Jin Kikuchi, Masatoshi Uchida, Masanari Machida, Midori Tsuchiya, Kentaro Hayashi, Nana Maekawa, Hajime Houzumi, Arata Honda, and Koji Wake. 2023. “Tiger Attack at a Japanese Safari Park: A Case Report.” International Journal of Emergency Medicine 16 (1). https://doi.org/10.1186/s12245-023-00556-3.\n\n\nSprumont, Adrien, Ana Rodrigues, Simon J. McGowan, Colin Bannard, and Oliver Bannard. 2023. “Germinal Centers Output Clonally Diverse Plasma Cell Populations Expressing High- and Low-Affinity Antibodies.” Cell, November. https://doi.org/10.1016/j.cell.2023.10.022."
+  },
+  {
+    "objectID": "quarto_foundation/quarto_books.html#制作about-pages",
+    "href": "quarto_foundation/quarto_books.html#制作about-pages",
+    "title": "10  Quarto Books",
+    "section": "\n10.1 制作About Pages",
+    "text": "10.1 制作About Pages\nindex.qmd文件会编译形成首页/封面文件（index.html），如果我们将书籍/网页发布（详见： Chapter 11 ），这是打开网站链接后首先看到的页面。我们可以通过Quarto提供的About Pages模板来快速创建一个美观的首页。下面是一个采用了About Pages模板的index.qmd文件的示例：\n\n---\ntitle: \"关于这本笔记\"\nsidebar: false # 关闭左侧栏\ntoc: false # 关闭右侧的页面目录\nnumber-sections: false # 取消对标题的编号\ncode-tools: false # 关闭代码工具\nabout:\n  template: trestles # 模板\n  image: images/book_cover.jpg # 封面图片\n  # 添加链接\n  links:\n    - icon: book-fill # 添加图标（https://icons.getbootstrap.com）\n      text: Bookdown # 图标的文字\n      href: https://bookdown.org # 图标的链接\n    - icon: github\n      text: Github\n      href: https://github.com/djhcod/r-notes\n    - text: Email\n      href: mailto::du.jh@icloud.com\n---\n\nFinley Malloc is the Chief Data Scientist at Wengo Analytics. When not innovating on data platforms, Finley enjoys spending time unicycling and playing with her pet iguana.\n\n------------------------------------------------------------------------ # 分割线\n\n## Education\n\nUniversity of California, San Diego \\| San Diego, CA PhD in Mathematics \\| Sept 2011 - June 2015\n\nMacalester College \\| St. Paul MA B.A in Economics \\| Sept 2007 - June 2011\n\n------------------------------------------------------------------------\n\n## Experience\n\nWengo Analytics \\| Head Data Scientist \\| April 2018 - present\n\nGeoScynce \\| Chief Analyst \\| Spet 2012 - April 2018\n\n\n\n\n\n\n\nTip\n\n\n\nmailto是一种特殊的超链接，其语法是mailto::youremail.com。点击mailto::后的邮箱地址之后会打开设备的邮件应用，并且自动填写邮箱地址。\n更多关于Quarto网页的技巧，参考：Creating your personal website using Quarto。"
+  },
+  {
+    "objectID": "quarto_foundation/github_pages.html#注册github账户",
+    "href": "quarto_foundation/github_pages.html#注册github账户",
+    "title": "11  发布到GitHub Pages",
+    "section": "\n11.1 注册GitHub账户",
+    "text": "11.1 注册GitHub账户\n关于注册GitHub账户的详细指南，参考：https://happygitwithr.com/github-acct。"
+  },
+  {
+    "objectID": "quarto_foundation/github_pages.html#安装git",
+    "href": "quarto_foundation/github_pages.html#安装git",
+    "title": "11  发布到GitHub Pages",
+    "section": "\n11.2 安装Git",
+    "text": "11.2 安装Git\n在终端APP或者RStudio的终端面板输入：\n\nwhich git\n\n如果返回”/usr/bin/git”，则表示Git已被安装到电脑上。如果返回”git: command not found”则表示Git未安装，则参阅《Happy Git and GitHub for the useR》进行安装。\n可以通过运行下面的命令进一步查看Git的版本：\n\ngit --version\n\n会返回”git version 2.39.3 (Apple Git-145)“这样的信息。"
+  },
+  {
+    "objectID": "quarto_foundation/github_pages.html#配置git",
+    "href": "quarto_foundation/github_pages.html#配置git",
+    "title": "11  发布到GitHub Pages",
+    "section": "\n11.3 配置Git",
+    "text": "11.3 配置Git\n在终端（RStudio的终端面板或系统的终端）中逐个运行下面的命令，把其中的user.name和user.email替换成自己的用户名和GItHub账户的邮箱。这里的用户名不一定要和GitHub账户的的用户名一致，它会给本的Git仓库提供一个便于识别的标记。\n\ngit config --global user.name \"dujunhong\"\ngit config --global user.email \"du.jh@icloud.com\"\n\n或者，通过usethis包在R中进行配置：\n\nlibrary(usethis)\nuse_git_config(user.name = \"djhcod\", user.email = \"du.jh@icloud.com\")\n\n\n\n\n\n\n\nNote\n\n\n\nusethis is a package that facilitates interactive workflows for R project creation and development\n\n\n然后通过在终端中运行git config –global –list查看配好的Git信息。或者通过usethis包的git_sitrep函数查看：\n\ngit_sitrep()"
+  },
+  {
+    "objectID": "quarto_foundation/github_pages.html#获取github个人访问令牌personal-access-tokenpat",
+    "href": "quarto_foundation/github_pages.html#获取github个人访问令牌personal-access-tokenpat",
+    "title": "11  发布到GitHub Pages",
+    "section": "\n11.4 获取GitHub个人访问令牌（personal access token，PAT）",
+    "text": "11.4 获取GitHub个人访问令牌（personal access token，PAT）\nPAT相当于GitHub账户的密码，所以通过PAT才能让本地的Git仓库和远程的GitHub个人仓库建立连接。需要为每台想连接GitHub的电脑配置一个专属PAT。可以通过https://github.com/settings/tokens进行配置，或者运行下面的代码直接进入配置页面：\n\ncreate_github_token()\n\n在配置页面的”NOTE”中填写这个PAT的备注，建议写此PAT将要应用的设备的名称。在它的下方可以选择该PAT的到期时间：\n\n其他的设置保持默认，然后滑到页面最下方，点击”Generate token”：\n\n现在就会看到我们生成的PAT，记得把它即时复制下来，因为只要关闭了这个页面就无法再查看该密钥了：\n\n接下来，通过运行gitcreds包内的gitcreds_set函数来将PAT存储到本地：\n\ngitcreds::gitcreds_set()\n\n运行该函数后会在Console中要求我们输入token，输入刚刚获取的PAT密钥点击回车即可。\n\n如果此前已经存储了PAT，运行这个函数后会出现如下的对话框，可以选择更新已到期的PAT也可以查看已经存储的PAT。\n\n接下来我们再次运行git_sitrep函数，\n\ngit_sitrep()\n\n如果看到如下红框内的信息，证明已经成功连接到了GitHub：\n\n\n\n\n\n\n\nNote\n\n\n\n更多关于PAT的获取指南，参考：https://ucsb-meds.github.io/meds-install-mac.html。"
+  },
+  {
+    "objectID": "quarto_foundation/github_pages.html#将r-project文件夹初始化为git存储库",
+    "href": "quarto_foundation/github_pages.html#将r-project文件夹初始化为git存储库",
+    "title": "11  发布到GitHub Pages",
+    "section": "\n11.5 将R Project文件夹初始化为Git存储库",
+    "text": "11.5 将R Project文件夹初始化为Git存储库\n创建Quarto Books项目的内容参考 Chapter 10 。\n\n\n\n\n\n\nCaution\n\n\n\n项目文件夹的名称就是最终上传到GitHub库的名称，所以不要使用中文和空格，并起一个简单和有意义的名字。\n对于Quarto Books或者Quarto Websites项目，为了方便项目管理和GitHub Pages的转换应该在项目的YAML配置文件中将编译文件的输出文件夹设置为”docs”（ Chapter 10 ）：\nproject:\n  type: book\n  output-dir: \"book\" \n这样qmd文件编译后生成的HTML文件、脚本文件以及图片等文件都被存放在docs文件夹内。后面我们就可以指定GitHub Pages将这个docs文件夹作为构建网页的依据。\n\n\n\n通过运行use_git函数以将R Project文件夹初始化为Git存储库：\n\nusethis::use_git()\n\nConsole中会提示已经将当前项目文件夹设置为了Git存储库。当系统询问是否可以提交任何未提交的文件时，请选择是，则会将所有文件进行上传。如果要求重新启动R，请选择是。\n\n重启后，会看到RStudio的右下角窗格中出现了一个新的Git选项卡。里面列出了Git存储库，也就是我们的项目文件夹里面的所有文件，左侧用不同的颜色标注了文件的状态。\n\n这个函数的原理是在项目文件夹中生成了一个名为”.git”的隐藏文件夹，从而将其认定为Git本地存储库。在Mac上通过快捷键Command+Shift+句号可以显示/隐藏这些隐藏文件。\n\n\n\nGit存储库的结构"
+  },
+  {
+    "objectID": "quarto_foundation/github_pages.html#连接本地git仓库和远程github仓库",
+    "href": "quarto_foundation/github_pages.html#连接本地git仓库和远程github仓库",
+    "title": "11  发布到GitHub Pages",
+    "section": "\n11.6 连接本地Git仓库和远程GitHub仓库",
+    "text": "11.6 连接本地Git仓库和远程GitHub仓库\n运行use_github函数后会首先创建一个项目同名的GitHub仓库，然后将所有本地Git库的文件上传到这个GitHub库中，完成后会自动打开浏览器并导航到建好的GitHub项目仓库。\n\nusethis::use_github()\n\n\n为了和GitHub统一，现在需要通过在RStusio的终端中运行下面的命令来检查一下当前项目的主分枝的名称是不是”main”。\n\ngit branch\n\n或者在RStudio中检查Git面板右上角的标签是不是”main”：\n\n同时，GitHub项目主页左上角的默认分枝也应该是”main”：\n\n如果是，则可以直接进入下一步。否则，如果当前分支的名称为”master”，需要通过运行git_default_branch_rename函数将默认分枝的名称更新为”main”。\n\nusethis::git_default_branch_rename(from = \"master\", to = \"main\")\n\n或者在终端中输入：\n\ngit config --global init.defaultBranch main\n\n然后通过git status再次检查默认分枝的名称，并回到GitHub项目主页刷新后查看默认分枝的名称是否已同步更改为”main”。"
+  },
+  {
+    "objectID": "quarto_foundation/github_pages.html#将本地静态html文件发布到github-pages",
+    "href": "quarto_foundation/github_pages.html#将本地静态html文件发布到github-pages",
+    "title": "11  发布到GitHub Pages",
+    "section": "\n11.7 将本地静态HTML文件发布到GitHub Pages",
+    "text": "11.7 将本地静态HTML文件发布到GitHub Pages\n首先，在项目根目录中创建一个名为.nojekyll的文件，该文件告诉GitHub Pages不要使用Jekyll（GitHub默认网页生成工具）对我们的文件进行额外处理。有两种方法可以做到这一点：\n\n\n在RStudio终端中运行下面的命令：\n\ntouch .nojekyll\n\n该命令运行后不会有任何提示，但是在项目的根目录中会创建一个名为.nojekyll的隐藏文件：\n\n\n在RStudio中依次点击File&gt;New File&gt;Text File，然后点击保存，文件名写成”.nojekyll”即可。\n\n\n\n然后在Git面板中选中所有的文件（Git面板中列出的都是监测到有变动的文件）。这一操作等价于在终端输入：git add .。之后点击”Commit”（等价：git commit -m \"my commit message\"）。\n\n这会打开commit说明窗口，填写右侧的commit说明后点击右下角的”Commit”就会上传所有的文件更改。\n\n上传完成后关闭窗口，这时Git面板中不会有任何文件，是因为我们已经提交了所有更改。最后点击”Push”，就会把所有文件上传到GitHub仓库（等价：git push）。\n\n完成上述操作后，我们打开浏览器进入GitHub项目主页，点击设置按钮。\n\n点击左侧导航栏的”Pages”选项，然后将GitHub Pages的创建来源选择为docs文件夹。\n\n一段时间的等待后，我们就会在这个页面的上方看到已经生成的GitHub Pages的链接。\n\n点击进去之后就可以看到我们的在线网页了。"
+  },
+  {
+    "objectID": "quarto_foundation/github_pages.html#github仓库网页的更新和维护",
+    "href": "quarto_foundation/github_pages.html#github仓库网页的更新和维护",
+    "title": "11  发布到GitHub Pages",
+    "section": "\n11.8 GitHub仓库/网页的更新和维护",
+    "text": "11.8 GitHub仓库/网页的更新和维护\n\n\n\n\n\n\nWarning\n\n\n\n不要更改docs文件夹内的任何内容。\n不要更改index.qmd文件的名称。"
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Blondel, Vincent D, Jean-Loup Guillaume, Renaud Lambiotte, and Etienne\nLefebvre. 2008. “Fast Unfolding of Communities in Large\nNetworks.” Journal of Statistical Mechanics: Theory and\nExperiment 2008 (10): P10008. https://doi.org/10.1088/1742-5468/2008/10/p10008.\n\n\nBrennecke, Philip, Simon Anders, Jong Kyoung Kim, Aleksandra A\nKołodziejczyk, Xiuwei Zhang, Valentina Proserpio, Bianka Baying, et al.\n2013. “Accounting for Technical Noise in Single-Cell RNA-Seq\nExperiments.” Nature Methods 10 (11): 1093–95. https://doi.org/10.1038/nmeth.2645.\n\n\nChoudhary, Saket, and Rahul Satija. 2022a. “Comparison and\nEvaluation of Statistical Error Models for scRNA-Seq.” Genome\nBiology 23 (1). https://doi.org/10.1186/s13059-021-02584-9.\n\n\n———. 2022b. “Comparison and Evaluation of Statistical Error Models\nfor scRNA-Seq.” Genome Biology 23 (1). https://doi.org/10.1186/s13059-021-02584-9.\n\n\nFujii, Kouichi, Jin Kikuchi, Masatoshi Uchida, Masanari Machida, Midori\nTsuchiya, Kentaro Hayashi, Nana Maekawa, Hajime Houzumi, Arata Honda,\nand Koji Wake. 2023. “Tiger Attack at a Japanese Safari Park: A\nCase Report.” International Journal of Emergency\nMedicine 16 (1). https://doi.org/10.1186/s12245-023-00556-3.\n\n\nIlicic, Tomislav, Jong Kyoung Kim, Aleksandra A. Kolodziejczyk, Frederik\nOtzen Bagger, Davis James McCarthy, John C. Marioni, and Sarah A.\nTeichmann. 2016. “Classification of Low Quality Cells from\nSingle-Cell RNA-Seq Data.” Genome Biology 17 (1). https://doi.org/10.1186/s13059-016-0888-1.\n\n\nLevine, Jacob H., Erin F. Simonds, Sean C. Bendall, Kara L. Davis,\nEl-ad D. Amir, Michelle D. Tadmor, Oren Litvin, et al. 2015.\n“Data-Driven Phenotypic Dissection of AML Reveals Progenitor-Like\nCells That Correlate with Prognosis.” Cell 162 (1):\n184–97. https://doi.org/10.1016/j.cell.2015.05.047.\n\n\nMacosko, Evan Z., Anindita Basu, Rahul Satija, James Nemesh, Karthik\nShekhar, Melissa Goldman, Itay Tirosh, et al. 2015a. “Highly\nParallel Genome-Wide Expression Profiling of Individual Cells Using\nNanoliter Droplets.” Cell 161 (5): 1202–14. https://doi.org/10.1016/j.cell.2015.05.002.\n\n\n———, et al. 2015b. “Highly Parallel Genome-Wide Expression\nProfiling of Individual Cells Using Nanoliter Droplets.”\nCell 161 (5): 1202–14. https://doi.org/10.1016/j.cell.2015.05.002.\n\n\nSprumont, Adrien, Ana Rodrigues, Simon J. McGowan, Colin Bannard, and\nOliver Bannard. 2023. “Germinal Centers Output Clonally Diverse\nPlasma Cell Populations Expressing High- and Low-Affinity\nAntibodies.” Cell, November. https://doi.org/10.1016/j.cell.2023.10.022.\n\n\nStuart, Tim, Andrew Butler, Paul Hoffman, Christoph Hafemeister,\nEfthymia Papalexi, William M. Mauck, Yuhan Hao, Marlon Stoeckius, Peter\nSmibert, and Rahul Satija. 2019. “Comprehensive Integration of\nSingle-Cell Data.” Cell 177 (7): 1888–1902.e21. https://doi.org/10.1016/j.cell.2019.05.031."
+  }
+]

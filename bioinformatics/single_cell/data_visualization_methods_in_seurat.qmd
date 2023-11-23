@@ -1,0 +1,191 @@
+# Seurat中的数据可视化方法
+
+链接：<https://satijalab.org/seurat/articles/visualization_vignette>
+
+教程发布日期：2023-10-31
+
+We'll demonstrate visualization techniques in Seurat using our previously computed Seurat object from the 2,700 PBMC tutorial. You can download this dataset from [SeuratData](https://github.com/satijalab/seurat-data)。官方教程是通过`SeuratData`包的`InstallData`函数来下载案例数据，可能需要开启全局代理才能下载：
+
+```{r}
+#| eval: false
+#| echo: fenced
+devtools::install_github('satijalab/seurat-data')
+SeuratData::InstallData("pbmc3k")
+```
+
+```{r}
+#| eval: false
+#| echo: fenced
+library(SeuratData)
+pbmc3k.final <- LoadData("pbmc3k", type = "pbmc3k.final")
+pbmc3k.final$groups <- sample(c("group1", 
+                                "group2"), 
+                              size = ncol(pbmc3k.final), 
+                              replace = TRUE)
+pbmc3k.final
+```
+
+这里我将下载下来的数据保存起来：
+
+```{r}
+#| eval: false
+#| echo: fenced
+saveRDS(pbmc3k.final, file = "data/pbmc3k.final.rds")
+```
+
+后面我们直接从本地读取这个Seurat对象：
+
+```{r}
+pbmc3k.final <- readRDS("data/pbmc3k.final.rds")
+```
+
+## 5种可视化marker gene的方法
+
+定义要检查的marker gene：
+
+```{r}
+features <- c("LYZ", "CCL5", "IL32", "PTPRCAP", "FCGR3A", "PF4")
+```
+
+### Ridge plots
+
+Ridge plots - from ggridges. Visualize single cell expression distributions in each cluster
+
+```{r}
+#| fig-height: 10
+#| fig-width: 10
+library(Seurat)
+RidgePlot(pbmc3k.final, features = features, ncol = 2)
+```
+
+### Violin plot
+
+```{r}
+#| fig-width: 10
+VlnPlot(pbmc3k.final, features = features)
+```
+
+Violin plots can be split on some variable. Simply add the splitting variable to object metadata and pass it to the `split.by` argument. 通过添加`split.by`参数，展示marker gene在不同的样本组别中的表达。
+
+```{r}
+VlnPlot(pbmc3k.final, 
+        features = "percent.mt", 
+        split.by = "groups")
+```
+
+### Feature plot
+
+Visualize feature expression in low-dimensional space
+
+```{r}
+#| fig-height: 8
+#| fig-width: 8
+FeaturePlot(pbmc3k.final, features = features)
+```
+
+#### 对`FeaturePlot`的进一步修饰
+
+原始图像：
+
+```{r}
+FeaturePlot(pbmc3k.final, features = "MS4A1")
+```
+
+Adjust the contrast in the plot。通过`min.cutoff`和`max.cutoff`调整颜色范围。
+
+```{r}
+FeaturePlot(pbmc3k.final, features = "MS4A1", 
+            min.cutoff = 1, max.cutoff = 3)
+```
+
+Calculate feature-specific contrast levels based on quantiles of non-zero expression. Particularly useful when plotting multiple markers。
+
+```{r}
+FeaturePlot(pbmc3k.final, 
+            features = c("MS4A1", "PTPRCAP"), 
+            min.cutoff = "q10", 
+            max.cutoff = "q90")
+```
+
+Visualize co-expression of two features simultaneously。添加`blend = TRUE`。
+
+```{r}
+FeaturePlot(pbmc3k.final, 
+            features = c("MS4A1", "CD79A"), 
+            blend = TRUE)
+```
+
+通过添加`split.by`参数，来按照不同的样本组别来分别展示marker gene的表达。
+
+```{r}
+FeaturePlot(pbmc3k.final, 
+            features = c("MS4A1", "CD79A"), 
+            split.by = "groups")
+```
+
+### Dot plots
+
+The **size** of the dot corresponds to **the percentage of cells expressing the feature in each cluster**. The **color** represents the **average expression level**
+
+```{r}
+DotPlot(pbmc3k.final, 
+        features = features) + 
+  RotatedAxis()
+```
+
+通过添加`split.by`参数，来按照不同的样本组别来分别展示marker gene的表达。
+
+```{r}
+DotPlot(pbmc3k.final, 
+        features = features, 
+        split.by = "groups") + 
+  RotatedAxis()
+```
+
+### Heatmap
+
+```{r}
+DoHeatmap(subset(pbmc3k.final, downsample = 100), 
+          features = features, 
+          size = 3)
+```
+
+DoHeatmap now shows a grouping bar, splitting the heatmap into groups or clusters. This can be changed with the `group.by` parameter. 默认的`group.by`为细胞分群信息，即按照细胞的分群作为分组依据来绘制热图：
+
+```{r}
+DoHeatmap(pbmc3k.final, 
+          features = VariableFeatures(pbmc3k.final)[1:30], 
+          cells = 1:1000, 
+          size = 4, # 分组文字的大小
+          angle = 45) +  # 分组文字角度
+  NoLegend()
+```
+
+我们用meta.data中的任何列作为分群依据。例如这里的"groups"列：
+
+```{r}
+colnames(pbmc3k.final@meta.data)
+DoHeatmap(pbmc3k.final, 
+          features = VariableFeatures(pbmc3k.final)[1:30], 
+          group.by = "groups",
+          cells = 1:1000, 
+          size = 4, # 分组文字的大小
+          angle = 0) +  # 分组文字角度
+  NoLegend()
+```
+
+## 细胞分群图
+
+```{r}
+DimPlot(pbmc3k.final, reduction = "pca")
+DimPlot(pbmc3k.final, reduction = "umap")
+```
+
+进一步修饰
+
+```{r}
+library(ggplot2)
+DimPlot(pbmc3k.final, reduction = "umap") + 
+  labs(title = "Clustering of 2,700 PBMCs") +
+  theme_bw()
+```

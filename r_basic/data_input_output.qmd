@@ -1,0 +1,119 @@
+---
+execute: 
+  eval: false
+---
+
+# 数据的读取与输出
+
+## 读取CSV数据文件
+
+read.csv或read.table均可
+
+```{r}
+csvdata<-read.csv("ovary_data.csv",#相对路径
+                  header=T,#第一行是否是列名
+                  sep=",",#字段分隔符。文件每行上的值由此字符分隔。read.table的默认值为sep=“”，表示分隔符为‘空白’，即一个或多个空格、制表符、换行符或回车。read.csv的默认值为sep=","，表示分隔符为英文逗号
+                  stringsAsFactors=F)#是否将字符向量转换为因子
+csvdata<-read.table("ovary_data.csv",header=T,sep=",", 
+                    row.names="patientID", 
+                    colClasses=c("character", "character", "character","numeric", "numeric", "numeric")) #指定每一列的变量类型
+```
+
+## 读取SPSS文件
+
+```{r}
+library(foreign)
+savdata<-read.spss("lweight.sav",to.data.frame=T)#需要将.sav格式数据转换成数据框
+```
+
+## 读取Excel文件
+
+MacOS 首选 gdata 包（因自带perl语言）；Windows首选 xlsx 包
+
+```{r}
+library(gdata)
+xlsdata<-read.xls("ovary_data.xlsx",
+                  sheet=1)#要读取的工作表的名称或编号
+```
+
+## 读取txt文件
+
+```{r}
+refGene<-read.table("refGene.txt",header=F,sep = "\t")
+```
+
+## 读取自带数据集
+
+```{r}
+data(Arthritis, package="vcd")
+#或
+mydata <- vcd::Arthritis
+```
+
+## 下载和读取压缩包
+
+### 解压.zip文件
+
+```{r}
+unzip("test.zip",#压缩包的位置及文件名
+      files = "ferroptosis_suppressor.csv",
+      overwrite = T)#解压后是否覆盖同名文件
+```
+
+### 解压.tar文件
+
+```{r}
+untar("test.tar",#压缩包的位置及文件名
+      files = "ferroptosis_suppressor.csv")#提取指定文件，忽略则解压压缩包内的所有文件
+```
+
+### 下载和解压.gz或.bz2文件
+
+这两个压缩文件与前面的相比，是最与众不同的，因为这两种后缀的文件，可以称之为压缩文件，也可以直接作为一个数据文件进行读取。
+
+```{r}
+#下载gz文件
+download.file("http://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/refGene.txt.gz"#下载地址
+              ,destfile="refGene.txt.gz")#文件名，注意需要添加后缀名
+#直接以数据的形式读取.gz文件
+mydata<-read.table("refGene.txt.gz")
+```
+
+## 列出指定目录中的文件
+
+```{r}
+list.files("folder_name",#需要列出的文件所在的路径,若忽略此项则列出当前工作路径下的所有文件
+          pattern = "\\.docx$",#列出当前目录中以.docx结尾的文件（列出以G开头的文件"^G"）
+          full.names = T)#FALSE：仅输出文件名；TRUE(默认)：输出路径+文件名
+```
+
+## 生成数据框
+
+```{r}
+framdata <- data.frame(y=c(6, 8, 12, 14, 14, 15, 17, 22, 24, 23),
+                       x1=c(2, 5, 4, 3, 4, 6, 7, 5, 8, 9),
+                       x2=c(14, 12, 12, 13, 7, 8, 7, 4, 6, 5))
+framdata
+
+#使用文本编辑器直接在窗口中编辑数据。macOS需要安装XQuartz（www.xquartz.org）才能运行此代码。
+framdata <- edit(framdata) 
+```
+
+## 导出表格
+
+### 导出csv文件
+
+```{r}
+write.csv(mydata,
+          row.names=F,#是否输出行名称
+          "mydata.csv")
+```
+
+### 导出excel文件
+
+```{r}
+library(openxlsx2)
+write_xlsx(coxtable1,"coxtable1.xlsx")
+```
+
+# 

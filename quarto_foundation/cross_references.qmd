@@ -1,0 +1,98 @@
+---
+execute:
+      eval: false
+      warning: false
+---
+
+# 交叉引用 {#sec-交叉引用}
+
+如果要使用交叉引用，则每个待引用对象需要有以下两个元素：
+
+-   `label`：标签。**必须以类型为前缀，如#fig-1、#tbl-1、#fig-boxplot。同时，标签名不能重复。**
+
+-   `caption`：标题。
+
+拥有了这两个元素的对象会被自动加上序号，如Figure 1，并可以被交叉引用。 可引用的对象包括：图表、公式、章节、代码和定理等。注意在交叉引用时要在两端加上空格。
+
+::: callout-tip
+有关交叉引用的详细指南，参考：<https://quarto.org/docs/authoring/cross-references.html>。
+:::
+
+## 标题/节的交叉引用
+
+只需通过`sec-`定义`label`，基本语法：Introduction `{#sec-introduction}`。注意：要使用节的引用，需要在YAML开启标题编号（`number-sections: true`），以便读者能够看到这些编号。
+
+## 图片的交叉引用
+
+实现的方法：
+
+-   方法一：在源代码模式下修改被引用对象的属性，如：`![Example for cross reference](images/crossref-figure.png){#fig-elephant width="290"}`。其中，方括号内的是对象的`caption`，小括号内是图片所在的目录，"{}"内的内容是图像的`label`以及其他可选设置。
+-   方法二：点击待引用对象右上角的三个点，进入对象设置。分别输入`caption`和`ID`（即`label`）（@fig-demo )。
+
+::: {#fig-demo layout-ncol="2"}
+![](images/screenshot_2023-11-09%2009.39.02.png){width="240"}
+
+![](images/screenshot_2023-11-09%2009.39.13-01.png){width="244"}
+
+交叉引用的设置
+:::
+
+例如下面的图片，可以被引用：@fig-elephant 。
+
+![Example for cross reference](images/crossref-figure.png){#fig-elephant width="290"}
+
+### 组图的交叉引用
+
+基本语法：
+
+![](images/screenshot_2023-11-09%2015.13.14.png)
+
+案例：
+
+::: {#fig-组图的交叉引用 layout-ncol="2"}
+![素描大象](images/crossref-figure.png){#fig-组图_素描大象 width="219"}
+
+![油画大象](images/screenshot_2023-11-09%2015.02.31.png){#fig-组图-油画大象 width="292"}
+
+组图的交叉引用
+:::
+
+现在，我们就可以将组图一起引用（@fig-组图的交叉引用 ），或是单独引用组图内的某一张图（@fig-组图-油画大象 ，@fig-组图_素描大象 ）。
+
+## 表格的交叉引用
+
+### Markdown表格的引用
+
+只需在表格后加上`: My Caption {#tbl-letters}`即可使该表格能够被引用。如下面的表格 @tbl-表格交叉引用 。
+
+| Col1 | Col2 | Col3 |
+|------|------|------|
+| A    | B    | C    |
+| E    | F    | G    |
+| A    | G    | G    |
+
+: 表格的交叉引用示例 {#tbl-表格交叉引用}
+
+### 代码输出表格的引用
+
+-   `label：tbl-`：表格的标签。
+
+-   `tbl-cap`：表格的标题。
+
+-   knitr包提供了一个 `kable()` 函数可以用来把数据框或矩阵转化成有格式的表格，支持HTML、docx、LaTeX等格式。
+
+```{r}
+#| eval: true
+#| echo: fenced
+#| label: tbl-iris
+#| tbl-cap: "Iris数据"
+
+library(knitr)
+kable(head(iris))
+```
+
+现在，就可以通过 @tbl-iris 来引用该表格了。
+
+::: callout-note
+关于表格的详细指南，参考：<https://quarto.org/docs/authoring/tables.html>。
+:::
