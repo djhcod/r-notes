@@ -66,7 +66,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
 <link href="../quarto_foundation/yaml_settings.html" rel="next">
-<link href="../bioinformatics/single_cell/data_visualization_methods_in_seurat.html" rel="prev">
+<link href="../bioinformatics/single_cell/sctransform.html" rel="prev">
 <link href="../images/logo.jpg" rel="icon" type="image/jpeg">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -293,14 +293,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../bioinformatics/single_cell/seurat_command_list.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">基于<code>Seurat</code>的单细胞数据处理流程常用函数清单</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../bioinformatics/single_cell/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../bioinformatics/single_cell/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../bioinformatics/single_cell/sctransform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">基于<code>SCTransform</code>的单细胞数据标准化</span></span></a>
   </div>
 </li>
       </ul>
@@ -317,37 +329,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
@@ -407,7 +419,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><a href="https://quarto.org">Quarto</a>是一个支持多种编程语言的新一代R Markdown，拥有多个新的特性和功能，同时能够兼容和渲染大多数现有的.rmd文件，而无需额外修改。Quarto可通过多种IDEs编辑，包括VS Code和RStudio。文档的后缀为.qmd。</p>
 <p><img src="images/截屏2023-11-22 19.10.55.png" class="img-fluid"></p>
 <p>目前，Quarto还处于起步和不断发展的阶段，针对其的学习资源还十分有限，尤其是中文资源更加匮乏，因此有了汇总和编写本章的动机。本章内容主要参考了<a href="https://quarto.org/docs/guide/">Quarto的官方指南</a>，并提取了其中我认为在将来的编写中会经常使用的技巧并加以汇总。这本学习笔记即全程采用Quarto编写。</p>
-<p>本章的逻辑结构：首先介绍Quarto文档的全局设置，即YAML语法（<a href="yaml_settings.html"><span>Chapter&nbsp;6</span></a>）；然后介绍图片的设置（<a href="images_settings.html"><span>Chapter&nbsp;7</span></a> ），包括插入的图片和代码块运行后产生的图片；随后介绍如何实现对图、表等的交叉引用（<a href="cross_references.html"><span>Chapter&nbsp;8</span></a> ）；随后介绍其他几种内容的插入（<a href="insert_other_content.html"><span>Chapter&nbsp;9</span></a> ）；随后，介绍创建和编辑Quarto Books的方法（<a href="quarto_books.html"><span>Chapter&nbsp;10</span></a> ）；最后，介绍如何将Quarto项目的源代码通过Git上传到GitHub以及如何将编译好的Quarto Book通过GitHub Pages<strong>进行发布（</strong>@sec-发布到github-pages <strong>）。</strong></p>
+<p>本章的逻辑结构：首先介绍Quarto文档的全局设置，即YAML语法（<a href="yaml_settings.html"><span>Chapter&nbsp;8</span></a>）；然后介绍图片的设置（<a href="images_settings.html"><span>Chapter&nbsp;9</span></a> ），包括插入的图片和代码块运行后产生的图片；随后介绍如何实现对图、表等的交叉引用（<a href="cross_references.html"><span>Chapter&nbsp;10</span></a> ）；随后介绍其他几种内容的插入（<a href="insert_other_content.html"><span>Chapter&nbsp;11</span></a> ）；随后，介绍创建和编辑Quarto Books的方法（<a href="quarto_books.html"><span>Chapter&nbsp;12</span></a> ）；最后，介绍如何将Quarto项目的源代码通过Git上传到GitHub以及如何将编译好的Quarto Book通过GitHub Pages进行发布<strong>（</strong> <a href="github_pages.html"><span>Chapter&nbsp;13</span></a> <strong>）。</strong></p>
 <p>有关Quarto的详细信息，参考：<a href="https://quarto.org" class="uri">https://quarto.org</a>.</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/_f3latmOhew" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -850,13 +862,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../bioinformatics/single_cell/data_visualization_methods_in_seurat.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span>
+      <a href="../bioinformatics/single_cell/sctransform.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">基于<code>SCTransform</code>的单细胞数据标准化</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../quarto_foundation/yaml_settings.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">YAML设置</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">YAML设置</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
@@ -872,7 +884,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>目前，Quarto还处于起步和不断发展的阶段，针对其的学习资源还十分有限，尤其是中文资源更加匮乏，因此有了汇总和编写本章的动机。本章内容主要参考了<span class="co">[</span><span class="ot">Quarto的官方指南</span><span class="co">](https://quarto.org/docs/guide/)</span>，并提取了其中我认为在将来的编写中会经常使用的技巧并加以汇总。这本学习笔记即全程采用Quarto编写。</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>本章的逻辑结构：首先介绍Quarto文档的全局设置，即YAML语法（@sec-yaml设置总览）；然后介绍图片的设置（@sec-图片设置 ），包括插入的图片和代码块运行后产生的图片；随后介绍如何实现对图、表等的交叉引用（@sec-交叉引用 ）；随后介绍其他几种内容的插入（@sec-插入其他内容 ）；随后，介绍创建和编辑Quarto Books的方法（@sec-quarto-books ）；最后，介绍如何将Quarto项目的源代码通过Git上传到GitHub以及如何将编译好的Quarto Book通过GitHub Pages**进行发布（**@sec-发布到github-pages **）。**</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>本章的逻辑结构：首先介绍Quarto文档的全局设置，即YAML语法（@sec-yaml设置总览）；然后介绍图片的设置（@sec-图片设置 ），包括插入的图片和代码块运行后产生的图片；随后介绍如何实现对图、表等的交叉引用（@sec-交叉引用 ）；随后介绍其他几种内容的插入（@sec-插入其他内容 ）；随后，介绍创建和编辑Quarto Books的方法（@sec-quarto-books ）；最后，介绍如何将Quarto项目的源代码通过Git上传到GitHub以及如何将编译好的Quarto Book通过GitHub Pages进行发布**（** @sec-发布到github-pages **）。**</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>有关Quarto的详细信息，参考：<span class="ot">&lt;https://quarto.org&gt;</span>.</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>

@@ -3,7 +3,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Seurat细胞分群官方教程
+# Seurat细胞分群官方教程 {#sec-seurat细胞分群官方教程}
 
 链接：<https://satijalab.org/seurat/articles/pbmc3k_tutorial>
 
@@ -125,11 +125,13 @@ In Seurat v5, Normalized values are stored in `pbmc[["RNA"]]$data`：
 
 ![](images/截屏2023-11-21%2011.17.58.png){width="599"}
 
+::: callout-tip
 While this method of normalization is standard and widely used in scRNA-seq analysis, global-scaling relies on an **assumption that each cell originally contains the same number of RNA molecules**. We and others have developed alternative workflows for the single cell preprocessing that do not make these assumptions.
 
-[SCTransform()](https://satijalab.org/seurat/reference/sctransform) normalization workflow 就是这样的一种工作流. 针对这一方法的原始文献：[@choudhary2022] 。基于`SCTransform`的数据标准化流程中，无需使用上面的`NormalizeData`, 和下面的`FindVariableFeatures`和`ScaleData`函数。
+SCTransform() normalization workflow 就是这样的一种工作流. 针对这一方法的原始文献：[@choudhary2022] 。基于`SCTransform`的数据标准化流程中，无需使用上面的`NormalizeData`, 和下面的`FindVariableFeatures`和`ScaleData`函数。详见后面的章节（ @sec-sctransform ）。
+:::
 
-## 识别高变基因（highly variable features）
+## 识别高变基因（highly variable features） {#sec-识别高变基因}
 
 We next calculate a subset of features that exhibit **high cell-to-cell variation** in the dataset (i.e, they are highly expressed in some cells, and lowly expressed in others). We and others [@brennecke2013] have found that focusing on these genes in downstream analysis helps to **highlight biological signal** in single-cell datasets.
 
@@ -155,7 +157,7 @@ plot1
 LabelPoints(plot = plot1, points = top10, repel = TRUE)
 ```
 
-## 归一化（Scaling）
+## 归一化（Scaling） {#sec-scaledata}
 
 Next, we apply a **linear transformation** ('scaling') that is a standard pre-processing step **prior to dimensional reduction** techniques like PCA. The [`ScaleData()`](https://satijalab.org/seurat/reference/scaledata) function:
 
@@ -180,8 +182,8 @@ all.genes <- rownames(pbmc)
 pbmc <- ScaleData(pbmc, features = all.genes)
 ```
 
-::: {.callout-note appearance="minimal" icon="false"}
-去除单细胞数据中的非期望变异来源。
+::: callout-tip
+## 去除单细胞数据中的非期望变异来源
 
 In Seurat, we also use the `ScaleData()` function to remove unwanted sources of variation from a single-cell dataset. For example, we could 'regress out' heterogeneity associated with (for example) [cell cycle stage](https://satijalab.org/seurat/articles/cell_cycle_vignette), or mitochondrial contamination i.e.:
 
@@ -243,7 +245,7 @@ DimHeatmap(pbmc, dims = 1, cells = 1000, balanced = TRUE)
 DimHeatmap(pbmc, dims = 1:15, cells = 1000, balanced = TRUE)
 ```
 
-### 决定后续分析的主成分
+### 决定后续分析的主成分 {#sec-决定后续分析的主成分}
 
 To overcome the extensive technical noise in any single feature for scRNA-seq data, **Seurat clusters cells based on their PCA scores**, with each PC essentially representing a 'metafeature' that combines information across a correlated feature set. The top principal components therefore represent a robust compression of the dataset. However, how many components should we choose to include? 10? 20? 100?
 
@@ -255,7 +257,10 @@ An alternative heuristic method generates an '**Elbow plot**': a ranking of prin
 ElbowPlot(pbmc)
 ```
 
-**Identifying the true dimensionality of a dataset -- can be challenging/uncertain for the user.** We therefore suggest these multiple approaches for users. The first is more supervised, exploring PCs to determine relevant sources of heterogeneity, and could be used in conjunction with GSEA for example. The second (`ElbowPlot`). The third is a heuristic that is commonly used, and can be calculated instantly. In this example, we might have been justified in choosing anything between PC 7-12 as a cutoff.
+::: {.callout-tip collapse="true"}
+## Identifying the true dimensionality of a dataset
+
+**Identifying the true dimensionality of a dataset can be challenging/uncertain for the user.** We therefore suggest these multiple approaches for users. The first is more supervised, exploring PCs to determine relevant sources of heterogeneity, and could be used in conjunction with GSEA for example. The second (`ElbowPlot`). The third is a heuristic that is commonly used, and can be calculated instantly. In this example, we might have been justified in choosing anything between PC 7-12 as a cutoff.
 
 We chose 10 here, but encourage users to consider the following:
 
@@ -264,6 +269,7 @@ We chose 10 here, but encourage users to consider the following:
 -   We encourage users to repeat downstream analyses with a different number of PCs (10, 15, or even 50!). As you will observe, **the results often do not differ dramatically.**
 
 -   We advise users to **err on the higher side when choosing this parameter（建议选择偏高的主成分数量）**. For example, performing downstream analyses with only 5 PCs does significantly and adversely affect results.
+:::
 
 ## 细胞聚类（cluster）
 
@@ -320,6 +326,7 @@ DimPlot(pbmc, reduction = "umap")
 You can save the object at this point so that it can easily be loaded back in without having to rerun the computationally intensive steps performed above, or easily shared with collaborators.
 
 ```{r}
+#| eval: false
 saveRDS(pbmc, file = "output/pbmc_tutorial.rds")
 ```
 
@@ -366,7 +373,7 @@ head(cluster0.markers)
 
 ## 可视化marker基因的表达
 
-对各种经典的细胞类型marker基因在不同的细胞cluster中的表达进行可视化。We include several tools for visualizing marker expression. `VlnPlot()` (shows expression probability distributions across clusters), and `FeaturePlot()` (visualizes feature expression on a tSNE or PCA plot) are our most commonly used visualizations. We also suggest exploring `RidgePlot()`, `CellScatter()`, and `DotPlot()` as additional methods to view your dataset.
+We include several tools for visualizing marker expression. `VlnPlot()` (shows expression probability distributions across clusters), and `FeaturePlot()` (visualizes feature expression on a tSNE or PCA plot) are our most commonly used visualizations. We also suggest exploring `RidgePlot()`, `CellScatter()`, and `DotPlot()` as additional methods to view your dataset.
 
 ### 小提琴图：
 
