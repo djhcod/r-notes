@@ -4,34 +4,9 @@ project:
   execute-dir: project #
 editor: visual
 
-execute:
-  eval: true
-  warning: false
-  cache: true # 开启运算结果缓存。将会在文件目录中生成后缀“_cache”的文件夹。
-
-format:
-  html:
-    theme:
-      light: Flatly # 分别设置暗色主题和亮色主题
-      dark: darkly
-    embed-resources: false # 是否将所有源文件嵌入HTML文件
-    code-tools: true
-    code-link: true
-    anchor-sections: true # 是否显示章节锚点图标（便于复制直接定位到某个章节的链接）
-    link-external-newwindow: true # 是否在新窗口打开链接
-    toc-depth: 3 # 设置右侧目录显示的最低层级（默认为显示到3级标题）
-    toc-expand: 1 # 右侧目录在一开始显示到多少级，默认显示到一级标题。
-
-number-sections: true # 是否开启章节编号
-number-depth: 2 # 标题编号级数
-crossref:
-  subref-labels: alpha A # 次级引用编号类型，如组图中的小图（默认是小写字母：alpha a）
-
 book:
   title: "R语言学习笔记"
   subtitle: "从数据清洗到高级统计学和生物信息学"
-
-
   navbar:
     logo: images/logo.jpg
     background: "#f1f1f3" # 顶栏背景色（默认为primary，网页主色）
@@ -50,17 +25,7 @@ book:
     right:
       - icon: book-fill
         text: Bookdown
-        href: https://bookdown.org
-      - icon: github
-        text: GitHub
-        menu:
-          - text: Source Code
-            url: https://github.com/djhcod/r-notes
-          - text: Report a Bug
-            url: https://github.com/djhcod/r-notes/issues
-          - text: Pull Request
-            url: https://github.com/djhcod/r-notes/pulls
-
+        url: https://bookdown.org
   chapters:
     - text: 主页
       file: index.qmd
@@ -89,17 +54,15 @@ book:
     - part: "参考文献"
       chapters:
         - references.qmd
-
   sidebar:
     style: "docked" # “docked” and “floating”
     collapse-level: 1 # 导航栏初始显示多少级标题
-
   page-navigation: true # 打开右侧的页内标签
-
+  repo-actions: [source, issue, edit] # 在页面右侧显示导航到GitHub仓库的链接
+  repo-url: https://github.com/djhcod/r-notes # GitHub仓库的链接
   search:
     location: navbar
     type: overlay
-
   page-footer:
     left:
       - text: "This book was built with Quarto"
@@ -108,12 +71,10 @@ book:
       - icon: github
         href: https://github.com/djhcod
     border: true
-
   favicon: images/logo.jpg # 网页的logo
   twitter-card: true
   site-url: https://djhcod.github.io/r-notes/
   sharing: [twitter, facebook] # 显示分享到社交网络图标
-
   comments:
     hypothesis:
       theme: classic
@@ -122,6 +83,30 @@ book:
       enableExperimentalNewNoteButton: true
     utterances:
       repo: https://github.com/djhcod/r-notes
+
+format:
+  html:
+    theme:
+      light: Flatly # 分别设置暗色主题和亮色主题
+      dark: darkly
+    embed-resources: false # 是否将所有源文件嵌入HTML文件
+    code-tools: true
+    code-link: true
+    anchor-sections: true # 是否显示章节锚点图标（便于复制直接定位到某个章节的链接）
+    link-external-newwindow: true # 是否在新窗口打开链接
+    toc-depth: 3 # 设置右侧目录显示的最低层级（默认为显示到3级标题）
+    toc-expand: 1 # 右侧目录在一开始显示到多少级，默认显示到一级标题。
+
+execute:
+  eval: true
+  warning: false
+  cache: true # 开启运算结果缓存。将会在文件目录中生成后缀“_cache”的文件夹。
+
+number-sections: true # 是否开启章节编号
+number-depth: 2 # 标题编号级数
+
+crossref:
+  subref-labels: alpha A # 次级引用编号类型，如组图中的小图（默认是小写字母：alpha a）
 
 bibliography: references.bib # 参考文献目录
 
