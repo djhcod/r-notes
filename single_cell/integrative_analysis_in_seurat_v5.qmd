@@ -1,0 +1,311 @@
+# Seurat v5单细胞数据整合分析
+
+原文：[*Integrative analysis in Seurat v5*](https://satijalab.org/seurat/articles/seurat5_integration)
+
+原文发布日期：2023年10月31日
+
+Integration of single-cell sequencing datasets, for example across **experimental batches**, **donors**, or **conditions**, is often an important step in scRNA-seq workflows. Integrative analysis can help to **match shared cell types and states across datasets**, which can **boost statistical power**, and most importantly, **facilitate accurate comparative analysis across datasets**.
+
+In previous versions of Seurat we introduced methods for integrative analysis, including our 'anchor-based' integration workflow. Many labs have also published powerful and pioneering methods, including [Harmony](https://github.com/immunogenomics/harmony) and [scVI](https://yoseflab.github.io/software/scvi-tools/), for integrative analysis. We recognize that while the goal of matching shared cell types across datasets may be important for many problems, users may also be concerned about which method to use, or that integration could result in a loss of biological resolution.
+
+In Seurat v5, we introduce more flexible and streamlined infrastructure to run different integration algorithms with a single line of code. This makes it easier to explore the results of different integration methods, and to compare these results to a workflow that excludes integration steps.
+
+For this vignette, we use a dataset of human PBMC profiled with **seven different technologies** [@ding2020], profiled as part of a systematic comparative analysis (`pbmcsca`). The data is available as part of our SeuratData package.
+
+![](images/截屏2023-11-28%2021.02.46.png){width="526"}
+
+## 加载数据
+
+::: {.callout-note collapse="true" appearance="minimal" icon="false"}
+###### 在线读取（可能需要全局代理）
+
+```{r}
+#| eval: false
+#| echo: fenced
+library(SeuratData)
+InstallData("pbmcsca")
+library(Seurat)
+obj <- LoadData("pbmcsca")
+```
+:::
+
+从本地下载好的数据读取：
+
+```{r}
+library(Seurat)
+obj <- readRDS("data/pbmcsca.rds")
+obj
+colnames(obj)[1:8]
+rownames(obj)[1:5]
+head(obj@meta.data, 5)
+table(obj$Method)
+```
+
+The object contains data from **nine different batches** (stored in the `Method` column in the object metadata), representing **seven different technologies**. We will aim to integrate the different batches together.
+
+## 数据质控
+
+过滤低质量细胞：
+
+```{r}
+obj <- subset(obj, nFeature_RNA > 1000)
+```
+
+这个地方为了验证后面整合的效果对细胞类型提前进行了注释。
+
+```{r}
+table(obj$CellType)
+```
+
+## 分割数据
+
+In previous versions of Seurat, if we want to integrate this data, we would require the data to be represented as nine different Seurat objects. When using Seurat v5 assays, we can instead keep all the data in one object, but simply split the layers:
+
+```{r}
+obj[["RNA"]] <- split(obj[["RNA"]], f = obj$Method)
+obj
+```
+
+After splitting, there are now **18 layers** (**a `counts` and `data` layer for each batch**).
+
+## 未整合情况下的标准scRNA-seq分析流程
+
+### 标准化、找高变基因、归一化、降维
+
+We can now run a standard scRNA-seq analysis (i.e. without integration). Note that since the data is split into layers, normalization and variable feature identification is performed for each batch independently (a consensus set of variable features is automatically identified).
+
+```{r}
+obj <- NormalizeData(obj)
+obj <- FindVariableFeatures(obj)
+obj <- ScaleData(obj)
+obj <- RunPCA(obj)
+obj <- RunUMAP(obj, 
+               dims = 1:30, 
+               reduction = "pca", 
+               reduction.name = "umap.unintegrated") # name to store dimensional reduction in the Seurat object
+```
+
+### 聚类、可视化
+
+We can now visualize the results of a standard analysis without integration. Note that cells are grouping both by **cell type** and by underlying **method**. While a UMAP analysis is just a visualization of this, clustering this dataset would return predominantly batch-specific clusters. Especially if previous cell-type annotations were not available, this would make downstream analysis extremely challenging.
+
+```{r}
+#| fig-width: 10
+obj <- FindNeighbors(obj, dims = 1:30, reduction = "pca")
+obj <- FindClusters(obj, resolution = 2, cluster.name = "unintegrated_clusters")
+
+DimPlot(obj, 
+        reduction = "umap.unintegrated", 
+        group.by = c("Method", "CellType"))
+```
+
+可以看到，不同的测序技术间的细胞类型差异较大。因此需要对数据进行整合。
+
+## 数据整合
+
+Seurat v5 enables streamlined integrative analysis using the `IntegrateLayers` function. The method currently supports **five integration methods**. Each of these methods performs integration in low-dimensional space, and **returns a dimensional reduction** (i.e. `integrated.rpca`) that aims to co-embed shared cell types across batches:
+
+-   **Anchor-based CCA integration** (`method=CCAIntegration`)
+
+-   **Anchor-based RPCA integration** (`method=RPCAIntegration`)
+
+-   **Harmony** (`method=HarmonyIntegration`)
+
+-   **FastMNN** (`method= FastMNNIntegration`)
+
+-   **scVI** (`method=scVIIntegration`)
+
+Note that our anchor-based RPCA integration represents a faster and more conservative (less correction) method for integration. For interested users, we discuss this method in more detail in our [previous RPCA vignette](https://satijalab.org/seurat/articles/integration_rpca).
+
+You can find more detail on each method, and any installation prerequisites, in Seurat's documentation (for example, `?HarmonyIntegration`). For example, harmony整合需要先安装[`harmony`](https://cran.r-project.org/web/packages/harmony/index.html)包（`install.packages("harmony")`）；scVI integration requires `reticulate` which can be installed from CRAN (`install.packages("reticulate")`) as well as `scvi-tools` and its dependencies installed in a conda environment. Please see scVI installation instructions [here](https://docs.scvi-tools.org/en/stable/installation.html).
+
+Each of the following lines perform a new integration using a single line of code:
+
+（这里我们选择其中的`CCAIntegration`和`HarmonyIntegration`两种方式分别对数据进行整合，整合后后的降维信息分别储存在"integrated.cca"和"harmony"中）
+
+```{r}
+obj <- IntegrateLayers(
+  object = obj,
+  method = CCAIntegration,
+  orig.reduction = "pca",
+  new.reduction = "integrated.cca",
+  verbose = FALSE
+)
+names(obj@reductions)
+```
+
+```{r}
+#| eval: false
+#| echo: fenced
+obj <- IntegrateLayers(
+  object = obj, 
+  method = RPCAIntegration,
+  orig.reduction = "pca", 
+  new.reduction = "integrated.rpca",
+  verbose = FALSE
+)
+names(obj@reductions)
+```
+
+```{r}
+obj <- IntegrateLayers(
+  object = obj, 
+  method = HarmonyIntegration,
+  orig.reduction = "pca", 
+  new.reduction = "harmony",
+  verbose = FALSE
+)
+names(obj@reductions)
+```
+
+```{r}
+#| eval: false
+#| echo: fenced
+obj <- IntegrateLayers(
+  object = obj, 
+  method = FastMNNIntegration,
+  new.reduction = "integrated.mnn",
+  verbose = FALSE
+)
+names(obj@reductions)
+```
+
+```{r}
+#| eval: false
+#| echo: fenced
+obj <- IntegrateLayers(
+  object = obj, 
+  method = scVIIntegration,
+  new.reduction = "integrated.scvi",
+  conda_env = "../miniconda3/envs/scvi-env", 
+  verbose = FALSE
+)
+names(obj@reductions)
+```
+
+## 重新降维、聚类、可视化
+
+`CCAIntegration`：
+
+```{r}
+obj <- RunUMAP(obj, 
+               reduction = "integrated.cca", 
+               dims = 1:30, 
+               reduction.name = "umap.cca")
+obj <- FindNeighbors(obj, reduction = "integrated.cca", dims = 1:30)
+obj <- FindClusters(obj, resolution = 2, cluster.name = "cca_clusters")
+colnames(obj@meta.data)
+p1 <- DimPlot(obj,
+              reduction = "umap.cca",
+              group.by = c("Method", "CellType", "cca_clusters"),
+              combine = FALSE, 
+              label.size = 2)
+```
+
+`HarmonyIntegration`：
+
+```{r}
+obj <- RunUMAP(obj, 
+               reduction = "harmony", 
+               dims = 1:30, 
+               reduction.name = "umap.harmony")
+obj <- FindNeighbors(obj, reduction = "harmony", dims = 1:30)
+obj <- FindClusters(obj, resolution = 2, cluster.name = "harmony_clusters")
+colnames(obj@meta.data)
+p2 <- DimPlot(obj,
+              reduction = "umap.harmony",
+              group.by = c("Method", "CellType", "harmony_clusters"),
+              combine = FALSE, 
+              label.size = 2)
+```
+
+合并UMAP图：
+
+```{r}
+#| fig-width: 13
+#| fig-height: 13
+library(patchwork)
+wrap_plots(c(p1, p2), ncol = 2, byrow = F)
+```
+
+## 检验细胞类型marker基因的表达
+
+We hope that by simplifying the process of performing integrative analysis, users can more carefully evaluate the biological information retained in the integrated dataset. For example, users can compare the expression of biological markers based on different clustering solutions, or visualize one method's clustering solution on different UMAP visualizations.
+
+```{r}
+#| fig-width: 15
+library(ggplot2)
+p1 <- VlnPlot(obj,
+              features = "rna_CD8A", 
+              group.by = "unintegrated_clusters",
+              pt.size = 0) + 
+  NoLegend() + 
+  ggtitle("CD8A - Unintegrated Clusters")
+p2 <- VlnPlot(obj, 
+              "rna_CD8A",
+              group.by = "cca_clusters",
+              pt.size = 0) + 
+  NoLegend() + 
+  ggtitle("CD8A - CCA Clusters")
+p3 <- VlnPlot(obj, 
+              "rna_CD8A",
+              group.by = "harmony_clusters",
+              pt.size = 0) + 
+  NoLegend() + 
+  ggtitle("CD8A - harmony Clusters")
+p1 | p2 | p3
+```
+
+## 重新合并layers
+
+Once integrative analysis is complete, you can rejoin the layers - which collapses the individual datasets together and recreates the original `counts` and `data` layers. **You will need to do this before performing any differential expression analysis**. However, you can always resplit the layers in case you would like to reperform integrative analysis.
+
+```{r}
+obj <- JoinLayers(obj)
+obj
+```
+
+## 对`SCTransform`处理后的数据的整合
+
+Users can also perform integration using sctransform-normalized data (see @sec-sctransform for more information), by first running `SCTransform` normalization, and then s**etting the `normalization.method` argument in `IntegrateLayers`**（和 @sec-integration_after_sct 中一样）。
+
+```{r}
+#| fig-width: 10
+rm(list = ls())
+#重新载入数据、质控、分割
+obj <- readRDS("data/pbmcsca.rds")
+obj <- subset(obj, nFeature_RNA > 1000)
+obj[["RNA"]] <- split(obj[["RNA"]], f = obj$Method)
+# 执行SCTransform
+obj <- SCTransform(obj)
+# 降维
+obj <- RunPCA(obj, npcs = 30, verbose = F)
+# 整合
+#options(future.globals.maxSize = 3e+09)
+obj <- IntegrateLayers(object = obj,
+                       method = CCAIntegration,
+                       normalization.method = "SCT",
+                       orig.reduction = "pca",
+                       new.reduction = "integrated.cca",
+                       verbose = F)
+# 重新降维、聚类、可视化
+obj <- RunUMAP(obj, 
+               dims = 1:30, 
+               reduction = "integrated.cca", 
+               reduction.name = "umap.cca")
+obj <- FindNeighbors(obj, dims = 1:30, reduction = "integrated.cca")
+obj <- FindClusters(obj, resolution = 2, cluster.name = "cca_clusters")
+DimPlot(obj,
+        reduction = "umap.cca",
+        group.by = c("Method", "cca_clusters"),
+        label.size = 1)
+```
+
+::: {.callout-note collapse="true" icon="false"}
+## Session Info
+
+```{r}
+#| echo: false
+sessionInfo()
+```
+:::

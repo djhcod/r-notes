@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>R语言学习笔记 - 7&nbsp; 基于SCTransform的单细胞数据标准化</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../single_cell/integration.html" rel="next">
+<link href="../single_cell/data_visualization_methods_in_seurat.html" rel="prev">
+<link href="../images/logo.jpg" rel="icon" type="image/jpeg">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script type="application/json" class="js-hypothesis-config">
+{
+  "theme": "classic",
+  "openSidebar": false,
+  "showHighlights": "always",
+  "enableExperimentalNewNoteButton": true
+}
+</script><script async="" src="https://hypothes.is/embed.js"></script>
+<meta name="twitter:title" content="R语言学习笔记 - 7&nbsp; 基于SCTransform的单细胞数据标准化">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/images/截屏2023-11-23 19.32.28.png">
+<meta name="twitter:image-height" content="436">
+<meta name="twitter:image-width" content="1406">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/logo.jpg" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">R语言学习笔记</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+<li class="nav-item">
+    <a class="nav-link active" href="../index.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../intro.html" rel="" target="">
+ <span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parts" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Parts</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-parts">
+<li>
+    <a class="dropdown-item" href="../r_basic/r_basics.html" rel="" target="">
+ <span class="dropdown-text">R语言基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../single_cell/seurat.html" rel="" target="">
+ <span class="dropdown-text">Seurat v5官方文档</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../quarto_foundation/quarto_foundation.html" rel="" target="">
+ <span class="dropdown-text">Quarto基础</span></a>
+  </li>  
+    </ul>
+</li>
+  <li class="nav-item">
+    <a class="nav-link" href="../references.html" rel="" target="">
+ <span class="menu-text">References</span></a>
+  </li>  
+</ul>
+<ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="https://bookdown.org" rel="" target=""><i class="bi bi-book-fill" role="img">
+</i> 
+ <span class="menu-text">Bookdown</span></a>
+  </li>  
+</ul>
+<div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/djhcod/r-notes" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+<li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=%7Curl%7C">
+              <i class="bi bi-bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=%7Curl%7C">
+              <i class="bi bi-bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+</div>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../single_cell/seurat.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../single_cell/sctransform.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">主页</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">前言</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R语言基础</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rstudio环境配置</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/data_input_output.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">数据的读取与输出</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../single_cell/seurat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat v5官方文档</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/seurat_command_list.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/sctransform.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/integration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">单细胞数据整合（integration）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/de_vignette.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">差异表达分析</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto基础</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+ <span class="menu-text">参考文献</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#%E8%BD%BD%E5%85%A5%E6%95%B0%E6%8D%AE" id="toc-载入数据" class="nav-link active" data-scroll-target="#%E8%BD%BD%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="header-section-number">7.1</span> 载入数据</a></li>
+  <li><a href="#%E8%B4%A8%E6%8E%A7" id="toc-质控" class="nav-link" data-scroll-target="#%E8%B4%A8%E6%8E%A7"><span class="header-section-number">7.2</span> 质控</a></li>
+  <li><a href="#%E8%BF%90%E8%A1%8Csctransform" id="toc-运行sctransform" class="nav-link" data-scroll-target="#%E8%BF%90%E8%A1%8Csctransform"><span class="header-section-number">7.3</span> 运行<code>SCTransform</code></a></li>
+  <li><a href="#%E9%99%8D%E7%BB%B4" id="toc-降维" class="nav-link" data-scroll-target="#%E9%99%8D%E7%BB%B4"><span class="header-section-number">7.4</span> 降维</a></li>
+  <li><a href="#%E8%81%9A%E7%B1%BB" id="toc-聚类" class="nav-link" data-scroll-target="#%E8%81%9A%E7%B1%BB"><span class="header-section-number">7.5</span> 聚类</a></li>
+  <li>
+<a href="#marker%E5%9F%BA%E5%9B%A0%E5%8F%AF%E8%A7%86%E5%8C%96" id="toc-marker基因可视化" class="nav-link" data-scroll-target="#marker%E5%9F%BA%E5%9B%A0%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="header-section-number">7.6</span> Marker基因可视化</a>
+  <ul class="collapse">
+<li><a href="#%E5%B0%8F%E6%8F%90%E7%90%B4%E5%9B%BE" id="toc-小提琴图" class="nav-link" data-scroll-target="#%E5%B0%8F%E6%8F%90%E7%90%B4%E5%9B%BE">小提琴图：</a></li>
+  <li><a href="#umap%E5%9B%BE" id="toc-umap图" class="nav-link" data-scroll-target="#umap%E5%9B%BE">UMAP图：</a></li>
+  </ul>
+</li>
+  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/sctransform.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/single_cell/sctransform.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-sctransform" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><p>原文：<a href="https://satijalab.org/seurat/articles/sctransform_vignette"><em>Using sctransform in Seurat</em></a></p>
+<p>原文发布日期：2023年10月31日</p>
+<p><strong>Biological heterogeneity</strong> in single-cell RNA-seq data is often confounded by technical factors including <strong>sequencing depth</strong>. The <strong>number of molecules detected in each cell</strong> can vary significantly between cells, even within the same celltype. Interpretation of scRNA-seq data requires effective pre-processing and normalization to remove this <strong>technical variability</strong>.</p>
+<p>In our manuscript we introduce a modeling framework for the normalization and variance stabilization of molecular count data from scRNA-seq experiments. This procedure <strong>omits the need for heuristic steps</strong> including pseudocount addition or log-transformation and <strong>improves common downstream analytical tasks</strong> such as variable gene selection, dimensional reduction, and differential expression. We named this method<code>sctransform</code>.</p>
+<p>Inspired by important and rigorous work from Lause et al <span class="citation" data-cites="lause2021">(<a href="../references.html#ref-lause2021" role="doc-biblioref">Lause, Berens, and Kobak 2021</a>)</span>, we released an updated manuscript <span class="citation" data-cites="choudhary2022b">(<a href="../references.html#ref-choudhary2022b" role="doc-biblioref">Choudhary and Satija 2022</a>)</span> and updated the sctransform software to a v2 version, which is now the default in Seurat v5.</p>
+<section id="载入数据" class="level2" data-number="7.1"><h2 data-number="7.1" class="anchored" data-anchor-id="载入数据">
+<span class="header-section-number">7.1</span> 载入数据</h2>
+<div class="cell" data-hash="sctransform_cache/html/unnamed-chunk-1_03090e5996a3734b2512ded97902f2b1">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
+<span><span class="va">pbmc_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/Read10X.html">Read10X</a></span><span class="op">(</span>data.dir <span class="op">=</span> <span class="st">"data/filtered_gene_bc_matrices/hg19"</span><span class="op">)</span></span>
+<span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/CreateSeuratObject.html">CreateSeuratObject</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">pbmc_data</span><span class="op">)</span></span>
+<span><span class="va">pbmc</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>An object of class Seurat 
+32738 features across 2700 samples within 1 assay 
+Active assay: RNA (32738 features, 0 variable features)
+ 1 layer present: counts</code></pre>
+</div>
+</div>
+</section><section id="质控" class="level2" data-number="7.2"><h2 data-number="7.2" class="anchored" data-anchor-id="质控">
+<span class="header-section-number">7.2</span> 质控</h2>
+<p>这里的质控步骤只简单的计算了线粒体基因的比例。</p>
+<div class="cell" data-hash="sctransform_cache/html/unnamed-chunk-2_afd524c523c8ee80970c4148cd69cc24">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/PercentageFeatureSet.html">PercentageFeatureSet</a></span><span class="op">(</span><span class="va">pbmc</span>, pattern <span class="op">=</span> <span class="st">"^MT-"</span>, col.name <span class="op">=</span> <span class="st">"percent.mt"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">pbmc</span><span class="op">@</span><span class="va">meta.data</span>, <span class="fl">5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                    orig.ident nCount_RNA nFeature_RNA percent.mt
+AAACATACAACCAC-1 SeuratProject       2421          781  3.0152829
+AAACATTGAGCTAC-1 SeuratProject       4903         1352  3.7935958
+AAACATTGATCAGC-1 SeuratProject       3149         1131  0.8891712
+AAACCGTGCTTCCG-1 SeuratProject       2639          960  1.7430845
+AAACCGTGTATGCG-1 SeuratProject        981          522  1.2232416</code></pre>
+</div>
+</div>
+</section><section id="运行sctransform" class="level2" data-number="7.3"><h2 data-number="7.3" class="anchored" data-anchor-id="运行sctransform">
+<span class="header-section-number">7.3</span> 运行<code>SCTransform</code>
+</h2>
+<ul>
+<li><p><code>SCTransform</code>替代了传统单细胞数据分析流程中的<code><a href="https://rdrr.io/pkg/Seurat/man/NormalizeData.html">NormalizeData()</a></code>、<code><a href="https://rdrr.io/pkg/Seurat/man/ScaleData.html">ScaleData()</a></code>和<code><a href="https://rdrr.io/pkg/Seurat/man/FindVariableFeatures.html">FindVariableFeatures()</a></code>函数的功能，因此不再需要运行这些函数。</p></li>
+<li><p>During normalization, we can also remove confounding sources of variation, for example, mitochondrial mapping percentage。<code>SCTransform</code>也可以移除一些非期望变异来源，如线粒体基因的比例。这在传统的单细胞数据分析流程中由<code>ScaleData</code>来完成（ <a href="seurat_tutorial.html#sec-scaledata"><span>Section&nbsp;5.5</span></a> ）。</p></li>
+<li><p>In Seurat v5, SCT v2 is applied by default. You can revert to v1 by setting&nbsp;<code>vst.flavor = 'v1'</code></p></li>
+<li><p><code>SCTransform</code>的运算调用了<a href="https://bioconductor.org/packages/release/bioc/html/glmGamPoi.html"><code>glmGamPoi</code></a>包以显著提升运算速度。所以事先需要通过BiocManager安装该包。</p></li>
+</ul>
+<div class="cell" data-hash="sctransform_cache/html/unnamed-chunk-3_ab8b047178f648d52cca340aeb29517a">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># BiocManager::install("glmGamPoi")</span></span>
+<span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/SCTransform.html">SCTransform</a></span><span class="op">(</span><span class="va">pbmc</span>, </span>
+<span>                    vars.to.regress <span class="op">=</span> <span class="st">"percent.mt"</span>, </span>
+<span>                    verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Transformed data will be available in the <code>SCT assay</code>, which is set as the default after running <code>SCTransform</code>：</p>
+<p><img src="images/截屏2023-11-23 19.32.28.png" class="img-fluid"></p>
+<ul>
+<li><p><code>pbmc[["SCT"]]$scale.data</code>&nbsp;contains the residuals (normalized values), and is <strong>used directly as input to PCA</strong>. Please note that <strong>this matrix is non-sparse</strong>, and can therefore take up a lot of memory if stored for all genes. <strong>To save memory, we store these values only for variable genes</strong>, by setting the <code>return.only.var.genes = TRUE</code> by default in the&nbsp;<code><a href="https://rdrr.io/pkg/Seurat/man/SCTransform.html">SCTransform()</a></code>&nbsp;function call.</p></li>
+<li><p>To assist with visualization and interpretation, we also convert Pearson residuals back to ‘corrected’ UMI counts. You can interpret these as the UMI counts we would expect to observe if all cells were sequenced to the same depth. If you want to see exactly how we do this, please look at the correct function&nbsp;<a href="https://github.com/ChristophH/sctransform/blob/master/R/denoise.R">here</a>.</p></li>
+<li><p>The ‘corrected’ UMI counts are stored in&nbsp;<code>pbmc[["SCT"]]$counts</code>. We store log-normalized versions of these corrected counts in&nbsp;<code>pbmc[["SCT"]]$data</code>, which are very helpful for visualization.</p></li>
+</ul></section><section id="降维" class="level2" data-number="7.4"><h2 data-number="7.4" class="anchored" data-anchor-id="降维">
+<span class="header-section-number">7.4</span> 降维</h2>
+<div class="cell" data-hash="sctransform_cache/html/unnamed-chunk-4_b08a762be38fb58050ce76f8e8646016">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunPCA.html">RunPCA</a></span><span class="op">(</span><span class="va">pbmc</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunUMAP.html">RunUMAP</a></span><span class="op">(</span><span class="va">pbmc</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>降维可视化：</p>
+<div class="cell" data-hash="sctransform_cache/html/unnamed-chunk-5_714378158cd084bac1bcbfff0e24657e">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/VizDimLoadings.html">VizDimLoadings</a></span><span class="op">(</span><span class="va">pbmc</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, reduction <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="sctransform_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">pbmc</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="sctransform_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/DimHeatmap.html">DimHeatmap</a></span><span class="op">(</span><span class="va">pbmc</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">15</span>, cells <span class="op">=</span> <span class="fl">1000</span>, balanced <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="sctransform_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/ElbowPlot.html">ElbowPlot</a></span><span class="op">(</span><span class="va">pbmc</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="sctransform_files/figure-html/unnamed-chunk-5-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section><section id="聚类" class="level2" data-number="7.5"><h2 data-number="7.5" class="anchored" data-anchor-id="聚类">
+<span class="header-section-number">7.5</span> 聚类</h2>
+<div class="cell" data-hash="sctransform_cache/html/unnamed-chunk-6_0865837d7f5ccd1edd9b065a37906480">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FindNeighbors.html">FindNeighbors</a></span><span class="op">(</span><span class="va">pbmc</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FindClusters.html">FindClusters</a></span><span class="op">(</span><span class="va">pbmc</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">pbmc</span>, label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="sctransform_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>根据Seurat细胞分群官方教程（ <a href="#sec-%E5%86%B3%E5%AE%9A%E5%90%8E%E7%BB%AD%E5%88%86%E6%9E%90%E7%9A%84%E4%B8%BB%E6%88%90%E5%88%86"><span>Section&nbsp;5.6.2</span></a> ），这个数据集”we can observe an ‘elbow’ around PC9-10, suggesting that the majority of true signal is captured in the first 10 PCs”。因此在<code>FindNeighbors</code>函数中指定了<code>dims = 1:10</code>。但是这里的<code>FindNeighbors</code>函数指定了更多的主成分（<code>dims = 1:30</code>）。下面的内容对此作出了解释：</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Why can we choose more PCs when using sctransform?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In the Seurat细胞分群官方教程，we focus on <strong>10 PCs</strong> for this dataset, though we highlight that <strong>the results are similar with higher settings for this parameter</strong>. Interestingly, we’ve found that when using <code>SCTransform</code>, we often <strong>benefit by pushing this parameter even higher</strong>. We believe this is because the <code>SCTransform</code> workflow performs more effective normalization, strongly removing technical effects from the data.</p>
+<p>Even after standard log-normalization, variation in sequencing depth is still a confounding factor (see&nbsp;<a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1">Figure 1</a>), and this effect can subtly influence higher PCs. In <code>SCTransform</code>, this effect is substantially mitigated (see&nbsp;<a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1">Figure 3</a>). This means that <strong>higher PCs are more likely to represent subtle, but biologically relevant, sources of heterogeneity</strong> – so including them may improve downstream analysis.</p>
+<p>In addition, <code>SCTransform</code> <strong>returns 3,000 variable features by default, instead of 2,000</strong>. The rationale is similar, the additional variable features are less likely to be driven by technical differences across cells, and instead may represent more subtle biological fluctuations. In general, we find that results produced with <code>SCTransform</code> are less dependent on these parameters (indeed, we achieve nearly identical results when using all genes in the transcriptome, though this does reduce computational efficiency). This can help users generate more robust results, and in addition, enables the application of standard analysis pipelines with identical parameter settings that can quickly be applied to new datasets.</p>
+</div>
+</div>
+</div>
+</section><section id="marker基因可视化" class="level2" data-number="7.6"><h2 data-number="7.6" class="anchored" data-anchor-id="marker基因可视化">
+<span class="header-section-number">7.6</span> Marker基因可视化</h2>
+<p>Users can individually annotate clusters based on canonical markers. However, the <code>SCTransform</code> normalization reveals <strong>sharper biological distinctions</strong> compared to the&nbsp;standard Seurat workflow（ <a href="#sec-seurat%E7%BB%86%E8%83%9E%E5%88%86%E7%BE%A4%E5%AE%98%E6%96%B9%E6%95%99%E7%A8%8B"><span>Chapter&nbsp;5</span></a> ）, in a few ways:</p>
+<ul>
+<li><p>Clear separation of at least <strong>3 CD8 T cell populations (naive, memory, effector)</strong>, based on <strong>CD8A, GZMK, CCL5, CCR7</strong> expression</p></li>
+<li><p>Clear separation of <strong>three CD4 T cell populations (naive, memory, IFN-activated)</strong> based on <strong>S100A4, CCR7, IL32,</strong> and <strong>ISG15</strong></p></li>
+<li><p>Additional developmental sub-structure in B cell cluster, based on TCL1A, FCER2</p></li>
+<li><p>Additional separation of NK cells into CD56dim vs.&nbsp;bright clusters, based on XCL1 and FCGR3A</p></li>
+</ul>
+<section id="小提琴图" class="level3"><h3 class="anchored" data-anchor-id="小提琴图">小提琴图：</h3>
+<div class="cell" data-hash="sctransform_cache/html/unnamed-chunk-7_bac6656440220fc341c661d4352605a5">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/VlnPlot.html">VlnPlot</a></span><span class="op">(</span><span class="va">pbmc</span>, </span>
+<span>        features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CD8A"</span>, <span class="st">"GZMK"</span>, <span class="st">"CCL5"</span>, <span class="st">"S100A4"</span>, <span class="st">"ANXA1"</span>, <span class="st">"CCR7"</span>, <span class="st">"ISG15"</span>, <span class="st">"CD3D"</span><span class="op">)</span>,</span>
+<span>    pt.size <span class="op">=</span> <span class="fl">0.2</span>, </span>
+<span>    ncol <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="sctransform_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+</section><section id="umap图" class="level3"><h3 class="anchored" data-anchor-id="umap图">UMAP图：</h3>
+<div class="cell" data-hash="sctransform_cache/html/unnamed-chunk-8_ef5618c4a623b22d95eb89b729ca99dd">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc</span>, </span>
+<span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CD8A"</span>, <span class="st">"GZMK"</span>, <span class="st">"CCL5"</span>, <span class="st">"S100A4"</span>, <span class="st">"ANXA1"</span>, <span class="st">"CCR7"</span><span class="op">)</span>, </span>
+<span>            pt.size <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>            ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="sctransform_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<div class="cell" data-hash="sctransform_cache/html/unnamed-chunk-9_532a2686556800611ff614825185fd13">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc</span>, </span>
+<span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CD3D"</span>, <span class="st">"ISG15"</span>, <span class="st">"TCL1A"</span>, <span class="st">"FCER2"</span>, <span class="st">"XCL1"</span>, <span class="st">"FCGR3A"</span><span class="op">)</span>, </span>
+<span>            pt.size <span class="op">=</span> <span class="fl">0.2</span>,</span>
+<span>            ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="sctransform_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Session Info
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="sctransform_cache/html/unnamed-chunk-10_e8b172ddd5ef5096e2642e36581913a2">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.3.2 (2023-10-31)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.1.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Asia/Shanghai
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] Seurat_5.0.1       SeuratObject_5.0.1 sp_2.1-1          
+
+loaded via a namespace (and not attached):
+  [1] RColorBrewer_1.1-3          rstudioapi_0.15.0          
+  [3] jsonlite_1.8.7              magrittr_2.0.3             
+  [5] spatstat.utils_3.0-4        farver_2.1.1               
+  [7] rmarkdown_2.25              zlibbioc_1.48.0            
+  [9] vctrs_0.6.4                 ROCR_1.0-11                
+ [11] DelayedMatrixStats_1.24.0   spatstat.explore_3.2-5     
+ [13] RCurl_1.98-1.13             S4Arrays_1.2.0             
+ [15] htmltools_0.5.7             SparseArray_1.2.2          
+ [17] sctransform_0.4.1           parallelly_1.36.0          
+ [19] KernSmooth_2.23-22          htmlwidgets_1.6.3          
+ [21] ica_1.0-3                   plyr_1.8.9                 
+ [23] plotly_4.10.3               zoo_1.8-12                 
+ [25] igraph_1.5.1                mime_0.12                  
+ [27] lifecycle_1.0.4             pkgconfig_2.0.3            
+ [29] Matrix_1.6-3                R6_2.5.1                   
+ [31] fastmap_1.1.1               GenomeInfoDbData_1.2.11    
+ [33] MatrixGenerics_1.14.0       fitdistrplus_1.1-11        
+ [35] future_1.33.0               shiny_1.8.0                
+ [37] digest_0.6.33               colorspace_2.1-0           
+ [39] patchwork_1.1.3             S4Vectors_0.40.1           
+ [41] tensor_1.5                  RSpectra_0.16-1            
+ [43] irlba_2.3.5.1               GenomicRanges_1.54.1       
+ [45] labeling_0.4.3              progressr_0.14.0           
+ [47] fansi_1.0.5                 spatstat.sparse_3.0-3      
+ [49] httr_1.4.7                  polyclip_1.10-6            
+ [51] abind_1.4-5                 compiler_4.3.2             
+ [53] withr_2.5.2                 fastDummies_1.7.3          
+ [55] R.utils_2.12.3              MASS_7.3-60                
+ [57] DelayedArray_0.28.0         tools_4.3.2                
+ [59] lmtest_0.9-40               httpuv_1.6.12              
+ [61] future.apply_1.11.0         goftest_1.2-3              
+ [63] R.oo_1.25.0                 glmGamPoi_1.14.0           
+ [65] glue_1.6.2                  nlme_3.1-163               
+ [67] promises_1.2.1              grid_4.3.2                 
+ [69] Rtsne_0.16                  cluster_2.1.4              
+ [71] reshape2_1.4.4              generics_0.1.3             
+ [73] gtable_0.3.4                spatstat.data_3.0-3        
+ [75] R.methodsS3_1.8.2           tidyr_1.3.0                
+ [77] data.table_1.14.8           XVector_0.42.0             
+ [79] utf8_1.2.4                  BiocGenerics_0.48.1        
+ [81] spatstat.geom_3.2-7         RcppAnnoy_0.0.21           
+ [83] ggrepel_0.9.4               RANN_2.6.1                 
+ [85] pillar_1.9.0                stringr_1.5.1              
+ [87] spam_2.10-0                 RcppHNSW_0.5.0             
+ [89] later_1.3.1                 splines_4.3.2              
+ [91] dplyr_1.1.4                 lattice_0.22-5             
+ [93] survival_3.5-7              deldir_2.0-2               
+ [95] tidyselect_1.2.0            miniUI_0.1.1.1             
+ [97] pbapply_1.7-2               knitr_1.45                 
+ [99] gridExtra_2.3               IRanges_2.36.0             
+[101] SummarizedExperiment_1.32.0 scattermore_1.2            
+[103] stats4_4.3.2                xfun_0.41                  
+[105] Biobase_2.62.0              matrixStats_1.1.0          
+[107] stringi_1.8.2               lazyeval_0.2.2             
+[109] yaml_2.3.7                  evaluate_0.23              
+[111] codetools_0.2-19            tibble_3.2.1               
+[113] cli_3.6.1                   uwot_0.1.16                
+[115] xtable_1.8-4                reticulate_1.34.0          
+[117] munsell_0.5.0               Rcpp_1.0.11                
+[119] GenomeInfoDb_1.38.1         globals_0.16.2             
+[121] spatstat.random_3.2-1       png_0.1-8                  
+[123] parallel_4.3.2              ellipsis_0.3.2             
+[125] ggplot2_3.4.4               dotCall64_1.1-0            
+[127] sparseMatrixStats_1.14.0    bitops_1.0-7               
+[129] listenv_0.9.0               viridisLite_0.4.2          
+[131] scales_1.2.1                ggridges_0.5.4             
+[133] crayon_1.5.2                leiden_0.4.3.1             
+[135] purrr_1.0.2                 rlang_1.1.2                
+[137] cowplot_1.1.1              </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- -->
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="ref-choudhary2022b" class="csl-entry" role="listitem">
+Choudhary, Saket, and Rahul Satija. 2022. <span>“Comparison and Evaluation of Statistical Error Models for scRNA-Seq.”</span> <em>Genome Biology</em> 23 (1). <a href="https://doi.org/10.1186/s13059-021-02584-9">https://doi.org/10.1186/s13059-021-02584-9</a>.
+</div>
+<div id="ref-lause2021" class="csl-entry" role="listitem">
+Lause, Jan, Philipp Berens, and Dmitry Kobak. 2021. <span>“Analytic Pearson Residuals for Normalization of Single-Cell RNA-Seq UMI Data.”</span> <em>Genome Biology</em> 22 (1). <a href="https://doi.org/10.1186/s13059-021-02451-7">https://doi.org/10.1186/s13059-021-02451-7</a>.
+</div>
+</div>
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+      }
+    }
+});
+</script><script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../single_cell/data_visualization_methods_in_seurat.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../single_cell/integration.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">单细胞数据整合（integration）</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb17" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 基于SCTransform的单细胞数据标准化 {#sec-sctransform}</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>原文：<span class="co">[</span><span class="ot">*Using sctransform in Seurat*</span><span class="co">](https://satijalab.org/seurat/articles/sctransform_vignette)</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>原文发布日期：2023年10月31日</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>**Biological heterogeneity** in single-cell RNA-seq data is often confounded by technical factors including **sequencing depth**. The **number of molecules detected in each cell** can vary significantly between cells, even within the same celltype. Interpretation of scRNA-seq data requires effective pre-processing and normalization to remove this **technical variability**.</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>In our manuscript we introduce a modeling framework for the normalization and variance stabilization of molecular count data from scRNA-seq experiments. This procedure **omits the need for heuristic steps** including pseudocount addition or log-transformation and **improves common downstream analytical tasks** such as variable gene selection, dimensional reduction, and differential expression. We named this method<span class="in">`sctransform`</span>.</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>Inspired by important and rigorous work from Lause et al <span class="co">[</span><span class="ot">@lause2021</span><span class="co">]</span>, we released an updated manuscript <span class="co">[</span><span class="ot">@choudhary2022b</span><span class="co">]</span> and updated the sctransform software to a v2 version, which is now the default in Seurat v5.</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## 载入数据</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>pbmc_data <span class="ot">&lt;-</span> <span class="fu">Read10X</span>(<span class="at">data.dir =</span> <span class="st">"data/filtered_gene_bc_matrices/hg19"</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> pbmc_data)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>pbmc</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## 质控</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>这里的质控步骤只简单的计算了线粒体基因的比例。</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">PercentageFeatureSet</span>(pbmc, <span class="at">pattern =</span> <span class="st">"^MT-"</span>, <span class="at">col.name =</span> <span class="st">"percent.mt"</span>)</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pbmc<span class="sc">@</span>meta.data, <span class="dv">5</span>)</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a><span class="fu">## 运行`SCTransform`</span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`SCTransform`</span>替代了传统单细胞数据分析流程中的<span class="in">`NormalizeData()`</span>、<span class="in">`ScaleData()`</span>和<span class="in">`FindVariableFeatures()`</span>函数的功能，因此不再需要运行这些函数。</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>During normalization, we can also remove confounding sources of variation, for example, mitochondrial mapping percentage。<span class="in">`SCTransform`</span>也可以移除一些非期望变异来源，如线粒体基因的比例。这在传统的单细胞数据分析流程中由<span class="in">`ScaleData`</span>来完成（ @sec-scaledata ）。</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>In Seurat v5, SCT v2 is applied by default. You can revert to v1 by setting&nbsp;<span class="in">`vst.flavor = 'v1'`</span></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`SCTransform`</span>的运算调用了<span class="co">[</span><span class="ot">`glmGamPoi`</span><span class="co">](https://bioconductor.org/packages/release/bioc/html/glmGamPoi.html)</span>包以显著提升运算速度。所以事先需要通过BiocManager安装该包。</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a><span class="co"># BiocManager::install("glmGamPoi")</span></span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(pbmc, </span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>                    <span class="at">vars.to.regress =</span> <span class="st">"percent.mt"</span>, </span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>                    <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a>Transformed data will be available in the <span class="in">`SCT assay`</span>, which is set as the default after running <span class="in">`SCTransform`</span>：</span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-11-23%2019.32.28.png)</span></span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`pbmc[["SCT"]]$scale.data`</span>&nbsp;contains the residuals (normalized values), and is **used directly as input to PCA**. Please note that **this matrix is non-sparse**, and can therefore take up a lot of memory if stored for all genes. **To save memory, we store these values only for variable genes**, by setting the <span class="in">`return.only.var.genes = TRUE`</span> by default in the&nbsp;<span class="in">`SCTransform()`</span>&nbsp;function call.</span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>To assist with visualization and interpretation, we also convert Pearson residuals back to 'corrected' UMI counts. You can interpret these as the UMI counts we would expect to observe if all cells were sequenced to the same depth. If you want to see exactly how we do this, please look at the correct function&nbsp;<span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/ChristophH/sctransform/blob/master/R/denoise.R)</span>.</span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>The 'corrected' UMI counts are stored in&nbsp;<span class="in">`pbmc[["SCT"]]$counts`</span>. We store log-normalized versions of these corrected counts in&nbsp;<span class="in">`pbmc[["SCT"]]$data`</span>, which are very helpful for visualization.</span>
+<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a><span class="fu">## 降维</span></span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(pbmc, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(pbmc, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a>降维可视化：</span>
+<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a><span class="fu">VizDimLoadings</span>(pbmc, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">reduction =</span> <span class="st">"pca"</span>)</span>
+<span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(pbmc, <span class="at">reduction =</span> <span class="st">"umap"</span>)</span>
+<span id="cb17-80"><a href="#cb17-80" aria-hidden="true" tabindex="-1"></a><span class="fu">DimHeatmap</span>(pbmc, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>, <span class="at">cells =</span> <span class="dv">1000</span>, <span class="at">balanced =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-81"><a href="#cb17-81" aria-hidden="true" tabindex="-1"></a><span class="fu">ElbowPlot</span>(pbmc)</span>
+<span id="cb17-82"><a href="#cb17-82" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-83"><a href="#cb17-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-84"><a href="#cb17-84" aria-hidden="true" tabindex="-1"></a><span class="fu">## 聚类</span></span>
+<span id="cb17-85"><a href="#cb17-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-88"><a href="#cb17-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-89"><a href="#cb17-89" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(pbmc, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-90"><a href="#cb17-90" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(pbmc, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(pbmc, <span class="at">label =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a>根据Seurat细胞分群官方教程（ @sec-决定后续分析的主成分 ），这个数据集"we can observe an 'elbow' around PC9-10, suggesting that the majority of true signal is captured in the first 10 PCs"。因此在<span class="in">`FindNeighbors`</span>函数中指定了<span class="in">`dims = 1:10`</span>。但是这里的<span class="in">`FindNeighbors`</span>函数指定了更多的主成分（<span class="in">`dims = 1:30`</span>）。下面的内容对此作出了解释：</span>
+<span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-96"><a href="#cb17-96" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a><span class="fu">## Why can we choose more PCs when using sctransform?</span></span>
+<span id="cb17-98"><a href="#cb17-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-99"><a href="#cb17-99" aria-hidden="true" tabindex="-1"></a>In the Seurat细胞分群官方教程，we focus on **10 PCs** for this dataset, though we highlight that **the results are similar with higher settings for this parameter**. Interestingly, we've found that when using `SCTransform`, we often **benefit by pushing this parameter even higher**. We believe this is because the <span class="in">`SCTransform`</span> workflow performs more effective normalization, strongly removing technical effects from the data.</span>
+<span id="cb17-100"><a href="#cb17-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-101"><a href="#cb17-101" aria-hidden="true" tabindex="-1"></a>Even after standard log-normalization, variation in sequencing depth is still a confounding factor (see&nbsp;<span class="co">[</span><span class="ot">Figure 1</span><span class="co">](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1)</span>), and this effect can subtly influence higher PCs. In <span class="in">`SCTransform`</span>, this effect is substantially mitigated (see&nbsp;<span class="co">[</span><span class="ot">Figure 3</span><span class="co">](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1)</span>). This means that **higher PCs are more likely to represent subtle, but biologically relevant, sources of heterogeneity** -- so including them may improve downstream analysis.</span>
+<span id="cb17-102"><a href="#cb17-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-103"><a href="#cb17-103" aria-hidden="true" tabindex="-1"></a>In addition, <span class="in">`SCTransform`</span> **returns 3,000 variable features by default, instead of 2,000**. The rationale is similar, the additional variable features are less likely to be driven by technical differences across cells, and instead may represent more subtle biological fluctuations. In general, we find that results produced with <span class="in">`SCTransform`</span> are less dependent on these parameters (indeed, we achieve nearly identical results when using all genes in the transcriptome, though this does reduce computational efficiency). This can help users generate more robust results, and in addition, enables the application of standard analysis pipelines with identical parameter settings that can quickly be applied to new datasets.</span>
+<span id="cb17-104"><a href="#cb17-104" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb17-105"><a href="#cb17-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-106"><a href="#cb17-106" aria-hidden="true" tabindex="-1"></a><span class="fu">## Marker基因可视化</span></span>
+<span id="cb17-107"><a href="#cb17-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-108"><a href="#cb17-108" aria-hidden="true" tabindex="-1"></a>Users can individually annotate clusters based on canonical markers. However, the <span class="in">`SCTransform`</span> normalization reveals **sharper biological distinctions** compared to the&nbsp;standard Seurat workflow（ @sec-seurat细胞分群官方教程 ）, in a few ways:</span>
+<span id="cb17-109"><a href="#cb17-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-110"><a href="#cb17-110" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Clear separation of at least **3 CD8 T cell populations (naive, memory, effector)**, based on **CD8A, GZMK, CCL5, CCR7** expression</span>
+<span id="cb17-111"><a href="#cb17-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-112"><a href="#cb17-112" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Clear separation of **three CD4 T cell populations (naive, memory, IFN-activated)** based on **S100A4, CCR7, IL32,** and **ISG15**</span>
+<span id="cb17-113"><a href="#cb17-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-114"><a href="#cb17-114" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Additional developmental sub-structure in B cell cluster, based on TCL1A, FCER2</span>
+<span id="cb17-115"><a href="#cb17-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-116"><a href="#cb17-116" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Additional separation of NK cells into CD56dim vs.&nbsp;bright clusters, based on XCL1 and FCGR3A</span>
+<span id="cb17-117"><a href="#cb17-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-118"><a href="#cb17-118" aria-hidden="true" tabindex="-1"></a><span class="fu">### 小提琴图：</span></span>
+<span id="cb17-119"><a href="#cb17-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-122"><a href="#cb17-122" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-123"><a href="#cb17-123" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb17-124"><a href="#cb17-124" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(pbmc, </span>
+<span id="cb17-125"><a href="#cb17-125" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD8A"</span>, <span class="st">"GZMK"</span>, <span class="st">"CCL5"</span>, <span class="st">"S100A4"</span>, <span class="st">"ANXA1"</span>, <span class="st">"CCR7"</span>, <span class="st">"ISG15"</span>, <span class="st">"CD3D"</span>),</span>
+<span id="cb17-126"><a href="#cb17-126" aria-hidden="true" tabindex="-1"></a>    <span class="at">pt.size =</span> <span class="fl">0.2</span>, </span>
+<span id="cb17-127"><a href="#cb17-127" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol =</span> <span class="dv">4</span>)</span>
+<span id="cb17-128"><a href="#cb17-128" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-129"><a href="#cb17-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-130"><a href="#cb17-130" aria-hidden="true" tabindex="-1"></a><span class="fu">### UMAP图：</span></span>
+<span id="cb17-131"><a href="#cb17-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-134"><a href="#cb17-134" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-135"><a href="#cb17-135" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 8</span></span>
+<span id="cb17-136"><a href="#cb17-136" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb17-137"><a href="#cb17-137" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc, </span>
+<span id="cb17-138"><a href="#cb17-138" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD8A"</span>, <span class="st">"GZMK"</span>, <span class="st">"CCL5"</span>, <span class="st">"S100A4"</span>, <span class="st">"ANXA1"</span>, <span class="st">"CCR7"</span>), </span>
+<span id="cb17-139"><a href="#cb17-139" aria-hidden="true" tabindex="-1"></a>            <span class="at">pt.size =</span> <span class="fl">0.2</span>,</span>
+<span id="cb17-140"><a href="#cb17-140" aria-hidden="true" tabindex="-1"></a>            <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb17-141"><a href="#cb17-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-142"><a href="#cb17-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-145"><a href="#cb17-145" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-146"><a href="#cb17-146" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 8</span></span>
+<span id="cb17-147"><a href="#cb17-147" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb17-148"><a href="#cb17-148" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc, </span>
+<span id="cb17-149"><a href="#cb17-149" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD3D"</span>, <span class="st">"ISG15"</span>, <span class="st">"TCL1A"</span>, <span class="st">"FCER2"</span>, <span class="st">"XCL1"</span>, <span class="st">"FCGR3A"</span>), </span>
+<span id="cb17-150"><a href="#cb17-150" aria-hidden="true" tabindex="-1"></a>            <span class="at">pt.size =</span> <span class="fl">0.2</span>,</span>
+<span id="cb17-151"><a href="#cb17-151" aria-hidden="true" tabindex="-1"></a>            <span class="at">ncol =</span> <span class="dv">3</span>)</span>
+<span id="cb17-152"><a href="#cb17-152" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-153"><a href="#cb17-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-154"><a href="#cb17-154" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb17-155"><a href="#cb17-155" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb17-156"><a href="#cb17-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-159"><a href="#cb17-159" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-160"><a href="#cb17-160" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb17-161"><a href="#cb17-161" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-162"><a href="#cb17-162" aria-hidden="true" tabindex="-1"></a>:::</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+      <ul class="footer-items list-unstyled">
+<li class="nav-item">
+ This book was built with Quarto
+  </li>  
+</ul>
+</div>   
+    <div class="nav-footer-center">Copyright 2023, Du Junhong</div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+<li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/djhcod">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+</div>
+  </div>
+</footer>
+
+
+</body></html>

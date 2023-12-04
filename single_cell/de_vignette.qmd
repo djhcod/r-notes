@@ -1,0 +1,332 @@
+# 差异表达分析 {#sec-差异表达分析}
+
+原文：[*Differential expression testing*](https://satijalab.org/seurat/articles/de_vignette)
+
+原文发布日期：2023年10月31日
+
+## 数据读取和预处理
+
+This vignette highlights some example workflows for performing differential expression in Seurat. For demonstration purposes, we will be using the interferon-beta stimulated human PBMCs dataset [@kang2017] that is available via the SeuratData package.
+
+::: {.callout-note collapse="true" appearance="minimal" icon="false"}
+###### 在线读取（可能需要全局代理）
+
+```{r}
+#| eval: false
+library(Seurat)
+library(SeuratData)
+InstallData("ifnb")
+ifnb <- LoadData("ifnb")
+```
+:::
+
+从本地下载好的数据读取：
+
+```{r}
+library(Seurat)
+ifnb <- readRDS("data/pbmc_ifnb.rds")
+ifnb
+head(ifnb@meta.data, 5)
+table(ifnb$seurat_annotations) # 这里的数据已经提前注释好了细胞类型
+# 标准化
+ifnb <- NormalizeData(ifnb)
+```
+
+## 寻找细胞类型之间的差异基因
+
+::: callout-caution
+For a **much** faster implementation of the Wilcoxon Rank Sum Test,(default method for `FindMarkers`) please install the [`presto`](https://github.com/immunogenomics/presto) package:
+
+```{r}
+#| eval: false
+devtools::install_github('immunogenomics/presto')
+```
+:::
+
+Find DE features between CD16 Mono and CD1 Mono：
+
+```{r}
+Idents(ifnb) <- "seurat_annotations"
+monocyte.de.markers <- FindMarkers(ifnb, 
+                                   ident.1 = "CD16 Mono", 
+                                   ident.2 = "CD14 Mono")
+# view results
+nrow(monocyte.de.markers)
+head(monocyte.de.markers)
+```
+
+The results data frame has the following columns :
+
+-   `p_val` : p-value (unadjusted)
+
+-   `avg_log2FC` : log fold-change of the average expression between the two groups. Positive values indicate that the feature is more highly expressed in the first group.
+
+-   `pct.1` : The percentage of cells where the feature is detected in the first group
+
+-   `pct.2` : The percentage of cells where the feature is detected in the second group
+
+-   `p_val_adj` : Adjusted p-value, based on **Bonferroni correction** using all features in the dataset.
+
+If the `ident.2` parameter is omitted or set to `NULL`, [`FindMarkers()`](https://satijalab.org/seurat/reference/findmarkers) will test for differentially expressed features **between the group specified by `ident.1` and all other cells**. Additionally, the parameter `only.pos` can be set to `TRUE` to only search for positive markers, i.e. features that are more highly expressed in the `ident.1` group.
+
+```{r}
+monocyte.de.markers <- FindMarkers(ifnb, 
+                                   ident.1 = "CD16 Mono", 
+                                   ident.2 = NULL, 
+                                   only.pos = TRUE)
+nrow(monocyte.de.markers)
+head(monocyte.de.markers)
+```
+
+## 寻找不同样本类型间同一细胞类型内的差异基因 {#sec-寻找不同样本类型间同一细胞类型内的差异基因}
+
+Since this dataset contains treatment information (control versus stimulated with interferon-beta), we can also ask **what genes change in different conditions for cells of the same type**.
+
+-   First, we create a column in the `meta.data` slot to hold both the cell type and treatment information and switch the current `Idents` to that column.
+
+```{r}
+ifnb$celltype.stim <- paste(ifnb$seurat_annotations, ifnb$stim, sep = "_")
+table(ifnb$celltype.stim)
+Idents(ifnb) <- "celltype.stim"
+```
+
+-   Then we use `FindMarkers()` to find the genes that are different between control and stimulated CD14 monocytes.
+
+```{r}
+mono.de <- FindMarkers(ifnb, 
+                       ident.1 = "CD14 Mono_STIM", 
+                       ident.2 = "CD14 Mono_CTRL", 
+                       verbose = FALSE)
+nrow(mono.de)
+head(mono.de, n = 10)
+```
+
+However, the p-values obtained from this analysis should be interpreted with caution, because **these tests treat each cell as an independent replicate and ignore inherent correlations between cells originating from the same sample**. Such analyses have been shown to find a large number of **false positive associations**, as has been demonstrated by [@squair2021], [@zimmerman2021], [@junttila2022], and others. Below, we show how **pseudobulking** can be used to account for such within-sample correlation.
+
+## pseudobulking后的差异分析
+
+To pseudobulk, we will use `AggregateExpression()` to sum together **gene counts of all the cells from the same sample** for each cell type. This results in **one gene expression profile per sample** **and cell type**. We can then perform DE analysis using [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) **on the sample level**. This treats the samples, rather than the individual cells, as independent observations. 参考前面的 @sec-识别不同样本类型间的差异基因 。
+
+### 准备样本信息
+
+First, we need to retrieve the sample information for each cell. This is not loaded in the metadata, so we will load it from the [Github repo](https://github.com/yelabucsf/demuxlet_paper_code/tree/master/) of the source data for the original paper.
+
+::: {.callout-tip collapse="true" appearance="minimal" icon="false"}
+###### Add sample information to the dataset
+
+```{r}
+#| eval: false
+#| echo: fenced
+
+# 从GitHub仓库读取（可能需要代理）
+# load the inferred sample IDs of each cell
+ctrl <- read.table(url("https://raw.githubusercontent.com/yelabucsf/demuxlet_paper_code/master/fig3/ye1.ctrl.8.10.sm.best"), head = T, stringsAsFactors = F)
+stim <- read.table(url("https://raw.githubusercontent.com/yelabucsf/demuxlet_paper_code/master/fig3/ye2.stim.8.10.sm.best"), head = T, stringsAsFactors = F)
+```
+
+```{r}
+# 这里提前下载好了两个样本信息文件，所以直接从本地读取
+ctrl <- readRDS("data/inferred_sample_ids_ctrl.rds")
+stim <- readRDS("data/inferred_sample_ids_stim.rds")
+info <- rbind(ctrl, stim)
+info$BARCODE[1:5]
+colnames(ifnb)[1:5]
+# 可以看到两者的barcode形式不一致
+# rename the cell IDs by substituting the '-' into '.'
+info$BARCODE <- gsub(pattern = "\\-", replacement = "\\.", info$BARCODE)
+info$BARCODE[1:5]
+
+# only keep the cells with high-confidence sample ID
+info <- info[grep(pattern = "SNG", x = info$BEST), ]
+
+# remove cells with duplicated IDs in both ctrl and stim groups
+info <- info[!duplicated(info$BARCODE) & !duplicated(info$BARCODE, fromLast = T), ]
+
+# now add the sample IDs to ifnb 
+rownames(info) <- info$BARCODE
+info <- info[, c("BEST"), drop = F]
+names(info) <- c("donor_id")
+ifnb <- AddMetaData(ifnb, metadata = info)
+
+# remove cells without donor IDs
+ifnb$donor_id[is.na(ifnb$donor_id)] <- "unknown"
+ifnb <- subset(ifnb, subset = donor_id != "unknown")
+```
+:::
+
+可以看到，现在的meta.dat中多了样本信息列（`donor_id`），记录了每个细胞来自哪个患者：
+
+```{r}
+head(ifnb@meta.data, 5)
+table(ifnb$donor_id)
+```
+
+### 执行pseudobulking
+
+按照治疗分组（STIM vs. CTRL）、患者IDs、细胞类型（seurat_annotations）3个条件，执行pseudobulking (`AggregateExpression`)。
+
+```{r}
+pseudo_ifnb <- AggregateExpression(ifnb, 
+                                   assays = "RNA", 
+                                   return.seurat = T, 
+                                   group.by = c("stim", "donor_id", "seurat_annotations"))
+pseudo_ifnb
+head(pseudo_ifnb@meta.data) # 可以看到现在的表达矩阵的列（即样本）为治疗分组+患者IDs+细胞类型
+```
+
+然后我们在meta.data中增加一列，记录治疗分组（STIM vs. CTRL）+ 细胞类型，这是用于差异分析的分组依据。这和 @sec-寻找不同样本类型间同一细胞类型内的差异基因 的第一步是一样的。
+
+```{r}
+pseudo_ifnb$celltype.stim <- paste(pseudo_ifnb$seurat_annotations, 
+                                   pseudo_ifnb$stim, 
+                                   sep = "_")
+pseudo_ifnb$celltype.stim[1:5]
+```
+
+### 执行差异分析
+
+Next, we perform DE testing on the pseudobulk level for CD14 monocytes, and compare it against the previous single-cell-level DE results.
+
+::: {.callout-caution collapse="true"}
+###### 安装`DESeq2`包
+
+由于pseudobulking后的`FindMarkers`差异分析需要采用`DESeq2`包提供的方法，所以需要提前安装`DESeq2`包：
+
+```{r}
+#| eval: false
+#| echo: fenced
+BiocManager::install("DESeq2")
+```
+:::
+
+```{r}
+Idents(pseudo_ifnb) <- "celltype.stim"
+
+bulk.mono.de <- FindMarkers(object = pseudo_ifnb, 
+                            ident.1 = "CD14 Mono_STIM", 
+                            ident.2 = "CD14 Mono_CTRL",
+                            test.use = "DESeq2") # 指定差异分析方法为"DESeq2"
+head(bulk.mono.de, n = 15)
+```
+
+::: {.callout-tip collapse="true"}
+###### `FindMarkers`支持的差异分析方法
+
+We also support many other DE tests using other methods. For completeness, the following tests are currently supported:
+
+-   "wilcox" : Wilcoxon rank sum test (default, using '[presto](https://github.com/immunogenomics/presto)' package)
+
+-   "wilcox_limma" : Wilcoxon rank sum test (using '[limma](https://bioconductor.org/packages/release/bioc/html/limma.html)' package)
+
+-   "bimod" : Likelihood-ratio test for single cell feature expression, (McDavid et al., Bioinformatics, 2013)
+
+-   "roc" : Standard AUC classifier
+
+-   "t" : Student's t-test
+
+-   "poisson" : Likelihood ratio test assuming an underlying negative binomial distribution. Use only for UMI-based datasets
+
+-   "negbinom" : Likelihood ratio test assuming an underlying negative binomial distribution. Use only for UMI-based datasets
+
+-   "LR" : Uses a logistic regression framework to determine differentially expressed genes. Constructs a logistic regression model predicting group membership based on each feature individually and compares this to a null model with a likelihood ratio test.
+
+-   "MAST" : GLM-framework that treates cellular detection rate as a covariate (Finak et al, Genome Biology, 2015) (Installation instructions)
+
+-   "DESeq2" : DE based on a model using the negative binomial distribution (Love et al, Genome Biology, 2014) (Installation instructions) For MAST and DESeq2, please ensure that these packages are installed separately in order to use them as part of Seurat. Once installed, use the test.use parameter can be used to specify which DE test to use.
+
+```{r}
+# Test for DE features using the MAST package
+# BiocManager::install('limma')
+Idents(ifnb) <- "seurat_annotations"
+head(FindMarkers(ifnb, 
+                 ident.1 = "CD14 Mono", 
+                 ident.2 = "CD16 Mono", 
+                 test.use = "wilcox_limma"))
+```
+:::
+
+### 比较单细胞水平和pseudobulk水平的差异表达分析
+
+接下来，我们可以比较一下单细胞水平的差异表达分析的P值和pseudobulk水平的P值：
+
+```{r}
+names(bulk.mono.de) <- paste0(names(bulk.mono.de), ".bulk") # 重命名列
+bulk.mono.de$gene <- rownames(bulk.mono.de)
+
+names(mono.de) <- paste0(names(mono.de), ".sc")
+mono.de$gene <- rownames(mono.de)
+
+merge_dat <- merge(mono.de, bulk.mono.de, by = "gene")
+merge_dat <- merge_dat[order(merge_dat$p_val.bulk), ]
+
+# 查看在两种差异分析方法中P值都有意义的基因名
+common <- merge_dat$gene[which(merge_dat$p_val.bulk < 0.05 & 
+                                merge_dat$p_val.sc < 0.05)]
+# 查看在pseudobulk水平P>0.05但是在单细胞水平P<0.05的基因名：
+only_sc <- merge_dat$gene[which(merge_dat$p_val.bulk > 0.05 & 
+                                  merge_dat$p_val.sc < 0.05)]
+# 查看在pseudobulk水平P<0.05但是在单细胞水平P>0.05的基因名：
+only_bulk <- merge_dat$gene[which(merge_dat$p_val.bulk < 0.05 & 
+                                    merge_dat$p_val.sc > 0.05)]
+print(paste0('# 在两种差异分析方法中P值都<0.05的基因有: ',length(common), "个"))
+print(paste0('# 仅在单细胞水平差异分析中P值<0.05的基因有: ',length(only_sc), "个"))
+print(paste0('# 仅在pseudobulk水平差异分析中P值<0.05的基因有: ',length(only_bulk), "个"))
+```
+
+> We can see that while the p-values are correlated between the single-cell and pseudobulk data, the [**single-cell p-values are often smaller**]{.underline} and suggest higher levels of significance. In particular, there are 3,519 genes with evidence of differential expression (prior to multiple hypothesis testing) in both analyses, 1,649 genes that only appear to be differentially expressed in the single-cell analysis, and just 204 genes that only appear to be differentially expressed in the bulk analysis. We can investigate these discrepancies using `VlnPlot`.
+
+接下来，我们通过小提琴图来检查两种方法中的Top共同差异基因在在刺激组和对照组的表达水平：
+
+```{r}
+# create a new column to annotate sample-condition-celltype in the single-cell dataset
+ifnb$donor_id.stim <- paste0(ifnb$stim, "-", ifnb$donor_id)
+head(ifnb@meta.data)
+table(ifnb$celltype.stim)
+
+Idents(ifnb) <- "celltype.stim"
+# 这里我们检查p_val.bulk最小的前两个Top差异基因
+print(merge_dat[merge_dat$gene %in% common[1:2], c('gene','p_val.sc','p_val.bulk')])
+
+# 在细胞类型水平（CD14 Mono）查看这两个Top差异基因在刺激组和对照组的表达水平
+VlnPlot(ifnb, 
+        features = common[1:2], 
+        idents = c("CD14 Mono_CTRL", "CD14 Mono_STIM"), 
+        group.by = "stim") 
+# 在样本（患者）水平查看这两个Top差异基因在刺激组和对照组的表达水平
+VlnPlot(ifnb, 
+        features = common[1:2], 
+        idents = c("CD14 Mono_CTRL", "CD14 Mono_STIM"), 
+        group.by = "donor_id.stim", 
+        ncol = 1) 
+```
+
+> In both the pseudobulk and single-cell analyses, the p-values for these two genes are astronomically small. For both of these genes, when just comparing all stimulated CD4 monocytes to all control CD4 monocytes across samples, we see much higher expression in the stimulated cells. When breaking down these cells by sample, we continue to see consistently higher expression levels in the stimulated samples compared to the control samples; in other words, this finding is not driven by just one or two samples. Because of this consistency, we find this signal in both analyses.
+
+By contrast, we can examine examples of genes that are only DE under the single-cell analysis.
+
+```{r}
+print(merge_dat[merge_dat$gene %in% c('SRGN','HLA-DRA'), 
+                c('gene','p_val.sc','p_val.bulk')])
+VlnPlot(ifnb, 
+        features = c('SRGN','HLA-DRA'), 
+        idents = c("CD14 Mono_CTRL", "CD14 Mono_STIM"), 
+        group.by = "stim") 
+VlnPlot(ifnb, 
+        features = c('SRGN','HLA-DRA'), 
+        idents = c("CD14 Mono_CTRL", "CD14 Mono_STIM"), 
+        group.by = "donor_id.stim", 
+        ncol = 1) 
+```
+
+> Here, SRGN and HLA-DRA both have very small p-values in the single-cell analysis (on the orders of 10^−21^ and 10^−9^), but much larger p-values around 0.18 in the pseudobulk analysis. While there appears to be a difference between control and simulated cells when ignoring sample information, the signal is much weaker on the sample level, and we can see notable variability from sample to sample.
+
+所以，从这个例子中可以看出**pseudobulk后的差异分析的结果更加准确**。
+
+::: {.callout-note collapse="true" icon="false"}
+## Session Info
+
+```{r}
+#| echo: false
+sessionInfo()
+```
+:::

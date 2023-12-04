@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.3.433">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
 <title>R语言学习笔记 - 3&nbsp; 数据的读取与输出</title>
 <style>
 code{white-space: pre-wrap;}
@@ -53,6 +56,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 </style>
 
+
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
@@ -60,7 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../bioinformatics/single_cell/r_single_cell.html" rel="next">
+<link href="../single_cell/seurat.html" rel="next">
 <link href="../r_basic/environment_configuration.html" rel="prev">
 <link href="../images/logo.jpg" rel="icon" type="image/jpeg">
 <script src="../site_libs/quarto-html/quarto.js"></script>
@@ -73,7 +77,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
   "collapse-after": 3,
@@ -92,25 +97,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script type="application/json" class="js-hypothesis-config">
+}</script>
+<script type="application/json" class="js-hypothesis-config">
 {
   "theme": "classic",
   "openSidebar": false,
   "showHighlights": "always",
   "enableExperimentalNewNoteButton": true
 }
-</script><script async="" src="https://hypothes.is/embed.js"></script>
+</script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+
+
 <meta name="twitter:title" content="R语言学习笔记 - 3&nbsp; 数据的读取与输出">
 <meta name="twitter:description" content="">
 <meta name="twitter:card" content="summary">
 </head>
+
 <body class="nav-sidebar docked nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../images/logo.jpg" alt="" class="navbar-logo"></a>
+    <img src="../images/logo.jpg" alt="" class="navbar-logo">
+    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">R语言学习笔记</span>
     </a>
@@ -121,69 +134,71 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-<li class="nav-item">
+  <li class="nav-item">
     <a class="nav-link active" href="../index.html" rel="" target="" aria-current="page">
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../intro.html" rel="" target="">
- <span class="menu-text">前言</span></a>
+ <span class="menu-text">Introduction</span></a>
   </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parts" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
  <span class="menu-text">Parts</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-parts">
-<li>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-parts">    
+        <li>
     <a class="dropdown-item" href="../r_basic/r_basics.html" rel="" target="">
  <span class="dropdown-text">R语言基础</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../bioinformatics/single_cell/r_single_cell.html" rel="" target="">
- <span class="dropdown-text">R语言单细胞数据分析</span></a>
+    <a class="dropdown-item" href="../single_cell/seurat.html" rel="" target="">
+ <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../quarto_foundation/quarto_foundation.html" rel="" target="">
  <span class="dropdown-text">Quarto基础</span></a>
   </li>  
     </ul>
-</li>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="../references.html" rel="" target="">
  <span class="menu-text">References</span></a>
   </li>  
 </ul>
-<ul class="navbar-nav navbar-nav-scroll ms-auto">
-<li class="nav-item">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
     <a class="nav-link" href="https://bookdown.org" rel="" target=""><i class="bi bi-book-fill" role="img">
 </i> 
  <span class="menu-text">Bookdown</span></a>
   </li>  
 </ul>
-<div class="quarto-navbar-tools tools-wide">
+            <div class="quarto-navbar-tools tools-wide">
     <a href="https://github.com/djhcod/r-notes" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <div class="dropdown">
       <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
-<li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=%7Curl%7C">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=|url|">
               <i class="bi bi-bi-twitter pe-1"></i>
             Twitter
             </a>
           </li>
           <li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=%7Curl%7C">
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
               <i class="bi bi-bi-facebook pe-1"></i>
             Facebook
             </a>
           </li>
       </ul>
-</div>
+    </div>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
-    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
@@ -194,16 +209,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
         <div id="quarto-search" class="" title="Search"></div>
         </div>
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">主页</span></span></a>
@@ -224,8 +243,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rstudio环境配置</span></span></a>
@@ -238,48 +257,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../bioinformatics/single_cell/r_single_cell.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">R语言单细胞数据分析</span></a>
+            <a href="../single_cell/seurat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat v5官方文档</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../bioinformatics/single_cell/seurat_command_list.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title"><code>Seurat</code>单细胞数据处理流程常用函数清单</span></span></a>
+  <a href="../single_cell/seurat_command_list.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../bioinformatics/single_cell/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
+  <a href="../single_cell/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../bioinformatics/single_cell/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
+  <a href="../single_cell/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../bioinformatics/single_cell/sctransform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">基于<code>SCTransform</code>的单细胞数据标准化</span></span></a>
+  <a href="../single_cell/sctransform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../bioinformatics/single_cell/integration.html" class="sidebar-item-text sidebar-link">
+  <a href="../single_cell/integration.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">单细胞数据整合（integration）</span></span></a>
   </div>
 </li>
-      </ul>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+  </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/de_vignette.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">差异表达分析</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
@@ -288,45 +331,45 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
@@ -336,53 +379,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
 </li>
       </ul>
-</li>
+  </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">Table of contents</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1">
+    <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#%E8%AF%BB%E5%8F%96csv%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6" id="toc-读取csv数据文件" class="nav-link active" data-scroll-target="#%E8%AF%BB%E5%8F%96csv%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6"><span class="header-section-number">3.1</span> 读取CSV数据文件</a></li>
-  <li><a href="#%E8%AF%BB%E5%8F%96spss%E6%96%87%E4%BB%B6" id="toc-读取spss文件" class="nav-link" data-scroll-target="#%E8%AF%BB%E5%8F%96spss%E6%96%87%E4%BB%B6"><span class="header-section-number">3.2</span> 读取SPSS文件</a></li>
-  <li><a href="#%E8%AF%BB%E5%8F%96excel%E6%96%87%E4%BB%B6" id="toc-读取excel文件" class="nav-link" data-scroll-target="#%E8%AF%BB%E5%8F%96excel%E6%96%87%E4%BB%B6"><span class="header-section-number">3.3</span> 读取Excel文件</a></li>
-  <li><a href="#%E8%AF%BB%E5%8F%96txt%E6%96%87%E4%BB%B6" id="toc-读取txt文件" class="nav-link" data-scroll-target="#%E8%AF%BB%E5%8F%96txt%E6%96%87%E4%BB%B6"><span class="header-section-number">3.4</span> 读取txt文件</a></li>
-  <li><a href="#%E8%AF%BB%E5%8F%96%E8%87%AA%E5%B8%A6%E6%95%B0%E6%8D%AE%E9%9B%86" id="toc-读取自带数据集" class="nav-link" data-scroll-target="#%E8%AF%BB%E5%8F%96%E8%87%AA%E5%B8%A6%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="header-section-number">3.5</span> 读取自带数据集</a></li>
-  <li>
-<a href="#%E4%B8%8B%E8%BD%BD%E5%92%8C%E8%AF%BB%E5%8F%96%E5%8E%8B%E7%BC%A9%E5%8C%85" id="toc-下载和读取压缩包" class="nav-link" data-scroll-target="#%E4%B8%8B%E8%BD%BD%E5%92%8C%E8%AF%BB%E5%8F%96%E5%8E%8B%E7%BC%A9%E5%8C%85"><span class="header-section-number">3.6</span> 下载和读取压缩包</a>
+  <li><a href="#读取csv数据文件" id="toc-读取csv数据文件" class="nav-link active" data-scroll-target="#读取csv数据文件"><span class="header-section-number">3.1</span> 读取CSV数据文件</a></li>
+  <li><a href="#读取spss文件" id="toc-读取spss文件" class="nav-link" data-scroll-target="#读取spss文件"><span class="header-section-number">3.2</span> 读取SPSS文件</a></li>
+  <li><a href="#读取excel文件" id="toc-读取excel文件" class="nav-link" data-scroll-target="#读取excel文件"><span class="header-section-number">3.3</span> 读取Excel文件</a></li>
+  <li><a href="#读取txt文件" id="toc-读取txt文件" class="nav-link" data-scroll-target="#读取txt文件"><span class="header-section-number">3.4</span> 读取txt文件</a></li>
+  <li><a href="#读取自带数据集" id="toc-读取自带数据集" class="nav-link" data-scroll-target="#读取自带数据集"><span class="header-section-number">3.5</span> 读取自带数据集</a></li>
+  <li><a href="#下载和读取压缩包" id="toc-下载和读取压缩包" class="nav-link" data-scroll-target="#下载和读取压缩包"><span class="header-section-number">3.6</span> 下载和读取压缩包</a>
   <ul class="collapse">
-<li><a href="#%E8%A7%A3%E5%8E%8B.zip%E6%96%87%E4%BB%B6" id="toc-解压.zip文件" class="nav-link" data-scroll-target="#%E8%A7%A3%E5%8E%8B.zip%E6%96%87%E4%BB%B6">解压.zip文件</a></li>
-  <li><a href="#%E8%A7%A3%E5%8E%8B.tar%E6%96%87%E4%BB%B6" id="toc-解压.tar文件" class="nav-link" data-scroll-target="#%E8%A7%A3%E5%8E%8B.tar%E6%96%87%E4%BB%B6">解压.tar文件</a></li>
-  <li><a href="#%E4%B8%8B%E8%BD%BD%E5%92%8C%E8%A7%A3%E5%8E%8B.gz%E6%88%96.bz2%E6%96%87%E4%BB%B6" id="toc-下载和解压.gz或.bz2文件" class="nav-link" data-scroll-target="#%E4%B8%8B%E8%BD%BD%E5%92%8C%E8%A7%A3%E5%8E%8B.gz%E6%88%96.bz2%E6%96%87%E4%BB%B6">下载和解压.gz或.bz2文件</a></li>
-  </ul>
-</li>
-  <li><a href="#%E5%88%97%E5%87%BA%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6" id="toc-列出指定目录中的文件" class="nav-link" data-scroll-target="#%E5%88%97%E5%87%BA%E6%8C%87%E5%AE%9A%E7%9B%AE%E5%BD%95%E4%B8%AD%E7%9A%84%E6%96%87%E4%BB%B6"><span class="header-section-number">3.7</span> 列出指定目录中的文件</a></li>
-  <li><a href="#%E7%94%9F%E6%88%90%E6%95%B0%E6%8D%AE%E6%A1%86" id="toc-生成数据框" class="nav-link" data-scroll-target="#%E7%94%9F%E6%88%90%E6%95%B0%E6%8D%AE%E6%A1%86"><span class="header-section-number">3.8</span> 生成数据框</a></li>
-  <li>
-<a href="#%E5%AF%BC%E5%87%BA%E8%A1%A8%E6%A0%BC" id="toc-导出表格" class="nav-link" data-scroll-target="#%E5%AF%BC%E5%87%BA%E8%A1%A8%E6%A0%BC"><span class="header-section-number">3.9</span> 导出表格</a>
+  <li><a href="#解压.zip文件" id="toc-解压.zip文件" class="nav-link" data-scroll-target="#解压.zip文件">解压.zip文件</a></li>
+  <li><a href="#解压.tar文件" id="toc-解压.tar文件" class="nav-link" data-scroll-target="#解压.tar文件">解压.tar文件</a></li>
+  <li><a href="#下载和解压.gz或.bz2文件" id="toc-下载和解压.gz或.bz2文件" class="nav-link" data-scroll-target="#下载和解压.gz或.bz2文件">下载和解压.gz或.bz2文件</a></li>
+  </ul></li>
+  <li><a href="#列出指定目录中的文件" id="toc-列出指定目录中的文件" class="nav-link" data-scroll-target="#列出指定目录中的文件"><span class="header-section-number">3.7</span> 列出指定目录中的文件</a></li>
+  <li><a href="#生成数据框" id="toc-生成数据框" class="nav-link" data-scroll-target="#生成数据框"><span class="header-section-number">3.8</span> 生成数据框</a></li>
+  <li><a href="#导出表格" id="toc-导出表格" class="nav-link" data-scroll-target="#导出表格"><span class="header-section-number">3.9</span> 导出表格</a>
   <ul class="collapse">
-<li><a href="#%E5%AF%BC%E5%87%BAcsv%E6%96%87%E4%BB%B6" id="toc-导出csv文件" class="nav-link" data-scroll-target="#%E5%AF%BC%E5%87%BAcsv%E6%96%87%E4%BB%B6">导出csv文件</a></li>
-  <li><a href="#%E5%AF%BC%E5%87%BAexcel%E6%96%87%E4%BB%B6" id="toc-导出excel文件" class="nav-link" data-scroll-target="#%E5%AF%BC%E5%87%BAexcel%E6%96%87%E4%BB%B6">导出excel文件</a></li>
+  <li><a href="#导出csv文件" id="toc-导出csv文件" class="nav-link" data-scroll-target="#导出csv文件">导出csv文件</a></li>
+  <li><a href="#导出excel文件" id="toc-导出excel文件" class="nav-link" data-scroll-target="#导出excel文件">导出excel文件</a></li>
+  </ul></li>
   </ul>
-</li>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"><span class="header-section-number">4</span> </a></li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/r_basic/data_input_output.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/r_basic/data_input_output.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/r_basic/data_input_output.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/r_basic/data_input_output.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">
-<span class="chapter-number">3</span>&nbsp; <span class="chapter-title">数据的读取与输出</span>
-</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">数据的读取与输出</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -395,104 +437,129 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
-</header><section id="读取csv数据文件" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="读取csv数据文件">
-<span class="header-section-number">3.1</span> 读取CSV数据文件</h2>
+</header>
+
+<section id="读取csv数据文件" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="读取csv数据文件"><span class="header-section-number">3.1</span> 读取CSV数据文件</h2>
 <p>read.csv或read.table均可</p>
 <div class="cell" data-hash="data_input_output_cache/html/unnamed-chunk-1_739edf5630c4d879401c8ce76eaebb67">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">csvdata</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"ovary_data.csv"</span>,<span class="co">#相对路径</span></span>
-<span>                  header<span class="op">=</span><span class="cn">T</span>,<span class="co">#第一行是否是列名</span></span>
-<span>                  sep<span class="op">=</span><span class="st">","</span>,<span class="co">#字段分隔符。文件每行上的值由此字符分隔。read.table的默认值为sep=“”，表示分隔符为‘空白’，即一个或多个空格、制表符、换行符或回车。read.csv的默认值为sep=","，表示分隔符为英文逗号</span></span>
-<span>                  stringsAsFactors<span class="op">=</span><span class="cn">F</span><span class="op">)</span><span class="co">#是否将字符向量转换为因子</span></span>
-<span><span class="va">csvdata</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"ovary_data.csv"</span>,header<span class="op">=</span><span class="cn">T</span>,sep<span class="op">=</span><span class="st">","</span>, </span>
-<span>                    row.names<span class="op">=</span><span class="st">"patientID"</span>, </span>
-<span>                    colClasses<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"character"</span>, <span class="st">"character"</span>, <span class="st">"character"</span>,<span class="st">"numeric"</span>, <span class="st">"numeric"</span>, <span class="st">"numeric"</span><span class="op">)</span><span class="op">)</span> <span class="co">#指定每一列的变量类型</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>csvdata<span class="ot">&lt;-</span><span class="fu">read.csv</span>(<span class="st">"ovary_data.csv"</span>,<span class="co">#相对路径</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">header=</span>T,<span class="co">#第一行是否是列名</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sep=</span><span class="st">","</span>,<span class="co">#字段分隔符。文件每行上的值由此字符分隔。read.table的默认值为sep=“”，表示分隔符为‘空白’，即一个或多个空格、制表符、换行符或回车。read.csv的默认值为sep=","，表示分隔符为英文逗号</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                  <span class="at">stringsAsFactors=</span>F)<span class="co">#是否将字符向量转换为因子</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>csvdata<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="st">"ovary_data.csv"</span>,<span class="at">header=</span>T,<span class="at">sep=</span><span class="st">","</span>, </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">row.names=</span><span class="st">"patientID"</span>, </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">colClasses=</span><span class="fu">c</span>(<span class="st">"character"</span>, <span class="st">"character"</span>, <span class="st">"character"</span>,<span class="st">"numeric"</span>, <span class="st">"numeric"</span>, <span class="st">"numeric"</span>)) <span class="co">#指定每一列的变量类型</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="读取spss文件" class="level2" data-number="3.2"><h2 data-number="3.2" class="anchored" data-anchor-id="读取spss文件">
-<span class="header-section-number">3.2</span> 读取SPSS文件</h2>
+<p>read.table参数含义：</p>
+<ul>
+<li><code>as.is</code>：该参数用于确定<code>read.table()</code>函数读取字符型数据时是否转换为因子型变量。当其取值为<code>FALSE</code>时，该函数将把字符型数据转换为因子型数据，取值为<code>TRUE</code>时，仍将其保留为字符型数据。</li>
+</ul>
+</section>
+<section id="读取spss文件" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="读取spss文件"><span class="header-section-number">3.2</span> 读取SPSS文件</h2>
 <div class="cell" data-hash="data_input_output_cache/html/unnamed-chunk-2_f015f02792aea507f9fce7422354d596">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://svn.r-project.org/R-packages/trunk/foreign/">foreign</a></span><span class="op">)</span></span>
-<span><span class="va">savdata</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/pkg/foreign/man/read.spss.html">read.spss</a></span><span class="op">(</span><span class="st">"lweight.sav"</span>,to.data.frame<span class="op">=</span><span class="cn">T</span><span class="op">)</span><span class="co">#需要将.sav格式数据转换成数据框</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreign)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>savdata<span class="ot">&lt;-</span><span class="fu">read.spss</span>(<span class="st">"lweight.sav"</span>,<span class="at">to.data.frame=</span>T)<span class="co">#需要将.sav格式数据转换成数据框</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="读取excel文件" class="level2" data-number="3.3"><h2 data-number="3.3" class="anchored" data-anchor-id="读取excel文件">
-<span class="header-section-number">3.3</span> 读取Excel文件</h2>
+</section>
+<section id="读取excel文件" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="读取excel文件"><span class="header-section-number">3.3</span> 读取Excel文件</h2>
 <p>MacOS 首选 gdata 包（因自带perl语言）；Windows首选 xlsx 包</p>
 <div class="cell" data-hash="data_input_output_cache/html/unnamed-chunk-3_d91f7171eedc4c9ec2f59dc9f1c69d0e">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/r-gregmisc/gdata">gdata</a></span><span class="op">)</span></span>
-<span><span class="va">xlsdata</span><span class="op">&lt;-</span><span class="fu">read.xls</span><span class="op">(</span><span class="st">"ovary_data.xlsx"</span>,</span>
-<span>                  sheet<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="co">#要读取的工作表的名称或编号</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gdata)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>xlsdata<span class="ot">&lt;-</span><span class="fu">read.xls</span>(<span class="st">"ovary_data.xlsx"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sheet=</span><span class="dv">1</span>)<span class="co">#要读取的工作表的名称或编号</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="读取txt文件" class="level2" data-number="3.4"><h2 data-number="3.4" class="anchored" data-anchor-id="读取txt文件">
-<span class="header-section-number">3.4</span> 读取txt文件</h2>
+</section>
+<section id="读取txt文件" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="读取txt文件"><span class="header-section-number">3.4</span> 读取txt文件</h2>
 <div class="cell" data-hash="data_input_output_cache/html/unnamed-chunk-4_b7ac61f600d6aa37a5e684864d8ab862">
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">refGene</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"refGene.txt"</span>,header<span class="op">=</span><span class="cn">F</span>,sep <span class="op">=</span> <span class="st">"\t"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>refGene<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="st">"refGene.txt"</span>,<span class="at">header=</span>F,<span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="读取自带数据集" class="level2" data-number="3.5"><h2 data-number="3.5" class="anchored" data-anchor-id="读取自带数据集">
-<span class="header-section-number">3.5</span> 读取自带数据集</h2>
+</section>
+<section id="读取自带数据集" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="读取自带数据集"><span class="header-section-number">3.5</span> 读取自带数据集</h2>
 <div class="cell" data-hash="data_input_output_cache/html/unnamed-chunk-5_f870f30780b4a287db2ba3cfedbe528d">
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">Arthritis</span>, package<span class="op">=</span><span class="st">"vcd"</span><span class="op">)</span></span>
-<span><span class="co">#或</span></span>
-<span><span class="va">mydata</span> <span class="op">&lt;-</span> <span class="fu">vcd</span><span class="fu">::</span><span class="va">Arthritis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Arthritis, <span class="at">package=</span><span class="st">"vcd"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#或</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> vcd<span class="sc">::</span>Arthritis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="下载和读取压缩包" class="level2" data-number="3.6"><h2 data-number="3.6" class="anchored" data-anchor-id="下载和读取压缩包">
-<span class="header-section-number">3.6</span> 下载和读取压缩包</h2>
-<section id="解压.zip文件" class="level3"><h3 class="anchored" data-anchor-id="解压.zip文件">解压.zip文件</h3>
+</section>
+<section id="下载和读取压缩包" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="下载和读取压缩包"><span class="header-section-number">3.6</span> 下载和读取压缩包</h2>
+<section id="解压.zip文件" class="level3">
+<h3 class="anchored" data-anchor-id="解压.zip文件">解压.zip文件</h3>
 <div class="cell" data-hash="data_input_output_cache/html/unnamed-chunk-6_9fbd05e07fad811418fa3e2d53eb6b1b">
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/unzip.html">unzip</a></span><span class="op">(</span><span class="st">"test.zip"</span>,<span class="co">#压缩包的位置及文件名</span></span>
-<span>      files <span class="op">=</span> <span class="st">"ferroptosis_suppressor.csv"</span>,</span>
-<span>      overwrite <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="co">#解压后是否覆盖同名文件</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(<span class="st">"test.zip"</span>,<span class="co">#压缩包的位置及文件名</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">files =</span> <span class="st">"ferroptosis_suppressor.csv"</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">overwrite =</span> T)<span class="co">#解压后是否覆盖同名文件</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="解压.tar文件" class="level3"><h3 class="anchored" data-anchor-id="解压.tar文件">解压.tar文件</h3>
+</section>
+<section id="解压.tar文件" class="level3">
+<h3 class="anchored" data-anchor-id="解压.tar文件">解压.tar文件</h3>
 <div class="cell" data-hash="data_input_output_cache/html/unnamed-chunk-7_dd4361fcad3b2ae18451f02fbc64172a">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/untar.html">untar</a></span><span class="op">(</span><span class="st">"test.tar"</span>,<span class="co">#压缩包的位置及文件名</span></span>
-<span>      files <span class="op">=</span> <span class="st">"ferroptosis_suppressor.csv"</span><span class="op">)</span><span class="co">#提取指定文件，忽略则解压压缩包内的所有文件</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">untar</span>(<span class="st">"test.tar"</span>,<span class="co">#压缩包的位置及文件名</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>      <span class="at">files =</span> <span class="st">"ferroptosis_suppressor.csv"</span>)<span class="co">#提取指定文件，忽略则解压压缩包内的所有文件</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="下载和解压.gz或.bz2文件" class="level3"><h3 class="anchored" data-anchor-id="下载和解压.gz或.bz2文件">下载和解压.gz或.bz2文件</h3>
+</section>
+<section id="下载和解压.gz或.bz2文件" class="level3">
+<h3 class="anchored" data-anchor-id="下载和解压.gz或.bz2文件">下载和解压.gz或.bz2文件</h3>
 <p>这两个压缩文件与前面的相比，是最与众不同的，因为这两种后缀的文件，可以称之为压缩文件，也可以直接作为一个数据文件进行读取。</p>
 <div class="cell" data-hash="data_input_output_cache/html/unnamed-chunk-8_03e4877e486400de09da5204f994ccc0">
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#下载gz文件</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html">download.file</a></span><span class="op">(</span><span class="st">"http://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/refGene.txt.gz"</span><span class="co">#下载地址</span></span>
-<span>              ,destfile<span class="op">=</span><span class="st">"refGene.txt.gz"</span><span class="op">)</span><span class="co">#文件名，注意需要添加后缀名</span></span>
-<span><span class="co">#直接以数据的形式读取.gz文件</span></span>
-<span><span class="va">mydata</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.table</a></span><span class="op">(</span><span class="st">"refGene.txt.gz"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#下载gz文件</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">"http://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/refGene.txt.gz"</span><span class="co">#下载地址</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>              ,<span class="at">destfile=</span><span class="st">"refGene.txt.gz"</span>)<span class="co">#文件名，注意需要添加后缀名</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#直接以数据的形式读取.gz文件</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>mydata<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="st">"refGene.txt.gz"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section></section><section id="列出指定目录中的文件" class="level2" data-number="3.7"><h2 data-number="3.7" class="anchored" data-anchor-id="列出指定目录中的文件">
-<span class="header-section-number">3.7</span> 列出指定目录中的文件</h2>
+</section>
+</section>
+<section id="列出指定目录中的文件" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="列出指定目录中的文件"><span class="header-section-number">3.7</span> 列出指定目录中的文件</h2>
 <div class="cell" data-hash="data_input_output_cache/html/unnamed-chunk-9_36bc2f1d4f664bf50a092fe7a83acdbe">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span><span class="st">"folder_name"</span>,<span class="co">#需要列出的文件所在的路径,若忽略此项则列出当前工作路径下的所有文件</span></span>
-<span>          pattern <span class="op">=</span> <span class="st">"\\.docx$"</span>,<span class="co">#列出当前目录中以.docx结尾的文件（列出以G开头的文件"^G"）</span></span>
-<span>          full.names <span class="op">=</span> <span class="cn">T</span><span class="op">)</span><span class="co">#FALSE：仅输出文件名；TRUE(默认)：输出路径+文件名</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="st">"folder_name"</span>,<span class="co">#需要列出的文件所在的路径,若忽略此项则列出当前工作路径下的所有文件</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.docx$"</span>,<span class="co">#列出当前目录中以.docx结尾的文件（列出以G开头的文件"^G"）</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">full.names =</span> T)<span class="co">#FALSE：仅输出文件名；TRUE(默认)：输出路径+文件名</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="生成数据框" class="level2" data-number="3.8"><h2 data-number="3.8" class="anchored" data-anchor-id="生成数据框">
-<span class="header-section-number">3.8</span> 生成数据框</h2>
+</section>
+<section id="生成数据框" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="生成数据框"><span class="header-section-number">3.8</span> 生成数据框</h2>
 <div class="cell" data-hash="data_input_output_cache/html/unnamed-chunk-10_5b04bb94ef086d382f1fc793c4bd620d">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">framdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>y<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">8</span>, <span class="fl">12</span>, <span class="fl">14</span>, <span class="fl">14</span>, <span class="fl">15</span>, <span class="fl">17</span>, <span class="fl">22</span>, <span class="fl">24</span>, <span class="fl">23</span><span class="op">)</span>,</span>
-<span>                       x1<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">5</span>, <span class="fl">4</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">7</span>, <span class="fl">5</span>, <span class="fl">8</span>, <span class="fl">9</span><span class="op">)</span>,</span>
-<span>                       x2<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">14</span>, <span class="fl">12</span>, <span class="fl">12</span>, <span class="fl">13</span>, <span class="fl">7</span>, <span class="fl">8</span>, <span class="fl">7</span>, <span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">framdata</span></span>
-<span></span>
-<span><span class="co">#使用文本编辑器直接在窗口中编辑数据。macOS需要安装XQuartz（www.xquartz.org）才能运行此代码。</span></span>
-<span><span class="va">framdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/edit.html">edit</a></span><span class="op">(</span><span class="va">framdata</span><span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>framdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">y=</span><span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">12</span>, <span class="dv">14</span>, <span class="dv">14</span>, <span class="dv">15</span>, <span class="dv">17</span>, <span class="dv">22</span>, <span class="dv">24</span>, <span class="dv">23</span>),</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">x1=</span><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">9</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">x2=</span><span class="fu">c</span>(<span class="dv">14</span>, <span class="dv">12</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>framdata</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">#使用文本编辑器直接在窗口中编辑数据。macOS需要安装XQuartz（www.xquartz.org）才能运行此代码。</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>framdata <span class="ot">&lt;-</span> <span class="fu">edit</span>(framdata) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="导出表格" class="level2" data-number="3.9"><h2 data-number="3.9" class="anchored" data-anchor-id="导出表格">
-<span class="header-section-number">3.9</span> 导出表格</h2>
-<section id="导出csv文件" class="level3"><h3 class="anchored" data-anchor-id="导出csv文件">导出csv文件</h3>
+</section>
+<section id="导出表格" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="导出表格"><span class="header-section-number">3.9</span> 导出表格</h2>
+<section id="导出csv文件" class="level3">
+<h3 class="anchored" data-anchor-id="导出csv文件">导出csv文件</h3>
 <div class="cell" data-hash="data_input_output_cache/html/unnamed-chunk-11_96b800b8074b0f5e56811b94714255aa">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">mydata</span>,</span>
-<span>          row.names<span class="op">=</span><span class="cn">F</span>,<span class="co">#是否输出行名称</span></span>
-<span>          <span class="st">"mydata.csv"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(mydata,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>          <span class="at">row.names=</span>F,<span class="co">#是否输出行名称</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>          <span class="st">"mydata.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="导出excel文件" class="level3"><h3 class="anchored" data-anchor-id="导出excel文件">导出excel文件</h3>
+</section>
+<section id="导出excel文件" class="level3">
+<h3 class="anchored" data-anchor-id="导出excel文件">导出excel文件</h3>
 <div class="cell" data-hash="data_input_output_cache/html/unnamed-chunk-12_70c7498e15b030370d630ba97569cd99">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://janmarvin.github.io/openxlsx2/">openxlsx2</a></span><span class="op">)</span></span>
-<span><span class="fu">write_xlsx</span><span class="op">(</span><span class="va">coxtable1</span>,<span class="st">"coxtable1.xlsx"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openxlsx2)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write_xlsx</span>(coxtable1,<span class="st">"coxtable1.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section></section><section id="section" class="level1" data-number="4"><h1 data-number="4">
-<span class="header-section-number">4</span> </h1>
 
 
 <!-- -->
 
-</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -904,15 +971,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
 });
-</script><script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+</script>
+<script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
       <a href="../r_basic/environment_configuration.html" class="pagination-link">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rstudio环境配置</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../bioinformatics/single_cell/r_single_cell.html" class="pagination-link">
-        <span class="nav-page-text">R语言单细胞数据分析</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../single_cell/seurat.html" class="pagination-link">
+        <span class="nav-page-text">Seurat v5官方文档</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
@@ -937,128 +1007,132 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">colClasses=</span><span class="fu">c</span>(<span class="st">"character"</span>, <span class="st">"character"</span>, <span class="st">"character"</span>,<span class="st">"numeric"</span>, <span class="st">"numeric"</span>, <span class="st">"numeric"</span>)) <span class="co">#指定每一列的变量类型</span></span>
 <span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## 读取SPSS文件</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>read.table参数含义：</span>
 <span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreign)</span>
-<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>savdata<span class="ot">&lt;-</span><span class="fu">read.spss</span>(<span class="st">"lweight.sav"</span>,<span class="at">to.data.frame=</span>T)<span class="co">#需要将.sav格式数据转换成数据框</span></span>
-<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="fu">## 读取Excel文件</span></span>
-<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>MacOS 首选 gdata 包（因自带perl语言）；Windows首选 xlsx 包</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`as.is`</span>：该参数用于确定<span class="in">`read.table()`</span>函数读取字符型数据时是否转换为因子型变量。当其取值为<span class="in">`FALSE`</span>时，该函数将把字符型数据转换为因子型数据，取值为<span class="in">`TRUE`</span>时，仍将其保留为字符型数据。</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## 读取SPSS文件</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreign)</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>savdata<span class="ot">&lt;-</span><span class="fu">read.spss</span>(<span class="st">"lweight.sav"</span>,<span class="at">to.data.frame=</span>T)<span class="co">#需要将.sav格式数据转换成数据框</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gdata)</span>
-<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>xlsdata<span class="ot">&lt;-</span><span class="fu">read.xls</span>(<span class="st">"ovary_data.xlsx"</span>,</span>
-<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sheet=</span><span class="dv">1</span>)<span class="co">#要读取的工作表的名称或编号</span></span>
-<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a><span class="fu">## 读取txt文件</span></span>
-<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>refGene<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="st">"refGene.txt"</span>,<span class="at">header=</span>F,<span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>)</span>
-<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a><span class="fu">## 读取自带数据集</span></span>
-<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Arthritis, <span class="at">package=</span><span class="st">"vcd"</span>)</span>
-<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a><span class="co">#或</span></span>
-<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> vcd<span class="sc">::</span>Arthritis</span>
-<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a><span class="fu">## 下载和读取压缩包</span></span>
-<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a><span class="fu">### 解压.zip文件</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a><span class="fu">## 读取Excel文件</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>MacOS 首选 gdata 包（因自带perl语言）；Windows首选 xlsx 包</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gdata)</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>xlsdata<span class="ot">&lt;-</span><span class="fu">read.xls</span>(<span class="st">"ovary_data.xlsx"</span>,</span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sheet=</span><span class="dv">1</span>)<span class="co">#要读取的工作表的名称或编号</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## 读取txt文件</span></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>refGene<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="st">"refGene.txt"</span>,<span class="at">header=</span>F,<span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>)</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a><span class="fu">## 读取自带数据集</span></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Arthritis, <span class="at">package=</span><span class="st">"vcd"</span>)</span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a><span class="co">#或</span></span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> vcd<span class="sc">::</span>Arthritis</span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(<span class="st">"test.zip"</span>,<span class="co">#压缩包的位置及文件名</span></span>
-<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a>      <span class="at">files =</span> <span class="st">"ferroptosis_suppressor.csv"</span>,</span>
-<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>      <span class="at">overwrite =</span> T)<span class="co">#解压后是否覆盖同名文件</span></span>
-<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a><span class="fu">### 解压.tar文件</span></span>
-<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a><span class="fu">untar</span>(<span class="st">"test.tar"</span>,<span class="co">#压缩包的位置及文件名</span></span>
-<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>      <span class="at">files =</span> <span class="st">"ferroptosis_suppressor.csv"</span>)<span class="co">#提取指定文件，忽略则解压压缩包内的所有文件</span></span>
-<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a><span class="fu">### 下载和解压.gz或.bz2文件</span></span>
-<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a>这两个压缩文件与前面的相比，是最与众不同的，因为这两种后缀的文件，可以称之为压缩文件，也可以直接作为一个数据文件进行读取。</span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a><span class="fu">## 下载和读取压缩包</span></span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a><span class="fu">### 解压.zip文件</span></span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span>(<span class="st">"test.zip"</span>,<span class="co">#压缩包的位置及文件名</span></span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a>      <span class="at">files =</span> <span class="st">"ferroptosis_suppressor.csv"</span>,</span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a>      <span class="at">overwrite =</span> T)<span class="co">#解压后是否覆盖同名文件</span></span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a><span class="fu">### 解压.tar文件</span></span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a><span class="fu">untar</span>(<span class="st">"test.tar"</span>,<span class="co">#压缩包的位置及文件名</span></span>
+<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a>      <span class="at">files =</span> <span class="st">"ferroptosis_suppressor.csv"</span>)<span class="co">#提取指定文件，忽略则解压压缩包内的所有文件</span></span>
+<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a><span class="co">#下载gz文件</span></span>
-<span id="cb13-92"><a href="#cb13-92" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">"http://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/refGene.txt.gz"</span><span class="co">#下载地址</span></span>
-<span id="cb13-93"><a href="#cb13-93" aria-hidden="true" tabindex="-1"></a>              ,<span class="at">destfile=</span><span class="st">"refGene.txt.gz"</span>)<span class="co">#文件名，注意需要添加后缀名</span></span>
-<span id="cb13-94"><a href="#cb13-94" aria-hidden="true" tabindex="-1"></a><span class="co">#直接以数据的形式读取.gz文件</span></span>
-<span id="cb13-95"><a href="#cb13-95" aria-hidden="true" tabindex="-1"></a>mydata<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="st">"refGene.txt.gz"</span>)</span>
-<span id="cb13-96"><a href="#cb13-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-97"><a href="#cb13-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-98"><a href="#cb13-98" aria-hidden="true" tabindex="-1"></a><span class="fu">## 列出指定目录中的文件</span></span>
-<span id="cb13-99"><a href="#cb13-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-102"><a href="#cb13-102" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb13-103"><a href="#cb13-103" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="st">"folder_name"</span>,<span class="co">#需要列出的文件所在的路径,若忽略此项则列出当前工作路径下的所有文件</span></span>
-<span id="cb13-104"><a href="#cb13-104" aria-hidden="true" tabindex="-1"></a>          <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.docx$"</span>,<span class="co">#列出当前目录中以.docx结尾的文件（列出以G开头的文件"^G"）</span></span>
-<span id="cb13-105"><a href="#cb13-105" aria-hidden="true" tabindex="-1"></a>          <span class="at">full.names =</span> T)<span class="co">#FALSE：仅输出文件名；TRUE(默认)：输出路径+文件名</span></span>
-<span id="cb13-106"><a href="#cb13-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-107"><a href="#cb13-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-108"><a href="#cb13-108" aria-hidden="true" tabindex="-1"></a><span class="fu">## 生成数据框</span></span>
-<span id="cb13-109"><a href="#cb13-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-112"><a href="#cb13-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb13-113"><a href="#cb13-113" aria-hidden="true" tabindex="-1"></a>framdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">y=</span><span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">12</span>, <span class="dv">14</span>, <span class="dv">14</span>, <span class="dv">15</span>, <span class="dv">17</span>, <span class="dv">22</span>, <span class="dv">24</span>, <span class="dv">23</span>),</span>
-<span id="cb13-114"><a href="#cb13-114" aria-hidden="true" tabindex="-1"></a>                       <span class="at">x1=</span><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">9</span>),</span>
-<span id="cb13-115"><a href="#cb13-115" aria-hidden="true" tabindex="-1"></a>                       <span class="at">x2=</span><span class="fu">c</span>(<span class="dv">14</span>, <span class="dv">12</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>))</span>
-<span id="cb13-116"><a href="#cb13-116" aria-hidden="true" tabindex="-1"></a>framdata</span>
-<span id="cb13-117"><a href="#cb13-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-118"><a href="#cb13-118" aria-hidden="true" tabindex="-1"></a><span class="co">#使用文本编辑器直接在窗口中编辑数据。macOS需要安装XQuartz（www.xquartz.org）才能运行此代码。</span></span>
-<span id="cb13-119"><a href="#cb13-119" aria-hidden="true" tabindex="-1"></a>framdata <span class="ot">&lt;-</span> <span class="fu">edit</span>(framdata) </span>
-<span id="cb13-120"><a href="#cb13-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a><span class="fu">### 下载和解压.gz或.bz2文件</span></span>
+<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a>这两个压缩文件与前面的相比，是最与众不同的，因为这两种后缀的文件，可以称之为压缩文件，也可以直接作为一个数据文件进行读取。</span>
+<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-94"><a href="#cb13-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-95"><a href="#cb13-95" aria-hidden="true" tabindex="-1"></a><span class="co">#下载gz文件</span></span>
+<span id="cb13-96"><a href="#cb13-96" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">"http://hgdownload.soe.ucsc.edu/goldenPath/hg38/database/refGene.txt.gz"</span><span class="co">#下载地址</span></span>
+<span id="cb13-97"><a href="#cb13-97" aria-hidden="true" tabindex="-1"></a>              ,<span class="at">destfile=</span><span class="st">"refGene.txt.gz"</span>)<span class="co">#文件名，注意需要添加后缀名</span></span>
+<span id="cb13-98"><a href="#cb13-98" aria-hidden="true" tabindex="-1"></a><span class="co">#直接以数据的形式读取.gz文件</span></span>
+<span id="cb13-99"><a href="#cb13-99" aria-hidden="true" tabindex="-1"></a>mydata<span class="ot">&lt;-</span><span class="fu">read.table</span>(<span class="st">"refGene.txt.gz"</span>)</span>
+<span id="cb13-100"><a href="#cb13-100" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-101"><a href="#cb13-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-102"><a href="#cb13-102" aria-hidden="true" tabindex="-1"></a><span class="fu">## 列出指定目录中的文件</span></span>
+<span id="cb13-103"><a href="#cb13-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-106"><a href="#cb13-106" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-107"><a href="#cb13-107" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="st">"folder_name"</span>,<span class="co">#需要列出的文件所在的路径,若忽略此项则列出当前工作路径下的所有文件</span></span>
+<span id="cb13-108"><a href="#cb13-108" aria-hidden="true" tabindex="-1"></a>          <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.docx$"</span>,<span class="co">#列出当前目录中以.docx结尾的文件（列出以G开头的文件"^G"）</span></span>
+<span id="cb13-109"><a href="#cb13-109" aria-hidden="true" tabindex="-1"></a>          <span class="at">full.names =</span> T)<span class="co">#FALSE：仅输出文件名；TRUE(默认)：输出路径+文件名</span></span>
+<span id="cb13-110"><a href="#cb13-110" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-111"><a href="#cb13-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-112"><a href="#cb13-112" aria-hidden="true" tabindex="-1"></a><span class="fu">## 生成数据框</span></span>
+<span id="cb13-113"><a href="#cb13-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-116"><a href="#cb13-116" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-117"><a href="#cb13-117" aria-hidden="true" tabindex="-1"></a>framdata <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">y=</span><span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">12</span>, <span class="dv">14</span>, <span class="dv">14</span>, <span class="dv">15</span>, <span class="dv">17</span>, <span class="dv">22</span>, <span class="dv">24</span>, <span class="dv">23</span>),</span>
+<span id="cb13-118"><a href="#cb13-118" aria-hidden="true" tabindex="-1"></a>                       <span class="at">x1=</span><span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">9</span>),</span>
+<span id="cb13-119"><a href="#cb13-119" aria-hidden="true" tabindex="-1"></a>                       <span class="at">x2=</span><span class="fu">c</span>(<span class="dv">14</span>, <span class="dv">12</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">5</span>))</span>
+<span id="cb13-120"><a href="#cb13-120" aria-hidden="true" tabindex="-1"></a>framdata</span>
 <span id="cb13-121"><a href="#cb13-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-122"><a href="#cb13-122" aria-hidden="true" tabindex="-1"></a><span class="fu">## 导出表格</span></span>
-<span id="cb13-123"><a href="#cb13-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-124"><a href="#cb13-124" aria-hidden="true" tabindex="-1"></a><span class="fu">### 导出csv文件</span></span>
+<span id="cb13-122"><a href="#cb13-122" aria-hidden="true" tabindex="-1"></a><span class="co">#使用文本编辑器直接在窗口中编辑数据。macOS需要安装XQuartz（www.xquartz.org）才能运行此代码。</span></span>
+<span id="cb13-123"><a href="#cb13-123" aria-hidden="true" tabindex="-1"></a>framdata <span class="ot">&lt;-</span> <span class="fu">edit</span>(framdata) </span>
+<span id="cb13-124"><a href="#cb13-124" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb13-125"><a href="#cb13-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-128"><a href="#cb13-128" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb13-129"><a href="#cb13-129" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(mydata,</span>
-<span id="cb13-130"><a href="#cb13-130" aria-hidden="true" tabindex="-1"></a>          <span class="at">row.names=</span>F,<span class="co">#是否输出行名称</span></span>
-<span id="cb13-131"><a href="#cb13-131" aria-hidden="true" tabindex="-1"></a>          <span class="st">"mydata.csv"</span>)</span>
-<span id="cb13-132"><a href="#cb13-132" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-133"><a href="#cb13-133" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-134"><a href="#cb13-134" aria-hidden="true" tabindex="-1"></a><span class="fu">### 导出excel文件</span></span>
-<span id="cb13-135"><a href="#cb13-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-138"><a href="#cb13-138" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb13-139"><a href="#cb13-139" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openxlsx2)</span>
-<span id="cb13-140"><a href="#cb13-140" aria-hidden="true" tabindex="-1"></a><span class="fu">write_xlsx</span>(coxtable1,<span class="st">"coxtable1.xlsx"</span>)</span>
-<span id="cb13-141"><a href="#cb13-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb13-142"><a href="#cb13-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-143"><a href="#cb13-143" aria-hidden="true" tabindex="-1"></a><span class="fu"># </span></span>
+<span id="cb13-126"><a href="#cb13-126" aria-hidden="true" tabindex="-1"></a><span class="fu">## 导出表格</span></span>
+<span id="cb13-127"><a href="#cb13-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-128"><a href="#cb13-128" aria-hidden="true" tabindex="-1"></a><span class="fu">### 导出csv文件</span></span>
+<span id="cb13-129"><a href="#cb13-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-132"><a href="#cb13-132" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-133"><a href="#cb13-133" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(mydata,</span>
+<span id="cb13-134"><a href="#cb13-134" aria-hidden="true" tabindex="-1"></a>          <span class="at">row.names=</span>F,<span class="co">#是否输出行名称</span></span>
+<span id="cb13-135"><a href="#cb13-135" aria-hidden="true" tabindex="-1"></a>          <span class="st">"mydata.csv"</span>)</span>
+<span id="cb13-136"><a href="#cb13-136" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-137"><a href="#cb13-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-138"><a href="#cb13-138" aria-hidden="true" tabindex="-1"></a><span class="fu">### 导出excel文件</span></span>
+<span id="cb13-139"><a href="#cb13-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-142"><a href="#cb13-142" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb13-143"><a href="#cb13-143" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openxlsx2)</span>
+<span id="cb13-144"><a href="#cb13-144" aria-hidden="true" tabindex="-1"></a><span class="fu">write_xlsx</span>(coxtable1,<span class="st">"coxtable1.xlsx"</span>)</span>
+<span id="cb13-145"><a href="#cb13-145" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
+<footer class="footer">
+  <div class="nav-footer">
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
-<li class="nav-item">
+    <li class="nav-item">
  This book was built with Quarto
   </li>  
 </ul>
-</div>   
+    </div>   
     <div class="nav-footer-center">Copyright 2023, Du Junhong</div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
-<li class="nav-item compact">
+    <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/djhcod">
       <i class="bi bi-github" role="img">
 </i> 
     </a>
   </li>  
 </ul>
-</div>
+    </div>
   </div>
 </footer>
+
 
 
 </body></html>

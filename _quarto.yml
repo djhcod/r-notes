@@ -1,7 +1,7 @@
 project:
   type: book
   output-dir: "docs" # 输出（编译后的HTML文件、PDF文件以及运行code chunk后产生的图像、数据等）文件夹
-  execute-dir: project #
+  execute-dir: project
 editor: visual
 
 book:
@@ -15,11 +15,12 @@ book:
     left:
       - text: "Home"
         file: index.qmd
-      - file: intro.qmd
+      - text: "Introduction"
+        file: intro.qmd
       - text: "Parts"
         menu:
           - r_basic/r_basics.qmd
-          - bioinformatics/single_cell/r_single_cell.qmd
+          - single_cell/seurat.qmd
           - quarto_foundation/quarto_foundation.qmd
       - file: references.qmd
     right:
@@ -35,13 +36,17 @@ book:
       chapters:
         - r_basic/environment_configuration.qmd
         - r_basic/data_input_output.qmd
-    - part: bioinformatics/single_cell/r_single_cell.qmd
+    - part: single_cell/seurat.qmd
       chapters:
-        - bioinformatics/single_cell/seurat_command_list.qmd
-        - bioinformatics/single_cell/seurat_tutorial.qmd
-        - bioinformatics/single_cell/data_visualization_methods_in_seurat.qmd
-        - bioinformatics/single_cell/sctransform.qmd
-        - bioinformatics/single_cell/integration.qmd
+        - single_cell/seurat_command_list.qmd
+        - single_cell/seurat_tutorial.qmd
+        - single_cell/data_visualization_methods_in_seurat.qmd
+        - single_cell/sctransform.qmd
+        - single_cell/integration.qmd
+        - single_cell/integrative_analysis_in_seurat_v5.qmd
+        - single_cell/mapping_and_annotating_query_datasets.qmd
+        - single_cell/cell_cycle_regression.qmd
+        - single_cell/de_vignette.qmd
     - part: quarto_foundation/quarto_foundation.qmd
       chapters:
         - quarto_foundation/yaml_settings.qmd
@@ -107,6 +112,8 @@ number-depth: 2 # 标题编号级数
 
 crossref:
   subref-labels: alpha A # 次级引用编号类型，如组图中的小图（默认是小写字母：alpha a）
+
+fig-align: left
 
 bibliography: references.bib # 参考文献目录
 

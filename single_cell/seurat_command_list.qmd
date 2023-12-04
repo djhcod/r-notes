@@ -1,0 +1,107 @@
+---
+execute: 
+  eval: false
+---
+
+# Seurat常用函数清单
+
+原文：[*Seurat Command List*](https://satijalab.org/seurat/articles/essential_commands)
+
+原文发布日期：2023年10月31日
+
+## 标准Seurat流程：
+
+```{r}
+pbmc <- NormalizeData(object = pbmc)
+pbmc <- FindVariableFeatures(object = pbmc)
+pbmc <- ScaleData(object = pbmc)
+pbmc <- RunPCA(object = pbmc)
+pbmc <- FindNeighbors(object = pbmc, dims = 1:30)
+pbmc <- FindClusters(object = pbmc)
+pbmc <- RunUMAP(object = pbmc, dims = 1:30)
+DimPlot(object = pbmc, reduction = "umap")
+```
+
+### 采用`SCtransform`标准化时的流程：
+
+```{r}
+pbmc <- SCTransform(object = pbmc)
+pbmc <- RunPCA(object = pbmc)
+pbmc <- FindNeighbors(object = pbmc, dims = 1:30)
+pbmc <- FindClusters(object = pbmc)
+pbmc <- RunUMAP(object = pbmc, dims = 1:30)
+DimPlot(object = pbmc, reduction = "umap")
+```
+
+或者通过管道函数：
+
+```{r}
+pbmc <- SCTransform(pbmc) %>%
+    RunPCA() %>%
+    FindNeighbors(dims = 1:30) %>%
+    FindClusters() %>%
+    RunUMAP(dims = 1:30)
+```
+
+## 提取`Seurat`对象内的各数据：
+
+获取所有细胞的barcode：
+
+```{r}
+colnames(pbmc)
+Cells(pbmc) # 效果同上
+```
+
+获取所有的基因（feature）名：
+
+```{r}
+Features(pbmc)
+rownames(pbmc) # 同上
+```
+
+获取细胞和基因的数量：
+
+```{r}
+ncol(pbmc) # 细胞数量
+nrow(pbmc) # 基因（feature）数量
+```
+
+List of object layers：
+
+```{r}
+Layers(pbmc)
+```
+
+获取运行`FindVariableFeatures`函数之后的高变基因列表（ @sec-识别高变基因 ）：
+
+```{r}
+VariableFeatures(pbmc)
+```
+
+## 细胞注释信息（cell identities）设置
+
+查看cell identities：
+
+```{r}
+Idents(pbmc)
+table(Idents(pbmc))
+```
+
+将meta.data中的"seurat_clusters"列设置为cell identities：
+
+```{r}
+Idents(object = pbmc) <- "seurat_clusters"
+```
+
+将目前的cell identities保存到meta.data新的一列中：
+
+```{r}
+pbmc[["old.ident"]] <- Idents(pbmc) # 将目前的cell identities储存到meta.data的"old.ident"列中
+```
+
+重命名某个细胞注释：
+
+```{r}
+pbmc <- RenameIdents(object = pbmc, 
+                     `FCGR3A+ Mono` = "monocyte")
+```

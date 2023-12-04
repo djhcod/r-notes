@@ -1,0 +1,420 @@
+# 单细胞数据整合（integration） {#sec-单细胞数据整合}
+
+原文：[*Introduction to scRNA-seq integration*](https://satijalab.org/seurat/articles/integration_introduction)
+
+原文发布日期：2023年10月31日
+
+::: callout-tip
+本篇主要介绍来自不同样本类型的单细胞数据的整合。对于如何整合不同测序技术的单细胞数据集，参考Seurat官方文档：[*Integrative analysis in Seurat v5*](https://satijalab.org/seurat/articles/seurat5_integration)。
+:::
+
+Integration of single-cell sequencing datasets, for example across experimental batches, donors, or conditions, is often an important step in scRNA-seq workflows. Integrative analysis can help to **match shared cell types and states across datasets**, which can boost statistical power, and most importantly, facilitate accurate comparative analysis across datasets. In previous versions of Seurat we introduced methods for integrative analysis, including our 'anchor-based' integration workflow. Many labs have also published powerful and pioneering methods, including [Harmony](https://portals.broadinstitute.org/harmony/) and [scVI](https://docs.scvi-tools.org/en/stable/index.html), for integrative analysis.
+
+数据整合的目标：
+
+The following tutorial is designed to give you an overview of the kinds of comparative analyses on complex cell types that are possible using the Seurat integration procedure. Here, we address a few key goals:
+
+-   Identify **cell subpopulations** that are present in both datasets
+
+-   Obtain **cell type markers** that are conserved in both control and stimulated cells
+
+-   **Compare the datasets** to find cell-type specific responses to stimulation
+
+## 数据读取和分层
+
+::: {.callout-note collapse="true" appearance="minimal" icon="false"}
+### 在线读取（可能需要全局代理）
+
+```{r}
+#| eval: false
+#| echo: fenced
+library(Seurat)
+library(SeuratData)
+InstallData("ifnb")
+ifnb <- LoadData("ifnb")
+```
+:::
+
+从本地下载好的数据读取：
+
+```{r}
+ifnb <- readRDS("data/pbmc_ifnb.rds")
+ifnb
+head(ifnb@meta.data, 5)
+```
+
+![](images/截屏2023-11-27%2012.49.37.png)
+
+The object contains data from human PBMC from two conditions, **interferon-stimulated** and **control** cells (stored in the `stim` column in the object metadata). We will aim to integrate the two conditions together, so that we can jointly identify cell subpopulations across datasets, and then explore how each group differs across conditions
+
+In previous versions of Seurat, we would require the data to be represented as two different Seurat objects. **In Seurat v5, we keep all the data in one object, but simply split it into multiple 'layers'**. To learn more about layers, check out our [Seurat object interaction vignette](https://satijalab.org/seurat/articles/interaction_vignette).
+
+::: callout-important
+Seurat v5 assays store data in **layers**. These layers can store:
+
+-   raw, un-normalized counts (`layer='counts'`)
+
+-   normalized data (`layer='data'`)
+
+-   z-scored/variance-stabilized data (`layer='scale.data'`).
+:::
+
+**split the RNA measurements into two layers one for control cells, one for stimulated cells:**
+
+```{r}
+library(Seurat)
+ifnb[["RNA"]] <- split(ifnb[["RNA"]], 
+                       f = ifnb$stim) # 按照meta.data中的“stim”列进行分割
+ifnb
+```
+
+现在可以发现`ifnb`被分为了4个layer，此前是2个layer（`counts`和`data`）：
+
+![](images/截屏2023-11-27%2011.55.48.png)
+
+## 不进行整合的情况下的数据处理
+
+进行标准的数据处理流程：
+
+```{r}
+ifnb <- NormalizeData(ifnb)
+ifnb <- FindVariableFeatures(ifnb)
+ifnb <- ScaleData(ifnb)
+ifnb <- RunPCA(ifnb)
+ifnb <- FindNeighbors(ifnb, dims = 1:30, reduction = "pca")
+ifnb <- FindClusters(ifnb, 
+                     resolution = 2, 
+                     cluster.name = "unintegrated_clusters")
+ifnb <- RunUMAP(ifnb, 
+                dims = 1:30, 
+                reduction = "pca", 
+                reduction.name = "umap.unintegrated")
+```
+
+分别按照**样本分组（"stim"**）**和**细胞聚类情况（"seurat_clusters"**）**着色绘制UMAP图：
+
+```{r}
+#| label: fig-未整合
+#| fig-cap: 未整合时的细胞分群情况（左：按照刺激条件着色；右：按照细胞聚类情况着色）
+#| fig-width: 10
+DimPlot(ifnb, 
+        reduction = "umap.unintegrated", 
+        group.by = c("stim", "seurat_clusters"))
+```
+
+可以发现：The resulting clusters are defined **both by cell type** **and stimulation condition**, which creates challenges for downstream analysis.
+
+## 进行数据整合
+
+We now aim to integrate data from the two conditions, so that cells from the same cell type/subpopulation will cluster together.
+
+We often refer to this procedure as intergration/alignment. When aligning two genome sequences together, identification of shared/homologous regions can help to interpret differences between the sequences as well. Similarly for scRNA-seq integration, our goal is **not to remove biological differences across conditions**, **but to learn shared cell types/states in an initial step-specifically** because that will enable us to compare control stimulated and control profiles for these individual cell types.
+
+The Seurat v5 integration procedure aims to return a single dimensional reduction that captures the shared sources of variance across multiple layers, so that cells in a similar biological state will cluster. The method returns a dimensional reduction (i.e. `integrated.cca`) which can be used for visualization and unsupervised clustering analysis. For evaluating performance, we can use cell type labels that are pre-loaded in the `seurat_annotations` metadata column.
+
+```{r}
+# 整合，比较耗时间，进度条会一直显示0%直至运算完成
+ifnb <- IntegrateLayers(object = ifnb, 
+                        method = CCAIntegration, 
+                        orig.reduction = "pca", 
+                        new.reduction = "integrated.cca", # 整合后新的降维数据的名称
+                        verbose = FALSE)
+
+# 整合后重新合并layer
+ifnb[["RNA"]] <- JoinLayers(ifnb[["RNA"]])
+```
+
+可以看到经过整合的Seurat对象的降维（"reduction"）中多出了整合后的降维（"integrated.cca"）：
+
+![](images/截屏2023-11-28%2009.57.11.png)
+
+### 整合后重新聚类、降维
+
+```{r}
+#| label: fig-整合后
+#| fig-cap: 整合后的细胞分群情况（左：按照刺激条件着色；右：按照细胞聚类情况着色）
+#| fig-width: 10
+
+# 重新聚类
+ifnb <- FindNeighbors(ifnb, 
+                      reduction = "integrated.cca", #更改降维来源为"integrated.cca"
+                      dims = 1:30)
+ifnb <- FindClusters(ifnb, resolution = 1)
+
+# 重新降维
+ifnb <- RunUMAP(ifnb, 
+                dims = 1:30, 
+                reduction = "integrated.cca") #更改降维来源为"integrated.cca"
+
+# Visualization：
+DimPlot(ifnb, 
+        reduction = "umap", 
+        group.by = c("stim", "seurat_annotations"))
+```
+
+可以看到和 @fig-未整合 相比，在整合后，细胞就只按照细胞类型进行聚类了。
+
+也可以按照刺激条件（"stim"）绘制分面图，分别展示刺激组和对照组的细胞分群情况：
+
+```{r}
+#| fig-width: 10
+DimPlot(ifnb, reduction = "umap", split.by = "stim")
+```
+
+可以看到，和上面的结论一致，两种条件下的细胞分群基本一致。
+
+## 鉴定保守的cell marker
+
+To **identify canonical cell type marker genes that are conserved across conditions**, we provide the `FindConservedMarkers()` function. This function performs **differential gene expression testing** for each dataset/group and combines the p-values using meta-analysis methods from the MetaDE R package. For example, **we can calculated the genes that are conserved markers irrespective of stimulation condition in cluster 6 (NK cells).**
+
+`FindConservedMarkers`函数会调用`metap`包，`metap`包需要`multtest`包，所以需要先安装这两个依赖包：
+
+```{r}
+#| eval: false
+#| echo: true
+BiocManager::install('multtest')
+install.packages('metap')
+```
+
+```{r}
+# 这里的meta.data已经提前注释好了细胞类型（储存在"seurat_annotations"列中）。
+# 将细胞类型注释指定为"seurat_annotations"
+Idents(ifnb) <- "seurat_annotations"
+
+nk.markers <- FindConservedMarkers(ifnb, 
+                                   ident.1 = "NK", 
+                                   grouping.var = "stim", 
+                                   verbose = FALSE)
+head(nk.markers)
+```
+
+在实际分析中，鉴定这些保守的cell marker主要用来辅助对cluster的注释：you can perform these same analysis on the unsupervised clustering results (stored in `seurat_clusters`), and **use these conserved markers to annotate cell types in your dataset**.
+
+### 可视化cell markers的表达
+
+The `DotPlot()` function with the `split.by` parameter can be useful for viewing conserved cell type markers across conditions, showing both the expression level and the percentage of cells in a cluster expressing any given gene. Here we plot 2-3 strong marker genes for each of our 14 clusters.
+
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+
+# NEEDS TO BE FIXED AND SET ORDER CORRECTLY
+Idents(ifnb) <- factor(Idents(ifnb), 
+                       levels = c("pDC", "Eryth", "Mk", "DC", "CD14 Mono", "CD16 Mono", 
+                                  "B Activated", "B", "CD8 T", "NK", "T activated", 
+                                  "CD4 Naive T", "CD4 Memory T"))
+
+markers.to.plot <- c("CD3D", "CREM", "HSPH1", "SELL", "GIMAP5", "CACYBP", "GNLY", "NKG7",
+                     "CCL5", "CD8A", "MS4A1", "CD79A", "MIR155HG", "NME1", "FCGR3A", 
+                     "VMO1", "CCL2", "S100A9", "HLA-DQA1", "GPR183", "PPBP", "GNG11",
+                     "HBA2", "HBB", "TSPAN13", "IL3RA", "IGJ", "PRSS57")
+DotPlot(ifnb, 
+        features = markers.to.plot, 
+        cols = c("blue", "red"), 
+        dot.scale = 8, 
+        split.by = "stim") +
+  RotatedAxis()
+```
+
+## 识别不同样本类型间的差异基因 {#sec-识别不同样本类型间的差异基因}
+
+**Now that we've aligned the stimulated and control cells, we can start to do comparative analyses and look at the differences induced by stimulation.**
+
+We can aggregate cells of a similar type and condition together to create "pseudobulk" profiles using the `AggregateExpression` command（通过`AggregateExpression`命令将同一类型的细胞按照不同的处理条件合并起来，形成一个假的组织水平的测序数据。本例中，细胞被注释为13种细胞类型，而处理条件为"STIM"和"CTRL"，因此总共会被合并成13\*2=26个类别，将每一个类别看作是一个样本，这样就形成了一个所谓的假的组织水平的测序数据）.
+
+```{r}
+aggregate_ifnb <- AggregateExpression(ifnb, 
+                                      group.by = c("seurat_annotations", "stim"), 
+                                      return.seurat = TRUE)
+aggregate_ifnb
+head(aggregate_ifnb@meta.data, 5)
+colnames(aggregate_ifnb) # 可以看到现在的表达矩阵的列（即样本）为细胞类型+处理条件
+```
+
+![](images/截屏2023-11-27%2015.59.00.png)
+
+As an initial exploratory analysis, we can **compare pseudobulk profiles of two cell types (naive CD4 T cells, and CD14 monocytes)**, and compare their gene expression profiles before and after stimulation. We highlight genes that exhibit dramatic responses to interferon stimulation.
+
+```{r}
+#| label: fig-cellscater
+#| fig-cap: CD14 Mono和CD4 Naive T细胞中的基因在对照组和刺激组之间的表达量散点图
+#| fig-subcap: 
+#|   - CD14 Mono细胞中的基因在对照组和刺激组之间的表达量散点图
+#|   - CD4 Naive T细胞中的基因在对照组和刺激组之间的表达量散点图
+#| layout-ncol: 2
+library(ggplot2)
+library(cowplot)
+theme_set(theme_cowplot())
+
+# genes that exhibit dramatic responses to interferon stimulation
+genes.to.label = c("ISG15", "LY6E", "IFI6", "ISG20", "MX1", "IFIT2", "IFIT1", "CXCL10",
+                   "CCL8")
+
+p1 <- CellScatter(aggregate_ifnb, 
+                  "CD14 Mono_CTRL", "CD14 Mono_STIM", 
+                  highlight = genes.to.label)
+LabelPoints(plot = p1, 
+                  points = genes.to.label, 
+                  repel = TRUE)
+
+p3 <- CellScatter(aggregate_ifnb, 
+                  "CD4 Naive T_CTRL", "CD4 Naive T_STIM", 
+                  highlight = genes.to.label)
+LabelPoints(plot = p3, 
+                  points = genes.to.label, 
+                  repel = TRUE)
+```
+
+> As you can see, many of the same genes are **upregulated** (位于对角线上方) in both of these cell types and **likely represent a conserved interferon response pathway**, though CD14 monocytes exhibit a stronger transcriptional response.
+
+### 正式差异分析 {#sec-正式差异分析}
+
+We can now ask **what genes change in different conditions for cells of the same type**.
+
+1.  First, we create a column in the meta.data slot to hold both the cell type and stimulation information and switch the current ident to that column.
+
+2.  Then we use [`FindMarkers()`](https://satijalab.org/seurat/reference/findmarkers) to find the genes that are different **between stimulated and control B cells**. Notice that many of the top genes that show up here are the same as the ones we plotted earlier as core interferon response genes. Additionally, genes like CXCL10 which we saw were specific to monocyte and B cell interferon response show up as highly significant in this list as well.
+
+```{r}
+ifnb$celltype.stim <- paste(ifnb$seurat_annotations, ifnb$stim, sep = "_")
+Idents(ifnb) <- "celltype.stim"
+
+# 寻找对照组和刺激组之间在B细胞中的差异基因
+b.interferon.response <- FindMarkers(ifnb, 
+                                     ident.1 = "B_STIM", 
+                                     ident.2 = "B_CTRL", 
+                                     verbose = FALSE)
+head(b.interferon.response, n = 15)
+```
+
+Please note that p-values obtained from this analysis should be interpreted with caution, as **these tests treat each cell as an independent replicate, and ignore inherent correlations between cells originating from the same sample**. As discussed here [@crowell2020], DE tests across multiple conditions should expressly utilize multiple samples/replicates, and can be performed after aggregating ('pseudobulking') cells from the same sample and subpopulation together. We do not perform this analysis here, as there is a single replicate in the data, but please see our [vignette comparing healthy and diabetic samples](https://satijalab.org/seurat/articles/parsebio_sketch_integration) as an example for how to perform DE analysis across conditions.
+
+Another useful way to visualize these changes in gene expression is with the `split.by` option to the `FeaturePlot()` or `VlnPlot()` function. This will display FeaturePlots of the list of given genes, split by a grouping variable (stimulation condition here).
+
+```{r}
+#| fig-height: 12
+FeaturePlot(ifnb, 
+            features = c("CD3D", "GNLY", "IFI6", "ISG15", "CD14", "CXCL10"), 
+            split.by = "stim", 
+            max.cutoff = 3, 
+            cols = c("grey", "red"), 
+            reduction = "umap")
+```
+
+```{r}
+#| fig-width: 10
+#| fig-height: 15
+plots <- VlnPlot(ifnb,
+        features = c("CD3D", "GNLY", "IFI6", "ISG15", "CD14", "CXCL10", "LYZ"),
+        split.by = "stim",
+        group.by = "seurat_annotations",
+        pt.size = 0,
+        combine = FALSE) # 由于VlnPlot绘制组图时没有图例，所以这里取消绘制组图
+library(patchwork)
+wrap_plots(plots = plots, ncol = 2) # 将plots列表组合成组图
+```
+
+> -   *Genes such as **CD3D** and **GNLY** are canonical cell type markers (for T cells and NK/CD8 T cells) that are virtually **unaffected by interferon stimulation** and **display similar gene expression patterns in the control and stimulated group**.*
+>
+> -   ***IFI6** and **ISG15**, on the other hand, are **core interferon response genes** and are **upregulated** accordingly **in all cell types**.*
+>
+> -   ***CD14** and **CXCL10** are genes that show a **cell type specific interferon response**.*
+>
+>     -   ***CD14** expression **decreases** after stimulation in **CD14 monocytes**, [which could lead to misclassification in a supervised analysis framework, underscoring the value of integrated analysis.]{.underline}**如果用于识别细胞类型的marker本身在不同的样本类型（处理 vs. 对照、恶性组织 vs. 正常组织）中存在表达量的差异，那么就会导致对细胞类型判断的错误。而本篇的数据整合则能够避免出现这种情况。***
+>
+>     -   ***CXCL10** shows a distinct **upregulation** in **monocytes** and **B cells** after interferon stimulation but not in other cell types.*
+
+## 执行`SCTransform`标准化流程之后的整合
+
+As an alternative to log-normalization, Seurat also includes support for preprocessing of scRNA-seq using the `SCTransform` workflow（ @sec-sctransform ）. The `IntegrateLayers` function also supports SCTransform-normalized data, by setting the `normalization.method` parameter, as shown below.
+
+### 不进行整合的情况下的数据分析
+
+```{r}
+#| label: fig-sctransform_未整合
+#| fig-cap: 未整合时的细胞分群情况（左：按照刺激条件着色；右：按照细胞聚类情况着色）
+#| fig-width: 10
+
+# 重新载入原始的Seurat对象ifnb
+ifnb <- readRDS("data/pbmc_ifnb.rds")
+
+# 同样先拆分数据集，然后进行无整合情况下的降维
+ifnb[["RNA"]] <- split(ifnb[["RNA"]], f = ifnb$stim)
+ifnb <- SCTransform(ifnb)
+ifnb <- RunPCA(ifnb)
+ifnb <- RunUMAP(ifnb, dims = 1:30)
+DimPlot(ifnb, 
+        reduction = "umap", 
+        group.by = c("stim", "seurat_annotations"))
+```
+
+可以看到，如果不进行整合，不同样本（STIM vs. STIM）的细胞类型差异很大。
+
+### 进行整合 {#sec-integration_after_sct}
+
+同样通过`IntegrateLayers`函数进行数据整合，只不过需要将默认的标准化方法由"LogNormalize"指定为"SCT"（`normalization.method = "SCT"`）：
+
+```{r}
+ifnb <- IntegrateLayers(object = ifnb, 
+                        method = CCAIntegration, 
+                        normalization.method = "SCT", 
+                        verbose = F)
+```
+
+![](images/截屏2023-11-28%2009.16.10.png)
+
+可以看到经过整合的现在的Seurat对象中除了"RNA"的assay还由"SCT"的assay。同时，降维（"reduction"）中多出了整合后的降维（"integrated.dr"）。
+
+### 整合后聚类
+
+```{r}
+#| fig-width: 10
+ifnb <- FindNeighbors(ifnb, 
+                      reduction = "integrated.dr", #更改降维来源为"integrated.dr"
+                      dims = 1:30)
+ifnb <- FindClusters(ifnb, 
+                     resolution = 0.6)
+ifnb <- RunUMAP(ifnb, 
+                dims = 1:30, 
+                reduction = "integrated.dr")
+DimPlot(ifnb, 
+        reduction = "umap", 
+        group.by = c("stim", "seurat_annotations"))
+```
+
+可以看到和 @fig-sctransform_未整合 相比，整合后在样本间的细胞类型基本均匀分布。
+
+### 差异表达分析
+
+对于`SCTransform`处理的数据首先要通过PrepSCTFindMarkers函数来预处理，然后再进行差异分析，基本内容和 @sec-正式差异分析 一致。
+
+```{r}
+ifnb <- PrepSCTFindMarkers(ifnb)
+ifnb$celltype.stim <- paste(ifnb$seurat_annotations, 
+                            ifnb$stim, 
+                            sep = "_")
+Idents(ifnb) <- "celltype.stim"
+b.interferon.response <- FindMarkers(ifnb, 
+                                     ident.1 = "B_STIM", 
+                                     ident.2 = "B_CTRL", 
+                                     verbose = FALSE)
+head(b.interferon.response, n = 15)
+```
+
+```{r}
+#| fig-height: 12
+FeaturePlot(ifnb, 
+            features = c("CD3D", "GNLY", "IFI6", "ISG15", "CD14", "CXCL10"), 
+            split.by = "stim", 
+            max.cutoff = 3, 
+            cols = c("grey", "red"), 
+            reduction = "umap")
+```
+
+::: {.callout-note collapse="true" icon="false"}
+## Session Info
+
+```{r}
+sessionInfo()
+```
+:::
