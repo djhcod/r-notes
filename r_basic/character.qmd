@@ -1,0 +1,178 @@
+# 字符的处理
+
+## 字符串的截取
+
+```{r}
+substr(" A BC",
+       1,#从第几个字符开始截取
+       3)#截取多少个字符
+
+substring(" A BC", 1, 3)
+```
+
+`substr()`对含有空格和特殊字符如下划线的支持不好，这种情况可采用stringr包内的字符分割函数str_split()来实现。下面实现从"A_B_C"中截取"B"：
+
+```{r}
+library(stringr)
+str_split("A_B_C",
+          "_",#按照什么标志切割字符
+          simplify = T)[,2] #这里把"A_B_C"切开后，“B"应该位于第二个，所以通过[,2]取第二个元素
+str_sub("A_B_C",
+        1,
+        2)
+```
+
+## 字符串的替换（gsub函数）
+
+```{r}
+gsub("B",#需要替换的原字符
+     "F",#替换成什么
+     'A_B_C_b', #替换目标
+     ignore.case=F) #是否忽略大小写。默认为FALSE
+#删掉某些字符
+gsub("B","",'A_B_C')
+```
+
+```{r}
+#使用正则表达式进行高级替换
+#多个相同字符，只替换开头的字符，在目标字符左侧加“^”
+gsub("^B","A",'B_B_B')
+#多个相同字符，只替换结尾字符，在目标字符右侧加“$”
+gsub("B$","A",'B_B_B')
+#把目标字符及目标字符后面的一个字符替换掉
+gsub('D.','X',"ABCDEFG")
+#把目标字符及目标字符后面的2个字符替换掉
+gsub('D..','X',"ABCDEFG")
+#把D及D后面的字符全部替换掉
+gsub('D.*','X',"ABCDEFG")
+#替换空格，使用“\\s”
+gsub("\\s","_","A B C")
+#替换不同字符，使用“|”
+gsub('B|D|G','X',"ABCDEFG")
+
+#模糊匹配替换
+gsub('[0-9]','X',"1A2B3C4D5")
+gsub('[A-Z]','X',"1A2B3C4D5")
+```
+
+```{r}
+#大小写转换
+toupper("abc") #转换成大写
+tolower("ABC") #转换成小写
+```
+
+## 字符的连接
+
+```{r}
+paste("hello", "world", "!", sep = " ")
+paste("x",1:3,sep="M")
+```
+
+### unite()函数的使用
+
+构建案例数据
+
+```{r}
+a1 <- rep(1,5) # 重复“1” 5次
+a2 <- rep(2,5)
+a3 <- rep(3,5)
+A <- data.frame(a1,a2,a3)
+A
+```
+
+现在想对生成的数据框A里面的a1,a2和a3列进行合并，形成新"a123"列，其中a1与a2用"\~"连接，a2与a3列用"/"连接。
+
+首先对数据A的列a1,a2合并为新列a12，用"\~"连接。
+
+```{r}
+library(tidyr)
+A1 <- unite(A,#目标数据集
+            "a12",#新列的名称
+            a1,a2,#需要合并的列名(若用“:”连接则表示合并两列及之间的所有列)
+            sep = '~',#指定连接符
+            remove=F)#是否移除原始列
+
+#或者
+A1 <- A %>% unite("a12",a1,a2,sep = '~',remove=F)
+A1
+```
+
+然后对A1里面的a12列与a3列用"/"连接，形成新列"a123"
+
+```{r echo=TRUE, message=FALSE}
+A2 <- unite(A1,"a123",a12,a3,sep = '/',remove=F)
+A2
+
+#也可以用管道传参一步搞定
+A2 <- A %>% 
+  unite(a12,a1,a2,sep = '~',remove=F) %>% 
+  unite(a123,a12,a3,sep = '/',remove=F)
+A2
+```
+
+## 字符查找
+
+### **%in%指令**
+
+它会把每个字符串当成判断的最小单位，所以不能用来判断/查找"长字符串中是否含有特定的短字符串"
+
+```{r}
+y <- c("中国四川","中国北京","中国安徽","北京天安门")
+y
+"中国四川" %in% y
+"中国" %in% y
+```
+
+### **`grep()`函数**
+
+grep的全称是global search regular expression and print out the line,可以通过正则表达式搜索文本，并把匹配的行打印出来。所谓正则表达式，就是用某种模式去匹配一类字符串的一个公式，很多文本编辑器或者程序语言都支持该方式进行字符串的操作。下面我们用该函数首先查找y中是否有包含"北京"字样的条目，并返回其所在位置：
+
+```{r}
+grep("北京", #需要找找的字符
+     y,#从哪里查找
+     ignore.case=F,#是否忽略大小写，默认为FALSE
+     value=F,#默认为FALSE，表示返回匹配到的字符所在的位置；TRUE则返回查找到的值
+     invert=F)#如果为TRUE，则返回未匹配到的字符的值或位置。
+```
+
+查找y中包含"北京"的条目有哪些：
+
+```{r}
+grep("北京", y, ignore.case = F, value = T, invert = F)
+```
+
+从framdata数据集中，提取NAME包含了"TR"的个案，形成新的TR_data数据集。
+
+生成演示数据
+
+```{r}
+framdata <- data.frame(ID = c(6, 8, 12, 14, 14, 15, 17, 22, 24, 23),
+                       NAME = c("A_CT", "B_CT", "C_CT", "D_CT", "E_TR", "F_TR",
+                                "G_TR", "H_TR", "I_TR", "J_TR"),
+                       VALUE = c(14, 12, 12, 13, 7, 8, 7, 4, 6, 5))
+framdata
+```
+
+利用该函数返回framdata中NAME列中包含了"TR"的行号
+
+```{r}
+grep("TR", framdata$NAME, ignore.case = F, value = F, invert = F)
+```
+
+下面最终实现上述目的
+
+```{r}
+TR_data <- framdata[grep("TR", framdata$NAME),]
+TR_data
+```
+
+### **`grepl()`函数**
+
+`grep()`和`grepl()`这两个函数最大的区别在于`grep()`返回找到的位置，`grepl`返回【是否】包含要查找的内容的逻辑向量。
+
+```{r}
+grepl("北京", y)
+any(grepl("北京", y))#只要y中有包含了“北京”的项目就返回一个"TRUE"
+```
+
+### 

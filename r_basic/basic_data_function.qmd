@@ -1,0 +1,522 @@
+# 数据处理基本函数
+
+## 数据展示
+
+载入示例数据：
+
+```{r}
+mydata <- readRDS("data/lms_ess.rds")
+```
+
+### 展示最大值、最小值、平均数、中位数、缺失值数量
+
+```{r}
+summary(mydata)
+```
+
+### 展示变量数量和样本数量
+
+#### 展示变量（列）数
+
+```{r}
+dim(mydata)[2]#dim()函数获取数据的维度，即行、列数。所以[1]输出行数，[2]输出列数
+ncol(mydata)#另一种方式
+```
+
+#### 展示行数
+
+```{r}
+dim(mydata)[1]
+#或者
+nrow(mydata)
+```
+
+#### 综合展示
+
+```{r}
+print(paste0("该数据集有 ",dim(mydata)[1]," 个样本； ",dim(mydata)[2]," 个变量"))
+```
+
+#### 展示所有变量名
+
+```{r}
+colnames(mydata)
+#或者通过dput函数将所有变量名输出为向量
+dput(names(mydata))
+```
+
+#### 展示所有行名称
+
+```{r}
+#| eval: false
+#| echo: fenced
+rownames(mydata)
+```
+
+#### 展示某个变量的所有值及其频数
+
+```{r}
+table(mydata$his)
+hist(mydata$age,col="coral")#以直方图的形式展示
+```
+
+### 展示缺失值的构成
+
+加载案例数据：这里用VIM包内自带的sleep数据集为例进行演示。该数据集显示了两种安眠药对10名患者的影响(与对照组相比，睡眠时间的增加量)。其中就包含了很多缺失值。
+
+```{r}
+data(sleep, package="VIM")
+head(sleep)
+```
+
+首先展示缺失值的比例。
+
+-   左侧直方图展示单个变量的缺失比例，其中NonD缺失比例大于20%。
+
+-   右侧直方图展示各个变量的缺失模式。如第一行表示NonD、Dream和Span 3个变量共同缺失的比例为1.6%。NonD的缺失比例=1.6%+3.2%+3.2%+14.5%=22.5%。所有变量均无缺失值的个案占67.7%
+
+输出的结果部分同样展示了各个变量缺失的具体比例
+
+```{r}
+library(VIM)
+aggr_plot<-aggr(sleep,
+                prop=T,
+                numbers=T,
+                sortVars=TRUE,
+                gap=2,
+                ylab=c("Histogram of missing data","Pattern"))
+```
+
+展示缺失值的数量。输出的结果部分展示了各个变量缺失的具体数量。
+
+```{r}
+aggr_plot<-aggr(sleep,
+                prop=F,
+                numbers=T,
+                sortVars=TRUE,
+                gap=2,
+                ylab=c("Histogram of missing data","Pattern"))
+```
+
+以表格的形式展示各个变量的缺失模式（同右侧图形）
+
+```{r}
+summary(aggr_plot)
+```
+
+通过marginplot分析缺失值。空心的湖蓝色圆圈表示非缺失值，红色实心圆圈表示缺失值，深红色实心圆圈表示两个变量均缺失。图左侧的红色箱型图显示了在保留NonD缺失值的情况下Dream的分布，蓝色箱型图显示了删除NonD缺失值后Dream的分布。图表底部的框图正好相反，反映了在保留和删除Dreamq缺失值的情况下NonD的分布情况。如果数据是完全随机缺失(MCAR : missing completely at random)，那么红色和蓝色箱型图将十分接近
+
+```{r}
+marginplot(sleep[3:4])
+```
+
+删除所有缺失值
+
+```{r}
+sleep<-na.omit(sleep)
+```
+
+## 数据整理
+
+### 排序
+
+```{r}
+library(dplyr)
+mydata <- arrange(mydata, age)#按照某列升序排序
+mydata$age[1:10]
+mydata <- arrange(mydata, desc(age))#按照某列降序排序
+mydata$age[1:10]
+mydata <- arrange(mydata, his, tumor_size)#根据多列排序
+mydata[1:5,c("his", "tumor_size")]
+mydata[445:455,c("his", "tumor_size")]
+```
+
+也可用自带base包内的`order()`函数排序：
+
+```{r}
+#| eval: false
+mydata <- mydata[order(mydata$age),]
+mydata <- mydata[order(-mydata$age),]
+mydata <- mydata[order(mydata$age, mydata$his, mydata$tumor_size),]
+```
+
+### 重新命名行、列
+
+#### 重新命名变量（列）
+
+```{r}
+#| eval: false
+names(mydata) <- c("N","patient_ID","diagnosis") # 连续命名
+colnames(mydata)[2] <- 'patient_ID'# 重新命名指定列名
+```
+
+#### 设置行名
+
+```{r}
+#| eval: false
+rownames(mydata) <- mydata$ID # 将ID列设置为行名（注意不能有重复值）
+```
+
+### 数据筛选
+
+#### 提取某几列数据形成新的数据集
+
+```{r}
+#| eval: false
+vnumber <- mydata[, 4:16] # 提取第4-16列的数据形成新的“vnumber”数据集
+vnumber <- mydata[,c(2:12,16)] # 提取2-12列和第16列的数据
+```
+
+#### 提取指定行数的数据
+
+```{r}
+#| eval: false
+mydata_less <- mydata[1:100, ]#提取1-100行的数据
+```
+
+#### 筛选数据
+
+筛选出低级别、接受了放疗的病例，并生成新的"new_data"数据集
+
+```{r}
+#方法一
+new_data<-subset(mydata,grade == "Well differentiated; Grade I" & rad == "Yes")
+new_data[,c("grade", "rad")]
+#也可用“｜”（或者），“！”（NOT）连接
+
+#方法二
+new_data <- mydata[which((mydata$grade == "Well differentiated; Grade I") &
+                           (mydata$rad == "Yes")),] 
+new_data[,c("grade", "rad")]
+```
+
+### 合并两个数据集
+
+#### 纵向合并
+
+即增加个案，要求两个数据集具有相同的列名及列数
+
+```{r}
+#| eval: false
+rbind_data <- rbind(mydata, mydata2)
+```
+
+#### 横向合并
+
+直接通过cbind()函数合并数据集，要求两个数据集具有相同的行数及顺序
+
+```{r}
+#| eval: false
+total <- cbind(dataframeA, dataframeB)
+```
+
+#### 以某一列（如学号等）匹配两个数据集
+
+详细解读：<https://blog.csdn.net/chongbaikaishi/article/details/115740560>
+
+```{r}
+#| eval: false
+# 以"probe_id"为匹配标准匹配探针id和gene symbol
+exptab1 <- merge(x = ids,
+                 y = expset1,#x、y为要合并的数据框或者对象
+                 by ="probe_id", #指定以哪一列为标准匹配两个数据集。
+                                 #如果有多个匹配项，则所有可能的匹配项各贡献一行。
+                 all.x=F,#是否将没有匹配到y数据集的行也保留下来，并以NA替代。
+                         #默认为FALSE，只有x与y数据框相匹配的行会被包含在输出结果中
+                 all.y=F)#与上面类似
+```
+
+如果两个数据集要用来匹配的列的列名不同则可用by.x和by.y指定。如下面的代码就是用id2symbol数据集中的ENSEMBL列去匹配rawcount数据集中的GeneID列
+
+```{r}
+#| eval: false
+rawcount <- merge(id2symbol,
+                  rawcount,
+                  by.x="ENSEMBL",
+                  by.y="GeneID",
+                  all.y=T)#对于没有匹配到的GeneID以NA替代
+```
+
+![](images/20210416100511517.png)
+
+### 去重（保留唯一值）
+
+生成带有重复值的示例数据
+
+```{r}
+set.seed(123)
+mydata = data.frame(ID = c(1:10,9,4,4,9,9,2), y = rnorm(16))
+mydata <- rbind(mydata, mydata)
+mydata
+```
+
+通过`duplicated()`函数检查某一列是否有重复值，及有多少重复值
+
+```{r}
+table(duplicated(mydata$ID))
+```
+
+通过`unique()`函数去除完全相同的行。`unique()`函数：一行的所有数据都相同认定为重复
+
+```{r}
+mydata <- unique(mydata)
+mydata
+```
+
+通过`distinct()`函数，去除ID列重复的数据
+
+```{r}
+library(dplyr)
+mydata <- distinct(mydata, # 需要去重的数据集名称
+                   ID, # 按照哪一列去重（可为多个条件）
+                   .keep_all = T) # 去重后保留所有列
+mydata
+```
+
+### 变量的赋值/替换
+
+```{r}
+#| eval: false
+savdata$low <- ifelse(savdata$low =="低出生体重", 1, 0)#将结局变量low赋值为0和1
+mydata[is.na(mydata)] <- "Unknown"#替换缺失值
+```
+
+当需要对一个数据集的多个变量进行转换时，可通过`within(data, {expression})`函数将括号内的操作限定到当前数据集中，避免"\$"的反复使用，简化代码。函数`within()`与函数`with()`类似，不同的是`within()`允许你修改数据框:
+
+```{r}
+mydata <- within(mydata, {
+  ID <- ifelse(ID < 5, "A", "B")
+  y <- ifelse(y < 0, "A", "B")
+})
+mydata
+```
+
+### 转换变量类型
+
+将结局变量转换成因子变量,ordered=F,用于定义无序多分类变量，起到设置哑变量的作用；ordered=T用于定义有序多分类变量。如果变量的取值以英文字符表示，那么默认以变量首字母的顺序编号赋值；如果变量的取值已经转换成数字，那么默认按照编号的大小依次赋值。可以通过指定"levels"选项来覆盖默认排序。
+
+```{r}
+#| eval: false
+savdata$stage <- factor(savdata$stage, 
+                        levels = c(1,2,3,4),
+                        labels = c("I","II","III","IV"),
+                        ordered = T)
+savdata$stage <- relevel(savdata$stage,ref="IV") # 设置因子的参照水平，仅限无序因子变量
+```
+
+通过`lapply`函数批量转换因子变量
+
+```{r}
+#| eval: false
+mydata[2:14] <- lapply(mydata[2:14], factor) # 转换几个连续列的因子变量
+```
+
+批量转换多个指定因子变量
+
+```{r}
+#| eval: false
+catvars<-c("year", "race", "single", "grade", "T_stage", "N_stage", "M_stage",
+           "surgery", "lymphadenectomy", "radiotherapy", "chemotherapy")
+mydata[catvars] <- lapply(mydata[catvars], factor)
+```
+
+转换为数值型变量
+
+```{r}
+#| eval: false
+mydata$grade <- as.numeric(mydata$grade)
+mydata = lapply(mydata, as.numeric) # 将所有的变量转换成数值型
+```
+
+### 哑变量设置
+
+```{r}
+#| eval: false
+# 因种族为无序多分类变量，需要设置三个哑变量（race1～3）
+savdata$race1 <- ifelse(savdata$race == "白种人", 1, 0)
+savdata$race2 <- ifelse(savdata$race == "黑种人", 1, 0)
+savdata$race3 <- ifelse(savdata$race == "其他种族", 1, 0)
+```
+
+## 数学函数
+
+```{r}
+abs(-4) #取绝对值
+sqrt(16) #开平方根
+log(4,base=2) #取2为底的对数
+log10(100) #取10为底的对数
+log(2) #取2的自然对数
+exp(2) #取e的指数函数
+
+#设置小数位数
+ceiling(3.14159) #取不小于x的最小整数（有小数点一律进一位）
+floor(3.99999) #取不大于x的最大整数（忽略小数点）
+sprintf("%0.3f", 3.14159) #四舍五入保留3位小数
+round(3.14159,digits=3) #同上。注意该函数在处理科学计数法时无法有效保留目标小数位数
+```
+
+## 管道操作符(%\>%)的使用
+
+％\>％为来自**dplyr包**的**管道操作符（pipe operator)**，我们可以将其理解为车间里的流水线，经过前一步加工的产品才能进入后一步进一步加工，其作用是将上一步的结果直接传参给下一步的函数，从而省略了中间的赋值步骤，可以大量减少内存中的对象，节省内存。
+
+> **将%\>%左边的对象传递给右边的函数，作为第一个选项的设置（或剩下唯一一个选项的设置）。**
+>
+> a %\>% f(b)等同于f(a,b)；b% \> %f(a,.,c)等同于f(a,b,c)
+
+【例一】
+
+比如我们要算f(x)=sin((x+1)\^2)在x=4的值，可以分为以下三步：
+
+1.  计算a = x+1的值；
+
+2.  计算b = a\^2的值；
+
+3.  计算c = sin(b)的值
+
+这样一来，c就是我们需要的最终结果了。用R语言管道传参，只需要这样写：
+
+```{r}
+f1 <- function(x){return(x+1)}
+f2 <- function(x){return(x^2)}
+f3 <- function(x){return(sin(x))}
+library(dplyr)
+x <- 1
+y <- x %>% f1 %>% f2 %>% f3
+print(y)
+```
+
+【例二】
+
+```{r}
+f1 <- function(x,y){return(x+y)}
+f2 <- function(x,y,z){return(x*y+z)}
+x <- 2
+y <- 3
+z <- 4
+x %>% f1(y)
+y %>% f2(x,.,5)
+z %>% f2(x,y,.)
+```
+
+【例三】日期合并
+
+```{r}
+date <- as.Date('2017-6-22')+0:14
+hour <- sample(1:24, 15)
+min <- sample(1:60, 15)
+second <- sample(1:60, 15)
+dat <- data.frame(date,hour,min,second)
+dat
+
+library(tidyr)
+datstd <- dat %>% unite("datehour",date,hour,sep = ' ',remove = T) %>% unite("datetime",datehour,min,second,sep = ':',remove = T)
+datstd
+```
+
+## `apply`函数家族
+
+主要应用apply()函数。apply()以数据帧或矩阵作为输入，并以向量、列表或数组的形式给出输出。apply()函数主要用于避免显式使用循环结构。与之类似的lapply()函数返回与输入列表对象长度相似的列表对象，其中的每个元素都是应用指定函数到列表中相应元素的结果，其作用相当于避免了for循环的使用，更适合转换数据类型等操作。
+
+生成案例数据
+
+```{r}
+mydata<-matrix(1:9,ncol = 3,nrow=6)#生成一个3列、6行的矩阵数据
+mydata[3,3]<-NA#生成一个缺失值
+mydata<-as.data.frame(mydata)#如果要生成新的一列需要转换为数据框形式
+mydata
+```
+
+计算mydata数据集中每一行的均值并添加到每一行后面
+
+```{r}
+mydata$Row_Means<-apply(mydata,
+                        MARGIN=1,#1:对每行进行运算；2:对列进行运算；MARGIN=c(1,2)对行、列运算
+                        mean,#要应用的函数
+                        na.rm=T)#是否忽略缺失值
+mydata
+```
+
+对mydata的第一列和第二列数据求均值
+
+```{r}
+mydata$Row_Means12<-apply(mydata[,c(1:2)],MARGIN=1,mean,na.rm=T)
+mydata
+```
+
+对mydata的每一列进行求和运算
+
+```{r}
+Col_Sums<-apply(mydata,MARGIN=2,sum,na.rm=T)
+mydata<-rbind(mydata,Col_Sums)
+mydata
+```
+
+## 自定义函数
+
+R语言可以自定义函数，也可以使用其自带的函数。
+
+```         
+R语言中，自定义函数的一般格式为：
+函数名 <- function（输入1，……，输入n）{
+     函数体
+     return（返回值）
+}
+```
+
+其中，return并不是必需的，默认函数体最后一行的值作为返回值，即return完全可以换成"返回值"。下面以判断score为优良及格差的代码进行讲解。案例来源：<https://zhuanlan.zhihu.com/p/441710174>。
+
+首先对于不用函数的情况
+
+```{r}
+score = 73
+if(score >= 90){
+  res = "优"
+  }else if(score >=70){
+    res = "良"
+    }else if(score >= 60){
+      res = "及格"
+      }else{
+        res = "不及格"
+        }
+res#输出判断结果
+```
+
+接下来我们自定义一个scorejudge()函数实现对单个成绩对判断。实际上就是把上面的代码封装起来
+
+```{r}
+scorejudge<-function(x){
+  if(score >= 90){
+    res = "优"
+    }else if(score >=70){
+      res = "良"
+      }else if(score >= 60){
+        res = "及格"
+        }else{
+          res = "不及格"
+          }
+  paste0("该同学的分数等级为",res)
+  }
+scorejudge(score)#就像调用R自带函数一样调用我们自己编写的函数
+```
+
+如若想要同时查询多个分数，则需要对原来的代码进行修改，加入for循环语句
+
+```{r}
+scorejudge<-function(x){
+  n = length(x)#首先确定循环次数，即x中有多少个分数，下面的for循环就要运行多少次
+  res = vector("character",n)#建立一个和输入的分数个数相同的空向量，用来放每次for循环的输出结果
+  for(i in 1:n){
+    if(x[i] >= 90){
+      res[i] = paste0(i,"号同学的分数等级为","优")
+      } else if(x[i] >=70){
+        res[i] = paste0(i,"号同学的分数等级为","良")
+        } else if(x[i] >= 60){
+          res[i] = paste0(i,"号同学的分数等级为","及格")
+          } else{
+            res[i] = paste0(i,"号同学的分数等级为","不及格")
+          }
+    }
+  res #输出最终的res向量
+  }
+scorejudge(c(34,67,89,95))
+```
