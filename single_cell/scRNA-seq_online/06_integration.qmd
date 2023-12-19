@@ -76,7 +76,7 @@ plot_grid(p1, p2, ncol = 2, labels = "AUTO")
 We want to identify **cell types which are present in all samples/conditions/modalities** within our dataset, and therefore would like to observe a representation of cells from both samples/conditions/modalities in every cluster. This will enable more interpretable results downstream (i.e. DE analysis, ligand-receptor analysis, differential abundance analysis...).
 :::
 
-In this lesson, we will cover the integration of our samples across conditions, which is adapted from @sec-单细胞数据整合 .
+In this lesson, we will cover the integration of our samples across conditions, which is adapted from @sec-Single-cell_data_integration .
 
 ::: callout-note
 在此前的 @sec-sctransform 中我们学习了how to run through the workflow from normalization to clustering without integration. Other steps in the workflow remain fairly similar, but the **samples would not necessarily be split** in the beginning and integration would not be performed.
@@ -169,7 +169,7 @@ names(seurat_integrated@reductions)
 ```
 
 ::: callout-tip
-如何调用Seurat嵌入的其他整合算法进行整合，参考： @sec-seurat细胞分群官方教程 。
+如何调用Seurat嵌入的其他整合算法进行整合，参考：@sec-sc_integration 。
 :::
 
 ## 整合后检验细胞分群情况
@@ -233,7 +233,7 @@ Not all tools may perform as well on every task, and complex datasets may requir
 
 Harmony [@korsunsky2019] was devleoped in 2019, and is an example of **a tool that can work with complex integration tasks**. It is available as an [GitHub](https://github.com/immunogenomics/harmony) and [CRAN](https://cran.r-project.org/web/packages/harmony/index.html), and it has functions for standalone and Seurat pipeline analyses. It has been shown to perform incredibly well from recent benchmarking studies [@tran2020].
 
-在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用`Harmony`包（available on [GitHub](https://github.com/immunogenomics/harmony) and [CRAN](https://cran.r-project.org/web/packages/harmony/index.html)），详见[该教程](https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html)。同时，Seurat V5中的`IntegrateLayers`函数集成了Harmony整合算法，可以直接调用，详见：@sec-数据整合 。Compared to other algorithms, `Harmony` notably presents the following advantages ([@korsunsky2019], [@tran2020]):
+在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用`Harmony`包（available on [GitHub](https://github.com/immunogenomics/harmony) and [CRAN](https://cran.r-project.org/web/packages/harmony/index.html)），详见[该教程](https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html)。同时，Seurat V5中的`IntegrateLayers`函数集成了Harmony整合算法，可以直接调用，详见：@sec-sc_integration 。Compared to other algorithms, `Harmony` notably presents the following advantages ([@korsunsky2019], [@tran2020]):
 
 1.  Possibility to integrate data across several variables (for example, by experimental batch and by condition)
 

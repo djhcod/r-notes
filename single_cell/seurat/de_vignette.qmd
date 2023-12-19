@@ -1,4 +1,4 @@
-# 差异表达分析 {#sec-差异表达分析}
+# 差异表达分析 {#sec-differential_expression}
 
 原文：[*Differential expression testing*](https://satijalab.org/seurat/articles/de_vignette)
 
@@ -78,7 +78,7 @@ nrow(monocyte.de.markers)
 head(monocyte.de.markers)
 ```
 
-## 寻找不同样本类型间同一细胞类型内的差异基因 {#sec-寻找不同样本类型间同一细胞类型内的差异基因}
+## 寻找不同样本类型间同一细胞类型内的差异基因 {#sec-degs_within_the_same_cell_type_between_different_sample_types}
 
 Since this dataset contains treatment information (control versus stimulated with interferon-beta), we can also ask **what genes change in different conditions for cells of the same type**.
 
@@ -105,7 +105,7 @@ However, the p-values obtained from this analysis should be interpreted with cau
 
 ## pseudobulking后的差异分析
 
-To pseudobulk, we will use `AggregateExpression()` to sum together **gene counts of all the cells from the same sample** for each cell type. This results in **one gene expression profile per sample** **and cell type**. We can then perform DE analysis using [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) **on the sample level**. This treats the samples, rather than the individual cells, as independent observations. 参考前面的 @sec-识别不同样本类型间的差异基因 。
+To pseudobulk, we will use `AggregateExpression()` to sum together **gene counts of all the cells from the same sample** for each cell type. This results in **one gene expression profile per sample** **and cell type**. We can then perform DE analysis using [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) **on the sample level**. This treats the samples, rather than the individual cells, as independent observations. 参考前面的 @sec-Identify_differential_genes_between_sample_types 。
 
 ### 准备样本信息
 
@@ -174,7 +174,7 @@ pseudo_ifnb
 head(pseudo_ifnb@meta.data) # 可以看到现在的表达矩阵的列（即样本）为治疗分组+患者IDs+细胞类型
 ```
 
-然后我们在meta.data中增加一列，记录治疗分组（STIM vs. CTRL）+ 细胞类型，这是用于差异分析的分组依据。这和 @sec-寻找不同样本类型间同一细胞类型内的差异基因 的第一步是一样的。
+然后我们在meta.data中增加一列，记录治疗分组（STIM vs. CTRL）+ 细胞类型，这是用于差异分析的分组依据。这和 @sec-degs_within_the_same_cell_type_between_different_sample_types 的第一步是一样的。
 
 ```{r}
 pseudo_ifnb$celltype.stim <- paste(pseudo_ifnb$seurat_annotations, 
@@ -183,7 +183,7 @@ pseudo_ifnb$celltype.stim <- paste(pseudo_ifnb$seurat_annotations,
 pseudo_ifnb$celltype.stim[1:5]
 ```
 
-### 执行差异分析
+### 执行差异分析 {#sec-perform_de_analysis}
 
 Next, we perform DE testing on the pseudobulk level for CD14 monocytes, and compare it against the previous single-cell-level DE results.
 

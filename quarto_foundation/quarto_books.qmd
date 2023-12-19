@@ -15,7 +15,7 @@ Quarto Books能够将多个Quarto文档（章节）组合成一份文档。这�
 
 ![](images/截屏2023-11-26%2011.38.25.png){width="410"}
 
-然后给项目起个名字，这个名字是最终项目文件夹和`.Rproject`文件的名字。选择项目的创建目录。如果需要将项目作为Git仓库同步到GitHub（详见： @sec-发布到github-pages ）的话可以勾选上"Create a git repository"：
+然后给项目起个名字，这个名字是最终项目文件夹和`.Rproject`文件的名字。选择项目的创建目录。如果需要将项目作为Git仓库同步到GitHub（详见： @sec-publish_github_pages ）的话可以勾选上"Create a git repository"：
 
 ![](images/截屏2023-11-26%2011.38.56.png){width="416"}
 
@@ -23,9 +23,9 @@ Quarto Books能够将多个Quarto文档（章节）组合成一份文档。这�
 
 ![](images/截屏2023-11-26%2011.39.25.png){width="353"}
 
-其中后缀为`.Rproject`的文件即项目文件。`index.qmd`文件编译后是book的封面。由于Quarto Books一般编译为HTML文件，所以这个文件就是网页的首页。**注意不要更改其文件名**。`references.qmd`编译后为参考文献页面；`references.bib`为插入参考文献后自动生成的参BibTeX/Citation文件，里面包括了所有考文献的列表（详见： @sec-参考文献设置 ）。
+其中后缀为`.Rproject`的文件即项目文件。`index.qmd`文件编译后是book的封面。由于Quarto Books一般编译为HTML文件，所以这个文件就是网页的首页。**注意不要更改其文件名**。`references.qmd`编译后为参考文献页面；`references.bib`为插入参考文献后自动生成的参BibTeX/Citation文件，里面包括了所有考文献的列表（详见： @sec-ref_settings ）。
 
-`_quarto.yml`文件为YAML配置文件。要实现按照一定的格式将各个Quarto文档组合成一个完整的网页或Quarto Books，定义这个YAML配置文件是核心。**YAML配置文件一般以"\_quarto.yml"命名**，并保存在项目的根目录中，在每次编译书籍时都会读取这个配置文件。实际上Quarto Books的YAML配置和此前独立的qmd文档的YAML配置（ @sec-yaml设置总览 ）有大量相似之处。最大的区别是Quarto Books需要通过`chapter`来将不同的qmd文件（章节）按照一定的顺序组合起来形成一本完整的书籍。下面主要介绍YAML配置文件的主要内容。各个章节即各个独立的qmd文件的编写方法参考之前的章节即可。
+`_quarto.yml`文件为YAML配置文件。要实现按照一定的格式将各个Quarto文档组合成一个完整的网页或Quarto Books，定义这个YAML配置文件是核心。**YAML配置文件一般以"\_quarto.yml"命名**，并保存在项目的根目录中，在每次编译书籍时都会读取这个配置文件。实际上Quarto Books的YAML配置和此前独立的qmd文档的YAML配置（ @sec-Overview_of_yaml_settings ）有大量相似之处。最大的区别是Quarto Books需要通过`chapter`来将不同的qmd文件（章节）按照一定的顺序组合起来形成一本完整的书籍。下面主要介绍YAML配置文件的主要内容。各个章节即各个独立的qmd文件的编写方法参考之前的章节即可。
 
 ## 项目设置
 
@@ -40,7 +40,7 @@ project:
 
 -   `project`：项目类型。定义了项目编译后的文档类型，包括`default`, **`website`**（Quarto Websites）和**`book`**（Quarto Book）。这里我们在新建项目时选择了Quarto Books，所以这里自动填写了`book`。
 
--   `output-dir`：输出文件夹。编译后的HTML文件、PDF文件以及运行code chunk后产生的图像、数据等的输出文件夹。上面的例子中将输出文件夹指定为"docs"文件夹可以方便将输出的HTML文件通过GitHub Pages发布（详见 @sec-发布到github-pages ）。
+-   `output-dir`：输出文件夹。编译后的HTML文件、PDF文件以及运行code chunk后产生的图像、数据等的输出文件夹。上面的例子中将输出文件夹指定为"docs"文件夹可以方便将输出的HTML文件通过GitHub Pages发布（详见 @sec-publish_github_pages ）。
 
 -   `execute-dir`：**在编译时**，各个qmd文件内的code chunk脚本运行的根目录，默认是`file`，即**当前qmd文档所在目录**，可设置为 "**project**"，这样在编译过程中执行代码块时会**将脚本运行根目录设置为项目根目录**。
 
@@ -70,7 +70,7 @@ book:
 
 -   `date`：文档发行日期。日期既可以手动添加，如"2023/11/10"，也可以通过`now`（输出样式：2023年11月11日 19:01）或`today`（输出样式：2023年11月11日）自动生成日期。
 
--   `date-format`：日期格式（详见： @sec-dateformat的设置 ）。
+-   `date-format`：日期格式（详见： @sec-dateformat ）。
 
 -   `cover-image`：封面图片。
 
@@ -78,7 +78,7 @@ book:
 上面列出的信息也可以在index.qmd文件中定义。
 :::
 
-### `chapter`章节 {#sec-chapter章节}
+### `chapter`章节
 
 **章节的定义是Quarto Books的YAML配置的核心**。通过`chapter`函数将多个不同的qmd文件（章节）按照指定的顺序结合起来就形成了一本书或者网站。
 
@@ -124,7 +124,7 @@ book:
 
 ![](images/截屏2023-11-26%2013.02.00.png){width="199"}
 
-### 侧边栏 {#sec-侧边栏}
+### 侧边栏 {#sec-sidebar}
 
 侧边栏是传统意义上的总目录，默认在网页的左侧显示，其内容反映了上面`chapter`中定义的章节编排。通过`sidebar`对侧边栏的样式、内容等进行进一步的设定。
 
@@ -158,7 +158,7 @@ book:
 
 ![](images/截屏2023-11-26%2019.30.06.png){width="171"}
 
-### 顶部导航栏 {#sec-顶部导航栏}
+### 顶部导航栏 {#sec-navbar}
 
 除了添加侧边导航栏之外，还可以通过`navbar`参数添加顶部导航栏。
 
@@ -224,7 +224,7 @@ book:
 顶栏和侧边导航栏的更多设置，参考[Quarto官方指南](https://quarto.org/docs/websites/website-navigation.html#side-navigation)。
 :::
 
-### 右侧页内导航 {#sec-右侧页内导航}
+### 右侧页内导航 {#sec-page_navigation}
 
 右侧页内导航显示的是当前页面的目录。可在`book`内的`page-navigation`和`format`-`html`内的`toc`相关函数中共同配置。
 
@@ -258,7 +258,7 @@ book:
 ---
 ```
 
--   `location`：搜索按钮的位置。默认为出现在顶栏（ @sec-顶部导航栏 ）最右侧（`navbar`）；也可以定义为`sidebar`，让其在侧边栏（ @sec-侧边栏 ）的上方显示。
+-   `location`：搜索按钮的位置。默认为出现在顶栏（ ）最右侧（`navbar`）；也可以定义为`sidebar`，让其在侧边栏（ @sec-sidebar ）的上方显示。
 
 -   `type`：搜索按钮的样式。可以仅搜索图标（`overlay`），也可以展示搜索框（`textbox`）。
 
@@ -282,7 +282,7 @@ book:
 ---
 ```
 
-页脚的配置和 @sec-顶部导航栏 的语法基本一致，此处不再赘述。
+页脚的配置和 @sec-navbar 的语法基本一致，此处不再赘述。
 
 ### 网站分享设置
 
@@ -343,7 +343,7 @@ format:
 ---
 ```
 
--   `theme`：定义了编译文档的主题（详见： @sec-theme主题设置 ）。
+-   `theme`：定义了编译文档的主题（详见： @sec-theme ）。
 
 -   `embed-resources`：是否将所有源文件嵌入HTML文件以方便分享。默认为"false"。
 
@@ -357,7 +357,7 @@ format:
 
 -   `link-external-newwindow`：是否在新标签页打开外部链接。
 
--   `toc`：是否显示页内目录。对于HTML格式的Quarto Books，开启该选项后会在每个网页的右侧显示一个页面内的导航目录（ @sec-右侧页内导航 ）。
+-   `toc`：是否显示页内目录。对于HTML格式的Quarto Books，开启该选项后会在每个网页的右侧显示一个页面内的导航目录（ @sec-page_navigation ）。
 
 -   `toc-title`：页内目录的标题。
 
@@ -390,7 +390,7 @@ execute:
 
 -   `cache`：是否开启运算结果缓存。默认为`false`。如果设置为`true`，就会在编译时将源代码的运算结果保存到文件目录中后缀为"\_cache"的文件夹中。这样在重新编译同一个文档时会加快编译速度。
 
-## 标题编号设置 {#sec-number-sections标题编号设置}
+## 标题编号设置 {#sec-number_sections}
 
 ```{r}
 ---
@@ -510,7 +510,7 @@ bibliography: references.bib # 参考文献目录
 
 ## 附：制作About Pages
 
-index.qmd文件会编译形成首页/封面文件（index.html），如果我们将书籍/网页发布（详见： @sec-发布到github-pages ），这是打开网站链接后首先看到的页面。我们可以通过Quarto提供的About Pages模板来快速创建一个美观的首页，其核心是`about`命令。下面是一个采用了About Pages模板的index.qmd文件的示例：
+index.qmd文件会编译形成首页/封面文件（index.html），如果我们将书籍/网页发布（详见： @sec-publish_github_pages ），这是打开网站链接后首先看到的页面。我们可以通过Quarto提供的About Pages模板来快速创建一个美观的首页，其核心是`about`命令。下面是一个采用了About Pages模板的index.qmd文件的示例：
 
 ```{r}
 ---

@@ -3,7 +3,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Seurat细胞分群官方教程 {#sec-seurat细胞分群官方教程}
+# Seurat细胞分群官方教程 {#sec-seurat_cell_clustering_official_tutorial}
 
 原文：[*Seurat - Guided Clustering Tutorial*](https://satijalab.org/seurat/articles/pbmc3k_tutorial)
 
@@ -131,7 +131,7 @@ While this method of normalization is standard and widely used in scRNA-seq anal
 SCTransform() normalization workflow 就是这样的一种工作流. 针对这一方法的原始文献：[@choudhary2022] 。基于`SCTransform`的数据标准化流程中，无需使用上面的`NormalizeData`, 和下面的`FindVariableFeatures`和`ScaleData`函数。详见后面的章节（ @sec-sctransform ）。
 :::
 
-## 识别高变基因（highly variable features） {#sec-识别高变基因}
+## 识别高变基因（highly variable features） {#sec-highly_variable_features}
 
 We next calculate a subset of features that exhibit **high cell-to-cell variation** in the dataset (i.e, they are highly expressed in some cells, and lowly expressed in others). We and others [@brennecke2013] have found that focusing on these genes in downstream analysis helps to **highlight biological signal** in single-cell datasets.
 
@@ -245,7 +245,7 @@ DimHeatmap(pbmc, dims = 1, cells = 1000, balanced = TRUE)
 DimHeatmap(pbmc, dims = 1:15, cells = 1000, balanced = TRUE)
 ```
 
-### 决定后续分析的主成分 {#sec-决定后续分析的主成分}
+### 决定后续分析的主成分 {#sec-Determine_pcs_for_subsequent_analyses}
 
 To overcome the extensive technical noise in any single feature for scRNA-seq data, **Seurat clusters cells based on their PCA scores**, with each PC essentially representing a 'metafeature' that combines information across a correlated feature set. The top principal components therefore represent a robust compression of the dataset. However, how many components should we choose to include? 10? 20? 100?
 
@@ -360,7 +360,7 @@ pbmc.markers %>%
     filter(avg_log2FC > 1)
 ```
 
-Seurat has several tests for differential expression which can be set with the `test.use` parameter (see our [DE vignette](https://satijalab.org/seurat/articles/de_vignette) for details). 默认是用的"wilcox"方法。For example, the ROC test（`test.use = "roc"`） returns the 'classification power' for any individual marker (ranging from 0 - random, to 1 - perfect)：
+Seurat has several tests for differential expression which can be set with the `test.use` parameter (see @sec-perform_de_analysis for details). 默认是用的"wilcox"方法。For example, the ROC test（`test.use = "roc"`） returns the 'classification power' for any individual marker (ranging from 0 - random, to 1 - perfect)：
 
 ```{r}
 cluster0.markers <- FindMarkers(pbmc, 

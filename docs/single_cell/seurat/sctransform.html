@@ -587,7 +587,7 @@ AAACCGTGTATGCG-1 SeuratProject        981          522  1.2232416</code></pre>
 <p><img src="sctransform_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>根据Seurat细胞分群官方教程（ <a href="#sec-%E5%86%B3%E5%AE%9A%E5%90%8E%E7%BB%AD%E5%88%86%E6%9E%90%E7%9A%84%E4%B8%BB%E6%88%90%E5%88%86"><span>Section&nbsp;7.6.2</span></a> ），这个数据集”we can observe an ‘elbow’ around PC9-10, suggesting that the majority of true signal is captured in the first 10 PCs”。因此在<code>FindNeighbors</code>函数中指定了<code>dims = 1:10</code>。但是这里的<code>FindNeighbors</code>函数指定了更多的主成分（<code>dims = 1:30</code>）。下面的内容对此作出了解释：</p>
+<p>根据Seurat细胞分群官方教程（ <a href="seurat_tutorial.html#sec-Determine_pcs_for_subsequent_analyses"><span>Section&nbsp;7.6.2</span></a> ），这个数据集”we can observe an ‘elbow’ around PC9-10, suggesting that the majority of true signal is captured in the first 10 PCs”。因此在<code>FindNeighbors</code>函数中指定了<code>dims = 1:10</code>。但是这里的<code>FindNeighbors</code>函数指定了更多的主成分（<code>dims = 1:30</code>）。下面的内容对此作出了解释：</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -608,7 +608,7 @@ Why can we choose more PCs when using sctransform?
 </div>
 </section><section id="marker基因可视化" class="level2" data-number="9.6"><h2 data-number="9.6" class="anchored" data-anchor-id="marker基因可视化">
 <span class="header-section-number">9.6</span> Marker基因可视化</h2>
-<p>Users can individually annotate clusters based on canonical markers. However, the <code>SCTransform</code> normalization reveals <strong>sharper biological distinctions</strong> compared to the&nbsp;standard Seurat workflow（ <a href="#sec-seurat%E7%BB%86%E8%83%9E%E5%88%86%E7%BE%A4%E5%AE%98%E6%96%B9%E6%95%99%E7%A8%8B"><span>Chapter&nbsp;7</span></a> ）, in a few ways:</p>
+<p>Users can individually annotate clusters based on canonical markers. However, the <code>SCTransform</code> normalization reveals <strong>sharper biological distinctions</strong> compared to the&nbsp;standard Seurat workflow（ <a href="seurat_tutorial.html"><span>Chapter&nbsp;7</span></a> ）, in a few ways:</p>
 <ul>
 <li><p>Clear separation of at least <strong>3 CD8 T cell populations (naive, memory, effector)</strong>, based on <strong>CD8A, GZMK, CCL5, CCR7</strong> expression</p></li>
 <li><p>Clear separation of <strong>three CD4 T cell populations (naive, memory, IFN-activated)</strong> based on <strong>S100A4, CCR7, IL32,</strong> and <strong>ISG15</strong></p></li>
@@ -1271,7 +1271,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb17-91"><a href="#cb17-91" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(pbmc, <span class="at">label =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb17-92"><a href="#cb17-92" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb17-93"><a href="#cb17-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a>根据Seurat细胞分群官方教程（ @sec-决定后续分析的主成分 ），这个数据集"we can observe an 'elbow' around PC9-10, suggesting that the majority of true signal is captured in the first 10 PCs"。因此在<span class="in">`FindNeighbors`</span>函数中指定了<span class="in">`dims = 1:10`</span>。但是这里的<span class="in">`FindNeighbors`</span>函数指定了更多的主成分（<span class="in">`dims = 1:30`</span>）。下面的内容对此作出了解释：</span>
+<span id="cb17-94"><a href="#cb17-94" aria-hidden="true" tabindex="-1"></a>根据Seurat细胞分群官方教程（ @sec-Determine_pcs_for_subsequent_analyses ），这个数据集"we can observe an 'elbow' around PC9-10, suggesting that the majority of true signal is captured in the first 10 PCs"。因此在<span class="in">`FindNeighbors`</span>函数中指定了<span class="in">`dims = 1:10`</span>。但是这里的<span class="in">`FindNeighbors`</span>函数指定了更多的主成分（<span class="in">`dims = 1:30`</span>）。下面的内容对此作出了解释：</span>
 <span id="cb17-95"><a href="#cb17-95" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-96"><a href="#cb17-96" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
 <span id="cb17-97"><a href="#cb17-97" aria-hidden="true" tabindex="-1"></a><span class="fu">## Why can we choose more PCs when using sctransform?</span></span>
@@ -1285,7 +1285,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb17-105"><a href="#cb17-105" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-106"><a href="#cb17-106" aria-hidden="true" tabindex="-1"></a><span class="fu">## Marker基因可视化</span></span>
 <span id="cb17-107"><a href="#cb17-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-108"><a href="#cb17-108" aria-hidden="true" tabindex="-1"></a>Users can individually annotate clusters based on canonical markers. However, the <span class="in">`SCTransform`</span> normalization reveals **sharper biological distinctions** compared to the&nbsp;standard Seurat workflow（ @sec-seurat细胞分群官方教程 ）, in a few ways:</span>
+<span id="cb17-108"><a href="#cb17-108" aria-hidden="true" tabindex="-1"></a>Users can individually annotate clusters based on canonical markers. However, the <span class="in">`SCTransform`</span> normalization reveals **sharper biological distinctions** compared to the&nbsp;standard Seurat workflow（ @sec-seurat_cell_clustering_official_tutorial ）, in a few ways:</span>
 <span id="cb17-109"><a href="#cb17-109" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-110"><a href="#cb17-110" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Clear separation of at least **3 CD8 T cell populations (naive, memory, effector)**, based on **CD8A, GZMK, CCL5, CCR7** expression</span>
 <span id="cb17-111"><a href="#cb17-111" aria-hidden="true" tabindex="-1"></a></span>

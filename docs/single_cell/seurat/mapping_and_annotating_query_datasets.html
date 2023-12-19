@@ -353,7 +353,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title"><strong>质控</strong></span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">质控</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title"><strong>Single-cell RNA-seq Clustering Workflow</strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
   </div>
 </li>
       </ul>
@@ -370,37 +388,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
@@ -448,7 +466,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span id="sec-基于参考集的细胞注释" class="quarto-section-identifier"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-Cellular_annotation_based_on_reference_sets" class="quarto-section-identifier"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -463,7 +481,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header><p>原文：<a href="https://satijalab.org/seurat/articles/integration_mapping"><em>Mapping and annotating query datasets</em></a></p>
 <p>原文发布日期：2023年10月31日</p>
-<p>In this vignette, we first build an <strong>integrated reference</strong> and then demonstrate how to leverage this reference to annotate new <strong>query datasets</strong>. Generating an integrated reference follows the same workflow described in more detail in the integration introduction ( <a href="#sec-%E5%8D%95%E7%BB%86%E8%83%9E%E6%95%B0%E6%8D%AE%E6%95%B4%E5%90%88"><span>Chapter&nbsp;10</span></a> ). Once generated, this reference can be used to analyze additional query datasets through tasks like cell type label transfer and projecting query cells onto reference UMAPs. Notably, this does not require correction of the underlying raw query data and can therefore be an efficient strategy if a high quality reference is available.</p>
+<p>In this vignette, we first build an <strong>integrated reference</strong> and then demonstrate how to leverage this reference to annotate new <strong>query datasets</strong>. Generating an integrated reference follows the same workflow described in more detail in the integration introduction ( <a href="integration.html"><span>Chapter&nbsp;10</span></a> ). Once generated, this reference can be used to analyze additional query datasets through tasks like cell type label transfer and projecting query cells onto reference UMAPs. Notably, this does not require correction of the underlying raw query data and can therefore be an efficient strategy if a high quality reference is available.</p>
 <section id="构建参考数据集" class="level2" data-number="12.1"><h2 data-number="12.1" class="anchored" data-anchor-id="构建参考数据集">
 <span class="header-section-number">12.1</span> 构建参考数据集</h2>
 <p>For the purposes of this example, we’ve chosen human pancreatic islet cell datasets produced across four technologies, <strong>CelSeq (<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE81076">GSE81076</a>) CelSeq2 (<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE85241">GSE85241</a>), Fluidigm C1 (<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE86469">GSE86469</a>), and SMART-Seq2 (E-MTAB-5061)</strong>. For convenience, we distribute this dataset through our&nbsp;<code>SeuratData</code>&nbsp;package. The metadata contains the technology (<code>tech</code>&nbsp;column) and cell type annotations (<code>celltype</code>&nbsp;column) for each cell in the four datasets.</p>
@@ -574,7 +592,7 @@ Elapsed time: 0 seconds</code></pre>
 <p><img src="mapping_and_annotating_query_datasets_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
-<p>可以看到，不同的测序技术间的细胞类型差异较大。因此需要对数据进行整合，方法同 <a href="#sec-%E5%8D%95%E7%BB%86%E8%83%9E%E6%95%B0%E6%8D%AE%E6%95%B4%E5%90%88"><span>Chapter&nbsp;10</span></a> 一致。</p>
+<p>可以看到，不同的测序技术间的细胞类型差异较大。因此需要对数据进行整合，方法同 <a href="integration.html"><span>Chapter&nbsp;10</span></a> 一致。</p>
 <div class="cell" data-hash="mapping_and_annotating_query_datasets_cache/html/unnamed-chunk-6_e0d4881dd9fbf4245ea54310abd6b465">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pancreas.ref</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/IntegrateLayers.html">IntegrateLayers</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pancreas.ref</span>, </span>
 <span>                                method <span class="op">=</span> <span class="va">CCAIntegration</span>, </span>
@@ -1312,13 +1330,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb37" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 基于参考集的细胞注释 {#sec-基于参考集的细胞注释}</span></span>
+<div class="sourceCode" id="cb37" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 基于参考集的细胞注释 {#sec-Cellular_annotation_based_on_reference_sets}</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>原文：<span class="co">[</span><span class="ot">*Mapping and annotating query datasets*</span><span class="co">](https://satijalab.org/seurat/articles/integration_mapping)</span></span>
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>原文发布日期：2023年10月31日</span>
 <span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>In this vignette, we first build an **integrated reference** and then demonstrate how to leverage this reference to annotate new **query datasets**. Generating an integrated reference follows the same workflow described in more detail in the integration introduction ( @sec-单细胞数据整合 ). Once generated, this reference can be used to analyze additional query datasets through tasks like cell type label transfer and projecting query cells onto reference UMAPs. Notably, this does not require correction of the underlying raw query data and can therefore be an efficient strategy if a high quality reference is available.</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>In this vignette, we first build an **integrated reference** and then demonstrate how to leverage this reference to annotate new **query datasets**. Generating an integrated reference follows the same workflow described in more detail in the integration introduction ( @sec-Single-cell_data_integration ). Once generated, this reference can be used to analyze additional query datasets through tasks like cell type label transfer and projecting query cells onto reference UMAPs. Notably, this does not require correction of the underlying raw query data and can therefore be an efficient strategy if a high quality reference is available.</span>
 <span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## 构建参考数据集</span></span>
 <span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
@@ -1384,7 +1402,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb37-80"><a href="#cb37-80" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(pancreas.ref, <span class="at">split.by =</span> <span class="st">"tech"</span>)</span>
 <span id="cb37-81"><a href="#cb37-81" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb37-82"><a href="#cb37-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-83"><a href="#cb37-83" aria-hidden="true" tabindex="-1"></a>可以看到，不同的测序技术间的细胞类型差异较大。因此需要对数据进行整合，方法同 @sec-单细胞数据整合 一致。</span>
+<span id="cb37-83"><a href="#cb37-83" aria-hidden="true" tabindex="-1"></a>可以看到，不同的测序技术间的细胞类型差异较大。因此需要对数据进行整合，方法同 @sec-Single-cell_data_integration 一致。</span>
 <span id="cb37-84"><a href="#cb37-84" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-87"><a href="#cb37-87" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb37-88"><a href="#cb37-88" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>

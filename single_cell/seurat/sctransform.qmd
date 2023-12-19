@@ -79,7 +79,7 @@ pbmc <- FindClusters(pbmc, verbose = FALSE)
 DimPlot(pbmc, label = TRUE)
 ```
 
-根据Seurat细胞分群官方教程（ @sec-决定后续分析的主成分 ），这个数据集"we can observe an 'elbow' around PC9-10, suggesting that the majority of true signal is captured in the first 10 PCs"。因此在`FindNeighbors`函数中指定了`dims = 1:10`。但是这里的`FindNeighbors`函数指定了更多的主成分（`dims = 1:30`）。下面的内容对此作出了解释：
+根据Seurat细胞分群官方教程（ @sec-Determine_pcs_for_subsequent_analyses ），这个数据集"we can observe an 'elbow' around PC9-10, suggesting that the majority of true signal is captured in the first 10 PCs"。因此在`FindNeighbors`函数中指定了`dims = 1:10`。但是这里的`FindNeighbors`函数指定了更多的主成分（`dims = 1:30`）。下面的内容对此作出了解释：
 
 ::: {.callout-tip collapse="true"}
 ## Why can we choose more PCs when using sctransform?
@@ -93,7 +93,7 @@ In addition, `SCTransform` **returns 3,000 variable features by default, instead
 
 ## Marker基因可视化
 
-Users can individually annotate clusters based on canonical markers. However, the `SCTransform` normalization reveals **sharper biological distinctions** compared to the standard Seurat workflow（ @sec-seurat细胞分群官方教程 ）, in a few ways:
+Users can individually annotate clusters based on canonical markers. However, the `SCTransform` normalization reveals **sharper biological distinctions** compared to the standard Seurat workflow（ @sec-seurat_cell_clustering_official_tutorial ）, in a few ways:
 
 -   Clear separation of at least **3 CD8 T cell populations (naive, memory, effector)**, based on **CD8A, GZMK, CCL5, CCR7** expression
 

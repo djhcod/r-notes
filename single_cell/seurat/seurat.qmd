@@ -24,9 +24,9 @@ In particular, we have made changes to:
     We've designed these updates to minimize changes for users. Existing Seurat functions and workflows from v4 continue to work in v5. For example, the command `GetAssayData(obj, assay="RNA", slot='counts')`, will run successfully in both Seurat v4 and Seurat v5.
 
 -   **Integration workflow:**\
-    Seurat v5 introduces a streamlined integration ( @sec-单细胞数据整合 ) and data transfer ( @sec-基于参考集的细胞注释 ) workflows that performs integration in low-dimensional space, and improves speed and memory efficiency. The results of integration are not identical between the two workflows, but users can still run the [v4 integration workflow](https://satijalab.org/seurat/articles/integration_introduction) in Seurat v5 if they wish.
+    Seurat v5 introduces a streamlined integration ( @sec-Integrated_analysis_of_seurat-v5 ) and data transfer ( @sec-Cellular_annotation_based_on_reference_sets ) workflows that performs integration in low-dimensional space, and improves speed and memory efficiency. The results of integration are not identical between the two workflows, but users can still run the [v4 integration workflow](https://satijalab.org/seurat/articles/integration_introduction) in Seurat v5 if they wish.
 
-    In previous versions of Seurat, the integration workflow required a list of multiple Seurat objects as input. In Seurat v5, **all the data can be kept as a single object**, but prior to integration, users can simply split the layers. See ( @sec-单细胞数据整合 ) for more information.
+    In previous versions of Seurat, the integration workflow required a list of multiple Seurat objects as input. In Seurat v5, **all the data can be kept as a single object**, but prior to integration, users can simply split the layers. See ( @sec-Single-cell_data_integration ) for more information.
 
 -   **Differential expression:**\
     Seurat v5 now uses the [presto package](https://github.com/immunogenomics/presto) (from the Korunsky and Raychaudhari labs), when available, to perform differential expression analysis. Using presto can dramatically speed up DE testing, and we encourage users to install it.\
@@ -37,4 +37,4 @@ In particular, we have made changes to:
 
 -   **Pseudobulk analysis:**\
     Once a single-cell dataset has been analyzed to annotate cell subpopulations, pseudobulk analyses (i.e. aggregating together cells within a given subpopulation and sample) can reduce noise, improve quantification of lowly expressed genes, and reduce the size of the data matrix. In Seurat v5, we encourage the use of the `AggregateExpression` function to perform pseudobulk analysis.\
-    Check out @sec-差异表达分析 as well as  [pancreatic/healthy PBMC comparison](https://satijalab.org/seurat/articles/parsebio_sketch_integration), for examples of how to use `AggregateExpression` to perform robust differential expression of scRNA-seq data from multiple different conditions.
+    Check out @sec-differential_expression as well as  [pancreatic/healthy PBMC comparison](https://satijalab.org/seurat/articles/parsebio_sketch_integration), for examples of how to use `AggregateExpression` to perform robust differential expression of scRNA-seq data from multiple different conditions.

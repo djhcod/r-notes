@@ -4,9 +4,9 @@ execute:
       warning: false
 ---
 
-# 图片设置 {#sec-图片设置}
+# 图片设置 {#sec-fig_Settings}
 
-## 插入图片的设置 {#sec-插入图片的设置}
+## 插入图片的设置 {#sec-Settings_for_inserting_figs}
 
 图片可以通过复制粘贴直接插入，Quarto定义图像的基本语法是：
 
@@ -18,9 +18,9 @@ execute:
 
 -   `fig-align`：图片的对齐方式，如"left"，"right"。
 
--   可以在小括号内添加超链接，如`[![](``images/crossref-figure.png``)](https://en.wikipedia.org/wiki/Elephant)`，当点击该图像时会跳转该网站。
+-   可以在小括号内添加超链接，如``` [![](``images/crossref-figure.png``)](https://en.wikipedia.org/wiki/Elephant) ```，当点击该图像时会跳转该网站。
 
--   `caption`和`label`的设置会使该图像能够被交叉引用（详见 @sec-交叉引用 ）。
+-   `caption`和`label`的设置会使该图像能够被交叉引用（详见 @sec-Cross_referencing_of_figs ）。
 
 -   `.column-page`：让图片以整个文档的宽度展示。需要首先建立一个Pandoc Div块（@fig-div）。然后在Pandoc Div块的参数项内填上`{.column-page}`。如下所示：
 
@@ -52,7 +52,7 @@ execute:
 ![](images/aerial-beautiful-color-2553004.jpg)
 :::
 
-### 组图的设置 {#sec-组图的设置}
+### 组图的设置 {#sec-Setting_of_group_figs}
 
 要容纳和排版组图，需要首先建立一个Pandoc Div块（@fig-div）。
 
@@ -82,7 +82,7 @@ Div块的图像排版基本语法如下：
 
 ### `Layout`复杂排版
 
-其基本语法和 @sec-代码块组图输出设置 一致。不同点在于需要在Div块开头的"{}"内设置，同时`layout`后要接"="，并且注意加引号，例如：`layout="[[1，1]，[1]]"`。通过设置`layout`可以完成对多图的复杂排版。`layout`属性是一个二维数组，其中第一维定义行，第二维定义列。`layout="[[1，1]，[1]]"`表示：创建两行，第一行有两列大小相等的列，第二行只有一列。
+其基本语法和 @sec-Code_chunk_figs_output_settings 一致。不同点在于需要在Div块开头的"{}"内设置，同时`layout`后要接"="，并且注意加引号，例如：`layout="[[1，1]，[1]]"`。通过设置`layout`可以完成对多图的复杂排版。`layout`属性是一个二维数组，其中第一维定义行，第二维定义列。`layout="[[1，1]，[1]]"`表示：创建两行，第一行有两列大小相等的列，第二行只有一列。
 
 ::: {#组图复杂排版设置 layout="[[1,1], [1]]"}
 ![](images/upregulate_genes.png){width="195"}
@@ -98,19 +98,19 @@ Div块的图像排版基本语法如下：
 关于图片设置的详细指南，参考：<https://quarto.org/docs/authoring/figures.html>。
 :::
 
-## 代码块图片输出设置
+## 代码块图片输出设置 {#sec-Code_chunk_figs_output_settings}
 
-对于代码块运行后生成的图片，我们也可以对其进行各种设置以使其在编译后的文档中符合理想的展示要求。基本语法和 @sec-插入图片的设置 中类似，只不过需要在前面加上"**#\|**"符号，然后将其放置在代码块开头。常用的参数有：
+对于代码块运行后生成的图片，我们也可以对其进行各种设置以使其在编译后的文档中符合理想的展示要求。基本语法和 中类似，只不过需要在前面加上"**#\|**"符号，然后将其放置在代码块开头。常用的参数有：
 
 -   `#| lable`：图片标签。
 
--   `#| fig-cap`：图片标题（`caption`）。`fig-cap`和`lable`共同用于图片的交叉引用，详见 @sec-交叉引用。
+-   `#| fig-cap`：图片标题（`caption`）。`fig-cap`和`lable`共同用于图片的交叉引用，详见 @sec-Cross_referencing_of_figs 。
 
 -   `#| fig-width`：图片的宽度。
 
 -   `#| fig-height`：图片的高度。
 
-其他设置包括`#| fig-align`、`#| fig-cap-location`等，见 @sec-图片设置 。
+其他设置包括`#| fig-align`、`#| fig-cap-location`等，见 @sec-Settings_for_inserting_figs 。
 
 ```{r}
 #| eval: true
@@ -126,9 +126,9 @@ ggplot(mpg, aes(x = hwy, y = cty, color = cyl)) +
   theme_minimal()
 ```
 
-### 代码块组图输出设置 {#sec-代码块组图输出设置}
+### 代码块组图输出设置
 
-如果一个代码块运行后可以生成多张图像，那么我们也可以和 @sec-组图的设置 中一样，对这些图片进行组图排版。常用的参数包括：
+如果一个代码块运行后可以生成多张图像，那么我们也可以和 @sec-Setting_of_group_figs 中一样，对这些图片进行组图排版。常用的参数包括：
 
 -   `layout-ncol`和`layout-nrow`：设置组图的行和列分别排多少张图片。如`layout-ncol: "2"`。
 
@@ -165,7 +165,7 @@ plot(cars)
 plot(pressure)
 ```
 
-#### 用`layout`进行复杂排版 {#sec-用layout进行复杂排版}
+#### 用`layout`进行复杂排版
 
 `layout`属性是一个二维数组，其中第一维定义行，第二维定义列。如`layout: "[[1，1]，[1]]`表示：创建两行，第一行有两列大小相等的列，第二行只有一列。
 
