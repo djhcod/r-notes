@@ -24,7 +24,7 @@ ifnb <- LoadData("ifnb")
 
 ```{r}
 library(Seurat)
-ifnb <- readRDS("data/pbmc_ifnb.rds")
+ifnb <- readRDS("data/seurat_official/pbmc_ifnb.rds")
 ifnb
 head(ifnb@meta.data, 5)
 table(ifnb$seurat_annotations) # 这里的数据已经提前注释好了细胞类型
@@ -126,8 +126,8 @@ stim <- read.table(url("https://raw.githubusercontent.com/yelabucsf/demuxlet_pap
 
 ```{r}
 # 这里提前下载好了两个样本信息文件，所以直接从本地读取
-ctrl <- readRDS("data/inferred_sample_ids_ctrl.rds")
-stim <- readRDS("data/inferred_sample_ids_stim.rds")
+ctrl <- readRDS("data/seurat_official/inferred_sample_ids_ctrl.rds")
+stim <- readRDS("data/seurat_official/inferred_sample_ids_stim.rds")
 info <- rbind(ctrl, stim)
 info$BARCODE[1:5]
 colnames(ifnb)[1:5]

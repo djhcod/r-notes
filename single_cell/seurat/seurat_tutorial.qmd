@@ -31,7 +31,7 @@ editor_options:
 library(Seurat)
 
 # 读取PBMC数据集
-pbmc.data <- Read10X(data.dir = "data/filtered_gene_bc_matrices/hg19")
+pbmc.data <- Read10X(data.dir = "data/seurat_official/filtered_gene_bc_matrices/hg19")
 # Initialize the Seurat object with the raw (non-normalized data).
 pbmc <- CreateSeuratObject(counts = pbmc.data, 
                            project = "pbmc3k", 
@@ -271,7 +271,7 @@ We chose 10 here, but encourage users to consider the following:
 -   We advise users to **err on the higher side when choosing this parameter（建议选择偏高的主成分数量）**. For example, performing downstream analyses with only 5 PCs does significantly and adversely affect results.
 :::
 
-## 细胞聚类（cluster）
+## 细胞聚类（cluster） {#sec-clustering_seurat}
 
 Seurat applies a **graph-based clustering approach**, building upon initial strategies in Macosko *et al* [@macosko2015a]. Importantly, the *distance metric* which drives the clustering analysis (based on previously identified PCs) remains the same. However, our approach to partitioning the cellular distance matrix into clusters has dramatically improved. Our approach was heavily inspired by recent manuscripts which applied graph-based clustering approaches to scRNA-seq data and CyTOF data [@levine2015]. Briefly, these methods embed cells in a graph structure - for example a **K-nearest neighbor (KNN) graph**, with edges drawn between cells with similar feature expression patterns, and then attempt to partition this graph into highly interconnected 'quasi-cliques' or 'communities'.
 
@@ -327,7 +327,7 @@ You can save the object at this point so that it can easily be loaded back in wi
 
 ```{r}
 #| eval: false
-saveRDS(pbmc, file = "output/pbmc_tutorial.rds")
+saveRDS(pbmc, file = "output/seurat_official/pbmc_tutorial.rds")
 ```
 
 ## 寻找细胞群间的差异表达基因（cluster biomarkers）
@@ -471,7 +471,7 @@ DimPlot(pbmc,
 保存Seurat对象：
 
 ```{r}
-saveRDS(pbmc, file = "output/pbmc3k_final.rds")
+saveRDS(pbmc, file = "output/seurat_official/pbmc3k_final.rds")
 ```
 
 ::: {.callout-note collapse="true" icon="false"}

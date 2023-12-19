@@ -116,7 +116,7 @@ If we had a single sample, we could generate the count matrix and then subsequen
 ```{r}
 library(Seurat)
 # Read in 10X data for a single sample (output is a sparse matrix)
-ctrl_counts <- Read10X(data.dir = "data/ctrl_raw_feature_bc_matrix")
+ctrl_counts <- Read10X(data.dir = "data/scRNA-seq_online/ctrl_raw_feature_bc_matrix")
 
 # Turn count matrix into a Seurat object (output is a Seurat object)
 ctrl <- CreateSeuratObject(counts = ctrl_counts,
@@ -149,7 +149,7 @@ Today we will use it to iterate over the two sample folders and execute two comm
 
 ```{r}
 for (file in c("ctrl_raw_feature_bc_matrix", "stim_raw_feature_bc_matrix")){
-        seurat_data <- Read10X(data.dir = paste0("data/", file))
+        seurat_data <- Read10X(data.dir = paste0("data/scRNA-seq_online/", file))
         seurat_obj <- CreateSeuratObject(counts = seurat_data, 
                                          min.features = 100, 
                                          project = file)
@@ -207,7 +207,7 @@ head(merged_seurat@meta.data)
 tail(merged_seurat@meta.data)
 
 # 保存
-saveRDS(merged_seurat, file = "output/merged_seurat.rds")
+saveRDS(merged_seurat, file = "output/scRNA-seq_online/merged_seurat.rds")
 ```
 
 ------------------------------------------------------------------------

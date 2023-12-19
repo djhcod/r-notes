@@ -14,7 +14,7 @@ Inspired by important and rigorous work from Lause et al [@lause2021], we releas
 
 ```{r}
 library(Seurat)
-pbmc_data <- Read10X(data.dir = "data/filtered_gene_bc_matrices/hg19")
+pbmc_data <- Read10X(data.dir = "data/seurat_official/filtered_gene_bc_matrices/hg19")
 pbmc <- CreateSeuratObject(counts = pbmc_data)
 pbmc
 ```
@@ -71,7 +71,7 @@ DimHeatmap(pbmc, dims = 1:15, cells = 1000, balanced = TRUE)
 ElbowPlot(pbmc)
 ```
 
-## 聚类
+## 聚类 {#sec-clustering}
 
 ```{r}
 pbmc <- FindNeighbors(pbmc, dims = 1:30, verbose = FALSE)
@@ -84,7 +84,7 @@ DimPlot(pbmc, label = TRUE)
 ::: {.callout-tip collapse="true"}
 ## Why can we choose more PCs when using sctransform?
 
-In the Seurat细胞分群官方教程，we focus on **10 PCs** for this dataset, though we highlight that **the results are similar with higher settings for this parameter**. Interestingly, we've found that when using `SCTransform`, we often **benefit by pushing this parameter even higher**. We believe this is because the `SCTransform` workflow performs more effective normalization, strongly removing technical effects from the data.
+In the @sec-seurat_cell_clustering_official_tutorial ，we focus on **10 PCs** for this dataset, though we highlight that **the results are similar with higher settings for this parameter**. Interestingly, we've found that when using `SCTransform`, we often **benefit by pushing this parameter even higher**. We believe this is because the `SCTransform` workflow performs more effective normalization, strongly removing technical effects from the data.
 
 Even after standard log-normalization, variation in sequencing depth is still a confounding factor (see [Figure 1](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1)), and this effect can subtly influence higher PCs. In `SCTransform`, this effect is substantially mitigated (see [Figure 3](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1)). This means that **higher PCs are more likely to represent subtle, but biologically relevant, sources of heterogeneity** -- so including them may improve downstream analysis.
 

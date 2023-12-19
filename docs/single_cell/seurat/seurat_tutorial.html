@@ -378,7 +378,7 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title"><strong>Single-cell RNA-seq Clustering Workflow</strong></span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -391,6 +391,12 @@ div.csl-indent {
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
   </div>
 </li>
       </ul>
@@ -407,37 +413,37 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
@@ -487,7 +493,7 @@ div.csl-indent {
   <li><a href="#sec-Determine_pcs_for_subsequent_analyses" id="toc-sec-Determine_pcs_for_subsequent_analyses" class="nav-link" data-scroll-target="#sec-Determine_pcs_for_subsequent_analyses">决定后续分析的主成分</a></li>
   </ul>
 </li>
-  <li><a href="#%E7%BB%86%E8%83%9E%E8%81%9A%E7%B1%BBcluster" id="toc-细胞聚类cluster" class="nav-link" data-scroll-target="#%E7%BB%86%E8%83%9E%E8%81%9A%E7%B1%BBcluster"><span class="header-section-number">7.7</span> 细胞聚类（cluster）</a></li>
+  <li><a href="#sec-clustering_seurat" id="toc-sec-clustering_seurat" class="nav-link" data-scroll-target="#sec-clustering_seurat"><span class="header-section-number">7.7</span> 细胞聚类（cluster）</a></li>
   <li>
 <a href="#%E9%9D%9E%E7%BA%BF%E6%80%A7%E9%99%8D%E7%BB%B4" id="toc-非线性降维" class="nav-link" data-scroll-target="#%E9%9D%9E%E7%BA%BF%E6%80%A7%E9%99%8D%E7%BB%B4"><span class="header-section-number">7.8</span> 非线性降维</a>
   <ul class="collapse">
@@ -542,11 +548,11 @@ div.csl-indent {
 </li>
 <li><p>matrix文件：表达矩阵（稀疏矩阵）。</p></li>
 </ul>
-<div class="cell" data-hash="seurat_tutorial_cache/html/unnamed-chunk-1_377c6a39af75165e6a26b515bbe602b1">
+<div class="cell" data-hash="seurat_tutorial_cache/html/unnamed-chunk-1_3b646a7e4b1c2ed5ab007863cec18426">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 读取PBMC数据集</span></span>
-<span><span class="va">pbmc.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/Read10X.html">Read10X</a></span><span class="op">(</span>data.dir <span class="op">=</span> <span class="st">"data/filtered_gene_bc_matrices/hg19"</span><span class="op">)</span></span>
+<span><span class="va">pbmc.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/Read10X.html">Read10X</a></span><span class="op">(</span>data.dir <span class="op">=</span> <span class="st">"data/seurat_official/filtered_gene_bc_matrices/hg19"</span><span class="op">)</span></span>
 <span><span class="co"># Initialize the Seurat object with the raw (non-normalized data).</span></span>
 <span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateSeuratObject.html">CreateSeuratObject</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">pbmc.data</span>, </span>
 <span>                           project <span class="op">=</span> <span class="st">"pbmc3k"</span>, </span>
@@ -824,7 +830,7 @@ Identifying the true dimensionality of a dataset
 </div>
 </div>
 </div>
-</section></section><section id="细胞聚类cluster" class="level2" data-number="7.7"><h2 data-number="7.7" class="anchored" data-anchor-id="细胞聚类cluster">
+</section></section><section id="sec-clustering_seurat" class="level2" data-number="7.7"><h2 data-number="7.7" class="anchored" data-anchor-id="sec-clustering_seurat">
 <span class="header-section-number">7.7</span> 细胞聚类（cluster）</h2>
 <p>Seurat applies a <strong>graph-based clustering approach</strong>, building upon initial strategies in Macosko&nbsp;<em>et al</em> <span class="citation" data-cites="macosko2015a">(<a href="../../references.html#ref-macosko2015a" role="doc-biblioref">Macosko et al. 2015b</a>)</span>. Importantly, the <em>distance metric</em> which drives the clustering analysis (based on previously identified PCs) remains the same. However, our approach to partitioning the cellular distance matrix into clusters has dramatically improved. Our approach was heavily inspired by recent manuscripts which applied graph-based clustering approaches to scRNA-seq data and CyTOF data <span class="citation" data-cites="levine2015">(<a href="../../references.html#ref-levine2015" role="doc-biblioref">Levine et al. 2015</a>)</span>. Briefly, these methods embed cells in a graph structure - for example a <strong>K-nearest neighbor (KNN) graph</strong>, with edges drawn between cells with similar feature expression patterns, and then attempt to partition this graph into highly interconnected ‘quasi-cliques’ or ‘communities’.</p>
 <p>As in PhenoGraph, we first construct a KNN graph based on the euclidean distance in PCA space, and refine the edge weights between any two cells based on the shared overlap in their local neighborhoods (Jaccard similarity). This step is performed using the&nbsp;<strong><code><a href="https://satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors()</a></code></strong>&nbsp;function, and takes as input the <strong>previously defined dimensionality of the dataset</strong> (first 10 PCs).</p>
@@ -908,8 +914,8 @@ Caution
 </div>
 </div>
 <p>You can save the object at this point so that it can easily be loaded back in without having to rerun the computationally intensive steps performed above, or easily shared with collaborators.</p>
-<div class="cell" data-hash="seurat_tutorial_cache/html/unnamed-chunk-23_e17a51c63d49e63de2b6fc7dc3b44bfa">
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">pbmc</span>, file <span class="op">=</span> <span class="st">"output/pbmc_tutorial.rds"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="seurat_tutorial_cache/html/unnamed-chunk-23_ddc2c590f4d5c2ae5e3fb6d808f6b5bc">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">pbmc</span>, file <span class="op">=</span> <span class="st">"output/seurat_official/pbmc_tutorial.rds"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="寻找细胞群间的差异表达基因cluster-biomarkers" class="level2" data-number="7.9"><h2 data-number="7.9" class="anchored" data-anchor-id="寻找细胞群间的差异表达基因cluster-biomarkers">
 <span class="header-section-number">7.9</span> 寻找细胞群间的差异表达基因（cluster biomarkers）</h2>
@@ -1137,8 +1143,8 @@ AAACCGTGTATGCG-1 AAACGCACTGGTAC-1
 </div>
 </div>
 <p>保存Seurat对象：</p>
-<div class="cell" data-hash="seurat_tutorial_cache/html/unnamed-chunk-36_e884456cbaa84ef1597264630741c6ae">
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">pbmc</span>, file <span class="op">=</span> <span class="st">"output/pbmc3k_final.rds"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="seurat_tutorial_cache/html/unnamed-chunk-36_93d4382f3586b92feebc099ba2ddc157">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">pbmc</span>, file <span class="op">=</span> <span class="st">"output/seurat_official/pbmc3k_final.rds"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
@@ -1710,7 +1716,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb52-33"><a href="#cb52-33" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
 <span id="cb52-34"><a href="#cb52-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-35"><a href="#cb52-35" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取PBMC数据集</span></span>
-<span id="cb52-36"><a href="#cb52-36" aria-hidden="true" tabindex="-1"></a>pbmc.data <span class="ot">&lt;-</span> <span class="fu">Read10X</span>(<span class="at">data.dir =</span> <span class="st">"data/filtered_gene_bc_matrices/hg19"</span>)</span>
+<span id="cb52-36"><a href="#cb52-36" aria-hidden="true" tabindex="-1"></a>pbmc.data <span class="ot">&lt;-</span> <span class="fu">Read10X</span>(<span class="at">data.dir =</span> <span class="st">"data/seurat_official/filtered_gene_bc_matrices/hg19"</span>)</span>
 <span id="cb52-37"><a href="#cb52-37" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the Seurat object with the raw (non-normalized data).</span></span>
 <span id="cb52-38"><a href="#cb52-38" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> pbmc.data, </span>
 <span id="cb52-39"><a href="#cb52-39" aria-hidden="true" tabindex="-1"></a>                           <span class="at">project =</span> <span class="st">"pbmc3k"</span>, </span>
@@ -1950,7 +1956,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb52-305"><a href="#cb52-305" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>We advise users to **err on the higher side when choosing this parameter（建议选择偏高的主成分数量）**. For example, performing downstream analyses with only 5 PCs does significantly and adversely affect results.</span>
 <span id="cb52-306"><a href="#cb52-306" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb52-307"><a href="#cb52-307" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-308"><a href="#cb52-308" aria-hidden="true" tabindex="-1"></a><span class="fu">## 细胞聚类（cluster）</span></span>
+<span id="cb52-308"><a href="#cb52-308" aria-hidden="true" tabindex="-1"></a><span class="fu">## 细胞聚类（cluster） {#sec-clustering_seurat}</span></span>
 <span id="cb52-309"><a href="#cb52-309" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-310"><a href="#cb52-310" aria-hidden="true" tabindex="-1"></a>Seurat applies a **graph-based clustering approach**, building upon initial strategies in Macosko&nbsp;*et al* [@macosko2015a]. Importantly, the *distance metric* which drives the clustering analysis (based on previously identified PCs) remains the same. However, our approach to partitioning the cellular distance matrix into clusters has dramatically improved. Our approach was heavily inspired by recent manuscripts which applied graph-based clustering approaches to scRNA-seq data and CyTOF data [@levine2015]. Briefly, these methods embed cells in a graph structure - for example a **K-nearest neighbor (KNN) graph**, with edges drawn between cells with similar feature expression patterns, and then attempt to partition this graph into highly interconnected 'quasi-cliques' or 'communities'.</span>
 <span id="cb52-311"><a href="#cb52-311" aria-hidden="true" tabindex="-1"></a></span>
@@ -2006,7 +2012,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb52-371"><a href="#cb52-371" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-374"><a href="#cb52-374" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb52-375"><a href="#cb52-375" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb52-376"><a href="#cb52-376" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(pbmc, <span class="at">file =</span> <span class="st">"output/pbmc_tutorial.rds"</span>)</span>
+<span id="cb52-376"><a href="#cb52-376" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(pbmc, <span class="at">file =</span> <span class="st">"output/seurat_official/pbmc_tutorial.rds"</span>)</span>
 <span id="cb52-377"><a href="#cb52-377" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb52-378"><a href="#cb52-378" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-379"><a href="#cb52-379" aria-hidden="true" tabindex="-1"></a><span class="fu">## 寻找细胞群间的差异表达基因（cluster biomarkers）</span></span>
@@ -2150,7 +2156,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb52-541"><a href="#cb52-541" aria-hidden="true" tabindex="-1"></a>保存Seurat对象：</span>
 <span id="cb52-542"><a href="#cb52-542" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-545"><a href="#cb52-545" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb52-546"><a href="#cb52-546" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(pbmc, <span class="at">file =</span> <span class="st">"output/pbmc3k_final.rds"</span>)</span>
+<span id="cb52-546"><a href="#cb52-546" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(pbmc, <span class="at">file =</span> <span class="st">"output/seurat_official/pbmc3k_final.rds"</span>)</span>
 <span id="cb52-547"><a href="#cb52-547" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb52-548"><a href="#cb52-548" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-549"><a href="#cb52-549" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>

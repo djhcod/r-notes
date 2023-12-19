@@ -357,7 +357,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title"><strong>Single-cell RNA-seq Clustering Workflow</strong></span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -370,6 +370,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
   </div>
 </li>
       </ul>
@@ -386,37 +392,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
@@ -531,9 +537,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="计算质控指标-generating-quality-metrics" class="level2" data-number="18.1"><h2 data-number="18.1" class="anchored" data-anchor-id="计算质控指标-generating-quality-metrics">
 <span class="header-section-number">18.1</span> 计算质控指标 (Generating quality metrics)</h2>
 <p>When data is loaded into Seurat and the initial object is created, there is some basic metadata asssembled for each of the cells in the count matrix. To take a close look at this metadata, let’s view the data frame stored in the <code>meta.data</code> slot of our <code>merged_seurat</code> object:</p>
-<div class="cell" data-hash="04_SC_quality_control_cache/html/unnamed-chunk-1_a6adc0a13c3ee0e2a7930691ad7180cd">
+<div class="cell" data-hash="04_SC_quality_control_cache/html/unnamed-chunk-1_0bd213b7b6ca759eb99c9d43cd36bb09">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
-<span><span class="va">merged_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/merged_seurat.rds"</span><span class="op">)</span></span>
+<span><span class="va">merged_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/scRNA-seq_online/merged_seurat.rds"</span><span class="op">)</span></span>
 <span><span class="va">merged_seurat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>An object of class Seurat 
@@ -669,9 +675,9 @@ ctrl_AAACATACCTCGCT-1        0.8283053 0.01392441 ctrl_AAACATACCTCGCT-1   ctrl</
 </div>
 </div>
 <p>Now you are all setup with the metrics you need to assess the quality of your data! Your final metadata table will have rows that correspond to each cell, and columns with information about those cells.</p>
-<div class="cell" data-hash="04_SC_quality_control_cache/html/unnamed-chunk-6_ee0d328267b64bcc36b27d3445e5ddee">
+<div class="cell" data-hash="04_SC_quality_control_cache/html/unnamed-chunk-6_b1a4830d5e41e618f422ccc95ca83aec">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 保存</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">merged_seurat</span>, file <span class="op">=</span> <span class="st">"output/merged_filtered_seurat.rds"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">merged_seurat</span>, file <span class="op">=</span> <span class="st">"output/scRNA-seq_online/merged_filtered_seurat.rds"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="质量评价-assessing-the-quality-metrics" class="level2" data-number="18.2"><h2 data-number="18.2" class="anchored" data-anchor-id="质量评价-assessing-the-quality-metrics">
 <span class="header-section-number">18.2</span> 质量评价 (Assessing the quality metrics)</h2>
@@ -1012,8 +1018,8 @@ Active assay: RNA (14065 features, 0 variable features)
 <hr></section><section id="saving-filtered-cells" class="level2" data-number="18.5"><h2 data-number="18.5" class="anchored" data-anchor-id="saving-filtered-cells">
 <span class="header-section-number">18.5</span> Saving filtered cells</h2>
 <p>Based on these QC metrics we would identify any failed samples and move forward with our filtered cells. Often we iterate through the QC metrics using different filtering criteria; it is not necessarily a linear process. When satisfied with the filtering criteria, we would save our filtered cell object for clustering and marker identification.</p>
-<div class="cell" data-hash="04_SC_quality_control_cache/html/unnamed-chunk-18_3bbeb226ea603370e366b7c665ab57c9">
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">filtered_seurat</span>, file<span class="op">=</span><span class="st">"output/seurat_filtered.rds"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="04_SC_quality_control_cache/html/unnamed-chunk-18_35b89fba656e82dd151ab7693db72f9d">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">filtered_seurat</span>, file<span class="op">=</span><span class="st">"output/scRNA-seq_online/seurat_filtered.rds"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr></section><section id="exploring-a-poor-quality-sample" class="level2" data-number="18.6"><h2 data-number="18.6" class="anchored" data-anchor-id="exploring-a-poor-quality-sample">
 <span class="header-section-number">18.6</span> Exploring a Poor Quality Sample</h2>
@@ -1549,7 +1555,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title"><strong>Single-cell RNA-seq Clustering Workflow</strong></span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
@@ -1588,7 +1594,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a>merged_seurat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/merged_seurat.rds"</span>)</span>
+<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a>merged_seurat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/scRNA-seq_online/merged_seurat.rds"</span>)</span>
 <span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a>merged_seurat</span>
 <span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(merged_seurat<span class="sc">@</span>meta.data)</span>
 <span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
@@ -1658,7 +1664,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb39-113"><a href="#cb39-113" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-116"><a href="#cb39-116" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb39-117"><a href="#cb39-117" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存</span></span>
-<span id="cb39-118"><a href="#cb39-118" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(merged_seurat, <span class="at">file =</span> <span class="st">"output/merged_filtered_seurat.rds"</span>)</span>
+<span id="cb39-118"><a href="#cb39-118" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(merged_seurat, <span class="at">file =</span> <span class="st">"output/scRNA-seq_online/merged_filtered_seurat.rds"</span>)</span>
 <span id="cb39-119"><a href="#cb39-119" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb39-120"><a href="#cb39-120" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-121"><a href="#cb39-121" aria-hidden="true" tabindex="-1"></a><span class="fu">## 质量评价 (Assessing the quality metrics)</span></span>
@@ -1953,7 +1959,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb39-432"><a href="#cb39-432" aria-hidden="true" tabindex="-1"></a>Based on these QC metrics we would identify any failed samples and move forward with our filtered cells. Often we iterate through the QC metrics using different filtering criteria; it is not necessarily a linear process. When satisfied with the filtering criteria, we would save our filtered cell object for clustering and marker identification.</span>
 <span id="cb39-433"><a href="#cb39-433" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-436"><a href="#cb39-436" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb39-437"><a href="#cb39-437" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(filtered_seurat, <span class="at">file=</span><span class="st">"output/seurat_filtered.rds"</span>)</span>
+<span id="cb39-437"><a href="#cb39-437" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(filtered_seurat, <span class="at">file=</span><span class="st">"output/scRNA-seq_online/seurat_filtered.rds"</span>)</span>
 <span id="cb39-438"><a href="#cb39-438" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb39-439"><a href="#cb39-439" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-440"><a href="#cb39-440" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>

@@ -33,7 +33,7 @@ When data is loaded into Seurat and the initial object is created, there is some
 
 ```{r}
 library(Seurat)
-merged_seurat <- readRDS("output/merged_seurat.rds")
+merged_seurat <- readRDS("output/scRNA-seq_online/merged_seurat.rds")
 merged_seurat
 head(merged_seurat@meta.data)
 ```
@@ -103,7 +103,7 @@ Now you are all setup with the metrics you need to assess the quality of your da
 
 ```{r}
 # 保存
-saveRDS(merged_seurat, file = "output/merged_filtered_seurat.rds")
+saveRDS(merged_seurat, file = "output/scRNA-seq_online/merged_filtered_seurat.rds")
 ```
 
 ## 质量评价 (Assessing the quality metrics)
@@ -398,7 +398,7 @@ The cells that were removed were those with **high nUMI but low numbers of genes
 Based on these QC metrics we would identify any failed samples and move forward with our filtered cells. Often we iterate through the QC metrics using different filtering criteria; it is not necessarily a linear process. When satisfied with the filtering criteria, we would save our filtered cell object for clustering and marker identification.
 
 ```{r}
-saveRDS(filtered_seurat, file="output/seurat_filtered.rds")
+saveRDS(filtered_seurat, file="output/scRNA-seq_online/seurat_filtered.rds")
 ```
 
 ------------------------------------------------------------------------
