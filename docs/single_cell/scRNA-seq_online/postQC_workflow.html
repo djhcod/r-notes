@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>R语言学习笔记 - References</title>
+<title>R语言学习笔记 - 19&nbsp; Single-cell RNA-seq Clustering Workflow</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -54,47 +54,30 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./images/logo.jpg" rel="icon" type="image/jpeg">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" rel="next">
+<link href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" rel="prev">
+<link href="../../images/logo.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -126,8 +109,10 @@ div.csl-indent {
 <script async="" src="https://hypothes.is/embed.js"></script>
 
 
-<meta name="twitter:title" content="R语言学习笔记 - References">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="R语言学习笔记 - 19&nbsp; Single-cell RNA-seq Clustering Workflow">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/images/sc_workflow_2022-01.jpg">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-sidebar docked nav-fixed">
@@ -137,10 +122,10 @@ div.csl-indent {
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./images/logo.jpg" alt="" class="navbar-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../images/logo.jpg" alt="" class="navbar-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">R语言学习笔记</span>
     </a>
   </div>
@@ -151,11 +136,11 @@ div.csl-indent {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" rel="" target="" aria-current="page">
+    <a class="nav-link active" href="../../index.html" rel="" target="" aria-current="page">
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./intro.html" rel="" target="">
+    <a class="nav-link" href="../../intro.html" rel="" target="">
  <span class="menu-text">Introduction</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -164,25 +149,25 @@ div.csl-indent {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-parts">    
         <li>
-    <a class="dropdown-item" href="./r_basic/r_basics.html" rel="" target="">
+    <a class="dropdown-item" href="../../r_basic/r_basics.html" rel="" target="">
  <span class="dropdown-text">R语言基础</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./single_cell/seurat/seurat.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/seurat/seurat.html" rel="" target="">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./single_cell/scRNA-seq_online/00_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/scRNA-seq_online/00_intro.html" rel="" target="">
  <span class="dropdown-text">scRNA-seq_online学习材料</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./quarto_foundation/quarto_foundation.html" rel="" target="">
+    <a class="dropdown-item" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
  <span class="dropdown-text">Quarto基础</span></a>
   </li>  
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="./references.html" rel="" target="">
+    <a class="nav-link" href="../../references.html" rel="" target="">
  <span class="menu-text">References</span></a>
   </li>  
 </ul>
@@ -222,7 +207,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./references.html">参考文献</a></li><li class="breadcrumb-item"><a href="./references.html">References</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/postQC_workflow.html"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">**Single-cell RNA-seq Clustering Workflow**</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -244,20 +229,20 @@ div.csl-indent {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">主页</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+  <a href="../../intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">前言</span></a>
   </div>
 </li>
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
+            <a href="../../r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">R语言基础</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -266,25 +251,25 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
+  <a href="../../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rstudio环境配置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./r_basic/data_input_output.html" class="sidebar-item-text sidebar-link">
+  <a href="../../r_basic/data_input_output.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">数据的读取与输出</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./r_basic/basic_data_function.html" class="sidebar-item-text sidebar-link">
+  <a href="../../r_basic/basic_data_function.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据处理基本函数</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./r_basic/character.html" class="sidebar-item-text sidebar-link">
+  <a href="../../r_basic/character.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">字符的处理</span></span></a>
   </div>
 </li>
@@ -292,7 +277,7 @@ div.csl-indent {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./single_cell/seurat/seurat.html" class="sidebar-item-text sidebar-link">
+            <a href="../../single_cell/seurat/seurat.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Seurat v5官方文档</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -301,55 +286,55 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/seurat/seurat_command_list.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/seurat/seurat_command_list.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/seurat/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/seurat/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/seurat/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/seurat/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/seurat/sctransform.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/seurat/sctransform.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">单细胞数据整合（integration）</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">差异表达分析</span></span></a>
   </div>
 </li>
@@ -357,60 +342,54 @@ div.csl-indent {
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./single_cell/scRNA-seq_online/00_intro.html" class="sidebar-item-text sidebar-link">
+            <a href="../../single_cell/scRNA-seq_online/00_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">scRNA-seq_online学习材料</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">质控</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title"><strong>Single-cell RNA-seq Clustering Workflow</strong></span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
+  <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="./quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
+            <a href="../../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quarto基础</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -419,38 +398,38 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+  <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+  <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+  <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+  <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+  <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+  <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
@@ -458,16 +437,16 @@ div.csl-indent {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
  <span class="menu-text">参考文献</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./references.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../references.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">References</span></a>
   </div>
 </li>
@@ -479,14 +458,27 @@ div.csl-indent {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#clustering-workflow" id="toc-clustering-workflow" class="nav-link active" data-scroll-target="#clustering-workflow"><span class="header-section-number">19.1</span> Clustering workflow</a>
+  <ul class="collapse">
+  <li><a href="#explore-sources-of-unwanted-variation" id="toc-explore-sources-of-unwanted-variation" class="nav-link" data-scroll-target="#explore-sources-of-unwanted-variation">1. Explore sources of unwanted variation</a></li>
+  <li><a href="#normalization-and-regressing-out-sources-of-unwanted-variation" id="toc-normalization-and-regressing-out-sources-of-unwanted-variation" class="nav-link" data-scroll-target="#normalization-and-regressing-out-sources-of-unwanted-variation">2. Normalization and regressing out sources of unwanted variation</a></li>
+  <li><a href="#integration" id="toc-integration" class="nav-link" data-scroll-target="#integration">3. Integration</a></li>
+  <li><a href="#clustering-cells" id="toc-clustering-cells" class="nav-link" data-scroll-target="#clustering-cells">4. Clustering cells</a></li>
+  <li><a href="#cluster-quality-evaluation" id="toc-cluster-quality-evaluation" class="nav-link" data-scroll-target="#cluster-quality-evaluation">5. Cluster quality evaluation</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/scRNA-seq_online/postQC_workflow.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/single_cell/scRNA-seq_online/postQC_workflow.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">References</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title"><strong>Single-cell RNA-seq Clustering Workflow</strong></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -501,141 +493,64 @@ div.csl-indent {
 
 </header>
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-blondel2008" class="csl-entry" role="listitem">
-Blondel, Vincent D, Jean-Loup Guillaume, Renaud Lambiotte, and Etienne
-Lefebvre. 2008. <span>“Fast Unfolding of Communities in Large
-Networks.”</span> <em>Journal of Statistical Mechanics: Theory and
-Experiment</em> 2008 (10): P10008. <a href="https://doi.org/10.1088/1742-5468/2008/10/p10008">https://doi.org/10.1088/1742-5468/2008/10/p10008</a>.
+<p><strong>Learning Objectives:</strong></p>
+<ul>
+<li>Describe the workflow for single-cell RNA-seq analysis after the quality control step.</li>
+</ul>
+<p>Now that we have our high quality cells, we can move forward with the workflow. Ultimately, we want to cluster cells and identify different potential celltypes however there are a few steps to walk-through before we get there. The green boxes in our workflow schematic below correspond to the steps taken post-QC and together consistute the clustering workflow.</p>
+<p><img src="images/sc_workflow_2022-01.jpg" class="img-fluid" width="545"></p>
+<section id="clustering-workflow" class="level2" data-number="19.1">
+<h2 data-number="19.1" class="anchored" data-anchor-id="clustering-workflow"><span class="header-section-number">19.1</span> Clustering workflow</h2>
+<p>For something to be informative, it needs to exhibit variation, but not all variation is informative. The goal of our clustering analysis is to keep the major sources of variation in our dataset that should define our cell types, while restricting the variation due to <strong>uninteresting sources of variation (sequencing depth, cell cycle differences, mitochondrial expression, batch effects, etc.)</strong>. Then, to determine the cell types present, we will perform a clustering analysis using the most variable genes to define the major sources of variation in the dataset.</p>
+<p>The workflow for this analysis is adapted from the following sources:</p>
+<ul>
+<li>Satija Lab: <a href="https://satijalab.org/seurat/v3.0/immune_alignment.html">Seurat v3 Guided Integration Tutorial</a></li>
+<li>Paul Hoffman: <a href="http://satijalab.org/seurat/cell_cycle_vignette.html">Cell-Cycle Scoring and Regression</a></li>
+</ul>
+<p>To identify clusters, the following steps will be performed:</p>
+<section id="explore-sources-of-unwanted-variation" class="level3">
+<h3 class="anchored" data-anchor-id="explore-sources-of-unwanted-variation">1. Explore sources of unwanted variation</h3>
+<p>The first step in the workflow is to see if our data contains any unwanted variability. The most common biological effect that is evaluated in single-cell RNA-seq data is the effect of <strong>cell cycle</strong> on the transcriptome. Another known biological effect is <strong>mitochondrial gene expression</strong>, which is interpreted as an indication of cell stress. This step of the workflow involves exploring our data to identify which covariates we would like to regress out.</p>
+</section>
+<section id="normalization-and-regressing-out-sources-of-unwanted-variation" class="level3">
+<h3 class="anchored" data-anchor-id="normalization-and-regressing-out-sources-of-unwanted-variation">2. Normalization and regressing out sources of unwanted variation</h3>
+<p>Seurat recently introduced a new method called <code>sctransform</code> which performs multiple processing steps on scRNA-seq data. Normalization is required to scale the raw count data to obtain correct relative gene expression abundances between cells. The <code>sctransform</code> function implements an advanced normalization and variance stabilization of the data. The <code>sctransform</code> function also regresses out sources of unwanted variation in our data. In the previous step, we had identified these sources of variability, and here we specify what those covariates are.</p>
+</section>
+<section id="integration" class="level3">
+<h3 class="anchored" data-anchor-id="integration">3. Integration</h3>
+<p>Often with single cell RNA-seq we are working with <strong>multiple samples</strong> which correspond to <strong>different</strong> <strong>sample groups</strong>, <strong>multiple experiments</strong> or <strong>different modalities</strong>. If we want to ultimately <strong>compare celltype expression between groups</strong> it is recommended to integrate the data. Integration is a powerful method that uses these shared sources of greatest variation to identify shared sub-populations across conditions or datasets. There are several steps involved in performing intergration in Seurat. Once complete, we use visualization methods to ensure a good integration before we proceed to cluster cells.</p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
 </div>
-<div id="ref-brennecke2013" class="csl-entry" role="listitem">
-Brennecke, Philip, Simon Anders, Jong Kyoung Kim, Aleksandra A
-Kołodziejczyk, Xiuwei Zhang, Valentina Proserpio, Bianka Baying, et al.
-2013. <span>“Accounting for Technical Noise in Single-Cell RNA-Seq
-Experiments.”</span> <em>Nature Methods</em> 10 (11): 1093–95. <a href="https://doi.org/10.1038/nmeth.2645">https://doi.org/10.1038/nmeth.2645</a>.
-</div>
-<div id="ref-choudhary2022" class="csl-entry" role="listitem">
-Choudhary, Saket, and Rahul Satija. 2022a. <span>“Comparison and
-Evaluation of Statistical Error Models for scRNA-Seq.”</span> <em>Genome
-Biology</em> 23 (1). <a href="https://doi.org/10.1186/s13059-021-02584-9">https://doi.org/10.1186/s13059-021-02584-9</a>.
-</div>
-<div id="ref-choudhary2022a" class="csl-entry" role="listitem">
-———. 2022b. <span>“Comparison and Evaluation of Statistical Error Models
-for scRNA-Seq.”</span> <em>Genome Biology</em> 23 (1). <a href="https://doi.org/10.1186/s13059-021-02584-9">https://doi.org/10.1186/s13059-021-02584-9</a>.
-</div>
-<div id="ref-choudhary2022b" class="csl-entry" role="listitem">
-———. 2022c. <span>“Comparison and Evaluation of Statistical Error Models
-for scRNA-Seq.”</span> <em>Genome Biology</em> 23 (1). <a href="https://doi.org/10.1186/s13059-021-02584-9">https://doi.org/10.1186/s13059-021-02584-9</a>.
-</div>
-<div id="ref-crowell2020" class="csl-entry" role="listitem">
-Crowell, Helena L., Charlotte Soneson, Pierre-Luc Germain, Daniela
-Calini, Ludovic Collin, Catarina Raposo, Dheeraj Malhotra, and Mark D.
-Robinson. 2020. <span>“Muscat Detects Subpopulation-Specific State
-Transitions from Multi-Sample Multi-Condition Single-Cell
-Transcriptomics Data.”</span> <em>Nature Communications</em> 11 (1). <a href="https://doi.org/10.1038/s41467-020-19894-4">https://doi.org/10.1038/s41467-020-19894-4</a>.
-</div>
-<div id="ref-ding2020" class="csl-entry" role="listitem">
-Ding, Jiarui, Xian Adiconis, Sean K. Simmons, Monika S. Kowalczyk,
-Cynthia C. Hession, Nemanja D. Marjanovic, Travis K. Hughes, et al.
-2020. <span>“Systematic Comparison of Single-Cell and Single-Nucleus
-RNA-Sequencing Methods.”</span> <em>Nature Biotechnology</em> 38 (6):
-737–46. <a href="https://doi.org/10.1038/s41587-020-0465-8">https://doi.org/10.1038/s41587-020-0465-8</a>.
-</div>
-<div id="ref-fujii2023" class="csl-entry" role="listitem">
-Fujii, Kouichi, Jin Kikuchi, Masatoshi Uchida, Masanari Machida, Midori
-Tsuchiya, Kentaro Hayashi, Nana Maekawa, Hajime Houzumi, Arata Honda,
-and Koji Wake. 2023. <span>“Tiger Attack at a Japanese Safari Park: A
-Case Report.”</span> <em>International Journal of Emergency
-Medicine</em> 16 (1). <a href="https://doi.org/10.1186/s12245-023-00556-3">https://doi.org/10.1186/s12245-023-00556-3</a>.
-</div>
-<div id="ref-hafemeister2019" class="csl-entry" role="listitem">
-Hafemeister, Christoph, and Rahul Satija. 2019. <span>“Normalization and
-Variance Stabilization of Single-Cell RNA-Seq Data Using Regularized
-Negative Binomial Regression.”</span> <em>Genome Biology</em> 20 (1). <a href="https://doi.org/10.1186/s13059-019-1874-1">https://doi.org/10.1186/s13059-019-1874-1</a>.
-</div>
-<div id="ref-ilicic2016" class="csl-entry" role="listitem">
-Ilicic, Tomislav, Jong Kyoung Kim, Aleksandra A. Kolodziejczyk, Frederik
-Otzen Bagger, Davis James McCarthy, John C. Marioni, and Sarah A.
-Teichmann. 2016. <span>“Classification of Low Quality Cells from
-Single-Cell RNA-Seq Data.”</span> <em>Genome Biology</em> 17 (1). <a href="https://doi.org/10.1186/s13059-016-0888-1">https://doi.org/10.1186/s13059-016-0888-1</a>.
-</div>
-<div id="ref-junttila2022" class="csl-entry" role="listitem">
-Junttila, Sini, Johannes Smolander, and Laura L Elo. 2022.
-<span>“Benchmarking Methods for Detecting Differential States Between
-Conditions from Multi-Subject Single-Cell RNA-Seq Data.”</span>
-<em>Briefings in Bioinformatics</em> 23 (5). <a href="https://doi.org/10.1093/bib/bbac286">https://doi.org/10.1093/bib/bbac286</a>.
-</div>
-<div id="ref-kang2017" class="csl-entry" role="listitem">
-Kang, Hyun Min, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka
-Maliskova, Elizabeth McCarthy, Eunice Wan, et al. 2017.
-<span>“Multiplexed Droplet Single-Cell RNA-Sequencing Using Natural
-Genetic Variation.”</span> <em>Nature Biotechnology</em> 36 (1): 89–94.
-<a href="https://doi.org/10.1038/nbt.4042">https://doi.org/10.1038/nbt.4042</a>.
-</div>
-<div id="ref-lause2021" class="csl-entry" role="listitem">
-Lause, Jan, Philipp Berens, and Dmitry Kobak. 2021. <span>“Analytic
-Pearson Residuals for Normalization of Single-Cell RNA-Seq UMI
-Data.”</span> <em>Genome Biology</em> 22 (1). <a href="https://doi.org/10.1186/s13059-021-02451-7">https://doi.org/10.1186/s13059-021-02451-7</a>.
-</div>
-<div id="ref-levine2015" class="csl-entry" role="listitem">
-Levine, Jacob&nbsp;H., Erin&nbsp;F. Simonds, Sean&nbsp;C. Bendall, Kara&nbsp;L. Davis,
-El-ad&nbsp;D. Amir, Michelle&nbsp;D. Tadmor, Oren Litvin, et al. 2015.
-<span>“Data-Driven Phenotypic Dissection of AML Reveals Progenitor-Like
-Cells That Correlate with Prognosis.”</span> <em>Cell</em> 162 (1):
-184–97. <a href="https://doi.org/10.1016/j.cell.2015.05.047">https://doi.org/10.1016/j.cell.2015.05.047</a>.
-</div>
-<div id="ref-macosko2015" class="csl-entry" role="listitem">
-Macosko, Evan&nbsp;Z., Anindita Basu, Rahul Satija, James Nemesh, Karthik
-Shekhar, Melissa Goldman, Itay Tirosh, et al. 2015a. <span>“Highly
-Parallel Genome-Wide Expression Profiling of Individual Cells Using
-Nanoliter Droplets.”</span> <em>Cell</em> 161 (5): 1202–14. <a href="https://doi.org/10.1016/j.cell.2015.05.002">https://doi.org/10.1016/j.cell.2015.05.002</a>.
-</div>
-<div id="ref-macosko2015a" class="csl-entry" role="listitem">
-———, et al. 2015b. <span>“Highly Parallel Genome-Wide Expression
-Profiling of Individual Cells Using Nanoliter Droplets.”</span>
-<em>Cell</em> 161 (5): 1202–14. <a href="https://doi.org/10.1016/j.cell.2015.05.002">https://doi.org/10.1016/j.cell.2015.05.002</a>.
-</div>
-<div id="ref-nestorowa2016" class="csl-entry" role="listitem">
-Nestorowa, Sonia, Fiona K. Hamey, Blanca Pijuan Sala, Evangelia
-Diamanti, Mairi Shepherd, Elisa Laurenti, Nicola K. Wilson, David G.
-Kent, and Berthold Göttgens. 2016. <span>“A Single-Cell Resolution Map
-of Mouse Hematopoietic Stem and Progenitor Cell Differentiation.”</span>
-<em>Blood</em> 128 (8): e20–31. <a href="https://doi.org/10.1182/blood-2016-05-716480">https://doi.org/10.1182/blood-2016-05-716480</a>.
-</div>
-<div id="ref-sprumont2023" class="csl-entry" role="listitem">
-Sprumont, Adrien, Ana Rodrigues, Simon J. McGowan, Colin Bannard, and
-Oliver Bannard. 2023. <span>“Germinal Centers Output Clonally Diverse
-Plasma Cell Populations Expressing High- and Low-Affinity
-Antibodies.”</span> <em>Cell</em>, November. <a href="https://doi.org/10.1016/j.cell.2023.10.022">https://doi.org/10.1016/j.cell.2023.10.022</a>.
-</div>
-<div id="ref-squair2021" class="csl-entry" role="listitem">
-Squair, Jordan W., Matthieu Gautier, Claudia Kathe, Mark A. Anderson,
-Nicholas D. James, Thomas H. Hutson, Rémi Hudelle, et al. 2021.
-<span>“Confronting False Discoveries in Single-Cell Differential
-Expression.”</span> <em>Nature Communications</em> 12 (1). <a href="https://doi.org/10.1038/s41467-021-25960-2">https://doi.org/10.1038/s41467-021-25960-2</a>.
-</div>
-<div id="ref-stuart2019" class="csl-entry" role="listitem">
-Stuart, Tim, Andrew Butler, Paul Hoffman, Christoph Hafemeister,
-Efthymia Papalexi, William M. Mauck, Yuhan Hao, Marlon Stoeckius, Peter
-Smibert, and Rahul Satija. 2019. <span>“Comprehensive Integration of
-Single-Cell Data.”</span> <em>Cell</em> 177 (7): 1888–1902.e21. <a href="https://doi.org/10.1016/j.cell.2019.05.031">https://doi.org/10.1016/j.cell.2019.05.031</a>.
-</div>
-<div id="ref-tirosh2016" class="csl-entry" role="listitem">
-Tirosh, Itay, Benjamin Izar, Sanjay M. Prakadan, Marc H. Wadsworth,
-Daniel Treacy, John J. Trombetta, Asaf Rotem, et al. 2016.
-<span>“Dissecting the Multicellular Ecosystem of Metastatic Melanoma by
-Single-Cell RNA-Seq.”</span> <em>Science</em> 352 (6282): 189–96. <a href="https://doi.org/10.1126/science.aad0501">https://doi.org/10.1126/science.aad0501</a>.
-</div>
-<div id="ref-zimmerman2021" class="csl-entry" role="listitem">
-Zimmerman, Kip D., Mark A. Espeland, and Carl D. Langefeld. 2021.
-<span>“A Practical Solution to Pseudoreplication Bias in Single-Cell
-Studies.”</span> <em>Nature Communications</em> 12 (1). <a href="https://doi.org/10.1038/s41467-021-21038-1">https://doi.org/10.1038/s41467-021-21038-1</a>.
+<div class="callout-title-container flex-fill">
+Caution
 </div>
 </div>
+<div class="callout-body-container callout-body">
+<p>Integration is optional. We recommend going through the workflow without integration to decide whether or not it is necessary for your data.</p>
+</div>
+</div>
+</section>
+<section id="clustering-cells" class="level3">
+<h3 class="anchored" data-anchor-id="clustering-cells">4. Clustering cells</h3>
+<p>Clusters of cells are obtained by grouping cells based on the similarity of their gene expression profiles. Expression profile similarity is determined via distance metrics, which often take <strong>dimensionality‐reduced representations</strong> as input. Seurat assigns cells to clusters based on their PCA scores derived from the expression of the integrated most variable genes.</p>
+</section>
+<section id="cluster-quality-evaluation" class="level3">
+<h3 class="anchored" data-anchor-id="cluster-quality-evaluation">5. Cluster quality evaluation</h3>
+<p>The clusters identified in our data represent groups of cells that presumably belong to a similar cell type. Before we can confirm the celltype of a group of member cells, the following steps are taken:</p>
+<ul>
+<li><strong>a.</strong> Check to see that clusters are not influenced by sources of uninteresting variation.</li>
+<li><strong>b.</strong> Check to see whether the major principal components are driving the different clusters.</li>
+<li><strong>c.</strong> Explore the cell type identities by looking at the expression for <strong>known markers</strong> across the clusters.</li>
+</ul>
 
 
 <!-- -->
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1052,11 +967,67 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 <script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
-</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># References {.unnumbered}</span></span>
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">质控</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># **Single-cell RNA-seq Clustering Workflow**</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>:::</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>**Learning Objectives:**</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Describe the workflow for single-cell RNA-seq analysis after the quality control step.</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>Now that we have our high quality cells, we can move forward with the workflow. Ultimately, we want to cluster cells and identify different potential celltypes however there are a few steps to walk-through before we get there. The green boxes in our workflow schematic below correspond to the steps taken post-QC and together consistute the clustering workflow.</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_workflow_2022-01.jpg)</span>{width="545"}</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Clustering workflow</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>For something to be informative, it needs to exhibit variation, but not all variation is informative. The goal of our clustering analysis is to keep the major sources of variation in our dataset that should define our cell types, while restricting the variation due to **uninteresting sources of variation (sequencing depth, cell cycle differences, mitochondrial expression, batch effects, etc.)**. Then, to determine the cell types present, we will perform a clustering analysis using the most variable genes to define the major sources of variation in the dataset.</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>The workflow for this analysis is adapted from the following sources:</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Satija Lab: <span class="co">[</span><span class="ot">Seurat v3 Guided Integration Tutorial</span><span class="co">](https://satijalab.org/seurat/v3.0/immune_alignment.html)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Paul Hoffman: <span class="co">[</span><span class="ot">Cell-Cycle Scoring and Regression</span><span class="co">](http://satijalab.org/seurat/cell_cycle_vignette.html)</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>To identify clusters, the following steps will be performed:</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">### 1. Explore sources of unwanted variation</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>The first step in the workflow is to see if our data contains any unwanted variability. The most common biological effect that is evaluated in single-cell RNA-seq data is the effect of **cell cycle** on the transcriptome. Another known biological effect is **mitochondrial gene expression**, which is interpreted as an indication of cell stress. This step of the workflow involves exploring our data to identify which covariates we would like to regress out.</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">### 2. Normalization and regressing out sources of unwanted variation</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>Seurat recently introduced a new method called <span class="in">`sctransform`</span> which performs multiple processing steps on scRNA-seq data. Normalization is required to scale the raw count data to obtain correct relative gene expression abundances between cells. The <span class="in">`sctransform`</span> function implements an advanced normalization and variance stabilization of the data. The <span class="in">`sctransform`</span> function also regresses out sources of unwanted variation in our data. In the previous step, we had identified these sources of variability, and here we specify what those covariates are.</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="fu">### 3. Integration</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>Often with single cell RNA-seq we are working with **multiple samples** which correspond to **different** **sample groups**, **multiple experiments** or **different modalities**. If we want to ultimately **compare celltype expression between groups** it is recommended to integrate the data. Integration is a powerful method that uses these shared sources of greatest variation to identify shared sub-populations across conditions or datasets. There are several steps involved in performing intergration in Seurat. Once complete, we use visualization methods to ensure a good integration before we proceed to cluster cells.</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>::: callout-caution</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>Integration is optional. We recommend going through the workflow without integration to decide whether or not it is necessary for your data.</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="fu">### 4. Clustering cells</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>Clusters of cells are obtained by grouping cells based on the similarity of their gene expression profiles. Expression profile similarity is determined via distance metrics, which often take **dimensionality‐reduced representations** as input. Seurat assigns cells to clusters based on their PCA scores derived from the expression of the integrated most variable genes.</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5. Cluster quality evaluation</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>The clusters identified in our data represent groups of cells that presumably belong to a similar cell type. Before we can confirm the celltype of a group of member cells, the following steps are taken:</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**a.** Check to see that clusters are not influenced by sources of uninteresting variation.</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**b.** Check to see whether the major principal components are driving the different clusters.</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**c.** Explore the cell type identities by looking at the expression for **known markers** across the clusters.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
@@ -1068,7 +1039,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </li>  
 </ul>
     </div>   
-    <div class="nav-footer-center">Copyright 2023, Du Junhong<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/references.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/references.qmd" class="toc-action">Edit this page</a></p></div></div></div>
+    <div class="nav-footer-center">Copyright 2023, Du Junhong</div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

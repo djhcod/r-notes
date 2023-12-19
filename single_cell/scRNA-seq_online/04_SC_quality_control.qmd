@@ -1,4 +1,4 @@
-# 质控
+# 质控 {#sec-质控}
 
 **Learning Objectives:**
 
@@ -293,17 +293,16 @@ counts <- filtered_seurat@assays[["RNA"]]@layers[["counts"]]
 Now, we will perform some filtering by prevalence. If a gene is only expressed in a handful of cells, it is not particularly meaningful as it still brings down the averages for all other cells it is not expressed in. For our data we choose to keep only **genes which are expressed in 10 or more cells.** By using this filter, genes which have zero counts in all cells will effectively be removed.
 
 ```{r}
-# Sums all TRUE values and returns TRUE if more than 10 TRUE values per gene
-keep_genes <- rowSums(counts > 0) >= 10
-
 # Only keeping those genes expressed in more than 10 cells
-filtered_counts <- counts[keep_genes, ]
-paste0("过滤掉了", nrow(counts) - nrow(filtered_counts), "个基因；剩余", 
-       nrow(filtered_counts), "个基因")
+keep_genes <- rownames(filtered_seurat)[rowSums(counts > 0) >= 10]
 
-# Reassign to filtered Seurat object
-filtered_seurat <- CreateSeuratObject(filtered_counts, 
-                                      meta.data = filtered_seurat@meta.data)
+paste0("过滤掉了", nrow(filtered_seurat) - length(keep_genes), "个基因；剩余", 
+       length(keep_genes), "个基因")
+
+# 过滤基因
+filtered_seurat <- subset(filtered_seurat, 
+                          features = keep_genes)
+filtered_seurat
 ```
 
 ## 重新质量评价 (Re-assess QC metrics)
