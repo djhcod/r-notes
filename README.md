@@ -22,7 +22,7 @@ Markdown——的编写和发布进行简单总结。目前该项目处于最开
 >
 > - [iCloud共享文件夹](https://www.icloud.com.cn/iclouddrive/018ENTDGZBLoJOI1Dgvh8c_4w#data)（实时同步，Mac用户建议选择此项）
 >
-> - [阿里云盘](https://www.alipan.com/s/hr2jqzdNAkk)（定期上传，不保证最新）
+> - [OneDrive](https://1drv.ms/f/s!AnnPVQqdpGpjgo0e6lIMuLHPc5GvXw)（定期上传，不保证最新）
 
 </div>
 
