@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.3.450">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>R语言学习笔记 - 17&nbsp; 数据导入与Seurat对象构建</title>
 <style>
@@ -381,20 +381,32 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
   </div>
 </li>
       </ul>
@@ -411,37 +423,37 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
@@ -513,7 +525,7 @@ div.csl-indent {
 <hr>
 <section id="exploring-the-example-dataset" class="level2" data-number="17.1"><h2 data-number="17.1" class="anchored" data-anchor-id="exploring-the-example-dataset">
 <span class="header-section-number">17.1</span> Exploring the example dataset</h2>
-<p>For this workshop we will be working with a single-cell RNA-seq dataset which is part of a larger study from <span class="citation" data-cites="kang2017a">(<a href="../../references.html#ref-kang2017a" role="doc-biblioref">Kang et al. 2017</a>)</span>. In this paper, the authors present a computational algorithm that harnesses genetic variation (eQTL) to determine the genetic identity of each droplet containing a single cell (singlet) and identify droplets containing two cells from different individuals (doublets).</p>
+<p>For this workshop we will be working with a single-cell RNA-seq dataset which is part of a larger study from <span class="citation" data-cites="kang2017a">(<a href="#ref-kang2017a" role="doc-biblioref">Kang et al. 2017</a>)</span>. In this paper, the authors present a computational algorithm that harnesses genetic variation (eQTL) to determine the genetic identity of each droplet containing a single cell (singlet) and identify droplets containing two cells from different individuals (doublets).</p>
 <p>The data used to test their algorithm is comprised of pooled Peripheral Blood Mononuclear Cells (PBMCs) taken from eight lupus patients, split into <strong>control</strong> and <strong>interferon beta-treated (stimulated)</strong> conditions.</p>
 <p><img src="images/kangetal_image.png" class="img-fluid"></p>
 <blockquote class="blockquote">
@@ -696,12 +708,12 @@ AAACATACGCGAAG-1 stim_raw_feature_bc_matrix       5445         1330</code></pre>
 </div>
 </div>
 <p>Next, we need to merge these objects together into a single Seurat object. This will make it easier to run the QC steps for both sample groups together and enable us to easily compare the data quality for all the samples.</p>
-<p>We can use the <code><a href="https://rdrr.io/r/base/merge.html">merge()</a></code> function from the Seurat package to do this:</p>
-<div class="cell" data-hash="03_SC_quality_control-setup_cache/html/unnamed-chunk-5_e70108c21ec0a454a4cfeac1d3e2f9a1">
+<p>We can use the <code><a href="https://rdrr.io/r/base/merge.html">merge()</a></code> function from the Seurat package to do this. 其中的<code>add.cell.id</code>参数用于给细胞barcode前面再加上表示其来源的样本的信息，这里有两种来源，即“ctrl”和“stim”。</p>
+<div class="cell" data-hash="03_SC_quality_control-setup_cache/html/unnamed-chunk-5_730d32b7117b74b5e38703b3f7eb055e">
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Create a merged Seurat object</span></span>
 <span><span class="va">merged_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ctrl_raw_feature_bc_matrix</span>, </span>
 <span>                       y <span class="op">=</span> <span class="va">stim_raw_feature_bc_matrix</span>, </span>
-<span>                       add.cell.id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ctrl"</span>, <span class="st">"stim"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>                       add.cell.id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"ctrl"</span>, <span class="st">"stim"</span><span class="op">)</span><span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>合并前的每个样本的数据被存储在合并后的Seurat对象的不同layer中：</p>
 <p><img src="images/截屏2023-12-14 16.40.46.png" class="img-fluid"></p>
@@ -841,7 +853,7 @@ loaded via a namespace (and not attached):
 
 <!-- -->
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-kang2017a" class="csl-entry" role="listitem">
 Kang, Hyun Min, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka Maliskova, Elizabeth McCarthy, Eunice Wan, et al. 2017. <span>“Multiplexed Droplet Single-Cell RNA-Sequencing Using Natural Genetic Variation.”</span> <em>Nature Biotechnology</em> 36 (1): 89–94. <a href="https://doi.org/10.1038/nbt.4042">https://doi.org/10.1038/nbt.4042</a>.
 </div>
@@ -1440,13 +1452,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb17-176"><a href="#cb17-176" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-177"><a href="#cb17-177" aria-hidden="true" tabindex="-1"></a>Next, we need to merge these objects together into a single Seurat object. This will make it easier to run the QC steps for both sample groups together and enable us to easily compare the data quality for all the samples.</span>
 <span id="cb17-178"><a href="#cb17-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-179"><a href="#cb17-179" aria-hidden="true" tabindex="-1"></a>We can use the <span class="in">`merge()`</span> function from the Seurat package to do this:</span>
+<span id="cb17-179"><a href="#cb17-179" aria-hidden="true" tabindex="-1"></a>We can use the <span class="in">`merge()`</span> function from the Seurat package to do this. 其中的<span class="in">`add.cell.id`</span>参数用于给细胞barcode前面再加上表示其来源的样本的信息，这里有两种来源，即“ctrl”和“stim”。</span>
 <span id="cb17-180"><a href="#cb17-180" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-183"><a href="#cb17-183" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb17-184"><a href="#cb17-184" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a merged Seurat object</span></span>
 <span id="cb17-185"><a href="#cb17-185" aria-hidden="true" tabindex="-1"></a>merged_seurat <span class="ot">&lt;-</span> <span class="fu">merge</span>(<span class="at">x =</span> ctrl_raw_feature_bc_matrix, </span>
 <span id="cb17-186"><a href="#cb17-186" aria-hidden="true" tabindex="-1"></a>                       <span class="at">y =</span> stim_raw_feature_bc_matrix, </span>
-<span id="cb17-187"><a href="#cb17-187" aria-hidden="true" tabindex="-1"></a>                       <span class="at">add.cell.id =</span> <span class="fu">c</span>(<span class="st">"ctrl"</span>, <span class="st">"stim"</span>))</span>
+<span id="cb17-187"><a href="#cb17-187" aria-hidden="true" tabindex="-1"></a>                       <span class="at">add.cell.id =</span> <span class="fu">c</span>(<span class="st">"ctrl"</span>, <span class="st">"stim"</span>)) </span>
 <span id="cb17-188"><a href="#cb17-188" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb17-189"><a href="#cb17-189" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-190"><a href="#cb17-190" aria-hidden="true" tabindex="-1"></a>合并前的每个样本的数据被存储在合并后的Seurat对象的不同layer中：</span>

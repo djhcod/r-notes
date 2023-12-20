@@ -168,13 +168,13 @@ head(stim_raw_feature_bc_matrix@meta.data)
 
 Next, we need to merge these objects together into a single Seurat object. This will make it easier to run the QC steps for both sample groups together and enable us to easily compare the data quality for all the samples.
 
-We can use the `merge()` function from the Seurat package to do this:
+We can use the `merge()` function from the Seurat package to do this. 其中的`add.cell.id`参数用于给细胞barcode前面再加上表示其来源的样本的信息，这里有两种来源，即“ctrl”和“stim”。
 
 ```{r}
 # Create a merged Seurat object
 merged_seurat <- merge(x = ctrl_raw_feature_bc_matrix, 
                        y = stim_raw_feature_bc_matrix, 
-                       add.cell.id = c("ctrl", "stim"))
+                       add.cell.id = c("ctrl", "stim")) 
 ```
 
 合并前的每个样本的数据被存储在合并后的Seurat对象的不同layer中：

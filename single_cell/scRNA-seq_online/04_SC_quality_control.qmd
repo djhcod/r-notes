@@ -200,6 +200,8 @@ merged_seurat@meta.data %>%
     geom_vline(xintercept = 0.8)
 ```
 
+如果有较多的细胞处于较低的novelty score，表示可能样品受到了红细胞等低复杂性细胞的污染。
+
 ### Mitochondrial counts ratio
 
 This metric can identify whether there is a large amount of mitochondrial contamination from dead or dying cells. We define poor quality samples for mitochondrial counts as cells which surpass the **0.2** mitochondrial ratio mark, unless of course you are expecting this in your sample.
@@ -251,6 +253,14 @@ merged_seurat@meta.data %>%
 
 Good cells will generally exhibit both higher number of genes per cell and higher numbers of UMIs (**upper right quadrant of the plot**). Cells that are poor quality are likely to have low genes and UMIs per cell, and correspond to the data points in the bottom left quadrant of the plot. With this plot we also evaluate the slope of the line, and any scatter of data points in the **bottom right hand quadrant** of the plot. These cells have a high number of UMIs but only a few number of genes. These could be **dying cells**, but also could represent a population of a **low complexity celltype (i.e red blood cells)**.
 
+> -   好的细胞通常会表现出更多的基因数量和更多的UMI(图的右上象限)。
+>
+> -   质量差的细胞可能具有较低的基因和UMI，对应于该图左下角象限中的数据点。
+>
+> -   我们还希望所有样品都有类似的线条和相似的斜率。
+>
+> -   该图右下角中的散在数据点表示这些细胞有大量的UMI，但只有少数几个基因。这些可能是濒临死亡的细胞，也可能代表一种低复杂性细胞类型(即红细胞)。
+
 **Mitochondrial read fractions are only high in particularly low count cells with few detected genes** (darker colored data points). This could be indicative of damaged/dying cells whose cytoplasmic mRNA has leaked out through a broken membrane, and thus, only mRNA located in the mitochondria is still conserved. We can see from the plot, that these cells are filtered out by our count and gene number thresholds.
 
 ## 细胞/基因过滤 (Filtering)
@@ -258,6 +268,8 @@ Good cells will generally exhibit both higher number of genes per cell and highe
 ### Cell-level filtering
 
 Now that we have visualized the various metrics, we can decide on the thresholds to apply which will result in the removal of low quality cells. Often the recommendations mentioned earlier are a rough guideline, and the specific experiment needs to inform the exact thresholds chosen. We will use the following thresholds:
+
+> 在完成了细胞质量可视化评估之后就可以确定一系列质量控制的阈值来进行低质量细胞的过滤。这里选择如下阈值：
 
 -   nUMI \> 500
 -   nGene \> 250

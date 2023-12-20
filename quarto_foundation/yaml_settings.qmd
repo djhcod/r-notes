@@ -6,7 +6,7 @@ execute:
 
 # YAML设置 {#sec-Overview_of_yaml_settings}
 
-**Quarto主要由三大部分组成：metadata, text, 和 code**。其中metadata是文档开头写在"\-\--"之间的句子，它采用的是[YAML语法](https://en.wikipedia.org/wiki/YAML)，所以有时候也被叫做YAML metadata 或者 the YAML frontmatter。YAML定义了Quarto文档的各种属性，比如编译文件类型、主题、代码块的执行行为以及目录等。**在**YAML metadata**中采用正确的缩进十分重要**。
+**Quarto主要由三大部分组成：metadata, text, 和 code**。其中metadata是文档开头写在"---"之间的句子，它采用的是[YAML语法](https://en.wikipedia.org/wiki/YAML)，所以有时候也被叫做YAML metadata 或者 the YAML frontmatter。YAML定义了Quarto文档的各种属性，比如编译文件类型、主题、代码块的执行行为以及目录等。**在**YAML metadata**中采用正确的缩进十分重要**。
 
 ::: {.callout-tip appearance="minimal"}
 [Quarto Cheat sheet](https://images.datacamp.com/image/upload/v1676540721/Marketing/Blog/Quarto_Cheat_Sheet.pdf)
@@ -291,6 +291,23 @@ execute:
 #| fig-cap: 箱型图
 boxplot(1:100)
 ```
+
+::: callout-caution
+有时候当一个代码块需要读取一个较大的对象时（如包含大量细胞的Seurat对象），尽管运行该代码块不会报错，但是在编译时可能会出现如下报错：
+
+```         
+long vectors not supported yet: /Volumes/Builds/R4/R-4.3.2/src/main/connections.c:6093
+```
+
+这时我们可以通过添加`#| cache-lazy: false`命令，[取消延迟缓存](https://bookdown.org/yihui/rmarkdown-cookbook/cache-lazy.html)来解决这个问题：
+
+```{r}
+#| echo: fenced
+#| cache-lazy: false
+library(Seurat)
+seurat_integrated <- readRDS("output/scRNA-seq_online/seurat_clustered.rds")
+```
+:::
 
 ## `crossref`交叉引用设置
 

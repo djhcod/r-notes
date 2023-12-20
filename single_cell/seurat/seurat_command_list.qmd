@@ -3,13 +3,13 @@ execute:
   eval: false
 ---
 
-# Seurat常用函数清单
+# Seurat常用函数清单 {#sec-seurat_command_list}
 
 原文：[*Seurat Command List*](https://satijalab.org/seurat/articles/essential_commands)
 
 原文发布日期：2023年10月31日
 
-## 标准Seurat流程：
+## 标准Seurat流程基本函数
 
 ```{r}
 pbmc <- NormalizeData(object = pbmc)
@@ -43,7 +43,9 @@ pbmc <- SCTransform(pbmc) %>%
     RunUMAP(dims = 1:30)
 ```
 
-## 提取`Seurat`对象内的各数据：
+## 提取`Seurat`对象内的各数据
+
+### 获取细胞、基因、assays、layers名称
 
 获取所有细胞的barcode：
 
@@ -52,11 +54,14 @@ colnames(pbmc)
 Cells(pbmc) # 效果同上
 ```
 
-获取所有的基因（feature）名：
+获取所有的基因（feature）名。可以添加layer参数，用于指定提取哪一个layer下的基因名，如果未指定，则提取默认layer内的基因名。
 
 ```{r}
 Features(pbmc)
 rownames(pbmc) # 同上
+
+# 获取指定assay（如“RNA”）下的基因名
+Features(seurat_integrated[["RNA"]])
 ```
 
 获取细胞和基因的数量：
@@ -66,42 +71,235 @@ ncol(pbmc) # 细胞数量
 nrow(pbmc) # 基因（feature）数量
 ```
 
-List of object layers：
-
-```{r}
-Layers(pbmc)
-```
-
 获取运行`FindVariableFeatures`函数之后的高变基因列表（ @sec-highly_variable_features ）：
 
 ```{r}
 VariableFeatures(pbmc)
 ```
 
-## 细胞注释信息（cell identities）设置
+获取/设定默认的layer：
+
+```{r}
+# 列出所有的layers
+Layers(pbmc)
+
+# 获取默认的layer
+DefaultLayer(pbmc)
+
+# 设定默认的layer
+DefaultLayer(pbmc) <- "value"
+```
+
+列出所有的assay，如"RNA"、运行SCTransform之后的"SCT" assay:
+
+```{r}
+# 列出所有的assay，如"RNA"、运行SCTransform之后的"SCT" assay:
+Assays(pbmc)
+
+# 获取目前的默认assay名称
+DefaultAssay(pbmc)
+
+# 设定默认assay
+DefaultAssay(pbmc) <- "value"
+```
+
+### 获取细胞注释信息（cell identities）
 
 查看cell identities：
 
 ```{r}
 Idents(pbmc)
 table(Idents(pbmc))
+
+# 查看目前cell identities的水平
+levels(pbmc)
 ```
 
-将meta.data中的"seurat_clusters"列设置为cell identities：
+设定细胞identities：
 
 ```{r}
+# 将meta.data中的"seurat_clusters"列设置为cell identities
 Idents(object = pbmc) <- "seurat_clusters"
 ```
 
 将目前的cell identities保存到meta.data新的一列中：
 
 ```{r}
-pbmc[["old.ident"]] <- Idents(pbmc) # 将目前的cell identities储存到meta.data的"old.ident"列中
+# 将目前的cell identities储存到meta.data的"old.ident"列中
+pbmc[["old.ident"]] <- Idents(pbmc) 
 ```
 
-重命名某个细胞注释：
+重命名某个cell identities：
 
 ```{r}
 pbmc <- RenameIdents(object = pbmc, 
                      `FCGR3A+ Mono` = "monocyte")
 ```
+
+### 获取meta.data
+
+```{r}
+# View metadata data frame, stored in object@meta.data
+pbmc@meta.data
+# 或
+pbmc[[]]
+
+# Retrieve specific values from the metadata
+pbmc$nCount_RNA
+pbmc[[c("percent.mito", "nFeature_RNA")]]
+
+# Add metadata, see ?AddMetaData
+pbmc$groups <- random_group_labels
+```
+
+### 获取表达量信息 (stored as layers in Seurat v5)
+
+```{r}
+# Retrieve data in an expression matrix RNA counts matrix
+pbmc[["RNA"]]$counts
+# 或
+LayerData(pbmc, assay = "RNA", layer = "counts")
+
+# GetAssayData from Seurat v4 is still supported
+GetAssayData(object = pbmc, assay = "RNA", slot = "counts")
+```
+
+```{r}
+# Set expression data assume new.data is a new expression matrix
+pbmc[["RNA"]]$counts <- new.data
+# 或
+LayerData(pbmc, assay = "RNA", layer = "counts") <- new.data
+
+# SetAssayData from Seurat v4 is still supported
+pbmc <- SetAssayData(object = pbmc, slot = "counts", new.data = new.data)
+```
+
+### 获取PCA降维信息
+
+```{r}
+# 获取细胞在所有主成分上的评分（坐标）
+Embeddings(pbmc, reduction = "pca")
+# 或
+pbmc[['pca']]@cell.embeddings
+
+# 获取基因在所有主成分上的评分（坐标）
+Loadings(pbmc, reduction = "pca")
+# 或
+pbmc[["pca"]]@feature.loadings
+
+# 提取PCA信息中的第二主成分，并展示对该主成分影响最大的前5个基因名
+print(pbmc[["pca"]], dims = 2, nfeatures = 5)
+```
+
+```{r}
+# Create custom dimensional reduction loadings matrix is optional
+new_reduction <- CreateDimReducObject(embeddings = new.embeddings, 
+                                      loadings = new.loadings, 
+                                      key = "custom_pca")
+# 或
+pbmc[["custom_pca"]] <- new_reduction
+```
+
+### 通过`FetchData`从Seurat对象中获取任意信息
+
+`FetchData` can access anything from expression matrices, cell embeddings, or metadata use the previously listed commands to access entire matrices。通过FetchData可以提取包括表达量数据、PCA分数以及meta.data内的任何变量并形成一个数据框。
+
+```{r}
+FetchData(object = pbmc, 
+          vars = c("PC_1", "nFeature_RNA", "MS4A1"), 
+          layer = "counts")
+```
+
+## Seurat对象取子集和合并
+
+### 取子集
+
+```{r}
+# 根据meta data中的信息取子集
+subset(x = pbmc, subset = groups == "g1")
+
+# 提取特定cell identities, also see ?SubsetData
+subset(x = pbmc, idents = "B")
+# 反选
+subset(x = pbmc, idents = c("Naive CD4 T", "CD8 T"), invert = TRUE)
+
+# 根据特定gene/feature表达水平取子集
+subset(x = pbmc, subset = MS4A1 > 2.5)
+
+# 采用多个标准取子集
+subset(x = pbmc, subset = MS4A1 > 2.5 & PC_1 > 5)
+subset(x = pbmc, subset = MS4A1 > 2.5, idents = "B")
+
+# Downsample the number of cells per identity class
+subset(x = pbmc, downsample = 100)
+```
+
+### 分割layers
+
+In Seurat v5, users can now split in object directly into different layers keeps expression data in one object, but splits multiple samples into layers can proceed directly to integration workflow after splitting layers
+
+```{r}
+# 按照meta.data中的stim列分割layer
+ifnb[["RNA"]] <- split(ifnb[["RNA"]], f = ifnb$stim)
+Layers(ifnb)
+
+# If desired, for example after intergation, the layers can be joined together again
+ifnb <- JoinLayers(ifnb)
+```
+
+### 分割Seurat
+
+In line with prior workflows, you can also split your Seurat object into a list of multiple objects based on a metadata column creates a list of two objects
+
+```{r}
+ifnb_list <- SplitObject(ifnb, split.by = "stim")
+ifnb_list$CTRL
+ifnb_list$STIM
+```
+
+### Merge objects (without integration)
+
+In Seurat v5, merging creates a single object, but keeps the expression information split into different layers for integration. If not proceeding with integration, rejoin the layers after merging.
+
+```{r}
+# Merge two Seurat objects
+merged_obj <- merge(x = ifnb_list$CTRL, 
+                    y = ifnb_list$STIM)
+merged_obj[["RNA"]] <- JoinLayers(merged_obj)
+
+# Example to merge more than two Seurat objects
+merge(x = pbmc1, 
+      y = list(pbmc2, pbmc3))
+```
+
+### Merge objects (with integration)
+
+关于单细胞数据的整合，参考： @sec-Single-cell_data_integration 。
+
+```{r}
+merged_obj <- merge(x = ifnb_list$CTRL, y = ifnb_list$STIM)
+merged_obj <- NormalizeData(merged_obj)
+merged_obj <- FindVariableFeatures(merged_obj)
+merged_obj <- ScaleData(merged_obj)
+merged_obj <- RunPCA(merged_obj)
+merged_obj <- IntegrateLayers(object = obj, 
+                              method = RPCAIntegration, 
+                              orig.reduction = "pca", 
+                              new.reduction = "integrated.rpca",
+                              verbose = FALSE)
+
+# now that integration is complete, rejoin layers
+merged_obj[["RNA"]] <- JoinLayers(merged_obj)
+```
+
+------------------------------------------------------------------------
+
+::: callout-tip
+###### Additional resources
+
+Users who are particularly interested in some of the technical changes to data storage in Seurat v5 can explore the following resources:
+
+-   [SeuratObject manual](https://mojaveazure.github.io/seurat-object/)
+
+-   [Seurat v5 and Assay5 introductory vignette](https://satijalab.org/seurat/articles/seurat5_essential_commands)
+:::

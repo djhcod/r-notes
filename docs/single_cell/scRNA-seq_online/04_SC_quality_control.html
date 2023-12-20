@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.3.450">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>R语言学习笔记 - 18&nbsp; 质控</title>
 <style>
@@ -362,20 +362,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
   </div>
 </li>
       </ul>
@@ -392,37 +404,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
@@ -786,6 +798,7 @@ Note
 <p><img src="04_SC_quality_control_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>如果有较多的细胞处于较低的novelty score，表示可能样品受到了红细胞等低复杂性细胞的污染。</p>
 </section><section id="mitochondrial-counts-ratio" class="level3"><h3 class="anchored" data-anchor-id="mitochondrial-counts-ratio">Mitochondrial counts ratio</h3>
 <p>This metric can identify whether there is a large amount of mitochondrial contamination from dead or dying cells. We define poor quality samples for mitochondrial counts as cells which surpass the <strong>0.2</strong> mitochondrial ratio mark, unless of course you are expecting this in your sample.</p>
 <div class="cell" data-hash="04_SC_quality_control_cache/html/unnamed-chunk-11_12056ae1617d3b47e8a57c5fea9de597">
@@ -844,11 +857,22 @@ Note
 </div>
 </div>
 <p>Good cells will generally exhibit both higher number of genes per cell and higher numbers of UMIs (<strong>upper right quadrant of the plot</strong>). Cells that are poor quality are likely to have low genes and UMIs per cell, and correspond to the data points in the bottom left quadrant of the plot. With this plot we also evaluate the slope of the line, and any scatter of data points in the <strong>bottom right hand quadrant</strong> of the plot. These cells have a high number of UMIs but only a few number of genes. These could be <strong>dying cells</strong>, but also could represent a population of a <strong>low complexity celltype (i.e red blood cells)</strong>.</p>
+<blockquote class="blockquote">
+<ul>
+<li><p>好的细胞通常会表现出更多的基因数量和更多的UMI(图的右上象限)。</p></li>
+<li><p>质量差的细胞可能具有较低的基因和UMI，对应于该图左下角象限中的数据点。</p></li>
+<li><p>我们还希望所有样品都有类似的线条和相似的斜率。</p></li>
+<li><p>该图右下角中的散在数据点表示这些细胞有大量的UMI，但只有少数几个基因。这些可能是濒临死亡的细胞，也可能代表一种低复杂性细胞类型(即红细胞)。</p></li>
+</ul>
+</blockquote>
 <p><strong>Mitochondrial read fractions are only high in particularly low count cells with few detected genes</strong> (darker colored data points). This could be indicative of damaged/dying cells whose cytoplasmic mRNA has leaked out through a broken membrane, and thus, only mRNA located in the mitochondria is still conserved. We can see from the plot, that these cells are filtered out by our count and gene number thresholds.</p>
 </section></section><section id="细胞基因过滤-filtering" class="level2" data-number="18.3"><h2 data-number="18.3" class="anchored" data-anchor-id="细胞基因过滤-filtering">
 <span class="header-section-number">18.3</span> 细胞/基因过滤 (Filtering)</h2>
 <section id="cell-level-filtering" class="level3"><h3 class="anchored" data-anchor-id="cell-level-filtering">Cell-level filtering</h3>
 <p>Now that we have visualized the various metrics, we can decide on the thresholds to apply which will result in the removal of low quality cells. Often the recommendations mentioned earlier are a rough guideline, and the specific experiment needs to inform the exact thresholds chosen. We will use the following thresholds:</p>
+<blockquote class="blockquote">
+<p>在完成了细胞质量可视化评估之后就可以确定一系列质量控制的阈值来进行低质量细胞的过滤。这里选择如下阈值：</p>
+</blockquote>
 <ul>
 <li>nUMI &gt; 500</li>
 <li>nGene &gt; 250</li>
@@ -1761,277 +1785,289 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb39-220"><a href="#cb39-220" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.8</span>)</span>
 <span id="cb39-221"><a href="#cb39-221" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb39-222"><a href="#cb39-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-223"><a href="#cb39-223" aria-hidden="true" tabindex="-1"></a><span class="fu">### Mitochondrial counts ratio</span></span>
+<span id="cb39-223"><a href="#cb39-223" aria-hidden="true" tabindex="-1"></a>如果有较多的细胞处于较低的novelty score，表示可能样品受到了红细胞等低复杂性细胞的污染。</span>
 <span id="cb39-224"><a href="#cb39-224" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-225"><a href="#cb39-225" aria-hidden="true" tabindex="-1"></a>This metric can identify whether there is a large amount of mitochondrial contamination from dead or dying cells. We define poor quality samples for mitochondrial counts as cells which surpass the **0.2** mitochondrial ratio mark, unless of course you are expecting this in your sample.</span>
+<span id="cb39-225"><a href="#cb39-225" aria-hidden="true" tabindex="-1"></a><span class="fu">### Mitochondrial counts ratio</span></span>
 <span id="cb39-226"><a href="#cb39-226" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-229"><a href="#cb39-229" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb39-230"><a href="#cb39-230" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the distribution of mitochondrial gene expression detected per cell</span></span>
-<span id="cb39-231"><a href="#cb39-231" aria-hidden="true" tabindex="-1"></a>merged_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
-<span id="cb39-232"><a href="#cb39-232" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">color =</span> sample, <span class="at">x =</span> mitoRatio, <span class="at">fill =</span> sample)) <span class="sc">+</span> </span>
-<span id="cb39-233"><a href="#cb39-233" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb39-234"><a href="#cb39-234" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
-<span id="cb39-235"><a href="#cb39-235" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb39-236"><a href="#cb39-236" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.2</span>)</span>
-<span id="cb39-237"><a href="#cb39-237" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb39-238"><a href="#cb39-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-239"><a href="#cb39-239" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
-<span id="cb39-240"><a href="#cb39-240" aria-hidden="true" tabindex="-1"></a>**Reads per cell** is another metric that can be useful to explore; however, the workflow used would need to save this information to assess. Generally, with this metric you hope to see all of the samples with peaks in relatively the same location between 10,000 and 100,000 reads per cell.</span>
-<span id="cb39-241"><a href="#cb39-241" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb39-242"><a href="#cb39-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-243"><a href="#cb39-243" aria-hidden="true" tabindex="-1"></a>Visualize QC metrics as a violin plot:</span>
+<span id="cb39-227"><a href="#cb39-227" aria-hidden="true" tabindex="-1"></a>This metric can identify whether there is a large amount of mitochondrial contamination from dead or dying cells. We define poor quality samples for mitochondrial counts as cells which surpass the **0.2** mitochondrial ratio mark, unless of course you are expecting this in your sample.</span>
+<span id="cb39-228"><a href="#cb39-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-231"><a href="#cb39-231" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb39-232"><a href="#cb39-232" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the distribution of mitochondrial gene expression detected per cell</span></span>
+<span id="cb39-233"><a href="#cb39-233" aria-hidden="true" tabindex="-1"></a>merged_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
+<span id="cb39-234"><a href="#cb39-234" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">color =</span> sample, <span class="at">x =</span> mitoRatio, <span class="at">fill =</span> sample)) <span class="sc">+</span> </span>
+<span id="cb39-235"><a href="#cb39-235" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
+<span id="cb39-236"><a href="#cb39-236" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
+<span id="cb39-237"><a href="#cb39-237" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb39-238"><a href="#cb39-238" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.2</span>)</span>
+<span id="cb39-239"><a href="#cb39-239" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-240"><a href="#cb39-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-241"><a href="#cb39-241" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
+<span id="cb39-242"><a href="#cb39-242" aria-hidden="true" tabindex="-1"></a>**Reads per cell** is another metric that can be useful to explore; however, the workflow used would need to save this information to assess. Generally, with this metric you hope to see all of the samples with peaks in relatively the same location between 10,000 and 100,000 reads per cell.</span>
+<span id="cb39-243"><a href="#cb39-243" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb39-244"><a href="#cb39-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-247"><a href="#cb39-247" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb39-248"><a href="#cb39-248" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
-<span id="cb39-249"><a href="#cb39-249" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(merged_seurat, </span>
-<span id="cb39-250"><a href="#cb39-250" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"nFeature_RNA"</span>, <span class="st">"nCount_RNA"</span>, <span class="st">"log10GenesPerUMI"</span>, <span class="st">"mitoRatio"</span>), </span>
-<span id="cb39-251"><a href="#cb39-251" aria-hidden="true" tabindex="-1"></a>        <span class="at">ncol =</span> <span class="dv">4</span>,</span>
-<span id="cb39-252"><a href="#cb39-252" aria-hidden="true" tabindex="-1"></a>        <span class="at">pt.size =</span> <span class="dv">0</span>)</span>
-<span id="cb39-253"><a href="#cb39-253" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb39-254"><a href="#cb39-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-255"><a href="#cb39-255" aria-hidden="true" tabindex="-1"></a><span class="fu">### Joint filtering effects</span></span>
+<span id="cb39-245"><a href="#cb39-245" aria-hidden="true" tabindex="-1"></a>Visualize QC metrics as a violin plot:</span>
+<span id="cb39-246"><a href="#cb39-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-249"><a href="#cb39-249" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb39-250"><a href="#cb39-250" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb39-251"><a href="#cb39-251" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(merged_seurat, </span>
+<span id="cb39-252"><a href="#cb39-252" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"nFeature_RNA"</span>, <span class="st">"nCount_RNA"</span>, <span class="st">"log10GenesPerUMI"</span>, <span class="st">"mitoRatio"</span>), </span>
+<span id="cb39-253"><a href="#cb39-253" aria-hidden="true" tabindex="-1"></a>        <span class="at">ncol =</span> <span class="dv">4</span>,</span>
+<span id="cb39-254"><a href="#cb39-254" aria-hidden="true" tabindex="-1"></a>        <span class="at">pt.size =</span> <span class="dv">0</span>)</span>
+<span id="cb39-255"><a href="#cb39-255" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb39-256"><a href="#cb39-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-257"><a href="#cb39-257" aria-hidden="true" tabindex="-1"></a>Considering any of these QC metrics in isolation can lead to misinterpretation of cellular signals. For example, cells with a comparatively high fraction of mitochondrial counts may be involved in respiratory processes and may be cells that you would like to keep. Likewise, other metrics can have other biological interpretations. A general rule of thumb when performing QC is to **set thresholds for individual metrics to be as permissive as possible, and always consider the joint effects** of these metrics. In this way, you reduce the risk of filtering out any viable cell populations.</span>
+<span id="cb39-257"><a href="#cb39-257" aria-hidden="true" tabindex="-1"></a><span class="fu">### Joint filtering effects</span></span>
 <span id="cb39-258"><a href="#cb39-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-259"><a href="#cb39-259" aria-hidden="true" tabindex="-1"></a>Two metrics that are often evaluated together are the number of UMIs and the number of genes detected per cell. Here, we have plotted the **number of genes versus the number of UMIs coloured by the fraction of mitochondrial reads**. Jointly visualizing the count and gene thresholds and additionally overlaying the mitochondrial fraction, gives a summarized persepective of the quality per cell.</span>
+<span id="cb39-259"><a href="#cb39-259" aria-hidden="true" tabindex="-1"></a>Considering any of these QC metrics in isolation can lead to misinterpretation of cellular signals. For example, cells with a comparatively high fraction of mitochondrial counts may be involved in respiratory processes and may be cells that you would like to keep. Likewise, other metrics can have other biological interpretations. A general rule of thumb when performing QC is to **set thresholds for individual metrics to be as permissive as possible, and always consider the joint effects** of these metrics. In this way, you reduce the risk of filtering out any viable cell populations.</span>
 <span id="cb39-260"><a href="#cb39-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-263"><a href="#cb39-263" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb39-264"><a href="#cb39-264" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the correlation between genes detected and number of UMIs and determine whether strong presence of cells with low numbers of genes/UMIs</span></span>
-<span id="cb39-265"><a href="#cb39-265" aria-hidden="true" tabindex="-1"></a>merged_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
-<span id="cb39-266"><a href="#cb39-266" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> nCount_RNA, <span class="at">y =</span> nFeature_RNA, <span class="at">color =</span> mitoRatio)) <span class="sc">+</span> </span>
-<span id="cb39-267"><a href="#cb39-267" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb39-268"><a href="#cb39-268" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_colour_gradient</span>(<span class="at">low =</span> <span class="st">"gray90"</span>, <span class="at">high =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb39-269"><a href="#cb39-269" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
-<span id="cb39-270"><a href="#cb39-270" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
-<span id="cb39-271"><a href="#cb39-271" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_log10</span>() <span class="sc">+</span> </span>
-<span id="cb39-272"><a href="#cb39-272" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb39-273"><a href="#cb39-273" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">500</span>) <span class="sc">+</span></span>
-<span id="cb39-274"><a href="#cb39-274" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">250</span>) <span class="sc">+</span></span>
-<span id="cb39-275"><a href="#cb39-275" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>sample)</span>
-<span id="cb39-276"><a href="#cb39-276" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb39-277"><a href="#cb39-277" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-278"><a href="#cb39-278" aria-hidden="true" tabindex="-1"></a>Good cells will generally exhibit both higher number of genes per cell and higher numbers of UMIs (**upper right quadrant of the plot**). Cells that are poor quality are likely to have low genes and UMIs per cell, and correspond to the data points in the bottom left quadrant of the plot. With this plot we also evaluate the slope of the line, and any scatter of data points in the **bottom right hand quadrant** of the plot. These cells have a high number of UMIs but only a few number of genes. These could be **dying cells**, but also could represent a population of a **low complexity celltype (i.e red blood cells)**.</span>
+<span id="cb39-261"><a href="#cb39-261" aria-hidden="true" tabindex="-1"></a>Two metrics that are often evaluated together are the number of UMIs and the number of genes detected per cell. Here, we have plotted the **number of genes versus the number of UMIs coloured by the fraction of mitochondrial reads**. Jointly visualizing the count and gene thresholds and additionally overlaying the mitochondrial fraction, gives a summarized persepective of the quality per cell.</span>
+<span id="cb39-262"><a href="#cb39-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-265"><a href="#cb39-265" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb39-266"><a href="#cb39-266" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize the correlation between genes detected and number of UMIs and determine whether strong presence of cells with low numbers of genes/UMIs</span></span>
+<span id="cb39-267"><a href="#cb39-267" aria-hidden="true" tabindex="-1"></a>merged_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
+<span id="cb39-268"><a href="#cb39-268" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> nCount_RNA, <span class="at">y =</span> nFeature_RNA, <span class="at">color =</span> mitoRatio)) <span class="sc">+</span> </span>
+<span id="cb39-269"><a href="#cb39-269" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb39-270"><a href="#cb39-270" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_colour_gradient</span>(<span class="at">low =</span> <span class="st">"gray90"</span>, <span class="at">high =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb39-271"><a href="#cb39-271" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
+<span id="cb39-272"><a href="#cb39-272" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
+<span id="cb39-273"><a href="#cb39-273" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_log10</span>() <span class="sc">+</span> </span>
+<span id="cb39-274"><a href="#cb39-274" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb39-275"><a href="#cb39-275" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">500</span>) <span class="sc">+</span></span>
+<span id="cb39-276"><a href="#cb39-276" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">250</span>) <span class="sc">+</span></span>
+<span id="cb39-277"><a href="#cb39-277" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>sample)</span>
+<span id="cb39-278"><a href="#cb39-278" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb39-279"><a href="#cb39-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-280"><a href="#cb39-280" aria-hidden="true" tabindex="-1"></a>**Mitochondrial read fractions are only high in particularly low count cells with few detected genes** (darker colored data points). This could be indicative of damaged/dying cells whose cytoplasmic mRNA has leaked out through a broken membrane, and thus, only mRNA located in the mitochondria is still conserved. We can see from the plot, that these cells are filtered out by our count and gene number thresholds.</span>
+<span id="cb39-280"><a href="#cb39-280" aria-hidden="true" tabindex="-1"></a>Good cells will generally exhibit both higher number of genes per cell and higher numbers of UMIs (**upper right quadrant of the plot**). Cells that are poor quality are likely to have low genes and UMIs per cell, and correspond to the data points in the bottom left quadrant of the plot. With this plot we also evaluate the slope of the line, and any scatter of data points in the **bottom right hand quadrant** of the plot. These cells have a high number of UMIs but only a few number of genes. These could be **dying cells**, but also could represent a population of a **low complexity celltype (i.e red blood cells)**.</span>
 <span id="cb39-281"><a href="#cb39-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-282"><a href="#cb39-282" aria-hidden="true" tabindex="-1"></a><span class="fu">## 细胞/基因过滤 (Filtering)</span></span>
-<span id="cb39-283"><a href="#cb39-283" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-284"><a href="#cb39-284" aria-hidden="true" tabindex="-1"></a><span class="fu">### Cell-level filtering</span></span>
-<span id="cb39-285"><a href="#cb39-285" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-286"><a href="#cb39-286" aria-hidden="true" tabindex="-1"></a>Now that we have visualized the various metrics, we can decide on the thresholds to apply which will result in the removal of low quality cells. Often the recommendations mentioned earlier are a rough guideline, and the specific experiment needs to inform the exact thresholds chosen. We will use the following thresholds:</span>
-<span id="cb39-287"><a href="#cb39-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-288"><a href="#cb39-288" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>nUMI <span class="sc">\&gt;</span> 500</span>
-<span id="cb39-289"><a href="#cb39-289" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>nGene <span class="sc">\&gt;</span> 250</span>
-<span id="cb39-290"><a href="#cb39-290" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>log10GenesPerUMI <span class="sc">\&gt;</span> 0.8</span>
-<span id="cb39-291"><a href="#cb39-291" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>mitoRatio <span class="sc">\&lt;</span> 0.2</span>
-<span id="cb39-292"><a href="#cb39-292" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-293"><a href="#cb39-293" aria-hidden="true" tabindex="-1"></a>To filter, we wil go back to our Seurat object and use the <span class="in">`subset()`</span> function:</span>
-<span id="cb39-294"><a href="#cb39-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-297"><a href="#cb39-297" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb39-298"><a href="#cb39-298" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter out low quality cells using selected thresholds - these will change with experiment</span></span>
-<span id="cb39-299"><a href="#cb39-299" aria-hidden="true" tabindex="-1"></a>filtered_seurat <span class="ot">&lt;-</span> <span class="fu">subset</span>(<span class="at">x =</span> merged_seurat, </span>
-<span id="cb39-300"><a href="#cb39-300" aria-hidden="true" tabindex="-1"></a>                          <span class="at">subset=</span> (nCount_RNA <span class="sc">&gt;=</span> <span class="dv">500</span>) <span class="sc">&amp;</span> </span>
-<span id="cb39-301"><a href="#cb39-301" aria-hidden="true" tabindex="-1"></a>                                  (nFeature_RNA <span class="sc">&gt;=</span> <span class="dv">250</span>) <span class="sc">&amp;</span> </span>
-<span id="cb39-302"><a href="#cb39-302" aria-hidden="true" tabindex="-1"></a>                                  (log10GenesPerUMI <span class="sc">&gt;</span> <span class="fl">0.80</span>) <span class="sc">&amp;</span> </span>
-<span id="cb39-303"><a href="#cb39-303" aria-hidden="true" tabindex="-1"></a>                                  (mitoRatio <span class="sc">&lt;</span> <span class="fl">0.20</span>))</span>
-<span id="cb39-304"><a href="#cb39-304" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"质控过滤掉了"</span>, <span class="fu">ncol</span>(merged_seurat) <span class="sc">-</span> <span class="fu">ncol</span>(filtered_seurat), <span class="st">"个细胞"</span>)</span>
-<span id="cb39-305"><a href="#cb39-305" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-282"><a href="#cb39-282" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; -   好的细胞通常会表现出更多的基因数量和更多的UMI(图的右上象限)。</span></span>
+<span id="cb39-283"><a href="#cb39-283" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb39-284"><a href="#cb39-284" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; -   质量差的细胞可能具有较低的基因和UMI，对应于该图左下角象限中的数据点。</span></span>
+<span id="cb39-285"><a href="#cb39-285" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb39-286"><a href="#cb39-286" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; -   我们还希望所有样品都有类似的线条和相似的斜率。</span></span>
+<span id="cb39-287"><a href="#cb39-287" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb39-288"><a href="#cb39-288" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; -   该图右下角中的散在数据点表示这些细胞有大量的UMI，但只有少数几个基因。这些可能是濒临死亡的细胞，也可能代表一种低复杂性细胞类型(即红细胞)。</span></span>
+<span id="cb39-289"><a href="#cb39-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-290"><a href="#cb39-290" aria-hidden="true" tabindex="-1"></a>**Mitochondrial read fractions are only high in particularly low count cells with few detected genes** (darker colored data points). This could be indicative of damaged/dying cells whose cytoplasmic mRNA has leaked out through a broken membrane, and thus, only mRNA located in the mitochondria is still conserved. We can see from the plot, that these cells are filtered out by our count and gene number thresholds.</span>
+<span id="cb39-291"><a href="#cb39-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-292"><a href="#cb39-292" aria-hidden="true" tabindex="-1"></a><span class="fu">## 细胞/基因过滤 (Filtering)</span></span>
+<span id="cb39-293"><a href="#cb39-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-294"><a href="#cb39-294" aria-hidden="true" tabindex="-1"></a><span class="fu">### Cell-level filtering</span></span>
+<span id="cb39-295"><a href="#cb39-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-296"><a href="#cb39-296" aria-hidden="true" tabindex="-1"></a>Now that we have visualized the various metrics, we can decide on the thresholds to apply which will result in the removal of low quality cells. Often the recommendations mentioned earlier are a rough guideline, and the specific experiment needs to inform the exact thresholds chosen. We will use the following thresholds:</span>
+<span id="cb39-297"><a href="#cb39-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-298"><a href="#cb39-298" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 在完成了细胞质量可视化评估之后就可以确定一系列质量控制的阈值来进行低质量细胞的过滤。这里选择如下阈值：</span></span>
+<span id="cb39-299"><a href="#cb39-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-300"><a href="#cb39-300" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>nUMI <span class="sc">\&gt;</span> 500</span>
+<span id="cb39-301"><a href="#cb39-301" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>nGene <span class="sc">\&gt;</span> 250</span>
+<span id="cb39-302"><a href="#cb39-302" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>log10GenesPerUMI <span class="sc">\&gt;</span> 0.8</span>
+<span id="cb39-303"><a href="#cb39-303" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>mitoRatio <span class="sc">\&lt;</span> 0.2</span>
+<span id="cb39-304"><a href="#cb39-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-305"><a href="#cb39-305" aria-hidden="true" tabindex="-1"></a>To filter, we wil go back to our Seurat object and use the <span class="in">`subset()`</span> function:</span>
 <span id="cb39-306"><a href="#cb39-306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-307"><a href="#cb39-307" aria-hidden="true" tabindex="-1"></a><span class="fu">### Gene-level filtering</span></span>
-<span id="cb39-308"><a href="#cb39-308" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-309"><a href="#cb39-309" aria-hidden="true" tabindex="-1"></a>Within our data we will have many genes with zero counts. These genes can dramatically reduce the average expression for a cell and so we will remove them from our data. We will start by identifying which genes have a zero count in each cell:</span>
-<span id="cb39-310"><a href="#cb39-310" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-313"><a href="#cb39-313" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb39-314"><a href="#cb39-314" aria-hidden="true" tabindex="-1"></a><span class="fu">Layers</span>(filtered_seurat)</span>
-<span id="cb39-315"><a href="#cb39-315" aria-hidden="true" tabindex="-1"></a><span class="co"># 在seurat V5中不同样本的数据被放到不同的layer中，为了方便后面计数基因，所以先将layer合并</span></span>
-<span id="cb39-316"><a href="#cb39-316" aria-hidden="true" tabindex="-1"></a>filtered_seurat <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(filtered_seurat)</span>
-<span id="cb39-317"><a href="#cb39-317" aria-hidden="true" tabindex="-1"></a><span class="fu">Layers</span>(filtered_seurat)</span>
+<span id="cb39-309"><a href="#cb39-309" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb39-310"><a href="#cb39-310" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter out low quality cells using selected thresholds - these will change with experiment</span></span>
+<span id="cb39-311"><a href="#cb39-311" aria-hidden="true" tabindex="-1"></a>filtered_seurat <span class="ot">&lt;-</span> <span class="fu">subset</span>(<span class="at">x =</span> merged_seurat, </span>
+<span id="cb39-312"><a href="#cb39-312" aria-hidden="true" tabindex="-1"></a>                          <span class="at">subset=</span> (nCount_RNA <span class="sc">&gt;=</span> <span class="dv">500</span>) <span class="sc">&amp;</span> </span>
+<span id="cb39-313"><a href="#cb39-313" aria-hidden="true" tabindex="-1"></a>                                  (nFeature_RNA <span class="sc">&gt;=</span> <span class="dv">250</span>) <span class="sc">&amp;</span> </span>
+<span id="cb39-314"><a href="#cb39-314" aria-hidden="true" tabindex="-1"></a>                                  (log10GenesPerUMI <span class="sc">&gt;</span> <span class="fl">0.80</span>) <span class="sc">&amp;</span> </span>
+<span id="cb39-315"><a href="#cb39-315" aria-hidden="true" tabindex="-1"></a>                                  (mitoRatio <span class="sc">&lt;</span> <span class="fl">0.20</span>))</span>
+<span id="cb39-316"><a href="#cb39-316" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"质控过滤掉了"</span>, <span class="fu">ncol</span>(merged_seurat) <span class="sc">-</span> <span class="fu">ncol</span>(filtered_seurat), <span class="st">"个细胞"</span>)</span>
+<span id="cb39-317"><a href="#cb39-317" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb39-318"><a href="#cb39-318" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-319"><a href="#cb39-319" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract counts</span></span>
-<span id="cb39-320"><a href="#cb39-320" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> filtered_seurat<span class="sc">@</span>assays[[<span class="st">"RNA"</span>]]<span class="sc">@</span>layers[[<span class="st">"counts"</span>]]</span>
-<span id="cb39-321"><a href="#cb39-321" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-319"><a href="#cb39-319" aria-hidden="true" tabindex="-1"></a><span class="fu">### Gene-level filtering</span></span>
+<span id="cb39-320"><a href="#cb39-320" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-321"><a href="#cb39-321" aria-hidden="true" tabindex="-1"></a>Within our data we will have many genes with zero counts. These genes can dramatically reduce the average expression for a cell and so we will remove them from our data. We will start by identifying which genes have a zero count in each cell:</span>
 <span id="cb39-322"><a href="#cb39-322" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-323"><a href="#cb39-323" aria-hidden="true" tabindex="-1"></a>Now, we will perform some filtering by prevalence. If a gene is only expressed in a handful of cells, it is not particularly meaningful as it still brings down the averages for all other cells it is not expressed in. For our data we choose to keep only **genes which are expressed in 10 or more cells.** By using this filter, genes which have zero counts in all cells will effectively be removed.</span>
-<span id="cb39-324"><a href="#cb39-324" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-327"><a href="#cb39-327" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb39-328"><a href="#cb39-328" aria-hidden="true" tabindex="-1"></a><span class="co"># Only keeping those genes expressed in more than 10 cells</span></span>
-<span id="cb39-329"><a href="#cb39-329" aria-hidden="true" tabindex="-1"></a>keep_genes <span class="ot">&lt;-</span> <span class="fu">rownames</span>(filtered_seurat)[<span class="fu">rowSums</span>(counts <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">&gt;=</span> <span class="dv">10</span>]</span>
+<span id="cb39-325"><a href="#cb39-325" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb39-326"><a href="#cb39-326" aria-hidden="true" tabindex="-1"></a><span class="fu">Layers</span>(filtered_seurat)</span>
+<span id="cb39-327"><a href="#cb39-327" aria-hidden="true" tabindex="-1"></a><span class="co"># 在seurat V5中不同样本的数据被放到不同的layer中，为了方便后面计数基因，所以先将layer合并</span></span>
+<span id="cb39-328"><a href="#cb39-328" aria-hidden="true" tabindex="-1"></a>filtered_seurat <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(filtered_seurat)</span>
+<span id="cb39-329"><a href="#cb39-329" aria-hidden="true" tabindex="-1"></a><span class="fu">Layers</span>(filtered_seurat)</span>
 <span id="cb39-330"><a href="#cb39-330" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-331"><a href="#cb39-331" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"过滤掉了"</span>, <span class="fu">nrow</span>(filtered_seurat) <span class="sc">-</span> <span class="fu">length</span>(keep_genes), <span class="st">"个基因；剩余"</span>, </span>
-<span id="cb39-332"><a href="#cb39-332" aria-hidden="true" tabindex="-1"></a>       <span class="fu">length</span>(keep_genes), <span class="st">"个基因"</span>)</span>
-<span id="cb39-333"><a href="#cb39-333" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-334"><a href="#cb39-334" aria-hidden="true" tabindex="-1"></a><span class="co"># 过滤基因</span></span>
-<span id="cb39-335"><a href="#cb39-335" aria-hidden="true" tabindex="-1"></a>filtered_seurat <span class="ot">&lt;-</span> <span class="fu">subset</span>(filtered_seurat, </span>
-<span id="cb39-336"><a href="#cb39-336" aria-hidden="true" tabindex="-1"></a>                          <span class="at">features =</span> keep_genes)</span>
-<span id="cb39-337"><a href="#cb39-337" aria-hidden="true" tabindex="-1"></a>filtered_seurat</span>
-<span id="cb39-338"><a href="#cb39-338" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb39-339"><a href="#cb39-339" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-340"><a href="#cb39-340" aria-hidden="true" tabindex="-1"></a><span class="fu">## 重新质量评价 (Re-assess QC metrics)</span></span>
-<span id="cb39-341"><a href="#cb39-341" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-342"><a href="#cb39-342" aria-hidden="true" tabindex="-1"></a>After performing the filtering, it's recommended to look back over the metrics to make sure that your data matches your expectations and is good for downstream analysis.</span>
-<span id="cb39-343"><a href="#cb39-343" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-346"><a href="#cb39-346" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb39-347"><a href="#cb39-347" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 3</span></span>
-<span id="cb39-348"><a href="#cb39-348" aria-hidden="true" tabindex="-1"></a><span class="co"># Cell counts</span></span>
-<span id="cb39-349"><a href="#cb39-349" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
-<span id="cb39-350"><a href="#cb39-350" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sample, <span class="at">fill =</span> sample)) <span class="sc">+</span> </span>
-<span id="cb39-351"><a href="#cb39-351" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb39-352"><a href="#cb39-352" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb39-353"><a href="#cb39-353" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb39-354"><a href="#cb39-354" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>)) <span class="sc">+</span></span>
-<span id="cb39-355"><a href="#cb39-355" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"NCells"</span>)</span>
-<span id="cb39-356"><a href="#cb39-356" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-357"><a href="#cb39-357" aria-hidden="true" tabindex="-1"></a><span class="co"># UMI counts</span></span>
-<span id="cb39-358"><a href="#cb39-358" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
-<span id="cb39-359"><a href="#cb39-359" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">color =</span> sample, <span class="at">x =</span> nCount_RNA, <span class="at">fill =</span> sample)) <span class="sc">+</span> </span>
-<span id="cb39-360"><a href="#cb39-360" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb39-361"><a href="#cb39-361" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
-<span id="cb39-362"><a href="#cb39-362" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb39-363"><a href="#cb39-363" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Cell density"</span>) <span class="sc">+</span></span>
-<span id="cb39-364"><a href="#cb39-364" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">500</span>)</span>
-<span id="cb39-365"><a href="#cb39-365" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-366"><a href="#cb39-366" aria-hidden="true" tabindex="-1"></a><span class="co"># Genes detected</span></span>
-<span id="cb39-367"><a href="#cb39-367" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
-<span id="cb39-368"><a href="#cb39-368" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">color =</span> sample, <span class="at">x =</span> nFeature_RNA, <span class="at">fill=</span> sample)) <span class="sc">+</span> </span>
-<span id="cb39-369"><a href="#cb39-369" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb39-370"><a href="#cb39-370" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb39-371"><a href="#cb39-371" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
-<span id="cb39-372"><a href="#cb39-372" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">250</span>)</span>
-<span id="cb39-373"><a href="#cb39-373" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-374"><a href="#cb39-374" aria-hidden="true" tabindex="-1"></a><span class="co"># UMIs vs genes</span></span>
-<span id="cb39-375"><a href="#cb39-375" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span></span>
-<span id="cb39-376"><a href="#cb39-376" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> log10GenesPerUMI, <span class="at">color =</span> sample, <span class="at">fill=</span>sample)) <span class="sc">+</span></span>
-<span id="cb39-377"><a href="#cb39-377" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb39-378"><a href="#cb39-378" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb39-379"><a href="#cb39-379" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.8</span>)</span>
-<span id="cb39-380"><a href="#cb39-380" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-381"><a href="#cb39-381" aria-hidden="true" tabindex="-1"></a><span class="co"># Mitochondrial counts ratio</span></span>
-<span id="cb39-382"><a href="#cb39-382" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
-<span id="cb39-383"><a href="#cb39-383" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">color =</span> sample, <span class="at">x =</span> mitoRatio, <span class="at">fill =</span> sample)) <span class="sc">+</span> </span>
-<span id="cb39-384"><a href="#cb39-384" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb39-385"><a href="#cb39-385" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
-<span id="cb39-386"><a href="#cb39-386" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb39-387"><a href="#cb39-387" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.2</span>)</span>
-<span id="cb39-388"><a href="#cb39-388" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-389"><a href="#cb39-389" aria-hidden="true" tabindex="-1"></a><span class="co"># Novelty</span></span>
-<span id="cb39-390"><a href="#cb39-390" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span></span>
-<span id="cb39-391"><a href="#cb39-391" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> log10GenesPerUMI, <span class="at">color =</span> sample, <span class="at">fill=</span>sample)) <span class="sc">+</span></span>
-<span id="cb39-392"><a href="#cb39-392" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb39-393"><a href="#cb39-393" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb39-394"><a href="#cb39-394" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.8</span>)</span>
-<span id="cb39-395"><a href="#cb39-395" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-396"><a href="#cb39-396" aria-hidden="true" tabindex="-1"></a><span class="co"># Joint filtering effects</span></span>
-<span id="cb39-397"><a href="#cb39-397" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
-<span id="cb39-398"><a href="#cb39-398" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> nCount_RNA, <span class="at">y =</span> nFeature_RNA, <span class="at">color =</span> mitoRatio)) <span class="sc">+</span> </span>
-<span id="cb39-399"><a href="#cb39-399" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb39-400"><a href="#cb39-400" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_colour_gradient</span>(<span class="at">low =</span> <span class="st">"gray90"</span>, <span class="at">high =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb39-401"><a href="#cb39-401" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
-<span id="cb39-402"><a href="#cb39-402" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
-<span id="cb39-403"><a href="#cb39-403" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_log10</span>() <span class="sc">+</span> </span>
-<span id="cb39-404"><a href="#cb39-404" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb39-405"><a href="#cb39-405" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">500</span>) <span class="sc">+</span></span>
-<span id="cb39-406"><a href="#cb39-406" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">250</span>) <span class="sc">+</span></span>
-<span id="cb39-407"><a href="#cb39-407" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>sample)</span>
-<span id="cb39-408"><a href="#cb39-408" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb39-409"><a href="#cb39-409" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-410"><a href="#cb39-410" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true"}</span>
-<span id="cb39-411"><a href="#cb39-411" aria-hidden="true" tabindex="-1"></a><span class="fu">###### 问题：</span></span>
-<span id="cb39-412"><a href="#cb39-412" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-413"><a href="#cb39-413" aria-hidden="true" tabindex="-1"></a>**1. Report the number of cells left for each sample, and comment on whether the number of cells removed is high or low. Can you give reasons why this number is still not \~12K (which is how many cells were loaded for the experiment)?**</span>
-<span id="cb39-414"><a href="#cb39-414" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-415"><a href="#cb39-415" aria-hidden="true" tabindex="-1"></a>There are just under 15K cells left for both the control and stim cells. The number of cells removed is reasonably low.</span>
-<span id="cb39-416"><a href="#cb39-416" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-417"><a href="#cb39-417" aria-hidden="true" tabindex="-1"></a>While it would be ideal to have 12K cells, we do not expect that due to the lower capture efficiency (i.e. the number of actual cells encapsulated within droplets containing barcodes) of these technologies. If we still see higher than expected numbers of cells after filtering, this means we could afford to filter more stringently (but we don't necessarily have to).</span>
-<span id="cb39-418"><a href="#cb39-418" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-419"><a href="#cb39-419" aria-hidden="true" tabindex="-1"></a>**2. After filtering for nGene per cell, you should still observe a small shoulder to the right of the main peak. What might this shoulder represent?**</span>
-<span id="cb39-420"><a href="#cb39-420" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-421"><a href="#cb39-421" aria-hidden="true" tabindex="-1"></a>This peak could represent a **biologically distinct population of cells**. It could be a set a of cells that share some properties and as a consequence exhibit more diversity in its transcriptome (with the larger number of genes detected).</span>
-<span id="cb39-422"><a href="#cb39-422" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-423"><a href="#cb39-423" aria-hidden="true" tabindex="-1"></a>**3. When plotting the nGene against nUMI do you observe any data points in the bottom right quadrant of the plot? What can you say about these cells that have been removed?**</span>
+<span id="cb39-331"><a href="#cb39-331" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract counts</span></span>
+<span id="cb39-332"><a href="#cb39-332" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> filtered_seurat<span class="sc">@</span>assays[[<span class="st">"RNA"</span>]]<span class="sc">@</span>layers[[<span class="st">"counts"</span>]]</span>
+<span id="cb39-333"><a href="#cb39-333" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-334"><a href="#cb39-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-335"><a href="#cb39-335" aria-hidden="true" tabindex="-1"></a>Now, we will perform some filtering by prevalence. If a gene is only expressed in a handful of cells, it is not particularly meaningful as it still brings down the averages for all other cells it is not expressed in. For our data we choose to keep only **genes which are expressed in 10 or more cells.** By using this filter, genes which have zero counts in all cells will effectively be removed.</span>
+<span id="cb39-336"><a href="#cb39-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-339"><a href="#cb39-339" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb39-340"><a href="#cb39-340" aria-hidden="true" tabindex="-1"></a><span class="co"># Only keeping those genes expressed in more than 10 cells</span></span>
+<span id="cb39-341"><a href="#cb39-341" aria-hidden="true" tabindex="-1"></a>keep_genes <span class="ot">&lt;-</span> <span class="fu">rownames</span>(filtered_seurat)[<span class="fu">rowSums</span>(counts <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">&gt;=</span> <span class="dv">10</span>]</span>
+<span id="cb39-342"><a href="#cb39-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-343"><a href="#cb39-343" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"过滤掉了"</span>, <span class="fu">nrow</span>(filtered_seurat) <span class="sc">-</span> <span class="fu">length</span>(keep_genes), <span class="st">"个基因；剩余"</span>, </span>
+<span id="cb39-344"><a href="#cb39-344" aria-hidden="true" tabindex="-1"></a>       <span class="fu">length</span>(keep_genes), <span class="st">"个基因"</span>)</span>
+<span id="cb39-345"><a href="#cb39-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-346"><a href="#cb39-346" aria-hidden="true" tabindex="-1"></a><span class="co"># 过滤基因</span></span>
+<span id="cb39-347"><a href="#cb39-347" aria-hidden="true" tabindex="-1"></a>filtered_seurat <span class="ot">&lt;-</span> <span class="fu">subset</span>(filtered_seurat, </span>
+<span id="cb39-348"><a href="#cb39-348" aria-hidden="true" tabindex="-1"></a>                          <span class="at">features =</span> keep_genes)</span>
+<span id="cb39-349"><a href="#cb39-349" aria-hidden="true" tabindex="-1"></a>filtered_seurat</span>
+<span id="cb39-350"><a href="#cb39-350" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-351"><a href="#cb39-351" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-352"><a href="#cb39-352" aria-hidden="true" tabindex="-1"></a><span class="fu">## 重新质量评价 (Re-assess QC metrics)</span></span>
+<span id="cb39-353"><a href="#cb39-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-354"><a href="#cb39-354" aria-hidden="true" tabindex="-1"></a>After performing the filtering, it's recommended to look back over the metrics to make sure that your data matches your expectations and is good for downstream analysis.</span>
+<span id="cb39-355"><a href="#cb39-355" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-358"><a href="#cb39-358" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb39-359"><a href="#cb39-359" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 3</span></span>
+<span id="cb39-360"><a href="#cb39-360" aria-hidden="true" tabindex="-1"></a><span class="co"># Cell counts</span></span>
+<span id="cb39-361"><a href="#cb39-361" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
+<span id="cb39-362"><a href="#cb39-362" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sample, <span class="at">fill =</span> sample)) <span class="sc">+</span> </span>
+<span id="cb39-363"><a href="#cb39-363" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb39-364"><a href="#cb39-364" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb39-365"><a href="#cb39-365" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb39-366"><a href="#cb39-366" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">face =</span> <span class="st">"bold"</span>)) <span class="sc">+</span></span>
+<span id="cb39-367"><a href="#cb39-367" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggtitle</span>(<span class="st">"NCells"</span>)</span>
+<span id="cb39-368"><a href="#cb39-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-369"><a href="#cb39-369" aria-hidden="true" tabindex="-1"></a><span class="co"># UMI counts</span></span>
+<span id="cb39-370"><a href="#cb39-370" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
+<span id="cb39-371"><a href="#cb39-371" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">color =</span> sample, <span class="at">x =</span> nCount_RNA, <span class="at">fill =</span> sample)) <span class="sc">+</span> </span>
+<span id="cb39-372"><a href="#cb39-372" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
+<span id="cb39-373"><a href="#cb39-373" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
+<span id="cb39-374"><a href="#cb39-374" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb39-375"><a href="#cb39-375" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Cell density"</span>) <span class="sc">+</span></span>
+<span id="cb39-376"><a href="#cb39-376" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">500</span>)</span>
+<span id="cb39-377"><a href="#cb39-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-378"><a href="#cb39-378" aria-hidden="true" tabindex="-1"></a><span class="co"># Genes detected</span></span>
+<span id="cb39-379"><a href="#cb39-379" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
+<span id="cb39-380"><a href="#cb39-380" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">color =</span> sample, <span class="at">x =</span> nFeature_RNA, <span class="at">fill=</span> sample)) <span class="sc">+</span> </span>
+<span id="cb39-381"><a href="#cb39-381" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
+<span id="cb39-382"><a href="#cb39-382" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb39-383"><a href="#cb39-383" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
+<span id="cb39-384"><a href="#cb39-384" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">250</span>)</span>
+<span id="cb39-385"><a href="#cb39-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-386"><a href="#cb39-386" aria-hidden="true" tabindex="-1"></a><span class="co"># UMIs vs genes</span></span>
+<span id="cb39-387"><a href="#cb39-387" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span></span>
+<span id="cb39-388"><a href="#cb39-388" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> log10GenesPerUMI, <span class="at">color =</span> sample, <span class="at">fill=</span>sample)) <span class="sc">+</span></span>
+<span id="cb39-389"><a href="#cb39-389" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb39-390"><a href="#cb39-390" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb39-391"><a href="#cb39-391" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.8</span>)</span>
+<span id="cb39-392"><a href="#cb39-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-393"><a href="#cb39-393" aria-hidden="true" tabindex="-1"></a><span class="co"># Mitochondrial counts ratio</span></span>
+<span id="cb39-394"><a href="#cb39-394" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
+<span id="cb39-395"><a href="#cb39-395" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">color =</span> sample, <span class="at">x =</span> mitoRatio, <span class="at">fill =</span> sample)) <span class="sc">+</span> </span>
+<span id="cb39-396"><a href="#cb39-396" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
+<span id="cb39-397"><a href="#cb39-397" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
+<span id="cb39-398"><a href="#cb39-398" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb39-399"><a href="#cb39-399" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.2</span>)</span>
+<span id="cb39-400"><a href="#cb39-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-401"><a href="#cb39-401" aria-hidden="true" tabindex="-1"></a><span class="co"># Novelty</span></span>
+<span id="cb39-402"><a href="#cb39-402" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span></span>
+<span id="cb39-403"><a href="#cb39-403" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> log10GenesPerUMI, <span class="at">color =</span> sample, <span class="at">fill=</span>sample)) <span class="sc">+</span></span>
+<span id="cb39-404"><a href="#cb39-404" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb39-405"><a href="#cb39-405" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb39-406"><a href="#cb39-406" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.8</span>)</span>
+<span id="cb39-407"><a href="#cb39-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-408"><a href="#cb39-408" aria-hidden="true" tabindex="-1"></a><span class="co"># Joint filtering effects</span></span>
+<span id="cb39-409"><a href="#cb39-409" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">@</span>meta.data <span class="sc">%&gt;%</span> </span>
+<span id="cb39-410"><a href="#cb39-410" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> nCount_RNA, <span class="at">y =</span> nFeature_RNA, <span class="at">color =</span> mitoRatio)) <span class="sc">+</span> </span>
+<span id="cb39-411"><a href="#cb39-411" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb39-412"><a href="#cb39-412" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_colour_gradient</span>(<span class="at">low =</span> <span class="st">"gray90"</span>, <span class="at">high =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb39-413"><a href="#cb39-413" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stat_smooth</span>(<span class="at">method =</span> lm) <span class="sc">+</span></span>
+<span id="cb39-414"><a href="#cb39-414" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
+<span id="cb39-415"><a href="#cb39-415" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_log10</span>() <span class="sc">+</span> </span>
+<span id="cb39-416"><a href="#cb39-416" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb39-417"><a href="#cb39-417" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">500</span>) <span class="sc">+</span></span>
+<span id="cb39-418"><a href="#cb39-418" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">250</span>) <span class="sc">+</span></span>
+<span id="cb39-419"><a href="#cb39-419" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>sample)</span>
+<span id="cb39-420"><a href="#cb39-420" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-421"><a href="#cb39-421" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-422"><a href="#cb39-422" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true"}</span>
+<span id="cb39-423"><a href="#cb39-423" aria-hidden="true" tabindex="-1"></a><span class="fu">###### 问题：</span></span>
 <span id="cb39-424"><a href="#cb39-424" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-425"><a href="#cb39-425" aria-hidden="true" tabindex="-1"></a>The cells that were removed were those with **high nUMI but low numbers of genes** detected. These cells had many captured transcripts but represent only a small number of genes. These low complexity cells could represent a specific cell type (i.e. red blood cells which lack a typical transcriptome), or could be due to some other strange artifact or contamination.</span>
-<span id="cb39-426"><a href="#cb39-426" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb39-427"><a href="#cb39-427" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-428"><a href="#cb39-428" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb39-429"><a href="#cb39-429" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-430"><a href="#cb39-430" aria-hidden="true" tabindex="-1"></a><span class="fu">## Saving filtered cells</span></span>
-<span id="cb39-431"><a href="#cb39-431" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-432"><a href="#cb39-432" aria-hidden="true" tabindex="-1"></a>Based on these QC metrics we would identify any failed samples and move forward with our filtered cells. Often we iterate through the QC metrics using different filtering criteria; it is not necessarily a linear process. When satisfied with the filtering criteria, we would save our filtered cell object for clustering and marker identification.</span>
-<span id="cb39-433"><a href="#cb39-433" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-436"><a href="#cb39-436" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb39-437"><a href="#cb39-437" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(filtered_seurat, <span class="at">file=</span><span class="st">"output/scRNA-seq_online/seurat_filtered.rds"</span>)</span>
-<span id="cb39-438"><a href="#cb39-438" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-425"><a href="#cb39-425" aria-hidden="true" tabindex="-1"></a>**1. Report the number of cells left for each sample, and comment on whether the number of cells removed is high or low. Can you give reasons why this number is still not \~12K (which is how many cells were loaded for the experiment)?**</span>
+<span id="cb39-426"><a href="#cb39-426" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-427"><a href="#cb39-427" aria-hidden="true" tabindex="-1"></a>There are just under 15K cells left for both the control and stim cells. The number of cells removed is reasonably low.</span>
+<span id="cb39-428"><a href="#cb39-428" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-429"><a href="#cb39-429" aria-hidden="true" tabindex="-1"></a>While it would be ideal to have 12K cells, we do not expect that due to the lower capture efficiency (i.e. the number of actual cells encapsulated within droplets containing barcodes) of these technologies. If we still see higher than expected numbers of cells after filtering, this means we could afford to filter more stringently (but we don't necessarily have to).</span>
+<span id="cb39-430"><a href="#cb39-430" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-431"><a href="#cb39-431" aria-hidden="true" tabindex="-1"></a>**2. After filtering for nGene per cell, you should still observe a small shoulder to the right of the main peak. What might this shoulder represent?**</span>
+<span id="cb39-432"><a href="#cb39-432" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-433"><a href="#cb39-433" aria-hidden="true" tabindex="-1"></a>This peak could represent a **biologically distinct population of cells**. It could be a set a of cells that share some properties and as a consequence exhibit more diversity in its transcriptome (with the larger number of genes detected).</span>
+<span id="cb39-434"><a href="#cb39-434" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-435"><a href="#cb39-435" aria-hidden="true" tabindex="-1"></a>**3. When plotting the nGene against nUMI do you observe any data points in the bottom right quadrant of the plot? What can you say about these cells that have been removed?**</span>
+<span id="cb39-436"><a href="#cb39-436" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-437"><a href="#cb39-437" aria-hidden="true" tabindex="-1"></a>The cells that were removed were those with **high nUMI but low numbers of genes** detected. These cells had many captured transcripts but represent only a small number of genes. These low complexity cells could represent a specific cell type (i.e. red blood cells which lack a typical transcriptome), or could be due to some other strange artifact or contamination.</span>
+<span id="cb39-438"><a href="#cb39-438" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb39-439"><a href="#cb39-439" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb39-440"><a href="#cb39-440" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb39-441"><a href="#cb39-441" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-442"><a href="#cb39-442" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exploring a Poor Quality Sample</span></span>
+<span id="cb39-442"><a href="#cb39-442" aria-hidden="true" tabindex="-1"></a><span class="fu">## Saving filtered cells</span></span>
 <span id="cb39-443"><a href="#cb39-443" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-444"><a href="#cb39-444" aria-hidden="true" tabindex="-1"></a>The data we are working with is pretty good quality. If you are interested in knowing what 'bad' data might look like when performing QC, we have some materials here where we explore similar QC metrics of a poor quality sample.</span>
+<span id="cb39-444"><a href="#cb39-444" aria-hidden="true" tabindex="-1"></a>Based on these QC metrics we would identify any failed samples and move forward with our filtered cells. Often we iterate through the QC metrics using different filtering criteria; it is not necessarily a linear process. When satisfied with the filtering criteria, we would save our filtered cell object for clustering and marker identification.</span>
 <span id="cb39-445"><a href="#cb39-445" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-446"><a href="#cb39-446" aria-hidden="true" tabindex="-1"></a><span class="fu">### Cell counts</span></span>
-<span id="cb39-447"><a href="#cb39-447" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-448"><a href="#cb39-448" aria-hidden="true" tabindex="-1"></a>The cell counts are determined by the number of unique cellular barcodes detected. During the droplet-based protocols, the cellular barcodes are present in the hydrogels, which are encapsulated in the droplets with a single cell and lysis/reaction mixture. While each hydrogel should have a single cellular barcode associated with it, occasionally a hydrogel can have more than one cellular barcode. We often see all possible combinations of cellular barcodes at a low level, leading to a **higher number of cellular barcodes than cells**.</span>
-<span id="cb39-449"><a href="#cb39-449" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-450"><a href="#cb39-450" aria-hidden="true" tabindex="-1"></a>You expect the number of unique cellular barcodes to be often greater than the number of seuqenced cells due to some hydrogels having more than one cellular barcode. The yellow sample below seems to have at least double the number of cellular barcodes as the other samples.</span>
+<span id="cb39-448"><a href="#cb39-448" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb39-449"><a href="#cb39-449" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(filtered_seurat, <span class="at">file=</span><span class="st">"output/scRNA-seq_online/seurat_filtered.rds"</span>)</span>
+<span id="cb39-450"><a href="#cb39-450" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb39-451"><a href="#cb39-451" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-452"><a href="#cb39-452" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_cellcounts.png)</span>{width="552"}</span>
+<span id="cb39-452"><a href="#cb39-452" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb39-453"><a href="#cb39-453" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-454"><a href="#cb39-454" aria-hidden="true" tabindex="-1"></a><span class="fu">### UMI counts per cell</span></span>
+<span id="cb39-454"><a href="#cb39-454" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exploring a Poor Quality Sample</span></span>
 <span id="cb39-455"><a href="#cb39-455" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-456"><a href="#cb39-456" aria-hidden="true" tabindex="-1"></a>The number of UMIs per cell tends to be very low for the Unsorted sample (yellow). The other samples have good numbers of UMIs per cell, indicating a problem only with the Unsorted sample. Using this cutoff, we will lose the majority of the Unsorted cells.</span>
+<span id="cb39-456"><a href="#cb39-456" aria-hidden="true" tabindex="-1"></a>The data we are working with is pretty good quality. If you are interested in knowing what 'bad' data might look like when performing QC, we have some materials here where we explore similar QC metrics of a poor quality sample.</span>
 <span id="cb39-457"><a href="#cb39-457" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-458"><a href="#cb39-458" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_umisPerCell.png)</span>{width="549"}</span>
+<span id="cb39-458"><a href="#cb39-458" aria-hidden="true" tabindex="-1"></a><span class="fu">### Cell counts</span></span>
 <span id="cb39-459"><a href="#cb39-459" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-460"><a href="#cb39-460" aria-hidden="true" tabindex="-1"></a><span class="fu">### Genes detected per cell</span></span>
+<span id="cb39-460"><a href="#cb39-460" aria-hidden="true" tabindex="-1"></a>The cell counts are determined by the number of unique cellular barcodes detected. During the droplet-based protocols, the cellular barcodes are present in the hydrogels, which are encapsulated in the droplets with a single cell and lysis/reaction mixture. While each hydrogel should have a single cellular barcode associated with it, occasionally a hydrogel can have more than one cellular barcode. We often see all possible combinations of cellular barcodes at a low level, leading to a **higher number of cellular barcodes than cells**.</span>
 <span id="cb39-461"><a href="#cb39-461" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-462"><a href="#cb39-462" aria-hidden="true" tabindex="-1"></a>Seeing gene detection in the range of **500-5000** is normal for inDrop/10X analyses. However, expectations can vary depending on the complexity of the cells expected in the experiment. Similar expectations for gene detection as for UMI detection.</span>
+<span id="cb39-462"><a href="#cb39-462" aria-hidden="true" tabindex="-1"></a>You expect the number of unique cellular barcodes to be often greater than the number of seuqenced cells due to some hydrogels having more than one cellular barcode. The yellow sample below seems to have at least double the number of cellular barcodes as the other samples.</span>
 <span id="cb39-463"><a href="#cb39-463" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-464"><a href="#cb39-464" aria-hidden="true" tabindex="-1"></a>All samples other than the Unsorted sample have a good number of genes detected (with medians between 1,000 - 3,000 genes), which correspond to the numbers of UMIs per cell for each sample. However, the Unsorted sample has a very low median number of genes per cell, indicating a sample failure.</span>
+<span id="cb39-464"><a href="#cb39-464" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_cellcounts.png)</span>{width="552"}</span>
 <span id="cb39-465"><a href="#cb39-465" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-466"><a href="#cb39-466" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_genesDetected.png)</span>{width="480"}</span>
+<span id="cb39-466"><a href="#cb39-466" aria-hidden="true" tabindex="-1"></a><span class="fu">### UMI counts per cell</span></span>
 <span id="cb39-467"><a href="#cb39-467" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-468"><a href="#cb39-468" aria-hidden="true" tabindex="-1"></a><span class="fu">### UMIs vs. genes detected</span></span>
+<span id="cb39-468"><a href="#cb39-468" aria-hidden="true" tabindex="-1"></a>The number of UMIs per cell tends to be very low for the Unsorted sample (yellow). The other samples have good numbers of UMIs per cell, indicating a problem only with the Unsorted sample. Using this cutoff, we will lose the majority of the Unsorted cells.</span>
 <span id="cb39-469"><a href="#cb39-469" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-470"><a href="#cb39-470" aria-hidden="true" tabindex="-1"></a>Poor quality cells are likely to have low genes and UMIs per cell. Therefore, a poor sample is likely to have cells in the lower left of the graph. Good cells should exhibit both higher number of genes per cell and higher numbers of UMIs. We also expect similar lines with similar slopes for all samples.</span>
+<span id="cb39-470"><a href="#cb39-470" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_umisPerCell.png)</span>{width="549"}</span>
 <span id="cb39-471"><a href="#cb39-471" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-472"><a href="#cb39-472" aria-hidden="true" tabindex="-1"></a>The Unsorted sample has many cells with few UMIs and low number of genes per cell. The other samples look fine.</span>
+<span id="cb39-472"><a href="#cb39-472" aria-hidden="true" tabindex="-1"></a><span class="fu">### Genes detected per cell</span></span>
 <span id="cb39-473"><a href="#cb39-473" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-474"><a href="#cb39-474" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_UMIsVsGenesDetected.png)</span>{width="499"}</span>
+<span id="cb39-474"><a href="#cb39-474" aria-hidden="true" tabindex="-1"></a>Seeing gene detection in the range of **500-5000** is normal for inDrop/10X analyses. However, expectations can vary depending on the complexity of the cells expected in the experiment. Similar expectations for gene detection as for UMI detection.</span>
 <span id="cb39-475"><a href="#cb39-475" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-476"><a href="#cb39-476" aria-hidden="true" tabindex="-1"></a><span class="fu">### Mitochondrial counts ratio</span></span>
+<span id="cb39-476"><a href="#cb39-476" aria-hidden="true" tabindex="-1"></a>All samples other than the Unsorted sample have a good number of genes detected (with medians between 1,000 - 3,000 genes), which correspond to the numbers of UMIs per cell for each sample. However, the Unsorted sample has a very low median number of genes per cell, indicating a sample failure.</span>
 <span id="cb39-477"><a href="#cb39-477" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-478"><a href="#cb39-478" aria-hidden="true" tabindex="-1"></a>Poor quality samples for mitochondrial counts would have larger peaks above the 0.1 mitochondrial ratio mark, unless it is expected based on sample type.</span>
+<span id="cb39-478"><a href="#cb39-478" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_genesDetected.png)</span>{width="480"}</span>
 <span id="cb39-479"><a href="#cb39-479" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-480"><a href="#cb39-480" aria-hidden="true" tabindex="-1"></a>There was just a very low number of genes detected for the Unsorted sample, so mitochondrial expression appears higher mainly due to this fact. The poor quality of the Unsorted sample does not appear to be due to dead or dying cells. The other samples have little mitochondrial expression, although hPSC sample has a bit more than the Sorted samples. <span class="co">[</span><span class="ot">Since the hPSC sample was expected to have cell types with higher levels of mitochondrial expression, it may have been advisable to not to use a threshold for this metric.</span><span class="co">]</span>{.underline}</span>
+<span id="cb39-480"><a href="#cb39-480" aria-hidden="true" tabindex="-1"></a><span class="fu">### UMIs vs. genes detected</span></span>
 <span id="cb39-481"><a href="#cb39-481" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-482"><a href="#cb39-482" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_mitoRatio.png)</span>{width="564"}</span>
+<span id="cb39-482"><a href="#cb39-482" aria-hidden="true" tabindex="-1"></a>Poor quality cells are likely to have low genes and UMIs per cell. Therefore, a poor sample is likely to have cells in the lower left of the graph. Good cells should exhibit both higher number of genes per cell and higher numbers of UMIs. We also expect similar lines with similar slopes for all samples.</span>
 <span id="cb39-483"><a href="#cb39-483" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-484"><a href="#cb39-484" aria-hidden="true" tabindex="-1"></a><span class="fu">### Novelty</span></span>
+<span id="cb39-484"><a href="#cb39-484" aria-hidden="true" tabindex="-1"></a>The Unsorted sample has many cells with few UMIs and low number of genes per cell. The other samples look fine.</span>
 <span id="cb39-485"><a href="#cb39-485" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-486"><a href="#cb39-486" aria-hidden="true" tabindex="-1"></a>We can see the samples where we sequenced each cell less have a higher overall novelty, that is because we have not started saturated the sequencing for any given gene for these samples. Outlier cells in these samples might be cells that we have a less complex RNA species than other cells. Sometimes we can detect contamination with low complexity cell types like red blood cells via this metric.</span>
+<span id="cb39-486"><a href="#cb39-486" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_UMIsVsGenesDetected.png)</span>{width="499"}</span>
 <span id="cb39-487"><a href="#cb39-487" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-488"><a href="#cb39-488" aria-hidden="true" tabindex="-1"></a>All of the samples look fine for complexity, except for the Unsorted sample, so it is unlikely that there is **contamination with low complexity cell types** in these of the samples. The Unsorted sample has a larger shoulder than desired, but is not bad by this metric.</span>
+<span id="cb39-488"><a href="#cb39-488" aria-hidden="true" tabindex="-1"></a><span class="fu">### Mitochondrial counts ratio</span></span>
 <span id="cb39-489"><a href="#cb39-489" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-490"><a href="#cb39-490" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_novelty.png)</span>{width="509"}</span>
+<span id="cb39-490"><a href="#cb39-490" aria-hidden="true" tabindex="-1"></a>Poor quality samples for mitochondrial counts would have larger peaks above the 0.1 mitochondrial ratio mark, unless it is expected based on sample type.</span>
 <span id="cb39-491"><a href="#cb39-491" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-492"><a href="#cb39-492" aria-hidden="true" tabindex="-1"></a><span class="fu">### Filtered results</span></span>
+<span id="cb39-492"><a href="#cb39-492" aria-hidden="true" tabindex="-1"></a>There was just a very low number of genes detected for the Unsorted sample, so mitochondrial expression appears higher mainly due to this fact. The poor quality of the Unsorted sample does not appear to be due to dead or dying cells. The other samples have little mitochondrial expression, although hPSC sample has a bit more than the Sorted samples. <span class="co">[</span><span class="ot">Since the hPSC sample was expected to have cell types with higher levels of mitochondrial expression, it may have been advisable to not to use a threshold for this metric.</span><span class="co">]</span>{.underline}</span>
 <span id="cb39-493"><a href="#cb39-493" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-494"><a href="#cb39-494" aria-hidden="true" tabindex="-1"></a>One main plot to look at to determine the success of the filtering criteria is the number of cell counts. The number of cells to expect depends on the library preparation method, but **for inDrops we see \~80% or less of the total sequenced cells per sample and for 10X it is often \~50% or less**.</span>
+<span id="cb39-494"><a href="#cb39-494" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_mitoRatio.png)</span>{width="564"}</span>
 <span id="cb39-495"><a href="#cb39-495" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-496"><a href="#cb39-496" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_filtered_cellcounts.png)</span>{width="422"}</span>
+<span id="cb39-496"><a href="#cb39-496" aria-hidden="true" tabindex="-1"></a><span class="fu">### Novelty</span></span>
 <span id="cb39-497"><a href="#cb39-497" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-498"><a href="#cb39-498" aria-hidden="true" tabindex="-1"></a>In addition, it is a good idea to explore all of the quality plots for the filtered data. All plots should be much improved for the number of reads per cell, genes detected, UMIs per cell, mitochondrial ratio, and novelty. Since the <span class="in">`Unsorted`</span> sample was a poor quality sample, the filter will remove a large number of the cells for this sample; in this case all cells except 1 were filtered out.</span>
+<span id="cb39-498"><a href="#cb39-498" aria-hidden="true" tabindex="-1"></a>We can see the samples where we sequenced each cell less have a higher overall novelty, that is because we have not started saturated the sequencing for any given gene for these samples. Outlier cells in these samples might be cells that we have a less complex RNA species than other cells. Sometimes we can detect contamination with low complexity cell types like red blood cells via this metric.</span>
 <span id="cb39-499"><a href="#cb39-499" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-500"><a href="#cb39-500" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb39-500"><a href="#cb39-500" aria-hidden="true" tabindex="-1"></a>All of the samples look fine for complexity, except for the Unsorted sample, so it is unlikely that there is **contamination with low complexity cell types** in these of the samples. The Unsorted sample has a larger shoulder than desired, but is not bad by this metric.</span>
 <span id="cb39-501"><a href="#cb39-501" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-502"><a href="#cb39-502" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb39-503"><a href="#cb39-503" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
-<span id="cb39-504"><a href="#cb39-504" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-507"><a href="#cb39-507" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb39-508"><a href="#cb39-508" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb39-509"><a href="#cb39-509" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb39-510"><a href="#cb39-510" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb39-511"><a href="#cb39-511" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb39-502"><a href="#cb39-502" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_novelty.png)</span>{width="509"}</span>
+<span id="cb39-503"><a href="#cb39-503" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-504"><a href="#cb39-504" aria-hidden="true" tabindex="-1"></a><span class="fu">### Filtered results</span></span>
+<span id="cb39-505"><a href="#cb39-505" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-506"><a href="#cb39-506" aria-hidden="true" tabindex="-1"></a>One main plot to look at to determine the success of the filtering criteria is the number of cell counts. The number of cells to expect depends on the library preparation method, but **for inDrops we see \~80% or less of the total sequenced cells per sample and for 10X it is often \~50% or less**.</span>
+<span id="cb39-507"><a href="#cb39-507" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-508"><a href="#cb39-508" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_qc_filtered_cellcounts.png)</span>{width="422"}</span>
+<span id="cb39-509"><a href="#cb39-509" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-510"><a href="#cb39-510" aria-hidden="true" tabindex="-1"></a>In addition, it is a good idea to explore all of the quality plots for the filtered data. All plots should be much improved for the number of reads per cell, genes detected, UMIs per cell, mitochondrial ratio, and novelty. Since the <span class="in">`Unsorted`</span> sample was a poor quality sample, the filter will remove a large number of the cells for this sample; in this case all cells except 1 were filtered out.</span>
+<span id="cb39-511"><a href="#cb39-511" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-512"><a href="#cb39-512" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb39-513"><a href="#cb39-513" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-514"><a href="#cb39-514" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb39-515"><a href="#cb39-515" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb39-516"><a href="#cb39-516" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-519"><a href="#cb39-519" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb39-520"><a href="#cb39-520" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb39-521"><a href="#cb39-521" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb39-522"><a href="#cb39-522" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb39-523"><a href="#cb39-523" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
