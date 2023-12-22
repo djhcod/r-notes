@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.3.450">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>R语言学习笔记 - 22&nbsp; 细胞聚类（clustering analysis）</title>
+<title>R语言学习笔记 - 23&nbsp; 细胞聚类（clustering analysis）</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,7 +60,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../quarto_foundation/quarto_foundation.html" rel="next">
+<link href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" rel="next">
 <link href="../../single_cell/scRNA-seq_online/06_integration.html" rel="prev">
 <link href="../../images/logo.jpg" rel="icon" type="image/jpeg">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
@@ -100,7 +100,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "enableExperimentalNewNoteButton": true
 }
 </script><script async="" src="https://hypothes.is/embed.js"></script>
-<meta name="twitter:title" content="R语言学习笔记 - 22&nbsp; 细胞聚类（clustering analysis）">
+<meta name="twitter:title" content="R语言学习笔记 - 23&nbsp; 细胞聚类（clustering analysis）">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/images/sc_workflow_2022-01.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -192,7 +192,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -362,20 +362,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
   </div>
 </li>
       </ul>
@@ -392,37 +410,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
@@ -453,23 +471,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#set-up" id="toc-set-up" class="nav-link active" data-scroll-target="#set-up"><span class="header-section-number">22.1</span> Set up</a></li>
+<li><a href="#set-up" id="toc-set-up" class="nav-link active" data-scroll-target="#set-up"><span class="header-section-number">23.1</span> Set up</a></li>
   <li>
-<a href="#%E5%86%B3%E5%AE%9A%E5%90%8E%E7%BB%AD%E5%88%86%E6%9E%90%E7%9A%84%E4%B8%BB%E6%88%90%E5%88%86" id="toc-决定后续分析的主成分" class="nav-link" data-scroll-target="#%E5%86%B3%E5%AE%9A%E5%90%8E%E7%BB%AD%E5%88%86%E6%9E%90%E7%9A%84%E4%B8%BB%E6%88%90%E5%88%86"><span class="header-section-number">22.2</span> 决定后续分析的主成分</a>
+<a href="#%E5%86%B3%E5%AE%9A%E5%90%8E%E7%BB%AD%E5%88%86%E6%9E%90%E7%9A%84%E4%B8%BB%E6%88%90%E5%88%86" id="toc-决定后续分析的主成分" class="nav-link" data-scroll-target="#%E5%86%B3%E5%AE%9A%E5%90%8E%E7%BB%AD%E5%88%86%E6%9E%90%E7%9A%84%E4%B8%BB%E6%88%90%E5%88%86"><span class="header-section-number">23.2</span> 决定后续分析的主成分</a>
   <ul class="collapse">
 <li><a href="#%E9%80%9A%E8%BF%87%E7%83%AD%E5%9B%BE%E5%88%A4%E6%96%AD%E9%9C%80%E8%A6%81%E5%8C%85%E6%8B%AC%E7%9A%84%E4%B8%BB%E6%88%90%E5%88%86" id="toc-通过热图判断需要包括的主成分" class="nav-link" data-scroll-target="#%E9%80%9A%E8%BF%87%E7%83%AD%E5%9B%BE%E5%88%A4%E6%96%AD%E9%9C%80%E8%A6%81%E5%8C%85%E6%8B%AC%E7%9A%84%E4%B8%BB%E6%88%90%E5%88%86">通过热图判断需要包括的主成分</a></li>
   <li><a href="#%E9%80%9A%E8%BF%87%E8%82%98%E5%9B%BEelbow-plot%E5%88%A4%E6%96%AD%E9%9C%80%E8%A6%81%E5%8C%85%E6%8B%AC%E7%9A%84%E4%B8%BB%E6%88%90%E5%88%86" id="toc-通过肘图elbow-plot判断需要包括的主成分" class="nav-link" data-scroll-target="#%E9%80%9A%E8%BF%87%E8%82%98%E5%9B%BEelbow-plot%E5%88%A4%E6%96%AD%E9%9C%80%E8%A6%81%E5%8C%85%E6%8B%AC%E7%9A%84%E4%B8%BB%E6%88%90%E5%88%86">通过肘图（elbow plot）判断需要包括的主成分</a></li>
   </ul>
 </li>
   <li>
-<a href="#%E8%81%9A%E7%B1%BBcluster-the-cells" id="toc-聚类cluster-the-cells" class="nav-link" data-scroll-target="#%E8%81%9A%E7%B1%BBcluster-the-cells"><span class="header-section-number">22.3</span> 聚类（Cluster the cells）</a>
+<a href="#%E8%81%9A%E7%B1%BBcluster-the-cells" id="toc-聚类cluster-the-cells" class="nav-link" data-scroll-target="#%E8%81%9A%E7%B1%BBcluster-the-cells"><span class="header-section-number">23.3</span> 聚类（Cluster the cells）</a>
   <ul class="collapse">
 <li><a href="#find-neighbors" id="toc-find-neighbors" class="nav-link" data-scroll-target="#find-neighbors">Find neighbors</a></li>
   <li><a href="#find-clusters" id="toc-find-clusters" class="nav-link" data-scroll-target="#find-clusters">Find clusters</a></li>
   </ul>
 </li>
   <li>
-<a href="#visualize-clusters-of-cells" id="toc-visualize-clusters-of-cells" class="nav-link" data-scroll-target="#visualize-clusters-of-cells"><span class="header-section-number">22.4</span> Visualize clusters of cells</a>
+<a href="#visualize-clusters-of-cells" id="toc-visualize-clusters-of-cells" class="nav-link" data-scroll-target="#visualize-clusters-of-cells"><span class="header-section-number">23.4</span> Visualize clusters of cells</a>
   <ul class="collapse">
 <li><a href="#%E8%BD%BD%E5%85%A5%E6%A1%88%E4%BE%8B%E6%95%B0%E6%8D%AE" id="toc-载入案例数据" class="nav-link" data-scroll-target="#%E8%BD%BD%E5%85%A5%E6%A1%88%E4%BE%8B%E6%95%B0%E6%8D%AE">载入案例数据</a></li>
   <li><a href="#%E5%86%8D%E6%AC%A1%E6%A3%80%E6%9F%A5%E4%B8%8D%E5%90%8C%E5%88%86%E8%BE%A8%E7%8E%87%E4%B8%8B%E7%9A%84%E7%BB%86%E8%83%9E%E5%88%86%E7%BE%A4%E6%83%85%E5%86%B5" id="toc-再次检查不同分辨率下的细胞分群情况" class="nav-link" data-scroll-target="#%E5%86%8D%E6%AC%A1%E6%A3%80%E6%9F%A5%E4%B8%8D%E5%90%8C%E5%88%86%E8%BE%A8%E7%8E%87%E4%B8%8B%E7%9A%84%E7%BB%86%E8%83%9E%E5%88%86%E7%BE%A4%E6%83%85%E5%86%B5">再次检查不同分辨率下的细胞分群情况</a></li>
@@ -479,9 +497,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">
-<span class="chapter-number">22</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span>
-</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-clustering_analysis" class="quarto-section-identifier"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -536,9 +552,9 @@ Learning Objectives:
 <li>If <strong>not detecting all cell types as separate clusters</strong>, try changing the resolution or the number of PCs used for clustering</li>
 </ul>
 <hr>
-<section id="set-up" class="level2" data-number="22.1"><h2 data-number="22.1" class="anchored" data-anchor-id="set-up">
-<span class="header-section-number">22.1</span> Set up</h2>
-<p>读取上一节（ <a href="06_integration.html"><span>Chapter&nbsp;21</span></a> ）中完成质控和整合的单细胞数据<code>seurat_integrated</code>。</p>
+<section id="set-up" class="level2" data-number="23.1"><h2 data-number="23.1" class="anchored" data-anchor-id="set-up">
+<span class="header-section-number">23.1</span> Set up</h2>
+<p>读取上一节（ <a href="06_integration.html"><span>Chapter&nbsp;22</span></a> ）中完成质控和整合的单细胞数据<code>seurat_integrated</code>。</p>
 <div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-1_d542247d6429a592dec52ce84cca8086">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
 <span><span class="va">seurat_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/scRNA-seq_online/integrated_seurat.rds"</span><span class="op">)</span></span>
@@ -579,8 +595,8 @@ ctrl_AAACATACCAGCTA-1         Low
 ctrl_AAACATACCATGCA-1 Medium high</code></pre>
 </div>
 </div>
-</section><section id="决定后续分析的主成分" class="level2" data-number="22.2"><h2 data-number="22.2" class="anchored" data-anchor-id="决定后续分析的主成分">
-<span class="header-section-number">22.2</span> 决定后续分析的主成分</h2>
+</section><section id="决定后续分析的主成分" class="level2" data-number="23.2"><h2 data-number="23.2" class="anchored" data-anchor-id="决定后续分析的主成分">
+<span class="header-section-number">23.2</span> 决定后续分析的主成分</h2>
 <p>To overcome the extensive technical noise in the expression of any single gene for scRNA-seq data, <strong>Seurat assigns cells to clusters based on their PCA scores derived from the expression of the integrated most variable genes</strong>, with each PC essentially representing a “metagene” that combines information across a correlated gene set. <strong>Determining how many PCs to include in the clustering step is therefore important to ensure that we are capturing the majority of the variation</strong>, or cell types, present in our dataset.</p>
 <p>It is useful to explore the PCs prior to deciding which PCs to include for the downstream clustering analysis.</p>
 <section id="通过热图判断需要包括的主成分" class="level3"><h3 class="anchored" data-anchor-id="通过热图判断需要包括的主成分">通过热图判断需要包括的主成分</h3>
@@ -662,8 +678,8 @@ Why is selection of PCs more important for older methods?
 <p>In theory, with <code>SCTransform</code>, <strong>the more PCs we choose the more variation is accounted for when performing the clustering</strong>, but it takes a lot longer to perform the clustering. Therefore for this analysis, we will use the <strong>first 40 PCs</strong> to generate the clusters.</p>
 </div>
 </div>
-</section></section><section id="聚类cluster-the-cells" class="level2" data-number="22.3"><h2 data-number="22.3" class="anchored" data-anchor-id="聚类cluster-the-cells">
-<span class="header-section-number">22.3</span> 聚类（Cluster the cells）</h2>
+</section></section><section id="聚类cluster-the-cells" class="level2" data-number="23.3"><h2 data-number="23.3" class="anchored" data-anchor-id="聚类cluster-the-cells">
+<span class="header-section-number">23.3</span> 聚类（Cluster the cells）</h2>
 <p>Seurat uses a graph-based clustering approach using a K-nearest neighbor approach, and then attempts to partition this graph into highly interconnected ‘quasi-cliques’ or ‘communities’ （ <a href="../seurat/seurat_tutorial.html#sec-clustering_seurat"><span>Section&nbsp;7.7</span></a> ）. A nice in-depth description of clustering methods is provided in the <a href="https://biocellgen-public.svi.edu.au/mig_2019_scrnaseq-workshop/clustering-and-cell-annotation.html">SVI Bioinformatics and Cellular Genomics Lab course</a>.</p>
 <section id="find-neighbors" class="level3"><h3 class="anchored" data-anchor-id="find-neighbors">Find neighbors</h3>
 <p>The first step is to <strong>construct a K-nearest neighbor (KNN) graph</strong> based on the euclidean distance in PCA space.</p>
@@ -737,8 +753,8 @@ Number of communities: 29
 Elapsed time: 4 seconds</code></pre>
 </div>
 </div>
-</section></section><section id="visualize-clusters-of-cells" class="level2" data-number="22.4"><h2 data-number="22.4" class="anchored" data-anchor-id="visualize-clusters-of-cells">
-<span class="header-section-number">22.4</span> Visualize clusters of cells</h2>
+</section></section><section id="visualize-clusters-of-cells" class="level2" data-number="23.4"><h2 data-number="23.4" class="anchored" data-anchor-id="visualize-clusters-of-cells">
+<span class="header-section-number">23.4</span> Visualize clusters of cells</h2>
 <p>To visualize the cell clusters, there are a few different dimensionality reduction techniques that can be helpful. The most popular methods include <a href="https://kb.10xgenomics.com/hc/en-us/articles/217265066-What-is-t-Distributed-Stochastic-Neighbor-Embedding-t-SNE-">t-distributed stochastic neighbor embedding (t-SNE)</a> and <a href="https://umap-learn.readthedocs.io/en/latest/index.html">Uniform Manifold Approximation and Projection (UMAP)</a> techniques.</p>
 <p>Both methods aim to place cells with similar local neighborhoods in high-dimensional space together in low-dimensional space. These methods will require you to input number of PCA dimentions to use for the visualization, we suggest using the same number of PCs as input to the clustering analysis. Here, we will proceed with the <a href="https://umap-learn.readthedocs.io/en/latest/how_umap_works.html">UMAP method</a> for visualizing the clusters.</p>
 <p>We can only visualize the results of one resolution setting at a time. If we look at the metadata of our Seurat object(<code>seurat_integrated@meta.data</code>), you should observe a separate column for each of the different resolutions calculated.</p>
@@ -784,10 +800,10 @@ ctrl_AAACATACCAGCTA-1              20
 ctrl_AAACATACCATGCA-1              21</code></pre>
 </div>
 </div>
-<p>To <strong>choose a resolution to start with</strong>, we often pick something in the middle of the range like 0.6 or 0.8. We will start with a resolution of 0.8 by assigning the identity of the clusters using the <code><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html">Idents()</a></code> function.</p>
+<p>To <strong>choose a resolution to start with</strong>, we often pick something in the middle of the range like 0.6 or 0.8. We will start with a resolution of 0.8 by assigning the identity of the clusters using the <code><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html">Idents()</a></code> function.</p>
 <div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-8_b49086a6a8f98b441734d561351349d1">
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Assign identity of clusters</span></span>
-<span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html">Idents</a></span><span class="op">(</span><span class="va">seurat_integrated</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"SCT_snn_res.0.8"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html">Idents</a></span><span class="op">(</span><span class="va">seurat_integrated</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"SCT_snn_res.0.8"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, we can plot the UMAP to look at how cells cluster together at a resolution of 0.8:</p>
 <div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-9_f5f0c233646fa9ace24c6741b268e6c1">
@@ -810,7 +826,7 @@ ctrl_AAACATACCATGCA-1              21</code></pre>
 <p>It can be useful to <strong>explore other resolutions as well</strong>. It will give you a quick idea about how the clusters would change based on the resolution parameter. For example, let’s switch to a resolution of 0.4:</p>
 <div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-11_e1e5462b61dfb8e8e392397ad1f75d49">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Assign identity of clusters</span></span>
-<span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html">Idents</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">seurat_integrated</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"SCT_snn_res.0.4"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html">Idents</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">seurat_integrated</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"SCT_snn_res.0.4"</span></span>
 <span></span>
 <span><span class="co"># Plot the UMAP</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">seurat_integrated</span>,</span>
@@ -887,7 +903,7 @@ ctrl_AAACATACCATGCA-1                     13              13</code></pre>
 </div>
 <hr></section><section id="再次检查不同分辨率下的细胞分群情况" class="level3"><h3 class="anchored" data-anchor-id="再次检查不同分辨率下的细胞分群情况">再次检查不同分辨率下的细胞分群情况</h3>
 <p>After loading <code>seurat_integrated.RData.bz2</code>, we now re-check the object clusters with different resolution (0.4, 0.6, 0.8, 1.0, 1.4).</p>
-<div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-13_6a0bc90c407384344e80e5ea94e03a25">
+<div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-13_c762bb37c33cdb24efb12324b06a1a6e">
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 查看不同分辨率下的细胞分群情况</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">seurat_integrated</span><span class="op">@</span><span class="va">meta.data</span><span class="op">[</span> ,<span class="fu"><a href="https://rdrr.io/r/base/grep.html">grep</a></span><span class="op">(</span><span class="st">"integrated_snn_res."</span>, </span>
 <span>                                         <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">seurat_integrated</span><span class="op">@</span><span class="va">meta.data</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>, </span>
@@ -905,7 +921,7 @@ ctrl_AAACATACCATGCA-1                     13              13</code></pre>
 <span>            <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">seurat_integrated</span><span class="op">@</span><span class="va">meta.data</span><span class="op">)</span>, </span>
 <span>            value <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>       <span class="kw">function</span><span class="op">(</span><span class="va">res</span><span class="op">)</span> <span class="op">{</span></span>
-<span>         <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html">Idents</a></span><span class="op">(</span><span class="va">seurat_integrated</span><span class="op">)</span> <span class="op">&lt;-</span>  <span class="va">res</span></span>
+<span>         <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html">Idents</a></span><span class="op">(</span><span class="va">seurat_integrated</span><span class="op">)</span> <span class="op">&lt;-</span>  <span class="va">res</span></span>
 <span>         <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">seurat_integrated</span>,</span>
 <span>                 reduction <span class="op">=</span> <span class="st">"umap"</span>,</span>
 <span>                 label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -920,7 +936,7 @@ ctrl_AAACATACCATGCA-1                     13              13</code></pre>
 <p>We will now continue with the 0.8 resolution to check the quality control metrics and known markers for the anticipated cell types.</p>
 <div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-15_d652b645ca5d6c24d00c9ac5e603993d">
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Assign identity of clusters</span></span>
-<span><span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/Idents.html">Idents</a></span><span class="op">(</span><span class="va">seurat_integrated</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"integrated_snn_res.0.8"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html">Idents</a></span><span class="op">(</span><span class="va">seurat_integrated</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"integrated_snn_res.0.8"</span></span>
 <span></span>
 <span><span class="co"># Plot the UMAP</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">seurat_integrated</span>,</span>
@@ -1430,16 +1446,16 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script><script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../quarto_foundation/quarto_foundation.html" class="pagination-link">
-        <span class="nav-page-text">Quarto基础</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb28" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 细胞聚类（clustering analysis）</span></span>
+<div class="sourceCode" id="cb28" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 细胞聚类（clustering analysis） {#sec-clustering_analysis}</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">###### Learning Objectives:</span></span>
@@ -1657,68 +1673,67 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb28-240"><a href="#cb28-240" aria-hidden="true" tabindex="-1"></a>After loading <span class="in">`seurat_integrated.RData.bz2`</span>, we now re-check the object clusters with different resolution (0.4, 0.6, 0.8, 1.0, 1.4).</span>
 <span id="cb28-241"><a href="#cb28-241" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-244"><a href="#cb28-244" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-245"><a href="#cb28-245" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
-<span id="cb28-246"><a href="#cb28-246" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看不同分辨率下的细胞分群情况</span></span>
-<span id="cb28-247"><a href="#cb28-247" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(seurat_integrated<span class="sc">@</span>meta.data[ ,<span class="fu">grep</span>(<span class="st">"integrated_snn_res."</span>, </span>
-<span id="cb28-248"><a href="#cb28-248" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">colnames</span>(seurat_integrated<span class="sc">@</span>meta.data))], </span>
-<span id="cb28-249"><a href="#cb28-249" aria-hidden="true" tabindex="-1"></a>      <span class="dv">2</span>, </span>
-<span id="cb28-250"><a href="#cb28-250" aria-hidden="true" tabindex="-1"></a>      table)</span>
-<span id="cb28-251"><a href="#cb28-251" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-252"><a href="#cb28-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-255"><a href="#cb28-255" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-256"><a href="#cb28-256" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb28-257"><a href="#cb28-257" aria-hidden="true" tabindex="-1"></a><span class="co"># 批量绘制不同分辨率下的UMAP图</span></span>
-<span id="cb28-258"><a href="#cb28-258" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb28-259"><a href="#cb28-259" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb28-260"><a href="#cb28-260" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(<span class="fu">grep</span>(<span class="st">"integrated_snn_res."</span>,</span>
-<span id="cb28-261"><a href="#cb28-261" aria-hidden="true" tabindex="-1"></a>            <span class="fu">colnames</span>(seurat_integrated<span class="sc">@</span>meta.data), </span>
-<span id="cb28-262"><a href="#cb28-262" aria-hidden="true" tabindex="-1"></a>            <span class="at">value =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb28-263"><a href="#cb28-263" aria-hidden="true" tabindex="-1"></a>       <span class="cf">function</span>(res) {</span>
-<span id="cb28-264"><a href="#cb28-264" aria-hidden="true" tabindex="-1"></a>         <span class="fu">Idents</span>(seurat_integrated) <span class="ot">&lt;-</span>  res</span>
-<span id="cb28-265"><a href="#cb28-265" aria-hidden="true" tabindex="-1"></a>         <span class="fu">DimPlot</span>(seurat_integrated,</span>
-<span id="cb28-266"><a href="#cb28-266" aria-hidden="true" tabindex="-1"></a>                 <span class="at">reduction =</span> <span class="st">"umap"</span>,</span>
-<span id="cb28-267"><a href="#cb28-267" aria-hidden="true" tabindex="-1"></a>                 <span class="at">label =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb28-268"><a href="#cb28-268" aria-hidden="true" tabindex="-1"></a>                 <span class="at">label.size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb28-269"><a href="#cb28-269" aria-hidden="true" tabindex="-1"></a>           <span class="fu">ggtitle</span>(res) <span class="sc">+</span></span>
-<span id="cb28-270"><a href="#cb28-270" aria-hidden="true" tabindex="-1"></a>           <span class="fu">theme_bw</span>()</span>
-<span id="cb28-271"><a href="#cb28-271" aria-hidden="true" tabindex="-1"></a>         }) <span class="sc">|&gt;</span></span>
-<span id="cb28-272"><a href="#cb28-272" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wrap_plots</span>(<span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb28-273"><a href="#cb28-273" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-274"><a href="#cb28-274" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-275"><a href="#cb28-275" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/umap_at_dif_res.png)</span></span>
-<span id="cb28-276"><a href="#cb28-276" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-277"><a href="#cb28-277" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb28-278"><a href="#cb28-278" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-279"><a href="#cb28-279" aria-hidden="true" tabindex="-1"></a>We will now continue with the 0.8 resolution to check the quality control metrics and known markers for the anticipated cell types.</span>
-<span id="cb28-280"><a href="#cb28-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-283"><a href="#cb28-283" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-284"><a href="#cb28-284" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
-<span id="cb28-285"><a href="#cb28-285" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign identity of clusters</span></span>
-<span id="cb28-286"><a href="#cb28-286" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(seurat_integrated) <span class="ot">&lt;-</span> <span class="st">"integrated_snn_res.0.8"</span></span>
-<span id="cb28-287"><a href="#cb28-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-288"><a href="#cb28-288" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP</span></span>
-<span id="cb28-289"><a href="#cb28-289" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_integrated,</span>
-<span id="cb28-290"><a href="#cb28-290" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap"</span>,</span>
-<span id="cb28-291"><a href="#cb28-291" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb28-292"><a href="#cb28-292" aria-hidden="true" tabindex="-1"></a>        <span class="at">label.size =</span> <span class="dv">6</span>)</span>
-<span id="cb28-293"><a href="#cb28-293" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-294"><a href="#cb28-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-295"><a href="#cb28-295" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/umap_at_res0.8.png)</span>{width="458"}</span>
-<span id="cb28-296"><a href="#cb28-296" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-299"><a href="#cb28-299" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-300"><a href="#cb28-300" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(seurat_integrated, <span class="at">file =</span> <span class="st">"output/scRNA-seq_online/seurat_clustered.rds"</span>)</span>
-<span id="cb28-301"><a href="#cb28-301" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-302"><a href="#cb28-302" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-303"><a href="#cb28-303" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb28-304"><a href="#cb28-304" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-305"><a href="#cb28-305" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb28-306"><a href="#cb28-306" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
-<span id="cb28-307"><a href="#cb28-307" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-310"><a href="#cb28-310" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-311"><a href="#cb28-311" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb28-312"><a href="#cb28-312" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb28-313"><a href="#cb28-313" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-314"><a href="#cb28-314" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb28-245"><a href="#cb28-245" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看不同分辨率下的细胞分群情况</span></span>
+<span id="cb28-246"><a href="#cb28-246" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(seurat_integrated<span class="sc">@</span>meta.data[ ,<span class="fu">grep</span>(<span class="st">"integrated_snn_res."</span>, </span>
+<span id="cb28-247"><a href="#cb28-247" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">colnames</span>(seurat_integrated<span class="sc">@</span>meta.data))], </span>
+<span id="cb28-248"><a href="#cb28-248" aria-hidden="true" tabindex="-1"></a>      <span class="dv">2</span>, </span>
+<span id="cb28-249"><a href="#cb28-249" aria-hidden="true" tabindex="-1"></a>      table)</span>
+<span id="cb28-250"><a href="#cb28-250" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-251"><a href="#cb28-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-254"><a href="#cb28-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-255"><a href="#cb28-255" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb28-256"><a href="#cb28-256" aria-hidden="true" tabindex="-1"></a><span class="co"># 批量绘制不同分辨率下的UMAP图</span></span>
+<span id="cb28-257"><a href="#cb28-257" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb28-258"><a href="#cb28-258" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb28-259"><a href="#cb28-259" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(<span class="fu">grep</span>(<span class="st">"integrated_snn_res."</span>,</span>
+<span id="cb28-260"><a href="#cb28-260" aria-hidden="true" tabindex="-1"></a>            <span class="fu">colnames</span>(seurat_integrated<span class="sc">@</span>meta.data), </span>
+<span id="cb28-261"><a href="#cb28-261" aria-hidden="true" tabindex="-1"></a>            <span class="at">value =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb28-262"><a href="#cb28-262" aria-hidden="true" tabindex="-1"></a>       <span class="cf">function</span>(res) {</span>
+<span id="cb28-263"><a href="#cb28-263" aria-hidden="true" tabindex="-1"></a>         <span class="fu">Idents</span>(seurat_integrated) <span class="ot">&lt;-</span>  res</span>
+<span id="cb28-264"><a href="#cb28-264" aria-hidden="true" tabindex="-1"></a>         <span class="fu">DimPlot</span>(seurat_integrated,</span>
+<span id="cb28-265"><a href="#cb28-265" aria-hidden="true" tabindex="-1"></a>                 <span class="at">reduction =</span> <span class="st">"umap"</span>,</span>
+<span id="cb28-266"><a href="#cb28-266" aria-hidden="true" tabindex="-1"></a>                 <span class="at">label =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb28-267"><a href="#cb28-267" aria-hidden="true" tabindex="-1"></a>                 <span class="at">label.size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb28-268"><a href="#cb28-268" aria-hidden="true" tabindex="-1"></a>           <span class="fu">ggtitle</span>(res) <span class="sc">+</span></span>
+<span id="cb28-269"><a href="#cb28-269" aria-hidden="true" tabindex="-1"></a>           <span class="fu">theme_bw</span>()</span>
+<span id="cb28-270"><a href="#cb28-270" aria-hidden="true" tabindex="-1"></a>         }) <span class="sc">|&gt;</span></span>
+<span id="cb28-271"><a href="#cb28-271" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wrap_plots</span>(<span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb28-272"><a href="#cb28-272" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-273"><a href="#cb28-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-274"><a href="#cb28-274" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/umap_at_dif_res.png)</span></span>
+<span id="cb28-275"><a href="#cb28-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-276"><a href="#cb28-276" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb28-277"><a href="#cb28-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-278"><a href="#cb28-278" aria-hidden="true" tabindex="-1"></a>We will now continue with the 0.8 resolution to check the quality control metrics and known markers for the anticipated cell types.</span>
+<span id="cb28-279"><a href="#cb28-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-282"><a href="#cb28-282" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-283"><a href="#cb28-283" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb28-284"><a href="#cb28-284" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign identity of clusters</span></span>
+<span id="cb28-285"><a href="#cb28-285" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(seurat_integrated) <span class="ot">&lt;-</span> <span class="st">"integrated_snn_res.0.8"</span></span>
+<span id="cb28-286"><a href="#cb28-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-287"><a href="#cb28-287" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP</span></span>
+<span id="cb28-288"><a href="#cb28-288" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_integrated,</span>
+<span id="cb28-289"><a href="#cb28-289" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap"</span>,</span>
+<span id="cb28-290"><a href="#cb28-290" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb28-291"><a href="#cb28-291" aria-hidden="true" tabindex="-1"></a>        <span class="at">label.size =</span> <span class="dv">6</span>)</span>
+<span id="cb28-292"><a href="#cb28-292" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-293"><a href="#cb28-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-294"><a href="#cb28-294" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/umap_at_res0.8.png)</span>{width="458"}</span>
+<span id="cb28-295"><a href="#cb28-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-298"><a href="#cb28-298" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-299"><a href="#cb28-299" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(seurat_integrated, <span class="at">file =</span> <span class="st">"output/scRNA-seq_online/seurat_clustered.rds"</span>)</span>
+<span id="cb28-300"><a href="#cb28-300" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-301"><a href="#cb28-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-302"><a href="#cb28-302" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb28-303"><a href="#cb28-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-304"><a href="#cb28-304" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb28-305"><a href="#cb28-305" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb28-306"><a href="#cb28-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-309"><a href="#cb28-309" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-310"><a href="#cb28-310" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb28-311"><a href="#cb28-311" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb28-312"><a href="#cb28-312" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-313"><a href="#cb28-313" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

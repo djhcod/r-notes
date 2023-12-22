@@ -164,6 +164,10 @@ seurat_integrated <- IntegrateLayers(object = split_seurat,
                                      orig.reduction = "pca",
                                      new.reduction = "integrated.cca", #  整合后新的降维数据的名称
                                      verbose = FALSE)
+
+# 整合后重新合并RNA layer
+seurat_integrated[["RNA"]] <- JoinLayers(seurat_integrated[["RNA"]])
+
 # 查看整合后的降维信息
 names(seurat_integrated@reductions)
 ```
@@ -189,7 +193,6 @@ set.seed(123456)
 seurat_integrated <- RunUMAP(seurat_integrated, 
                              dims = 1:40,
                              reduction = "integrated.cca") # 更改降维来源为整合后的"integrated.cca"
-names(seurat_integrated@reductions)
 
 # Plot UMAP                             
 p3 <- DimPlot(seurat_integrated, reduction = "umap", group.by = "sample")
