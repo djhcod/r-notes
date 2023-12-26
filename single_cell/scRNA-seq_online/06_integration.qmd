@@ -135,7 +135,7 @@ The different steps applied are as follows:
     -   The cell's closest neighbor in the other condition is identified based on gene expression values - its 'best buddy'.
     -   The reciprocal analysis is performed, and if the two cells are 'best buddies' in both directions, then those cells will be marked as **anchors** to 'anchor' the two datasets together.
 
-    > "The difference in expression values between cells in an MNN pair provides an estimate of the batch effect, which is made more precise by averaging across many such pairs. A correction vector is obtained and applied to the expression values to perform batch correction." [@stuart2019a].
+    > "The difference in expression values between cells in an MNN pair provides an estimate of the batch effect, which is made more precise by averaging across many such pairs. A correction vector is obtained and applied to the expression values to perform batch correction." ([Stuart et al. 2019](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-stuart2019a))
 
 3.  **Filter anchors** to remove incorrect anchors:
 
@@ -211,13 +211,13 @@ saveRDS(seurat_integrated, "output/scRNA-seq_online/integrated_seurat.rds")
 
 ## Complex Integration Tasks
 
-In the section above, we've presented the `Seurat` integration workflow, which uses canonical correlation analysis (CCA) and multiple nearest neighbors (MNN) to find "anchors" and integrate across samples, conditions, modalities, etc. While the `Seurat` integration approach is widely used and several benchmarking studies support its great performance in many cases, it is important to recognize that **alternative integration algorithms exist and may work better for more complex integration tasks** (see [@luecken2021] for a comprehensive review).
+In the section above, we've presented the `Seurat` integration workflow, which uses canonical correlation analysis (CCA) and multiple nearest neighbors (MNN) to find "anchors" and integrate across samples, conditions, modalities, etc. While the `Seurat` integration approach is widely used and several benchmarking studies support its great performance in many cases, it is important to recognize that **alternative integration algorithms exist and may work better for more complex integration tasks** (see [Luecken et al. 2021](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-luecken2021) for a comprehensive review).
 
 Not all integration algorithms rely on the same methodology, and they do not always provide the same type of corrected output (embeddings, count matrix...). Their performance is also affected by preliminary data processing steps, including which normalization method was used and how highly variable genes (HVGs) were determined. All those considerations are important to keep in mind when selecting a data integration approach for your study.
 
 **What do we mean by a "complex" integration task?**
 
-In their benchmarking study [@luecken2021] compared the performance of different scRNA-seq integration tools when confronted to different "complex" tasks. The "complexity" of integrating a dataset may relate to the number of samples (perhaps generated using different protocols) but also to the biological question the study seeks to address (e.g. comparing cell types across tissues, species...). In these contexts, you may **need to integrate across multiple confounding factors before you can start exploring the biology of your system.**
+In their benchmarking study ([Luecken et al. 2021](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-luecken2021)) compared the performance of different scRNA-seq integration tools when confronted to different "complex" tasks. The "complexity" of integrating a dataset may relate to the number of samples (perhaps generated using different protocols) but also to the biological question the study seeks to address (e.g. comparing cell types across tissues, species...). In these contexts, you may **need to integrate across multiple confounding factors before you can start exploring the biology of your system.**
 
 ![](images/complex_integration.png){width="597"}
 
@@ -234,9 +234,9 @@ Not all tools may perform as well on every task, and complex datasets may requir
 
 ### Harmonizing as a method of integration
 
-Harmony [@korsunsky2019] was devleoped in 2019, and is an example of **a tool that can work with complex integration tasks**. It is available as an [GitHub](https://github.com/immunogenomics/harmony) and [CRAN](https://cran.r-project.org/web/packages/harmony/index.html), and it has functions for standalone and Seurat pipeline analyses. It has been shown to perform incredibly well from recent benchmarking studies [@tran2020].
+Harmony ([Korsunsky et al. 2019](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019)) was devleoped in 2019, and is an example of **a tool that can work with complex integration tasks**. It is available as an [GitHub](#0) and [CRAN](#0), and it has functions for standalone and Seurat pipeline analyses. It has been shown to perform incredibly well from recent benchmarking studies ([Tran et al. 2020](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020)).
 
-在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用`Harmony`包（available on [GitHub](https://github.com/immunogenomics/harmony) and [CRAN](https://cran.r-project.org/web/packages/harmony/index.html)），详见[该教程](https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html)。同时，Seurat V5中的`IntegrateLayers`函数集成了Harmony整合算法，可以直接调用，详见：@sec-sc_integration 。Compared to other algorithms, `Harmony` notably presents the following advantages ([@korsunsky2019], [@tran2020]):
+在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用`Harmony`包（available on [GitHub](https://github.com/immunogenomics/harmony) and [CRAN](https://cran.r-project.org/web/packages/harmony/index.html)），详见[该教程](https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html)。同时，Seurat V5中的`IntegrateLayers`函数集成了Harmony整合算法，可以直接调用，详见：@sec-sc_integration 。Compared to other algorithms, `Harmony` notably presents the following advantages ([Korsunsky et al. 2019](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019), [Tran et al. 2020](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020)):
 
 1.  Possibility to integrate data across several variables (for example, by experimental batch and by condition)
 

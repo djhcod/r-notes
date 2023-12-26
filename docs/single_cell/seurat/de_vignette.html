@@ -542,7 +542,7 @@ div.csl-indent {
 <section id="sec-degs_within_the_same_cell_type_between_different_sample_types" class="level2" data-number="14.1"><h2 data-number="14.1" class="anchored" data-anchor-id="sec-degs_within_the_same_cell_type_between_different_sample_types">
 <span class="header-section-number">14.1</span> 直接通过<code>FindMarkers</code>寻找差异基因</h2>
 <section id="数据导入" class="level3"><h3 class="anchored" data-anchor-id="数据导入">数据导入</h3>
-<p>导入我们在 <a href="#sec-Single-cell_data_integration"><span class="quarto-unresolved-ref">sec-Single-cell_data_integration</span></a> 中完成<code>SCTransform</code>和整合的单细胞数据。这里的meta.data已经提前注释好了细胞类型（储存在”seurat_annotations”列中）。</p>
+<p>导入我们在 <a href="integration.html"><span>Chapter&nbsp;11</span></a> 中完成<code>SCTransform</code>和整合的单细胞数据。这里的meta.data已经提前注释好了细胞类型（储存在”seurat_annotations”列中）。</p>
 <div class="cell" data-hash="de_vignette_cache/html/unnamed-chunk-1_b3bbb11cbc1157d12ef5aacc5888428e">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
 <span><span class="va">ifnb_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/seurat_official/ifnb_integrated.rds"</span><span class="op">)</span></span>
@@ -644,7 +644,7 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Please note that p-values obtained from this analysis should be interpreted with caution, as&nbsp;<strong>these tests treat each cell as an independent replicate, and ignore inherent correlations between cells originating from the same sample</strong>. Such analyses have been shown to find a large number of <strong>false positive associations</strong>, as has been demonstrated by&nbsp;<span class="citation" data-cites="squair2021">(<a href="#ref-squair2021" role="doc-biblioref">Squair et al. 2021</a>)</span>,&nbsp;<span class="citation" data-cites="zimmerman2021">(<a href="#ref-zimmerman2021" role="doc-biblioref">Zimmerman, Espeland, and Langefeld 2021</a>)</span>,&nbsp;<span class="citation" data-cites="junttila2022">(<a href="#ref-junttila2022" role="doc-biblioref">Junttila, Smolander, and Elo 2022</a>)</span>, and others. As discussed&nbsp;here&nbsp;<span class="citation" data-cites="crowell2020a">(<a href="#ref-crowell2020a" role="doc-biblioref">Crowell et al. 2020</a>)</span>, DE tests across multiple conditions should expressly utilize multiple samples/replicates, and can be performed after aggregating (‘pseudobulking’) cells from the same sample and subpopulation together. Below, we show how <strong>pseudobulking</strong> can be used to account for such within-sample correlation.</p>
+<p>Please note that p-values obtained from this analysis should be interpreted with caution, as&nbsp;<strong>these tests treat each cell as an independent replicate, and ignore inherent correlations between cells originating from the same sample</strong>. Such analyses have been shown to find a large number of <strong>false positive associations</strong>, as has been demonstrated by&nbsp;<span class="citation" data-cites="squair2021">(<a href="../../references.html#ref-squair2021" role="doc-biblioref">Squair et al. 2021</a>)</span>,&nbsp;<span class="citation" data-cites="zimmerman2021">(<a href="../../references.html#ref-zimmerman2021" role="doc-biblioref">Zimmerman, Espeland, and Langefeld 2021</a>)</span>,&nbsp;<span class="citation" data-cites="junttila2022">(<a href="../../references.html#ref-junttila2022" role="doc-biblioref">Junttila, Smolander, and Elo 2022</a>)</span>, and others. As discussed&nbsp;here&nbsp;<span class="citation" data-cites="crowell2020a">(<a href="../../references.html#ref-crowell2020a" role="doc-biblioref">Crowell et al. 2020</a>)</span>, DE tests across multiple conditions should expressly utilize multiple samples/replicates, and can be performed after aggregating (‘pseudobulking’) cells from the same sample and subpopulation together. Below, we show how <strong>pseudobulking</strong> can be used to account for such within-sample correlation.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -716,7 +716,7 @@ Warning
 <span class="header-section-number">14.2</span> pseudobulking后的差异分析</h2>
 <p>这一节为了演示pseudobulking，采用的仍然是“ifnb”数据集，仍然包括了“ctrl”和“stim”两个conditions，但是每个条件下都有多个重复，即多个来自不同患者的样本。同时，为了和<a href="https://satijalab.org/seurat/articles/de_vignette">Seurat官方教程</a>一致，采用了<code>NormalizeData</code>对数据进行标准化。</p>
 <section id="数据读取和预处理" class="level3"><h3 class="anchored" data-anchor-id="数据读取和预处理">数据读取和预处理</h3>
-<p>For demonstration purposes, we will be using the interferon-beta stimulated human PBMCs dataset <span class="citation" data-cites="kang2017">(<a href="#ref-kang2017" role="doc-biblioref">Kang et al. 2017</a>)</span> that is available via the&nbsp;<code>SeuratData</code>&nbsp;package.</p>
+<p>For demonstration purposes, we will be using the interferon-beta stimulated human PBMCs dataset <span class="citation" data-cites="kang2017">(<a href="../../references.html#ref-kang2017" role="doc-biblioref">Kang et al. 2017</a>)</span> that is available via the&nbsp;<code>SeuratData</code>&nbsp;package.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -983,7 +983,7 @@ CTRL_SNG-101_CD8 T                     CD8 T</code></pre>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">"DESeq2"</span>)</span>
 <span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>注意，如果是用FindMarkers来寻找细胞类型的marker基因，则一般采用默认的Wilcoxon Rank Sum Test方法，这时需要调用的是<a href="https://github.com/immunogenomics/presto"><code>presto</code></a> 包（见 <a href="#sec-findmarkers_function"><span class="quarto-unresolved-ref">sec-findmarkers_function</span></a> ）。</p>
+<p>注意，如果是用FindMarkers来寻找细胞类型的marker基因，则一般采用默认的Wilcoxon Rank Sum Test方法，这时需要调用的是<a href="https://github.com/immunogenomics/presto"><code>presto</code></a> 包（见 <a href="marker_gene_identification.html#sec-findmarkers_function"><span>Section&nbsp;13.2</span></a> ）。</p>
 </div>
 </div>
 <div class="cell" data-hash="de_vignette_cache/html/unnamed-chunk-16_c5b315f98fe2b63b6b3d1a6e9f3ef6cc">
@@ -1276,7 +1276,7 @@ loaded via a namespace (and not attached):
 
 <!-- -->
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-crowell2020a" class="csl-entry" role="listitem">
 Crowell, Helena L., Charlotte Soneson, Pierre-Luc Germain, Daniela Calini, Ludovic Collin, Catarina Raposo, Dheeraj Malhotra, and Mark D. Robinson. 2020. <span>“Muscat Detects Subpopulation-Specific State Transitions from Multi-Sample Multi-Condition Single-Cell Transcriptomics Data.”</span> <em>Nature Communications</em> 11 (1). <a href="https://doi.org/10.1038/s41467-020-19894-4">https://doi.org/10.1038/s41467-020-19894-4</a>.
 </div>

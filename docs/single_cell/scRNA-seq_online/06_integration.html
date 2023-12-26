@@ -51,26 +51,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/quarto-nav/headroom.min.js"></script>
@@ -574,7 +555,7 @@ Learning Objectives:
 <span class="header-section-number">23.1</span> 不进行整合时检验细胞分群情况</h2>
 <p>Generally, we always look at our clustering <strong>without integration</strong> before deciding whether we need to perform any alignment. <strong>Do not just always perform integration because you think there might be differences - explore the data.</strong> If we had performed the normalization on both conditions together in a Seurat object and visualized the similarity between cells, we would have seen condition-specific clustering.</p>
 <section id="数据导入" class="level3"><h3 class="anchored" data-anchor-id="数据导入">数据导入</h3>
-<p>We use the <code>split_seurat</code> object from the previous lesson ( <a href="#sec-normalization-and-regressing-out-unwanted-variation"><span class="quarto-unresolved-ref">sec-normalization-and-regressing-out-unwanted-variation</span></a> ).</p>
+<p>We use the <code>split_seurat</code> object from the previous lesson ( <a href="06_SC_SCT_normalization.html"><span>Chapter&nbsp;22</span></a> ).</p>
 <div class="cell" data-hash="06_integration_cache/html/unnamed-chunk-1_cbaa5da497e5a9910aa358babc831889">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
 <span><span class="va">split_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/scRNA-seq_online/split_seurat.rds"</span><span class="op">)</span></span>
@@ -659,7 +640,7 @@ Top 10 variable features:
 <p>We want to identify <strong>cell types which are present in all samples/conditions/modalities</strong> within our dataset, and therefore would like to observe a representation of cells from both samples/conditions/modalities in every cluster. This will enable more interpretable results downstream (i.e.&nbsp;DE analysis, ligand-receptor analysis, differential abundance analysis…).</p>
 </div>
 </div>
-<p>In this lesson, we will cover the integration of our samples across conditions, which is adapted from <a href="#sec-Single-cell_data_integration"><span class="quarto-unresolved-ref">sec-Single-cell_data_integration</span></a> .</p>
+<p>In this lesson, we will cover the integration of our samples across conditions, which is adapted from <a href="../seurat/integration.html"><span>Chapter&nbsp;11</span></a> .</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -670,7 +651,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>在此前的 <a href="#sec-sctransform"><span class="quarto-unresolved-ref">sec-sctransform</span></a> 中我们学习了how to run through the workflow from normalization to clustering without integration. Other steps in the workflow remain fairly similar, but the <strong>samples would not necessarily be split</strong> in the beginning and integration would not be performed.</p>
+<p>在此前的 <a href="../seurat/sctransform.html"><span>Chapter&nbsp;9</span></a> 中我们学习了how to run through the workflow from normalization to clustering without integration. Other steps in the workflow remain fairly similar, but the <strong>samples would not necessarily be split</strong> in the beginning and integration would not be performed.</p>
 <p>It can help to first run conditions individually if unsure what clusters to expect or expecting some different cell types between conditions (e.g.&nbsp;tumor and control samples), then run them together to see whether there are condition-specific clusters for cell types present in both conditions. Oftentimes, when clustering cells from multiple conditions there are condition-specific clusters and integration can help ensure the same cell types cluster together.</p>
 </div>
 </div>
@@ -730,7 +711,7 @@ Note
 <li>The reciprocal analysis is performed, and if the two cells are ‘best buddies’ in both directions, then those cells will be marked as <strong>anchors</strong> to ‘anchor’ the two datasets together.</li>
 </ul>
 <blockquote class="blockquote">
-<p>“The difference in expression values between cells in an MNN pair provides an estimate of the batch effect, which is made more precise by averaging across many such pairs. A correction vector is obtained and applied to the expression values to perform batch correction.” <span class="citation" data-cites="stuart2019a">(<a href="#ref-stuart2019a" role="doc-biblioref">Stuart et al. 2019</a>)</span>.</p>
+<p>“The difference in expression values between cells in an MNN pair provides an estimate of the batch effect, which is made more precise by averaging across many such pairs. A correction vector is obtained and applied to the expression values to perform batch correction.” (<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-stuart2019a">Stuart et al.&nbsp;2019</a>)</p>
 </blockquote>
 </li>
 <li>
@@ -790,7 +771,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>如何调用Seurat嵌入的其他整合算法进行整合，参考：<a href="#sec-Integrated_analysis_of_seurat-v5"><span class="quarto-unresolved-ref">sec-Integrated_analysis_of_seurat-v5</span></a> 。</p>
+<p>如何调用Seurat嵌入的其他整合算法进行整合，参考：<a href="../seurat/integrative_analysis_in_seurat_v5.html"><span>Chapter&nbsp;12</span></a> 。</p>
 </div>
 </div>
 </section></section><section id="整合后检验细胞分群情况" class="level2" data-number="23.3"><h2 data-number="23.3" class="anchored" data-anchor-id="整合后检验细胞分群情况">
@@ -826,10 +807,10 @@ Tip
 </div>
 </section></section><section id="complex-integration-tasks" class="level2" data-number="23.4"><h2 data-number="23.4" class="anchored" data-anchor-id="complex-integration-tasks">
 <span class="header-section-number">23.4</span> Complex Integration Tasks</h2>
-<p>In the section above, we’ve presented the <code>Seurat</code> integration workflow, which uses canonical correlation analysis (CCA) and multiple nearest neighbors (MNN) to find “anchors” and integrate across samples, conditions, modalities, etc. While the <code>Seurat</code> integration approach is widely used and several benchmarking studies support its great performance in many cases, it is important to recognize that <strong>alternative integration algorithms exist and may work better for more complex integration tasks</strong> (see <span class="citation" data-cites="luecken2021">(<a href="#ref-luecken2021" role="doc-biblioref">Luecken et al. 2021</a>)</span> for a comprehensive review).</p>
+<p>In the section above, we’ve presented the <code>Seurat</code> integration workflow, which uses canonical correlation analysis (CCA) and multiple nearest neighbors (MNN) to find “anchors” and integrate across samples, conditions, modalities, etc. While the <code>Seurat</code> integration approach is widely used and several benchmarking studies support its great performance in many cases, it is important to recognize that <strong>alternative integration algorithms exist and may work better for more complex integration tasks</strong> (see <a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-luecken2021">Luecken et al.&nbsp;2021</a> for a comprehensive review).</p>
 <p>Not all integration algorithms rely on the same methodology, and they do not always provide the same type of corrected output (embeddings, count matrix…). Their performance is also affected by preliminary data processing steps, including which normalization method was used and how highly variable genes (HVGs) were determined. All those considerations are important to keep in mind when selecting a data integration approach for your study.</p>
 <p><strong>What do we mean by a “complex” integration task?</strong></p>
-<p>In their benchmarking study <span class="citation" data-cites="luecken2021">(<a href="#ref-luecken2021" role="doc-biblioref">Luecken et al. 2021</a>)</span> compared the performance of different scRNA-seq integration tools when confronted to different “complex” tasks. The “complexity” of integrating a dataset may relate to the number of samples (perhaps generated using different protocols) but also to the biological question the study seeks to address (e.g.&nbsp;comparing cell types across tissues, species…). In these contexts, you may <strong>need to integrate across multiple confounding factors before you can start exploring the biology of your system.</strong></p>
+<p>In their benchmarking study (<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-luecken2021">Luecken et al.&nbsp;2021</a>) compared the performance of different scRNA-seq integration tools when confronted to different “complex” tasks. The “complexity” of integrating a dataset may relate to the number of samples (perhaps generated using different protocols) but also to the biological question the study seeks to address (e.g.&nbsp;comparing cell types across tissues, species…). In these contexts, you may <strong>need to integrate across multiple confounding factors before you can start exploring the biology of your system.</strong></p>
 <p><img src="images/complex_integration.png" class="img-fluid" width="597"></p>
 <p>In these more complex scenarios, you want to select a data integration approach that successfully balances out the following challenges:</p>
 <ul>
@@ -842,8 +823,8 @@ Tip
 </ul>
 <p>Not all tools may perform as well on every task, and complex datasets may require testing several data integration approaches. You might want to analyze independently each of the batches you consider to integrate across, in order to define cell identities at this level before integrating and checking that the initially annotated cell types are mixed as expected.</p>
 <section id="harmonizing-as-a-method-of-integration" class="level3"><h3 class="anchored" data-anchor-id="harmonizing-as-a-method-of-integration">Harmonizing as a method of integration</h3>
-<p>Harmony <span class="citation" data-cites="korsunsky2019">(<a href="#ref-korsunsky2019" role="doc-biblioref">Korsunsky et al. 2019</a>)</span> was devleoped in 2019, and is an example of <strong>a tool that can work with complex integration tasks</strong>. It is available as an <a href="https://github.com/immunogenomics/harmony">GitHub</a> and <a href="https://cran.r-project.org/web/packages/harmony/index.html">CRAN</a>, and it has functions for standalone and Seurat pipeline analyses. It has been shown to perform incredibly well from recent benchmarking studies <span class="citation" data-cites="tran2020">(<a href="#ref-tran2020" role="doc-biblioref">Tran et al. 2020</a>)</span>.</p>
-<p>在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用<code>Harmony</code>包（available on <a href="https://github.com/immunogenomics/harmony">GitHub</a> and <a href="https://cran.r-project.org/web/packages/harmony/index.html">CRAN</a>），详见<a href="https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html">该教程</a>。同时，Seurat V5中的<code>IntegrateLayers</code>函数集成了Harmony整合算法，可以直接调用，详见：<a href="#sec-sc_integration"><span class="quarto-unresolved-ref">sec-sc_integration</span></a> 。Compared to other algorithms,&nbsp;<code>Harmony</code>&nbsp;notably presents the following advantages (<span class="citation" data-cites="korsunsky2019">(<a href="#ref-korsunsky2019" role="doc-biblioref">Korsunsky et al. 2019</a>)</span>,&nbsp;<span class="citation" data-cites="tran2020">(<a href="#ref-tran2020" role="doc-biblioref">Tran et al. 2020</a>)</span>):</p>
+<p>Harmony (<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019">Korsunsky et al.&nbsp;2019</a>) was devleoped in 2019, and is an example of <strong>a tool that can work with complex integration tasks</strong>. It is available as an <a href="#0">GitHub</a> and <a href="#0">CRAN</a>, and it has functions for standalone and Seurat pipeline analyses. It has been shown to perform incredibly well from recent benchmarking studies (<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020">Tran et al.&nbsp;2020</a>).</p>
+<p>在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用<code>Harmony</code>包（available on <a href="https://github.com/immunogenomics/harmony">GitHub</a> and <a href="https://cran.r-project.org/web/packages/harmony/index.html">CRAN</a>），详见<a href="https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html">该教程</a>。同时，Seurat V5中的<code>IntegrateLayers</code>函数集成了Harmony整合算法，可以直接调用，详见：<a href="#sec-sc_integration"><span>Chapter&nbsp;23</span></a> 。Compared to other algorithms,&nbsp;<code>Harmony</code>&nbsp;notably presents the following advantages (<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019">Korsunsky et al.&nbsp;2019</a>,&nbsp;<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020">Tran et al.&nbsp;2020</a>):</p>
 <ol type="1">
 <li><p>Possibility to integrate data across several variables (for example, by experimental batch and by condition)</p></li>
 <li><p>Significant gain in speed and lower memory requirements for integration of large datasets</p></li>
@@ -932,20 +913,6 @@ loaded via a namespace (and not attached):
 
 <!-- -->
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-korsunsky2019" class="csl-entry" role="listitem">
-Korsunsky, Ilya, Nghia Millard, Jean Fan, Kamil Slowikowski, Fan Zhang, Kevin Wei, Yuriy Baglaenko, Michael Brenner, Po-ru Loh, and Soumya Raychaudhuri. 2019. <span>“Fast, Sensitive and Accurate Integration of Single-Cell Data with Harmony.”</span> <em>Nature Methods</em> 16 (12): 1289–96. <a href="https://doi.org/10.1038/s41592-019-0619-0">https://doi.org/10.1038/s41592-019-0619-0</a>.
-</div>
-<div id="ref-luecken2021" class="csl-entry" role="listitem">
-Luecken, Malte D., M. Büttner, K. Chaichoompu, A. Danese, M. Interlandi, M. F. Mueller, D. C. Strobl, et al. 2021. <span>“Benchmarking Atlas-Level Data Integration in Single-Cell Genomics.”</span> <em>Nature Methods</em> 19 (1): 41–50. <a href="https://doi.org/10.1038/s41592-021-01336-8">https://doi.org/10.1038/s41592-021-01336-8</a>.
-</div>
-<div id="ref-stuart2019a" class="csl-entry" role="listitem">
-Stuart, Tim, Andrew Butler, Paul Hoffman, Christoph Hafemeister, Efthymia Papalexi, William M. Mauck, Yuhan Hao, Marlon Stoeckius, Peter Smibert, and Rahul Satija. 2019. <span>“Comprehensive Integration of Single-Cell Data.”</span> <em>Cell</em> 177 (7): 1888–1902.e21. <a href="https://doi.org/10.1016/j.cell.2019.05.031">https://doi.org/10.1016/j.cell.2019.05.031</a>.
-</div>
-<div id="ref-tran2020" class="csl-entry" role="listitem">
-Tran, Hoa Thi Nhu, Kok Siong Ang, Marion Chevrier, Xiaomeng Zhang, Nicole Yee Shin Lee, Michelle Goh, and Jinmiao Chen. 2020. <span>“A Benchmark of Batch-Effect Correction Methods for Single-Cell RNA Sequencing Data.”</span> <em>Genome Biology</em> 21 (1). <a href="https://doi.org/10.1186/s13059-019-1850-9">https://doi.org/10.1186/s13059-019-1850-9</a>.
-</div>
-</div>
 </section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1507,7 +1474,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb21-139"><a href="#cb21-139" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>The cell's closest neighbor in the other condition is identified based on gene expression values - its 'best buddy'.</span>
 <span id="cb21-140"><a href="#cb21-140" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>The reciprocal analysis is performed, and if the two cells are 'best buddies' in both directions, then those cells will be marked as **anchors** to 'anchor' the two datasets together.</span>
 <span id="cb21-141"><a href="#cb21-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-142"><a href="#cb21-142" aria-hidden="true" tabindex="-1"></a>    <span class="at">&gt; "The difference in expression values between cells in an MNN pair provides an estimate of the batch effect, which is made more precise by averaging across many such pairs. A correction vector is obtained and applied to the expression values to perform batch correction." </span><span class="co">[</span><span class="ot">@stuart2019a</span><span class="co">]</span><span class="at">.</span></span>
+<span id="cb21-142"><a href="#cb21-142" aria-hidden="true" tabindex="-1"></a>    <span class="at">&gt; "The difference in expression values between cells in an MNN pair provides an estimate of the batch effect, which is made more precise by averaging across many such pairs. A correction vector is obtained and applied to the expression values to perform batch correction." (</span><span class="co">[</span><span class="ot">Stuart et al. 2019</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-stuart2019a)</span><span class="at">)</span></span>
 <span id="cb21-143"><a href="#cb21-143" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-144"><a href="#cb21-144" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>**Filter anchors** to remove incorrect anchors:</span>
 <span id="cb21-145"><a href="#cb21-145" aria-hidden="true" tabindex="-1"></a></span>
@@ -1583,13 +1550,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb21-221"><a href="#cb21-221" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-222"><a href="#cb21-222" aria-hidden="true" tabindex="-1"></a><span class="fu">## Complex Integration Tasks</span></span>
 <span id="cb21-223"><a href="#cb21-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-224"><a href="#cb21-224" aria-hidden="true" tabindex="-1"></a>In the section above, we've presented the <span class="in">`Seurat`</span> integration workflow, which uses canonical correlation analysis (CCA) and multiple nearest neighbors (MNN) to find "anchors" and integrate across samples, conditions, modalities, etc. While the <span class="in">`Seurat`</span> integration approach is widely used and several benchmarking studies support its great performance in many cases, it is important to recognize that **alternative integration algorithms exist and may work better for more complex integration tasks** (see <span class="co">[</span><span class="ot">@luecken2021</span><span class="co">]</span> for a comprehensive review).</span>
+<span id="cb21-224"><a href="#cb21-224" aria-hidden="true" tabindex="-1"></a>In the section above, we've presented the <span class="in">`Seurat`</span> integration workflow, which uses canonical correlation analysis (CCA) and multiple nearest neighbors (MNN) to find "anchors" and integrate across samples, conditions, modalities, etc. While the <span class="in">`Seurat`</span> integration approach is widely used and several benchmarking studies support its great performance in many cases, it is important to recognize that **alternative integration algorithms exist and may work better for more complex integration tasks** (see <span class="co">[</span><span class="ot">Luecken et al. 2021</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-luecken2021)</span> for a comprehensive review).</span>
 <span id="cb21-225"><a href="#cb21-225" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-226"><a href="#cb21-226" aria-hidden="true" tabindex="-1"></a>Not all integration algorithms rely on the same methodology, and they do not always provide the same type of corrected output (embeddings, count matrix...). Their performance is also affected by preliminary data processing steps, including which normalization method was used and how highly variable genes (HVGs) were determined. All those considerations are important to keep in mind when selecting a data integration approach for your study.</span>
 <span id="cb21-227"><a href="#cb21-227" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-228"><a href="#cb21-228" aria-hidden="true" tabindex="-1"></a>**What do we mean by a "complex" integration task?**</span>
 <span id="cb21-229"><a href="#cb21-229" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-230"><a href="#cb21-230" aria-hidden="true" tabindex="-1"></a>In their benchmarking study <span class="co">[</span><span class="ot">@luecken2021</span><span class="co">]</span> compared the performance of different scRNA-seq integration tools when confronted to different "complex" tasks. The "complexity" of integrating a dataset may relate to the number of samples (perhaps generated using different protocols) but also to the biological question the study seeks to address (e.g. comparing cell types across tissues, species...). In these contexts, you may **need to integrate across multiple confounding factors before you can start exploring the biology of your system.**</span>
+<span id="cb21-230"><a href="#cb21-230" aria-hidden="true" tabindex="-1"></a>In their benchmarking study (<span class="co">[</span><span class="ot">Luecken et al. 2021</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-luecken2021)</span>) compared the performance of different scRNA-seq integration tools when confronted to different "complex" tasks. The "complexity" of integrating a dataset may relate to the number of samples (perhaps generated using different protocols) but also to the biological question the study seeks to address (e.g. comparing cell types across tissues, species...). In these contexts, you may **need to integrate across multiple confounding factors before you can start exploring the biology of your system.**</span>
 <span id="cb21-231"><a href="#cb21-231" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-232"><a href="#cb21-232" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/complex_integration.png)</span>{width="597"}</span>
 <span id="cb21-233"><a href="#cb21-233" aria-hidden="true" tabindex="-1"></a></span>
@@ -1606,9 +1573,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb21-244"><a href="#cb21-244" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-245"><a href="#cb21-245" aria-hidden="true" tabindex="-1"></a><span class="fu">### Harmonizing as a method of integration</span></span>
 <span id="cb21-246"><a href="#cb21-246" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-247"><a href="#cb21-247" aria-hidden="true" tabindex="-1"></a>Harmony <span class="co">[</span><span class="ot">@korsunsky2019</span><span class="co">]</span> was devleoped in 2019, and is an example of **a tool that can work with complex integration tasks**. It is available as an <span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/immunogenomics/harmony)</span> and <span class="co">[</span><span class="ot">CRAN</span><span class="co">](https://cran.r-project.org/web/packages/harmony/index.html)</span>, and it has functions for standalone and Seurat pipeline analyses. It has been shown to perform incredibly well from recent benchmarking studies <span class="co">[</span><span class="ot">@tran2020</span><span class="co">]</span>.</span>
+<span id="cb21-247"><a href="#cb21-247" aria-hidden="true" tabindex="-1"></a>Harmony (<span class="co">[</span><span class="ot">Korsunsky et al. 2019</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019)</span>) was devleoped in 2019, and is an example of **a tool that can work with complex integration tasks**. It is available as an <span class="co">[</span><span class="ot">GitHub</span><span class="co">](#0)</span> and <span class="co">[</span><span class="ot">CRAN</span><span class="co">](#0)</span>, and it has functions for standalone and Seurat pipeline analyses. It has been shown to perform incredibly well from recent benchmarking studies (<span class="co">[</span><span class="ot">Tran et al. 2020</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020)</span>).</span>
 <span id="cb21-248"><a href="#cb21-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-249"><a href="#cb21-249" aria-hidden="true" tabindex="-1"></a>在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用<span class="in">`Harmony`</span>包（available on <span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/immunogenomics/harmony)</span> and <span class="co">[</span><span class="ot">CRAN</span><span class="co">](https://cran.r-project.org/web/packages/harmony/index.html)</span>），详见<span class="co">[</span><span class="ot">该教程</span><span class="co">](https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html)</span>。同时，Seurat V5中的<span class="in">`IntegrateLayers`</span>函数集成了Harmony整合算法，可以直接调用，详见：@sec-sc_integration 。Compared to other algorithms,&nbsp;<span class="in">`Harmony`</span>&nbsp;notably presents the following advantages (<span class="co">[</span><span class="ot">@korsunsky2019</span><span class="co">]</span>,&nbsp;<span class="co">[</span><span class="ot">@tran2020</span><span class="co">]</span>):</span>
+<span id="cb21-249"><a href="#cb21-249" aria-hidden="true" tabindex="-1"></a>在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用<span class="in">`Harmony`</span>包（available on <span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/immunogenomics/harmony)</span> and <span class="co">[</span><span class="ot">CRAN</span><span class="co">](https://cran.r-project.org/web/packages/harmony/index.html)</span>），详见<span class="co">[</span><span class="ot">该教程</span><span class="co">](https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html)</span>。同时，Seurat V5中的<span class="in">`IntegrateLayers`</span>函数集成了Harmony整合算法，可以直接调用，详见：@sec-sc_integration 。Compared to other algorithms,&nbsp;<span class="in">`Harmony`</span>&nbsp;notably presents the following advantages (<span class="co">[</span><span class="ot">Korsunsky et al. 2019</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019)</span>,&nbsp;<span class="co">[</span><span class="ot">Tran et al. 2020</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020)</span>):</span>
 <span id="cb21-250"><a href="#cb21-250" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-251"><a href="#cb21-251" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Possibility to integrate data across several variables (for example, by experimental batch and by condition)</span>
 <span id="cb21-252"><a href="#cb21-252" aria-hidden="true" tabindex="-1"></a></span>

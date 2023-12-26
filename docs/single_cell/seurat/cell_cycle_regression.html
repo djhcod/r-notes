@@ -535,7 +535,7 @@ div.csl-indent {
 <p>原文：<a href="https://satijalab.org/seurat/articles/cell_cycle_vignette"><em>Cell-Cycle Scoring and Regression</em></a></p>
 <p>原文发布日期：2023年10月31日</p>
 </blockquote>
-<p>We demonstrate how to mitigate the effects of cell cycle heterogeneity in scRNA-seq data by calculating <strong>cell cycle phase scores</strong> based on canonical markers, and regressing these out of the data during pre-processing. We demonstrate this on a dataset of murine hematopoietic progenitors <span class="citation" data-cites="nestorowa2016">(<a href="#ref-nestorowa2016" role="doc-biblioref">Nestorowa et al. 2016</a>)</span>.You can download the files needed to run this vignette&nbsp;<a href="https://www.dropbox.com/s/3dby3bjsaf5arrw/cell_cycle_vignette_files.zip?dl=1">here</a>.</p>
+<p>We demonstrate how to mitigate the effects of cell cycle heterogeneity in scRNA-seq data by calculating <strong>cell cycle phase scores</strong> based on canonical markers, and regressing these out of the data during pre-processing. We demonstrate this on a dataset of murine hematopoietic progenitors <span class="citation" data-cites="nestorowa2016">(<a href="../../references.html#ref-nestorowa2016" role="doc-biblioref">Nestorowa et al. 2016</a>)</span>.You can download the files needed to run this vignette&nbsp;<a href="https://www.dropbox.com/s/3dby3bjsaf5arrw/cell_cycle_vignette_files.zip?dl=1">here</a>.</p>
 <section id="数据读取和预处理" class="level2" data-number="10.1"><h2 data-number="10.1" class="anchored" data-anchor-id="数据读取和预处理">
 <span class="header-section-number">10.1</span> 数据读取和预处理</h2>
 <section id="创建seurat对象" class="level3"><h3 class="anchored" data-anchor-id="创建seurat对象">创建Seurat对象</h3>
@@ -660,7 +660,7 @@ Prog_008       Prog    4079891        10540</code></pre>
 </div>
 </div>
 <p>We assign scores in the&nbsp;<code><a href="https://satijalab.org/seurat/reference/CellCycleScoring.html">CellCycleScoring()</a></code>&nbsp;function, which stores S and G2/M scores in object meta data, along with the <strong>predicted classification of each cell in either G2M, S or G1 phase</strong>.&nbsp;<code><a href="https://satijalab.org/seurat/reference/CellCycleScoring.html">CellCycleScoring()</a></code>&nbsp;can also set the identity of the Seurat object to the cell-cycle phase by passing&nbsp;<code>set.ident = TRUE</code>&nbsp;(the original identities are stored as&nbsp;<code>old.ident</code>). Please note that Seurat does not use the discrete classifications (G2M/G1/S) in downstream cell cycle regression. Instead, it uses the <strong>quantitative scores for G2M and S phase</strong>. However, we provide our predicted classifications in case they are of interest.</p>
-<p>We score single cells based on the scoring strategy described in&nbsp;<span class="citation" data-cites="tirosh2016">(<a href="#ref-tirosh2016" role="doc-biblioref">Tirosh et al. 2016</a>)</span>. See&nbsp;<code>?AddModuleScore()</code>&nbsp;in Seurat for more information, this function can be used to calculate supervised module scores for any gene list.</p>
+<p>We score single cells based on the scoring strategy described in&nbsp;<span class="citation" data-cites="tirosh2016">(<a href="../../references.html#ref-tirosh2016" role="doc-biblioref">Tirosh et al. 2016</a>)</span>. See&nbsp;<code>?AddModuleScore()</code>&nbsp;in Seurat for more information, this function can be used to calculate supervised module scores for any gene list.</p>
 <div class="cell" data-hash="cell_cycle_regression_cache/html/unnamed-chunk-4_af1d32a7da6e3dc7cebe91e53519acb3">
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">marrow</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/CellCycleScoring.html">CellCycleScoring</a></span><span class="op">(</span><span class="va">marrow</span>, </span>
 <span>                           s.features <span class="op">=</span> <span class="va">s.genes</span>, </span>
@@ -854,7 +854,7 @@ loaded via a namespace (and not attached):
 
 <!-- -->
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-nestorowa2016" class="csl-entry" role="listitem">
 Nestorowa, Sonia, Fiona K. Hamey, Blanca Pijuan Sala, Evangelia Diamanti, Mairi Shepherd, Elisa Laurenti, Nicola K. Wilson, David G. Kent, and Berthold Göttgens. 2016. <span>“A Single-Cell Resolution Map of Mouse Hematopoietic Stem and Progenitor Cell Differentiation.”</span> <em>Blood</em> 128 (8): e20–31. <a href="https://doi.org/10.1182/blood-2016-05-716480">https://doi.org/10.1182/blood-2016-05-716480</a>.
 </div>

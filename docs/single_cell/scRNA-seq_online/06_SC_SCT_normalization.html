@@ -606,7 +606,7 @@ Note
 </div>
 </div>
 <section id="methods-for-scrna-seq-normalization" class="level3"><h3 class="anchored" data-anchor-id="methods-for-scrna-seq-normalization">Methods for scRNA-seq normalization</h3>
-<p>Various methods have been developed specifically for scRNA-seq normalization. Some simpler methods resemble what we have seen with bulk RNA-seq; the application of <strong>global scale factors</strong> adjusting for a count-depth relationship that is assumed common across all genes. However, if those assumptions are not true then this basic normalization can lead to over-correction for lowly and moderately expressed genes and, in some cases, under-normalization of highly expressed genes <span class="citation" data-cites="bacher2017">(<a href="#ref-bacher2017" role="doc-biblioref">Bacher et al. 2017</a>)</span>. More complex methods will apply correction on a per-gene basis<strong>.</strong> In this lesson we will explore both approaches.</p>
+<p>Various methods have been developed specifically for scRNA-seq normalization. Some simpler methods resemble what we have seen with bulk RNA-seq; the application of <strong>global scale factors</strong> adjusting for a count-depth relationship that is assumed common across all genes. However, if those assumptions are not true then this basic normalization can lead to over-correction for lowly and moderately expressed genes and, in some cases, under-normalization of highly expressed genes <span class="citation" data-cites="bacher2017">(<a href="../../references.html#ref-bacher2017" role="doc-biblioref">Bacher et al. 2017</a>)</span>. More complex methods will apply correction on a per-gene basis<strong>.</strong> In this lesson we will explore both approaches.</p>
 <p>Regardless of which method is used for normalization, it can be helpful to think of it as a <strong>two-step process</strong> (even though it is often described as a single step in most papers). The first is a scaling step and the second is a transformation.</p>
 <p><strong>1. Scaling</strong></p>
 <p>The first step in normalization is to <strong>multiply each UMI count by a <u>cell specific factor</u> to get <u>all cells to have the same UMI counts</u></strong>. Why would we want to do this? Different cells have different amounts of mRNA; this could be due to differences between cell types or variation within the same cell type depending on how well the chemistry worked in one drop versus another. In either case, we are not interested in comparing these <strong>absolute counts</strong> between cells. Instead we are interested in comparing <strong>concentrations</strong>, and scaling helps achieve this.</p>
@@ -632,7 +632,7 @@ Note
 <p>The most common biological data correction (or source of “uninteresting” variation) in single cell RNA-seq is the effects of the <strong>cell cycle</strong> on the transcriptome. We need to explore the data and see if we observe any effects in our data.</p>
 <section id="set-up" class="level3"><h3 class="anchored" data-anchor-id="set-up">Set-up</h3>
 <p>Before we make any comparisons across cells, we will apply a <strong>simple normalization.</strong> <strong>This is solely for the purpose of exploring the sources of variation in our data.</strong></p>
-<p>The input for this analysis is a <code>seurat</code> object. We will use the one that we created in <a href="#sec-qc"><span class="quarto-unresolved-ref">sec-qc</span></a> called <code>filtered_seurat</code>.</p>
+<p>The input for this analysis is a <code>seurat</code> object. We will use the one that we created in <a href="04_SC_quality_control.html"><span>Chapter&nbsp;19</span></a> called <code>filtered_seurat</code>.</p>
 <div class="cell" data-hash="06_SC_SCT_normalization_cache/html/unnamed-chunk-1_2b3d41d03675b09e7a0556314825e8de">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
 <span><span class="va">filtered_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/scRNA-seq_online/seurat_filtered.rds"</span><span class="op">)</span></span>
@@ -719,7 +719,7 @@ ctrl_AAACATACCTCGCT-1  0.03421052  0.02033139     S</code></pre>
 </div>
 </div>
 </section><section id="使用pca确定细胞周期是否是我们数据集中的主要变异来源" class="level4"><h4 class="anchored" data-anchor-id="使用pca确定细胞周期是否是我们数据集中的主要变异来源">使用PCA确定细胞周期是否是我们数据集中的主要变异来源</h4>
-<p>After scoring the cells for cell cycle, we would like to determine <strong>whether cell cycle is a major source of variation in our dataset using PCA（PCA的原理详见：</strong> <a href="#sec-pca_theory"><span class="quarto-unresolved-ref">sec-pca_theory</span></a> <strong>）</strong>.</p>
+<p>After scoring the cells for cell cycle, we would like to determine <strong>whether cell cycle is a major source of variation in our dataset using PCA（PCA的原理详见：</strong> <a href="05_theory_of_PCA.html"><span>Chapter&nbsp;21</span></a> <strong>）</strong>.</p>
 <p>To perform PCA, we need to <strong>first choose the most variable features, then scale the data</strong>. Since highly expressed genes exhibit the highest amount of variation and we don’t want our ‘highly variable genes’ only to reflect high expression, we need to scale the data to scale variation with expression level. The Seurat <code><a href="https://satijalab.org/seurat/reference/ScaleData.html">ScaleData()</a></code> function will scale the data by:</p>
 <ul>
 <li>adjusting the expression of each gene <strong>to give a mean expression across cells to be 0</strong>
@@ -772,7 +772,7 @@ When should cell cycle phase be regressed out?
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Below are two PCA plots taken from <a href="#sec-Elimination_of_cell_cycle_effects"><span class="quarto-unresolved-ref">sec-Elimination_of_cell_cycle_effects</span></a> 。This first plot is similar to what we plotted above, it is a PCA prior to regression to evaluate if the cell cycle is playing a big role in driving PC1 and PC2. Clearly, the cells are separating by cell type in this case, so it suggests regressing out these effects.</p>
+<p>Below are two PCA plots taken from <a href="../seurat/cell_cycle_regression.html"><span>Chapter&nbsp;10</span></a> 。This first plot is similar to what we plotted above, it is a PCA prior to regression to evaluate if the cell cycle is playing a big role in driving PC1 and PC2. Clearly, the cells are separating by cell type in this case, so it suggests regressing out these effects.</p>
 <p><img src="images/unnamed-chunk-6-1.png" class="img-fluid" width="427"></p>
 <p>This second PCA plot is post-regression, and displays how effective the regression was in removing the effect we observed.</p>
 <p><img src="images/unnamed-chunk-10-1.png" class="img-fluid" width="430"></p>
@@ -789,7 +789,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>在需要消除细胞周期的影响时，如何通过<code>ScaleData</code>回归掉（regress out）细胞周期的影响，以及如何在消除细胞周期的影响同时保留增殖细胞与静止细胞的区分，参考 <a href="#sec-Elimination_of_cell_cycle_effects"><span class="quarto-unresolved-ref">sec-Elimination_of_cell_cycle_effects</span></a> 。</p>
+<p>在需要消除细胞周期的影响时，如何通过<code>ScaleData</code>回归掉（regress out）细胞周期的影响，以及如何在消除细胞周期的影响同时保留增殖细胞与静止细胞的区分，参考 <a href="../seurat/cell_cycle_regression.html"><span>Chapter&nbsp;10</span></a> 。</p>
 </div>
 </div>
 <hr></section></section><section id="评估线粒体基因表达的影响" class="level3"><h3 class="anchored" data-anchor-id="评估线粒体基因表达的影响">评估线粒体基因表达的影响</h3>
@@ -1195,7 +1195,7 @@ loaded via a namespace (and not attached):
 
 <!-- -->
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-bacher2017" class="csl-entry" role="listitem">
 Bacher, Rhonda, Li-Fang Chu, Ning Leng, Audrey P Gasch, James A Thomson, Ron M Stewart, Michael Newton, and Christina Kendziorski. 2017. <span>“SCnorm: Robust Normalization of Single-Cell RNA-Seq Data.”</span> <em>Nature Methods</em> 14 (6): 584–86. <a href="https://doi.org/10.1038/nmeth.4263">https://doi.org/10.1038/nmeth.4263</a>.
 </div>

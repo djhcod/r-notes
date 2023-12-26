@@ -537,7 +537,7 @@ div.csl-indent {
 <p>Integration of single-cell sequencing datasets, for example across <strong>experimental batches</strong>, <strong>donors</strong>, or <strong>conditions</strong>, is often an important step in scRNA-seq workflows. Integrative analysis can help to <strong>match shared cell types and states across datasets</strong>, which can <strong>boost statistical power</strong>, and most importantly, <strong>facilitate accurate comparative analysis across datasets</strong>.</p>
 <p>In previous versions of Seurat we introduced methods for integrative analysis, including our ‘anchor-based’ integration workflow. Many labs have also published powerful and pioneering methods, including&nbsp;<a href="https://github.com/immunogenomics/harmony">Harmony</a>&nbsp;and&nbsp;<a href="https://yoseflab.github.io/software/scvi-tools/">scVI</a>, for integrative analysis. We recognize that while the goal of matching shared cell types across datasets may be important for many problems, users may also be concerned about which method to use, or that integration could result in a loss of biological resolution.</p>
 <p>In Seurat v5, we introduce more flexible and streamlined infrastructure to run different integration algorithms with a single line of code. This makes it easier to explore the results of different integration methods, and to compare these results to a workflow that excludes integration steps.</p>
-<p>For this vignette, we use a&nbsp;dataset of human PBMC profiled with <strong>seven different technologies</strong> <span class="citation" data-cites="ding2020">(<a href="#ref-ding2020" role="doc-biblioref">Ding et al. 2020</a>)</span>, profiled as part of a systematic comparative analysis (<code>pbmcsca</code>). The data is available as part of our&nbsp;SeuratData&nbsp;package.</p>
+<p>For this vignette, we use a&nbsp;dataset of human PBMC profiled with <strong>seven different technologies</strong> <span class="citation" data-cites="ding2020">(<a href="../../references.html#ref-ding2020" role="doc-biblioref">Ding et al. 2020</a>)</span>, profiled as part of a systematic comparative analysis (<code>pbmcsca</code>). The data is available as part of our&nbsp;SeuratData&nbsp;package.</p>
 <p><img src="images/截屏2023-11-28 21.02.46.png" class="img-fluid" width="526"></p>
 <section id="加载数据" class="level2" data-number="12.1"><h2 data-number="12.1" class="anchored" data-anchor-id="加载数据">
 <span class="header-section-number">12.1</span> 加载数据</h2>
@@ -893,7 +893,7 @@ Active assay: RNA (33694 features, 2000 variable features)
 </div>
 </section><section id="对sctransform处理后的数据的整合" class="level2" data-number="12.9"><h2 data-number="12.9" class="anchored" data-anchor-id="对sctransform处理后的数据的整合">
 <span class="header-section-number">12.9</span> 对<code>SCTransform</code>处理后的数据的整合</h2>
-<p>Users can also perform integration using sctransform-normalized data (see <a href="#sec-sctransform"><span class="quarto-unresolved-ref">sec-sctransform</span></a> for more information), by first running <code>SCTransform</code> normalization, and then s<strong>etting the&nbsp;<code>normalization.method</code>&nbsp;argument in&nbsp;<code>IntegrateLayers</code></strong>（和 <a href="#sec-integration_after_sct"><span class="quarto-unresolved-ref">sec-integration_after_sct</span></a> 中一样）。</p>
+<p>Users can also perform integration using sctransform-normalized data (see <a href="sctransform.html"><span>Chapter&nbsp;9</span></a> for more information), by first running <code>SCTransform</code> normalization, and then s<strong>etting the&nbsp;<code>normalization.method</code>&nbsp;argument in&nbsp;<code>IntegrateLayers</code></strong>（和 <a href="integration.html#sec-integration_after_sct"><span>Section&nbsp;11.4.2</span></a> 中一样）。</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-18_714a1e1ba9fed6201b3c1716de97d143">
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#重新载入数据、质控、分割</span></span>
@@ -1021,7 +1021,7 @@ loaded via a namespace (and not attached):
 
 <!-- -->
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-ding2020" class="csl-entry" role="listitem">
 Ding, Jiarui, Xian Adiconis, Sean K. Simmons, Monika S. Kowalczyk, Cynthia C. Hession, Nemanja D. Marjanovic, Travis K. Hughes, et al. 2020. <span>“Systematic Comparison of Single-Cell and Single-Nucleus RNA-Sequencing Methods.”</span> <em>Nature Biotechnology</em> 38 (6): 737–46. <a href="https://doi.org/10.1038/s41587-020-0465-8">https://doi.org/10.1038/s41587-020-0465-8</a>.
 </div>
