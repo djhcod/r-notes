@@ -5,11 +5,13 @@ execute:
 
 # Seurat常用函数清单 {#sec-seurat_command_list}
 
-原文：[*Seurat Command List*](https://satijalab.org/seurat/articles/essential_commands)
-
-原文发布日期：2023年10月31日
+> 原文：[*Seurat Command List*](https://satijalab.org/seurat/articles/essential_commands)
+>
+> 原文发布日期：2023年10月31日
 
 ## 标准Seurat流程基本函数
+
+见 @sec-seurat_cell_clustering_official_tutorial 。
 
 ```{r}
 pbmc <- NormalizeData(object = pbmc)
@@ -23,6 +25,8 @@ DimPlot(object = pbmc, reduction = "umap")
 ```
 
 ### 采用`SCtransform`标准化时的流程：
+
+见 @sec-sctransform 。
 
 ```{r}
 pbmc <- SCTransform(object = pbmc)
@@ -54,7 +58,7 @@ colnames(pbmc)
 Cells(pbmc) # 效果同上
 ```
 
-获取所有的基因（feature）名。可以添加layer参数，用于指定提取哪一个layer下的基因名，如果未指定，则提取默认layer内的基因名。
+获取所有的基因（feature）名。可以添加`layer`参数，用于指定提取哪一个layer下的基因名，如果未指定，则提取默认layer内的基因名。
 
 ```{r}
 Features(pbmc)
@@ -90,7 +94,9 @@ DefaultLayer(pbmc)
 DefaultLayer(pbmc) <- "value"
 ```
 
-列出所有的assay，如"RNA"、运行SCTransform之后的"SCT" assay:
+列出所有的assay，如"RNA"、运行`SCTransform`之后的"SCT" assay:
+
+实际应用场景见 @sec-findmarkers_function 。
 
 ```{r}
 # 列出所有的assay，如"RNA"、运行SCTransform之后的"SCT" assay:
@@ -117,9 +123,17 @@ levels(pbmc)
 
 设定细胞identities：
 
+实际应用场景见 @sec-findmarkers_function 。
+
 ```{r}
 # 将meta.data中的"seurat_clusters"列设置为cell identities
 Idents(object = pbmc) <- "seurat_clusters"
+
+# 重命名细胞注释标签或重新排序细胞类型标签
+Idents(ifnb) <- factor(Idents(ifnb), 
+                       levels = c("pDC", "Eryth", "Mk", "DC", "CD14 Mono", "CD16 Mono", 
+                                  "B Activated", "B", "CD8 T", "NK", "T activated", 
+                                  "CD4 Naive T", "CD4 Memory T"))
 ```
 
 将目前的cell identities保存到meta.data新的一列中：
@@ -176,6 +190,8 @@ pbmc <- SetAssayData(object = pbmc, slot = "counts", new.data = new.data)
 
 ### 获取PCA降维信息
 
+实际应用场景见 @sec-Effect_of_pcs_clustering 。
+
 ```{r}
 # 获取细胞在所有主成分上的评分（坐标）
 Embeddings(pbmc, reduction = "pca")
@@ -202,7 +218,7 @@ pbmc[["custom_pca"]] <- new_reduction
 
 ### 通过`FetchData`从Seurat对象中获取任意信息
 
-`FetchData` can access anything from expression matrices, cell embeddings, or metadata use the previously listed commands to access entire matrices。通过FetchData可以提取包括表达量数据、PCA分数以及meta.data内的任何变量并形成一个数据框。
+`FetchData` can access anything from expression matrices, cell embeddings, or metadata use the previously listed commands to access entire matrices。通过FetchData可以提取包括表达量数据、PCA分数以及meta.data内的任何变量并形成一个数据框。实际应用场景见 @sec-Effect_of_pcs_clustering 。
 
 ```{r}
 FetchData(object = pbmc, 
@@ -213,6 +229,8 @@ FetchData(object = pbmc,
 ## Seurat对象取子集和合并
 
 ### 取子集 {#sec-subset_seurat}
+
+实际应用见 @sec-filtering 。
 
 ```{r}
 # 根据meta data中的信息取子集
@@ -236,7 +254,7 @@ subset(x = pbmc, downsample = 100)
 
 ### 分割layers
 
-In Seurat v5, users can now split in object directly into different layers keeps expression data in one object, but splits multiple samples into layers can proceed directly to integration workflow after splitting layers
+In Seurat v5, users can now split in object directly into different layers keeps expression data in one object, but splits multiple samples into layers can proceed directly to integration workflow after splitting layers。实际应用场景见 @sec-Single-cell_data_integration 。
 
 ```{r}
 # 按照meta.data中的stim列分割layer
@@ -259,7 +277,7 @@ ifnb_list$STIM
 
 ### Merge objects (without integration)
 
-In Seurat v5, merging creates a single object, but keeps the expression information split into different layers for integration. If not proceeding with integration, rejoin the layers after merging.
+In Seurat v5, merging creates a single object, but keeps the expression information split into different layers for integration. If not proceeding with integration, rejoin the layers after merging. 实际应用场景，见[此链接](https://hbctraining.github.io/scRNA-seq_online/lessons/03_SC_quality_control-setup.html)。
 
 ```{r}
 # Merge two Seurat objects

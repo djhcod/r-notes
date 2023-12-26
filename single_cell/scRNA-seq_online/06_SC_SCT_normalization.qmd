@@ -256,7 +256,7 @@ Since the UMI counts are part of the GLM, the effects are automatically regresse
 rm(list = ls())
 
 library(Seurat)
-filtered_seurat <- readRDS("output/seurat_filtered.rds")
+filtered_seurat <- readRDS("output/scRNA-seq_online/seurat_filtered.rds")
 filtered_seurat
 head(filtered_seurat@meta.data)
 ```
@@ -274,7 +274,7 @@ head(filtered_seurat@meta.data)
 ```{r}
 # SCTranform
 # BiocManager::install("glmGamPoi")
-seurat_phase <- SCTransform(filtered_seurat)
+seurat_phase <- SCTransform(filtered_seurat, verbose = FALSE)
 seurat_phase
 
 # Check which assays are stored in objects
@@ -291,6 +291,7 @@ Note, the last line of output specifies **"Set default assay to SCT"**. 表明�
 
 ```{r}
 #| fig-width: 10
+
 # Load cell cycle markers
 s.genes <- cc.genes$s.genes
 g2m.genes <- cc.genes$g2m.genes
@@ -376,7 +377,9 @@ options(future.globals.maxSize = 4000 * 1024^2)
 
 ```{r}
 # SCTranform
-seurat_phase <- SCTransform(seurat_phase, vars.to.regress = c("mitoRatio"))
+seurat_phase <- SCTransform(seurat_phase, 
+                            vars.to.regress = c("mitoRatio"),
+                            verbose = FALSE)
 ```
 
 By default, after normalizing, adjusting the variance, and regressing out uninteresting sources of variation, `SCTransform` will rank the genes by residual variance and output the **3000** most variant genes. If the dataset has larger cell numbers, then it may be beneficial to adjust this parameter higher using the `variable.features.n` argument.

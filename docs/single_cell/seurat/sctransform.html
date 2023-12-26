@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.3.450">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>R语言学习笔记 - 9&nbsp; 基于SCTransform的单细胞数据标准化</title>
 <style>
@@ -79,7 +79,7 @@ div.csl-indent {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../single_cell/seurat/integration.html" rel="next">
+<link href="../../single_cell/seurat/cell_cycle_regression.html" rel="next">
 <link href="../../single_cell/seurat/data_visualization_methods_in_seurat.html" rel="prev">
 <link href="../../images/logo.jpg" rel="icon" type="image/jpeg">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
@@ -312,32 +312,38 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">单细胞数据整合（integration）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+  <a href="../../single_cell/seurat/marker_gene_identification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">差异表达分析</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
   </div>
 </li>
       </ul>
@@ -354,49 +360,67 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">质控</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">质控</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
   </div>
 </li>
       </ul>
@@ -413,37 +437,37 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
@@ -476,7 +500,7 @@ div.csl-indent {
   <ul>
 <li><a href="#%E8%BD%BD%E5%85%A5%E6%95%B0%E6%8D%AE" id="toc-载入数据" class="nav-link active" data-scroll-target="#%E8%BD%BD%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="header-section-number">9.1</span> 载入数据</a></li>
   <li><a href="#%E8%B4%A8%E6%8E%A7" id="toc-质控" class="nav-link" data-scroll-target="#%E8%B4%A8%E6%8E%A7"><span class="header-section-number">9.2</span> 质控</a></li>
-  <li><a href="#%E8%BF%90%E8%A1%8Csctransform" id="toc-运行sctransform" class="nav-link" data-scroll-target="#%E8%BF%90%E8%A1%8Csctransform"><span class="header-section-number">9.3</span> 运行<code>SCTransform</code></a></li>
+  <li><a href="#sec-perform_sctransform" id="toc-sec-perform_sctransform" class="nav-link" data-scroll-target="#sec-perform_sctransform"><span class="header-section-number">9.3</span> 运行<code>SCTransform</code></a></li>
   <li><a href="#%E9%99%8D%E7%BB%B4" id="toc-降维" class="nav-link" data-scroll-target="#%E9%99%8D%E7%BB%B4"><span class="header-section-number">9.4</span> 降维</a></li>
   <li><a href="#sec-clustering" id="toc-sec-clustering" class="nav-link" data-scroll-target="#sec-clustering"><span class="header-section-number">9.5</span> 聚类</a></li>
   <li>
@@ -503,17 +527,19 @@ div.csl-indent {
   </div>
   
 
-</header><p>原文：<a href="https://satijalab.org/seurat/articles/sctransform_vignette"><em>Using sctransform in Seurat</em></a></p>
+</header><blockquote class="blockquote">
+<p>原文：<a href="https://satijalab.org/seurat/articles/sctransform_vignette"><em>Using sctransform in Seurat</em></a></p>
 <p>原文发布日期：2023年10月31日</p>
+</blockquote>
 <p><strong>Biological heterogeneity</strong> in single-cell RNA-seq data is often confounded by technical factors including <strong>sequencing depth</strong>. The <strong>number of molecules detected in each cell</strong> can vary significantly between cells, even within the same celltype. Interpretation of scRNA-seq data requires effective pre-processing and normalization to remove this <strong>technical variability</strong>.</p>
 <p>In our manuscript we introduce a modeling framework for the normalization and variance stabilization of molecular count data from scRNA-seq experiments. This procedure <strong>omits the need for heuristic steps</strong> including pseudocount addition or log-transformation and <strong>improves common downstream analytical tasks</strong> such as variable gene selection, dimensional reduction, and differential expression. We named this method<code>sctransform</code>.</p>
-<p>Inspired by important and rigorous work from Lause et al <span class="citation" data-cites="lause2021">(<a href="../../references.html#ref-lause2021" role="doc-biblioref">Lause, Berens, and Kobak 2021</a>)</span>, we released an updated manuscript <span class="citation" data-cites="choudhary2022b">(<a href="../../references.html#ref-choudhary2022b" role="doc-biblioref">Choudhary and Satija 2022</a>)</span> and updated the sctransform software to a v2 version, which is now the default in Seurat v5.</p>
+<p>Inspired by important and rigorous work from Lause et al <span class="citation" data-cites="lause2021">(<a href="#ref-lause2021" role="doc-biblioref">Lause, Berens, and Kobak 2021</a>)</span>, we released an updated manuscript <span class="citation" data-cites="choudhary2022b">(<a href="#ref-choudhary2022b" role="doc-biblioref">Choudhary and Satija 2022</a>)</span> and updated the sctransform software to a v2 version, which is now the default in Seurat v5.</p>
 <section id="载入数据" class="level2" data-number="9.1"><h2 data-number="9.1" class="anchored" data-anchor-id="载入数据">
 <span class="header-section-number">9.1</span> 载入数据</h2>
 <div class="cell" data-hash="sctransform_cache/html/unnamed-chunk-1_37c8a60e882b0d29a93bc8fe5f22fc16">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
 <span><span class="va">pbmc_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/Read10X.html">Read10X</a></span><span class="op">(</span>data.dir <span class="op">=</span> <span class="st">"data/seurat_official/filtered_gene_bc_matrices/hg19"</span><span class="op">)</span></span>
-<span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://mojaveazure.github.io/seurat-object/reference/CreateSeuratObject.html">CreateSeuratObject</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">pbmc_data</span><span class="op">)</span></span>
+<span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/CreateSeuratObject.html">CreateSeuratObject</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">pbmc_data</span><span class="op">)</span></span>
 <span><span class="va">pbmc</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>An object of class Seurat 
@@ -537,12 +563,12 @@ AAACCGTGCTTCCG-1 SeuratProject       2639          960  1.7430845
 AAACCGTGTATGCG-1 SeuratProject        981          522  1.2232416</code></pre>
 </div>
 </div>
-</section><section id="运行sctransform" class="level2" data-number="9.3"><h2 data-number="9.3" class="anchored" data-anchor-id="运行sctransform">
+</section><section id="sec-perform_sctransform" class="level2" data-number="9.3"><h2 data-number="9.3" class="anchored" data-anchor-id="sec-perform_sctransform">
 <span class="header-section-number">9.3</span> 运行<code>SCTransform</code>
 </h2>
 <ul>
-<li><p><code>SCTransform</code>替代了传统单细胞数据分析流程中的<code><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData()</a></code>、<code><a href="https://satijalab.org/seurat/reference/ScaleData.html">ScaleData()</a></code>和<code><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures()</a></code>函数的功能，因此不再需要运行这些函数。</p></li>
-<li><p>During normalization, we can also remove confounding sources of variation, for example, mitochondrial mapping percentage。<code>SCTransform</code>也可以移除一些非期望变异来源，如线粒体基因的比例。这在传统的单细胞数据分析流程中由<code>ScaleData</code>来完成（ <a href="seurat_tutorial.html#sec-scaledata"><span>Section&nbsp;7.5</span></a> ）。</p></li>
+<li><p><code><a href="https://satijalab.org/seurat/reference/SCTransform.html">SCTransform()</a></code>替代了传统单细胞数据分析流程中的<code><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData()</a></code>、<code><a href="https://satijalab.org/seurat/reference/ScaleData.html">ScaleData()</a></code>和<code><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures()</a></code>函数的功能，因此不再需要运行这些函数。</p></li>
+<li><p>During normalization, we can also remove confounding sources of variation, for example, mitochondrial mapping percentage。<code>SCTransform</code>也可以移除一些非期望变异来源，如线粒体基因的比例。这在传统的单细胞数据分析流程中由<code>ScaleData</code>来完成（ <a href="#sec-scaledata"><span class="quarto-unresolved-ref">sec-scaledata</span></a> ）。</p></li>
 <li><p>In Seurat v5, SCT v2 is applied by default. You can revert to v1 by setting&nbsp;<code>vst.flavor = 'v1'</code></p></li>
 <li><p><code>SCTransform</code>的运算调用了<a href="https://bioconductor.org/packages/release/bioc/html/glmGamPoi.html"><code>glmGamPoi</code></a>包以显著提升运算速度。所以事先需要通过BiocManager安装该包。</p></li>
 </ul>
@@ -593,7 +619,7 @@ AAACCGTGTATGCG-1 SeuratProject        981          522  1.2232416</code></pre>
 <p><img src="sctransform_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>根据Seurat细胞分群官方教程（ <a href="seurat_tutorial.html#sec-Determine_pcs_for_subsequent_analyses"><span>Section&nbsp;7.6.2</span></a> ），这个数据集”we can observe an ‘elbow’ around PC9-10, suggesting that the majority of true signal is captured in the first 10 PCs”。因此在<code>FindNeighbors</code>函数中指定了<code>dims = 1:10</code>。但是这里的<code>FindNeighbors</code>函数指定了更多的主成分（<code>dims = 1:30</code>）。下面的内容对此作出了解释：</p>
+<p>根据Seurat细胞分群官方教程（ <a href="#sec-Determine_pcs_for_subsequent_analyses"><span class="quarto-unresolved-ref">sec-Determine_pcs_for_subsequent_analyses</span></a> ），这个数据集”we can observe an ‘elbow’ around PC9-10, suggesting that the majority of true signal is captured in the first 10 PCs”。因此在<code>FindNeighbors</code>函数中指定了<code>dims = 1:10</code>。但是这里的<code>FindNeighbors</code>函数指定了更多的主成分（<code>dims = 1:30</code>）。下面的内容对此作出了解释：</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -606,7 +632,7 @@ Why can we choose more PCs when using sctransform?
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>In the <a href="seurat_tutorial.html"><span>Chapter&nbsp;7</span></a> ，we focus on <strong>10 PCs</strong> for this dataset, though we highlight that <strong>the results are similar with higher settings for this parameter</strong>. Interestingly, we’ve found that when using <code>SCTransform</code>, we often <strong>benefit by pushing this parameter even higher</strong>. We believe this is because the <code>SCTransform</code> workflow performs more effective normalization, strongly removing technical effects from the data.</p>
+<p>In the <a href="#sec-seurat_cell_clustering_official_tutorial"><span class="quarto-unresolved-ref">sec-seurat_cell_clustering_official_tutorial</span></a> ，we focus on <strong>10 PCs</strong> for this dataset, though we highlight that <strong>the results are similar with higher settings for this parameter</strong>. Interestingly, we’ve found that when using <code>SCTransform</code>, we often <strong>benefit by pushing this parameter even higher</strong>. We believe this is because the <code>SCTransform</code> workflow performs more effective normalization, strongly removing technical effects from the data.</p>
 <p>Even after standard log-normalization, variation in sequencing depth is still a confounding factor (see&nbsp;<a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1">Figure 1</a>), and this effect can subtly influence higher PCs. In <code>SCTransform</code>, this effect is substantially mitigated (see&nbsp;<a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1">Figure 3</a>). This means that <strong>higher PCs are more likely to represent subtle, but biologically relevant, sources of heterogeneity</strong> – so including them may improve downstream analysis.</p>
 <p>In addition, <code>SCTransform</code> <strong>returns 3,000 variable features by default, instead of 2,000</strong>. The rationale is similar, the additional variable features are less likely to be driven by technical differences across cells, and instead may represent more subtle biological fluctuations. In general, we find that results produced with <code>SCTransform</code> are less dependent on these parameters (indeed, we achieve nearly identical results when using all genes in the transcriptome, though this does reduce computational efficiency). This can help users generate more robust results, and in addition, enables the application of standard analysis pipelines with identical parameter settings that can quickly be applied to new datasets.</p>
 </div>
@@ -614,7 +640,7 @@ Why can we choose more PCs when using sctransform?
 </div>
 </section><section id="marker基因可视化" class="level2" data-number="9.6"><h2 data-number="9.6" class="anchored" data-anchor-id="marker基因可视化">
 <span class="header-section-number">9.6</span> Marker基因可视化</h2>
-<p>Users can individually annotate clusters based on canonical markers. However, the <code>SCTransform</code> normalization reveals <strong>sharper biological distinctions</strong> compared to the&nbsp;standard Seurat workflow（ <a href="seurat_tutorial.html"><span>Chapter&nbsp;7</span></a> ）, in a few ways:</p>
+<p>Users can individually annotate clusters based on canonical markers. However, the <code>SCTransform</code> normalization reveals <strong>sharper biological distinctions</strong> compared to the&nbsp;standard Seurat workflow（ <a href="#sec-seurat_cell_clustering_official_tutorial"><span class="quarto-unresolved-ref">sec-seurat_cell_clustering_official_tutorial</span></a> ）, in a few ways:</p>
 <ul>
 <li><p>Clear separation of at least <strong>3 CD8 T cell populations (naive, memory, effector)</strong>, based on <strong>CD8A, GZMK, CCL5, CCR7</strong> expression</p></li>
 <li><p>Clear separation of <strong>three CD4 T cell populations (naive, memory, IFN-activated)</strong> based on <strong>S100A4, CCR7, IL32,</strong> and <strong>ISG15</strong></p></li>
@@ -650,6 +676,7 @@ Why can we choose more PCs when using sctransform?
 <p><img src="sctransform_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
+<hr>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -764,7 +791,7 @@ loaded via a namespace (and not attached):
 
 <!-- -->
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-choudhary2022b" class="csl-entry" role="listitem">
 Choudhary, Saket, and Rahul Satija. 2022. <span>“Comparison and Evaluation of Statistical Error Models for scRNA-Seq.”</span> <em>Genome Biology</em> 23 (1). <a href="https://doi.org/10.1186/s13059-021-02584-9">https://doi.org/10.1186/s13059-021-02584-9</a>.
 </div>
@@ -1191,16 +1218,16 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../single_cell/seurat/integration.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">单细胞数据整合（integration）</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../single_cell/seurat/cell_cycle_regression.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="sourceCode" id="cb17" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 基于SCTransform的单细胞数据标准化 {#sec-sctransform}</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>原文：<span class="co">[</span><span class="ot">*Using sctransform in Seurat*</span><span class="co">](https://satijalab.org/seurat/articles/sctransform_vignette)</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>原文发布日期：2023年10月31日</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文：</span><span class="co">[</span><span class="ot">*Using sctransform in Seurat*</span><span class="co">](https://satijalab.org/seurat/articles/sctransform_vignette)</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文发布日期：2023年10月31日</span></span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>**Biological heterogeneity** in single-cell RNA-seq data is often confounded by technical factors including **sequencing depth**. The **number of molecules detected in each cell** can vary significantly between cells, even within the same celltype. Interpretation of scRNA-seq data requires effective pre-processing and normalization to remove this **technical variability**.</span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
@@ -1226,9 +1253,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pbmc<span class="sc">@</span>meta.data, <span class="dv">5</span>)</span>
 <span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a><span class="fu">## 运行`SCTransform`</span></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a><span class="fu">## 运行`SCTransform` {#sec-perform_sctransform}</span></span>
 <span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`SCTransform`</span>替代了传统单细胞数据分析流程中的<span class="in">`NormalizeData()`</span>、<span class="in">`ScaleData()`</span>和<span class="in">`FindVariableFeatures()`</span>函数的功能，因此不再需要运行这些函数。</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`SCTransform()`</span>替代了传统单细胞数据分析流程中的<span class="in">`NormalizeData()`</span>、<span class="in">`ScaleData()`</span>和<span class="in">`FindVariableFeatures()`</span>函数的功能，因此不再需要运行这些函数。</span>
 <span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>During normalization, we can also remove confounding sources of variation, for example, mitochondrial mapping percentage。<span class="in">`SCTransform`</span>也可以移除一些非期望变异来源，如线粒体基因的比例。这在传统的单细胞数据分析流程中由<span class="in">`ScaleData`</span>来完成（ @sec-scaledata ）。</span>
 <span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a></span>
@@ -1331,13 +1358,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb17-151"><a href="#cb17-151" aria-hidden="true" tabindex="-1"></a>            <span class="at">ncol =</span> <span class="dv">3</span>)</span>
 <span id="cb17-152"><a href="#cb17-152" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb17-153"><a href="#cb17-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-154"><a href="#cb17-154" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb17-155"><a href="#cb17-155" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
-<span id="cb17-156"><a href="#cb17-156" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-159"><a href="#cb17-159" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb17-160"><a href="#cb17-160" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb17-161"><a href="#cb17-161" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb17-162"><a href="#cb17-162" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb17-154"><a href="#cb17-154" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb17-155"><a href="#cb17-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-156"><a href="#cb17-156" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb17-157"><a href="#cb17-157" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb17-158"><a href="#cb17-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-161"><a href="#cb17-161" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb17-162"><a href="#cb17-162" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb17-163"><a href="#cb17-163" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb17-164"><a href="#cb17-164" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

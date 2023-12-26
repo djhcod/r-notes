@@ -1,18 +1,122 @@
-# 差异表达分析 {#sec-differential_expression}
+# 寻找不同样本类型间同一细胞类型内的差异基因 {#sec-differential_expression}
 
-原文：[*Differential expression testing*](https://satijalab.org/seurat/articles/de_vignette)
+> 参考原文：[*Introduction to scRNA-seq integration*](https://satijalab.org/seurat/articles/integration_introduction#identify-differential-expressed-genes-across-conditions) *和 [Differential expression testing](https://satijalab.org/seurat/articles/de_vignette)*
+>
+> 原文发布日期：2023年10月31日
 
-原文发布日期：2023年10月31日
+## 直接通过`FindMarkers`寻找差异基因 {#sec-degs_within_the_same_cell_type_between_different_sample_types}
 
-## 数据读取和预处理
+### 数据导入
 
-This vignette highlights some example workflows for performing differential expression in Seurat. For demonstration purposes, we will be using the interferon-beta stimulated human PBMCs dataset [@kang2017] that is available via the SeuratData package.
+导入我们在 @sec-Single-cell_data_integration 中完成`SCTransform`和整合的单细胞数据。这里的meta.data已经提前注释好了细胞类型（储存在"seurat_annotations"列中）。
+
+```{r}
+library(Seurat)
+ifnb_integrated <- readRDS("output/seurat_official/ifnb_integrated.rds")
+ifnb_integrated
+head(ifnb_integrated, 3)
+```
+
+### 运行`PrepSCTFindMarkers()`，预处理SCT assay
+
+```{r}
+ifnb_integrated <- PrepSCTFindMarkers(ifnb_integrated)
+```
+
+::: callout-important
+对于经过`SCTransform`归一化处理后的单细胞数据，在进行差异分析之前，需要先运行`PrepSCTFindMarkers()`，来预处理SCT assay。详细解释见[此链接](https://www.jianshu.com/p/fb2e43905559)。
+
+如果是基于`NormalizeData`标准化的单细胞数据，需要使用"RNA" assay进行差异分析（见下面的[数据读取和预处理](#数据读取和预处理)），如果不是，需要通过`DefaultAssay(ifnb) <- "RNA"`进行设定。Note that the raw and normalized counts are stored in the `counts` and `data` layers of `RNA` assay. By default, the functions for finding markers will use normalized `data`. 关于`FindMarkers`为什么要使用"RNA" assay，参阅：<https://github.com/hbctraining/scRNA-seq_online/issues/58>
+:::
+
+### 准备差异表达分析所需变量 {#准备差异表达分析所需变量}
+
+We create a column in the `meta.data` slot to hold both the cell type and treatment information and switch the current `Idents` to that column.
+
+```{r}
+ifnb_integrated$celltype.stim <- paste(ifnb_integrated$seurat_annotations, 
+                                       ifnb_integrated$stim, 
+                                       sep = "_")
+unique(ifnb_integrated$celltype.stim)
+Idents(ifnb_integrated) <- "celltype.stim"
+```
+
+### 执行差异表达分析
+
+Then we use `FindMarkers()` to find the genes that are different between control and stimulated B cells.
+
+```{r}
+# 寻找对照组和刺激组之间在B细胞中的差异基因
+
+b.interferon.response <- FindMarkers(ifnb_integrated, 
+                                     ident.1 = "B_STIM", 
+                                     ident.2 = "B_CTRL", 
+                                     verbose = FALSE)
+head(b.interferon.response, n = 15)
+```
+
+::: callout-warning
+Please note that p-values obtained from this analysis should be interpreted with caution, as **these tests treat each cell as an independent replicate, and ignore inherent correlations between cells originating from the same sample**. Such analyses have been shown to find a large number of **false positive associations**, as has been demonstrated by [@squair2021], [@zimmerman2021], [@junttila2022], and others. As discussed here [@crowell2020a], DE tests across multiple conditions should expressly utilize multiple samples/replicates, and can be performed after aggregating (‘pseudobulking’) cells from the same sample and subpopulation together. Below, we show how **pseudobulking** can be used to account for such within-sample correlation.
+:::
+
+::: callout-warning
+这里没有使用进行pseudobulking的原因是，本例中“ctrl”和“sim”组都分别只有一个重复：We do not perform this analysis here, as there is a single replicate in the data.
+:::
+
+### 可视化差异基因表达
+
+Another useful way to visualize these changes in gene expression is with the `split.by` option to the [`FeaturePlot()`](https://satijalab.org/seurat/reference/FeaturePlot.html) or [`VlnPlot()`](https://satijalab.org/seurat/reference/VlnPlot.html) function. This will display FeaturePlots of the list of given genes, split by a grouping variable (stimulation condition here).
+
+```{r}
+#| fig-height: 12
+FeaturePlot(ifnb_integrated, 
+            features = c("CD3D", "GNLY", "IFI6", "ISG15", "CD14", "CXCL10"), 
+            split.by = "stim", 
+            max.cutoff = 3, 
+            cols = c("grey", "red"), 
+            reduction = "umap")
+```
+
+```{r}
+#| fig-width: 10
+#| fig-height: 15
+plots <- VlnPlot(ifnb_integrated,
+                 features = c("CD3D", "GNLY", "IFI6", "ISG15", "CD14", "CXCL10", "LYZ"),
+                 split.by = "stim",
+                 group.by = "seurat_annotations",
+                 pt.size = 0,
+                 combine = FALSE) # 由于VlnPlot绘制组图时没有图例，所以这里取消绘制组图
+library(patchwork)
+wrap_plots(plots = plots, ncol = 2) # 将plots列表组合成组图
+```
+
+::: {.callout-note collapse="true"}
+###### 结果解读
+
+-   *Genes such as **CD3D** and **GNLY** are canonical cell type markers (for T cells and NK/CD8 T cells) that are virtually **unaffected by interferon stimulation** and **display similar gene expression patterns in the control and stimulated group**.*
+-   ***IFI6** and **ISG15**, on the other hand, are **core interferon response genes** and are **upregulated** accordingly **in all cell types**.*
+-   ***CD14** and **CXCL10** are genes that show a **cell type specific interferon response**.*
+    -   ***CD14** expression **decreases** after stimulation in **CD14 monocytes**, [which could lead to misclassification in a supervised analysis framework, underscoring the value of integrated analysis.]{.underline}**如果用于识别细胞类型的marker本身在不同的样本类型（处理 vs. 对照、恶性组织 vs. 正常组织）中存在表达量的差异，那么就会导致对细胞类型判断的错误。而本篇的数据整合则能够避免出现这种情况。***
+
+    -   ***CXCL10** shows a distinct **upregulation** in **monocytes** and **B cells** after interferon stimulation but not in other cell types.*
+:::
+
+------------------------------------------------------------------------
+
+## pseudobulking后的差异分析
+
+这一节为了演示pseudobulking，采用的仍然是“ifnb”数据集，仍然包括了“ctrl”和“stim”两个conditions，但是每个条件下都有多个重复，即多个来自不同患者的样本。同时，为了和[Seurat官方教程](https://satijalab.org/seurat/articles/de_vignette)一致，采用了`NormalizeData`对数据进行标准化。
+
+### 数据读取和预处理 {#数据读取和预处理}
+
+For demonstration purposes, we will be using the interferon-beta stimulated human PBMCs dataset [@kang2017] that is available via the `SeuratData` package.
 
 ::: {.callout-note collapse="true" appearance="minimal" icon="false"}
 ###### 在线读取（可能需要全局代理）
 
 ```{r}
 #| eval: false
+rm(list = ls())
 library(Seurat)
 library(SeuratData)
 InstallData("ifnb")
@@ -23,76 +127,28 @@ ifnb <- LoadData("ifnb")
 从本地下载好的数据读取：
 
 ```{r}
+rm(list = ls())
+
 library(Seurat)
 ifnb <- readRDS("data/seurat_official/pbmc_ifnb.rds")
 ifnb
 head(ifnb@meta.data, 5)
-table(ifnb$seurat_annotations) # 这里的数据已经提前注释好了细胞类型
+unique(ifnb$seurat_annotations) # 这里的数据已经提前注释好了细胞类型
 # 标准化
 ifnb <- NormalizeData(ifnb)
+# 核对目前的默认assay，保证是RNA assay
+DefaultAssay(ifnb)
 ```
 
-## 寻找细胞类型之间的差异基因
+### 直接通过`FindMarkers`寻找差异基因
 
-::: callout-caution
-For a **much** faster implementation of the Wilcoxon Rank Sum Test,(default method for `FindMarkers`) please install the [`presto`](https://github.com/immunogenomics/presto) package:
-
-```{r}
-#| eval: false
-devtools::install_github('immunogenomics/presto')
-```
-:::
-
-Find DE features between CD16 Mono and CD1 Mono：
-
-```{r}
-Idents(ifnb) <- "seurat_annotations"
-monocyte.de.markers <- FindMarkers(ifnb, 
-                                   ident.1 = "CD16 Mono", 
-                                   ident.2 = "CD14 Mono")
-# view results
-nrow(monocyte.de.markers)
-head(monocyte.de.markers)
-```
-
-The results data frame has the following columns :
-
--   `p_val` : p-value (unadjusted)
-
--   `avg_log2FC` : log fold-change of the average expression between the two groups. Positive values indicate that the feature is more highly expressed in the first group.
-
--   `pct.1` : The percentage of cells where the feature is detected in the first group
-
--   `pct.2` : The percentage of cells where the feature is detected in the second group
-
--   `p_val_adj` : Adjusted p-value, based on **Bonferroni correction** using all features in the dataset.
-
-If the `ident.2` parameter is omitted or set to `NULL`, [`FindMarkers()`](https://satijalab.org/seurat/reference/findmarkers) will test for differentially expressed features **between the group specified by `ident.1` and all other cells**. Additionally, the parameter `only.pos` can be set to `TRUE` to only search for positive markers, i.e. features that are more highly expressed in the `ident.1` group.
-
-```{r}
-monocyte.de.markers <- FindMarkers(ifnb, 
-                                   ident.1 = "CD16 Mono", 
-                                   ident.2 = NULL, 
-                                   only.pos = TRUE)
-nrow(monocyte.de.markers)
-head(monocyte.de.markers)
-```
-
-## 寻找不同样本类型间同一细胞类型内的差异基因 {#sec-degs_within_the_same_cell_type_between_different_sample_types}
-
-Since this dataset contains treatment information (control versus stimulated with interferon-beta), we can also ask **what genes change in different conditions for cells of the same type**.
-
--   First, we create a column in the `meta.data` slot to hold both the cell type and treatment information and switch the current `Idents` to that column.
+为了和pseudobulking后的差异分析结果进行比价，这里仍然先进行基于`FindMarkers`的简单差异表达分析，**寻找ctrl和stim之间在CD14单核细胞中的差异基因**。基本步骤和上面的[准备差异表达分析所需变量](#准备差异表达分析所需变量)一致。
 
 ```{r}
 ifnb$celltype.stim <- paste(ifnb$seurat_annotations, ifnb$stim, sep = "_")
-table(ifnb$celltype.stim)
+unique(ifnb$celltype.stim)
 Idents(ifnb) <- "celltype.stim"
-```
 
--   Then we use `FindMarkers()` to find the genes that are different between control and stimulated CD14 monocytes.
-
-```{r}
 mono.de <- FindMarkers(ifnb, 
                        ident.1 = "CD14 Mono_STIM", 
                        ident.2 = "CD14 Mono_CTRL", 
@@ -101,17 +157,13 @@ nrow(mono.de)
 head(mono.de, n = 10)
 ```
 
-However, the p-values obtained from this analysis should be interpreted with caution, because **these tests treat each cell as an independent replicate and ignore inherent correlations between cells originating from the same sample**. Such analyses have been shown to find a large number of **false positive associations**, as has been demonstrated by [@squair2021], [@zimmerman2021], [@junttila2022], and others. Below, we show how **pseudobulking** can be used to account for such within-sample correlation.
+### 执行pseudobulking
 
-## pseudobulking后的差异分析
-
-To pseudobulk, we will use `AggregateExpression()` to sum together **gene counts of all the cells from the same sample** for each cell type. This results in **one gene expression profile per sample** **and cell type**. We can then perform DE analysis using [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) **on the sample level**. This treats the samples, rather than the individual cells, as independent observations. 参考前面的 @sec-Identify_differential_genes_between_sample_types 。
-
-### 准备样本信息
+To pseudobulk, we will use `AggregateExpression()` to sum together **gene counts of all the cells from the same sample** for each cell type. This results in **one gene expression profile per sample** **and cell type**. We can then perform DE analysis using [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) **on the sample level**. This treats the samples, rather than the individual cells, as independent observations.
 
 First, we need to retrieve the sample information for each cell. This is not loaded in the metadata, so we will load it from the [Github repo](https://github.com/yelabucsf/demuxlet_paper_code/tree/master/) of the source data for the original paper.
 
-::: {.callout-tip collapse="true" appearance="minimal" icon="false"}
+::: {.callout-tip collapse="true"}
 ###### Add sample information to the dataset
 
 ```{r}
@@ -158,12 +210,10 @@ ifnb <- subset(ifnb, subset = donor_id != "unknown")
 
 ```{r}
 head(ifnb@meta.data, 5)
-table(ifnb$donor_id)
+table(ifnb$donor_id, ifnb$stim)
 ```
 
-### 执行pseudobulking
-
-按照治疗分组（STIM vs. CTRL）、患者IDs、细胞类型（seurat_annotations）3个条件，执行pseudobulking (`AggregateExpression`)。
+按照治疗分组（STIM vs. CTRL）、患者IDs、细胞类型（seurat_annotations）3个条件，执行pseudobulking (`AggregateExpression`)。通过`AggregateExpression`命令将同一类型的细胞按照不同的处理条件合并起来，形成一个假的组织水平的测序数据。本例中，有2个治疗分组、13种细胞类型和8个患者，总共被合并成206个类别，将每一个类别看作是一个样本，这样就形成了一个所谓的假的组织水平的测序数据。
 
 ```{r}
 pseudo_ifnb <- AggregateExpression(ifnb, 
@@ -171,23 +221,23 @@ pseudo_ifnb <- AggregateExpression(ifnb,
                                    return.seurat = T, 
                                    group.by = c("stim", "donor_id", "seurat_annotations"))
 pseudo_ifnb
-head(pseudo_ifnb@meta.data) # 可以看到现在的表达矩阵的列（即样本）为治疗分组+患者IDs+细胞类型
+head(pseudo_ifnb@meta.data) # 可以看到现在的表达矩阵的barcode变成了治疗分组+患者IDs+细胞类型
 ```
 
-然后我们在meta.data中增加一列，记录治疗分组（STIM vs. CTRL）+ 细胞类型，这是用于差异分析的分组依据。这和 @sec-degs_within_the_same_cell_type_between_different_sample_types 的第一步是一样的。
+然后和此前一样，我们在meta.data中增加一列，记录治疗分组（STIM vs. CTRL）+ 细胞类型，这是用于差异分析的分组依据。
 
 ```{r}
 pseudo_ifnb$celltype.stim <- paste(pseudo_ifnb$seurat_annotations, 
                                    pseudo_ifnb$stim, 
                                    sep = "_")
-pseudo_ifnb$celltype.stim[1:5]
+unique(pseudo_ifnb$celltype.stim)
 ```
 
 ### 执行差异分析 {#sec-perform_de_analysis}
 
 Next, we perform DE testing on the pseudobulk level for CD14 monocytes, and compare it against the previous single-cell-level DE results.
 
-::: {.callout-caution collapse="true"}
+::: callout-caution
 ###### 安装`DESeq2`包
 
 由于pseudobulking后的`FindMarkers`差异分析需要采用`DESeq2`包提供的方法，所以需要提前安装`DESeq2`包：
@@ -197,12 +247,14 @@ Next, we perform DE testing on the pseudobulk level for CD14 monocytes, and comp
 #| echo: fenced
 BiocManager::install("DESeq2")
 ```
+
+注意，如果是用FindMarkers来寻找细胞类型的marker基因，则一般采用默认的Wilcoxon Rank Sum Test方法，这时需要调用的是[`presto`](https://github.com/immunogenomics/presto) 包（见 @sec-findmarkers_function ）。
 :::
 
 ```{r}
 Idents(pseudo_ifnb) <- "celltype.stim"
 
-bulk.mono.de <- FindMarkers(object = pseudo_ifnb, 
+bulk.mono.de <- FindMarkers(pseudo_ifnb, 
                             ident.1 = "CD14 Mono_STIM", 
                             ident.2 = "CD14 Mono_CTRL",
                             test.use = "DESeq2") # 指定差异分析方法为"DESeq2"
@@ -245,6 +297,8 @@ head(FindMarkers(ifnb,
 ```
 :::
 
+------------------------------------------------------------------------
+
 ### 比较单细胞水平和pseudobulk水平的差异表达分析
 
 接下来，我们可以比较一下单细胞水平的差异表达分析的P值和pseudobulk水平的P值：
@@ -269,11 +323,11 @@ only_sc <- merge_dat$gene[which(merge_dat$p_val.bulk > 0.05 &
 only_bulk <- merge_dat$gene[which(merge_dat$p_val.bulk < 0.05 & 
                                     merge_dat$p_val.sc > 0.05)]
 print(paste0('# 在两种差异分析方法中P值都<0.05的基因有: ',length(common), "个"))
-print(paste0('# 仅在单细胞水平差异分析中P值<0.05的基因有: ',length(only_sc), "个"))
-print(paste0('# 仅在pseudobulk水平差异分析中P值<0.05的基因有: ',length(only_bulk), "个"))
+print(paste0('# 仅在细胞水平差异分析中P值<0.05的基因有: ',length(only_sc), "个"))
+print(paste0('# 仅在pseudobulk差异分析中P值<0.05的基因有: ',length(only_bulk), "个"))
 ```
 
-> We can see that while the p-values are correlated between the single-cell and pseudobulk data, the [**single-cell p-values are often smaller**]{.underline} and suggest higher levels of significance. In particular, there are 3,519 genes with evidence of differential expression (prior to multiple hypothesis testing) in both analyses, 1,649 genes that only appear to be differentially expressed in the single-cell analysis, and just 204 genes that only appear to be differentially expressed in the bulk analysis. We can investigate these discrepancies using `VlnPlot`.
+> We can see that while the p-values are correlated between the single-cell and pseudobulk data, the [**single-cell p-values are often smaller**]{.underline} and suggest higher levels of significance. In particular, there are 3,519 genes with evidence of differential expression (prior to multiple hypothesis testing) in both analyses, 1,649 genes that only appear to be differentially expressed in the single-cell analysis, and just 204 genes that only appear to be differentially expressed in the bulk analysis.
 
 接下来，我们通过小提琴图来检查两种方法中的Top共同差异基因在在刺激组和对照组的表达水平：
 
@@ -281,9 +335,10 @@ print(paste0('# 仅在pseudobulk水平差异分析中P值<0.05的基因有: ',le
 # create a new column to annotate sample-condition-celltype in the single-cell dataset
 ifnb$donor_id.stim <- paste0(ifnb$stim, "-", ifnb$donor_id)
 head(ifnb@meta.data)
-table(ifnb$celltype.stim)
+unique(ifnb$celltype.stim)
 
 Idents(ifnb) <- "celltype.stim"
+
 # 这里我们检查p_val.bulk最小的前两个Top差异基因
 print(merge_dat[merge_dat$gene %in% common[1:2], c('gene','p_val.sc','p_val.bulk')])
 
@@ -292,6 +347,11 @@ VlnPlot(ifnb,
         features = common[1:2], 
         idents = c("CD14 Mono_CTRL", "CD14 Mono_STIM"), 
         group.by = "stim") 
+```
+
+```{r}
+#| fig-width: 10
+#| fig-height: 8
 # 在样本（患者）水平查看这两个Top差异基因在刺激组和对照组的表达水平
 VlnPlot(ifnb, 
         features = common[1:2], 
@@ -300,7 +360,9 @@ VlnPlot(ifnb,
         ncol = 1) 
 ```
 
-> In both the pseudobulk and single-cell analyses, the p-values for these two genes are astronomically small. For both of these genes, when just comparing all stimulated CD4 monocytes to all control CD4 monocytes across samples, we see much higher expression in the stimulated cells. When breaking down these cells by sample, we continue to see consistently higher expression levels in the stimulated samples compared to the control samples; in other words, this finding is not driven by just one or two samples. Because of this consistency, we find this signal in both analyses.
+> In both the pseudobulk and single-cell analyses, the p-values for these two genes are astronomically small. For both of these genes, when just comparing all stimulated CD4 monocytes to all control CD4 monocytes across samples, we see much higher expression in the stimulated cells.
+>
+> When breaking down these cells by sample, we continue to see consistently higher expression levels in the stimulated samples compared to the control samples; in other words, this finding is not driven by just one or two samples. Because of this consistency, we find this signal in both analyses.
 
 By contrast, we can examine examples of genes that are only DE under the single-cell analysis.
 
@@ -311,6 +373,11 @@ VlnPlot(ifnb,
         features = c('SRGN','HLA-DRA'), 
         idents = c("CD14 Mono_CTRL", "CD14 Mono_STIM"), 
         group.by = "stim") 
+```
+
+```{r}
+#| fig-width: 10
+#| fig-height: 8
 VlnPlot(ifnb, 
         features = c('SRGN','HLA-DRA'), 
         idents = c("CD14 Mono_CTRL", "CD14 Mono_STIM"), 
@@ -321,6 +388,8 @@ VlnPlot(ifnb,
 > Here, SRGN and HLA-DRA both have very small p-values in the single-cell analysis (on the orders of 10^−21^ and 10^−9^), but much larger p-values around 0.18 in the pseudobulk analysis. While there appears to be a difference between control and simulated cells when ignoring sample information, the signal is much weaker on the sample level, and we can see notable variability from sample to sample.
 
 所以，从这个例子中可以看出**pseudobulk后的差异分析的结果更加准确**。
+
+------------------------------------------------------------------------
 
 ::: {.callout-note collapse="true" icon="false"}
 ## Session Info

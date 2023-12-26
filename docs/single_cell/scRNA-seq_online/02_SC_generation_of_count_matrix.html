@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.3.450">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>R语言学习笔记 - 16&nbsp; 单细胞RNA测序—从raw data到count matrix</title>
+<title>R语言学习笔记 - 17&nbsp; 单细胞RNA测序—从raw data到count matrix</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -109,7 +109,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script async="" src="https://hypothes.is/embed.js"></script>
 
 
-<meta name="twitter:title" content="R语言学习笔记 - 16&nbsp; 单细胞RNA测序—从raw data到count matrix">
+<meta name="twitter:title" content="R语言学习笔记 - 17&nbsp; 单细胞RNA测序—从raw data到count matrix">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/images/截屏2023-12-14 14.56.28.png">
 <meta name="twitter:image-height" content="742">
@@ -209,7 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">单细胞RNA测序---从raw data到count matrix</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞RNA测序---从raw data到count matrix</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -312,32 +312,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">单细胞数据整合（integration）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+  <a href="../../single_cell/seurat/marker_gene_identification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">差异表达分析</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
   </div>
 </li>
       </ul>
@@ -354,25 +360,67 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title"><strong>质控</strong></span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">质控</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
   </div>
 </li>
       </ul>
@@ -389,37 +437,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
@@ -452,13 +500,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#end-reads-includes-all-droplet-based-methods" id="toc-end-reads-includes-all-droplet-based-methods" class="nav-link active" data-scroll-target="#end-reads-includes-all-droplet-based-methods"><span class="header-section-number">16.1</span> 3’-end reads (includes all droplet-based methods)</a></li>
-  <li><a href="#single-cell-rna-seq-workflow" id="toc-single-cell-rna-seq-workflow" class="nav-link" data-scroll-target="#single-cell-rna-seq-workflow"><span class="header-section-number">16.2</span> Single-cell RNA-seq workflow</a></li>
-  <li><a href="#generation-of-count-matrix" id="toc-generation-of-count-matrix" class="nav-link" data-scroll-target="#generation-of-count-matrix"><span class="header-section-number">16.3</span> Generation of count matrix</a></li>
-  <li><a href="#formatting-reads-and-filtering-noisy-cellular-barcodes" id="toc-formatting-reads-and-filtering-noisy-cellular-barcodes" class="nav-link" data-scroll-target="#formatting-reads-and-filtering-noisy-cellular-barcodes"><span class="header-section-number">16.4</span> 1. Formatting reads and filtering noisy cellular barcodes</a></li>
-  <li><a href="#demultiplexing-sample-reads" id="toc-demultiplexing-sample-reads" class="nav-link" data-scroll-target="#demultiplexing-sample-reads"><span class="header-section-number">16.5</span> 2. Demultiplexing sample reads</a></li>
-  <li><a href="#mappingpseudo-mapping-to-cdnas" id="toc-mappingpseudo-mapping-to-cdnas" class="nav-link" data-scroll-target="#mappingpseudo-mapping-to-cdnas"><span class="header-section-number">16.6</span> 3. Mapping/pseudo-mapping to cDNAs</a></li>
-  <li><a href="#collapsing-umis-and-quantification-of-reads" id="toc-collapsing-umis-and-quantification-of-reads" class="nav-link" data-scroll-target="#collapsing-umis-and-quantification-of-reads"><span class="header-section-number">16.7</span> 4. Collapsing UMIs and quantification of reads</a></li>
+  <li><a href="#end-reads-includes-all-droplet-based-methods" id="toc-end-reads-includes-all-droplet-based-methods" class="nav-link active" data-scroll-target="#end-reads-includes-all-droplet-based-methods"><span class="header-section-number">17.1</span> 3’-end reads (includes all droplet-based methods)</a></li>
+  <li><a href="#single-cell-rna-seq-workflow" id="toc-single-cell-rna-seq-workflow" class="nav-link" data-scroll-target="#single-cell-rna-seq-workflow"><span class="header-section-number">17.2</span> Single-cell RNA-seq workflow</a></li>
+  <li><a href="#generation-of-count-matrix" id="toc-generation-of-count-matrix" class="nav-link" data-scroll-target="#generation-of-count-matrix"><span class="header-section-number">17.3</span> Generation of count matrix</a></li>
+  <li><a href="#formatting-reads-and-filtering-noisy-cellular-barcodes" id="toc-formatting-reads-and-filtering-noisy-cellular-barcodes" class="nav-link" data-scroll-target="#formatting-reads-and-filtering-noisy-cellular-barcodes"><span class="header-section-number">17.4</span> 1. Formatting reads and filtering noisy cellular barcodes</a></li>
+  <li><a href="#demultiplexing-sample-reads" id="toc-demultiplexing-sample-reads" class="nav-link" data-scroll-target="#demultiplexing-sample-reads"><span class="header-section-number">17.5</span> 2. Demultiplexing sample reads</a></li>
+  <li><a href="#mappingpseudo-mapping-to-cdnas" id="toc-mappingpseudo-mapping-to-cdnas" class="nav-link" data-scroll-target="#mappingpseudo-mapping-to-cdnas"><span class="header-section-number">17.6</span> 3. Mapping/pseudo-mapping to cDNAs</a></li>
+  <li><a href="#collapsing-umis-and-quantification-of-reads" id="toc-collapsing-umis-and-quantification-of-reads" class="nav-link" data-scroll-target="#collapsing-umis-and-quantification-of-reads"><span class="header-section-number">17.7</span> 4. Collapsing UMIs and quantification of reads</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
@@ -467,7 +515,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -506,8 +554,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 </ul>
 <p>Many of the same analysis steps need to occur for 3’-end sequencing as for full-length, but 3’ protocols have been increasing in popularity and consist of a few more steps in the analysis. Therefore, <strong>our materials are going to detail the analysis of data from these 3’ protocols with a focus on the droplet-based methods (inDrops, Drop-seq, 10X Genomics).</strong></p>
-<section id="end-reads-includes-all-droplet-based-methods" class="level2" data-number="16.1">
-<h2 data-number="16.1" class="anchored" data-anchor-id="end-reads-includes-all-droplet-based-methods"><span class="header-section-number">16.1</span> 3’-end reads (includes all droplet-based methods)</h2>
+<section id="end-reads-includes-all-droplet-based-methods" class="level2" data-number="17.1">
+<h2 data-number="17.1" class="anchored" data-anchor-id="end-reads-includes-all-droplet-based-methods"><span class="header-section-number">17.1</span> 3’-end reads (includes all droplet-based methods)</h2>
 <p>For the analysis of scRNA-seq data, it is helpful to understand what information is present in each of the reads and how we use it moving forward through the analysis.</p>
 <p>For the 3’-end sequencing methods, reads originating from different molecules of the same transcript would have originated only from the 3’ end of the transcripts, so would have a high likelihood of having the same sequence. However, the PCR step during library preparation could also generate read duplicates. To determine <strong>whether a read is a biological or technical duplicate</strong>, these methods use unique molecular identifiers, or UMIs.</p>
 <ul>
@@ -541,8 +589,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Sequencing read2</strong>:&nbsp;the Read2 sequence (purple bottom arrow)</li>
 </ul>
 </section>
-<section id="single-cell-rna-seq-workflow" class="level2" data-number="16.2">
-<h2 data-number="16.2" class="anchored" data-anchor-id="single-cell-rna-seq-workflow"><span class="header-section-number">16.2</span> Single-cell RNA-seq workflow</h2>
+<section id="single-cell-rna-seq-workflow" class="level2" data-number="17.2">
+<h2 data-number="17.2" class="anchored" data-anchor-id="single-cell-rna-seq-workflow"><span class="header-section-number">17.2</span> Single-cell RNA-seq workflow</h2>
 <p>The scRNA-seq method will determine how to parse the barcodes and UMIs from the sequencing reads. So, although a few of the specific steps will slightly differ, the overall workflow will generally follow the same steps regardless of method. The general workflow is shown below:</p>
 <p><img src="images/scRNA-seq_steps_image.jpg" class="img-fluid"></p>
 <blockquote class="blockquote">
@@ -558,8 +606,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>Regardless of the analysis being done, conclusions about a population based on a single sample per condition are not trustworthy. <strong>BIOLOGICAL REPLICATES ARE STILL NEEDED!</strong> That is, if you want to make conclusions that correspond to the population and not just the single sample.</p>
 </section>
-<section id="generation-of-count-matrix" class="level2" data-number="16.3">
-<h2 data-number="16.3" class="anchored" data-anchor-id="generation-of-count-matrix"><span class="header-section-number">16.3</span> Generation of count matrix</h2>
+<section id="generation-of-count-matrix" class="level2" data-number="17.3">
+<h2 data-number="17.3" class="anchored" data-anchor-id="generation-of-count-matrix"><span class="header-section-number">17.3</span> Generation of count matrix</h2>
 <p>We are going to start by discussing the first part of this workflow, which is generating the count matrix from the raw sequencing data. We will focus on the 3’ end sequencing used by droplet-based methods, such as inDrops, 10X Genomics, and Drop-seq.</p>
 <p><img src="images/sc_gen_matrix_workflow.png" class="img-fluid" width="288"></p>
 <p>After sequencing, the sequencing facility will either output the raw sequencing data as <strong>BCL or FASTQ format or will generate the count matrix</strong>. If the reads are in BCL format, then we will need to convert to FASTQ format. There is a useful command-line tool called <code>bcl2fastq</code> that can easily perform this conversion.</p>
@@ -577,8 +625,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>If using 10X Genomics library preparation method, then the <a href="https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger">Cell Ranger pipeline</a> would be used for all of the above steps.</p>
 </section>
-<section id="formatting-reads-and-filtering-noisy-cellular-barcodes" class="level2" data-number="16.4">
-<h2 data-number="16.4" class="anchored" data-anchor-id="formatting-reads-and-filtering-noisy-cellular-barcodes"><span class="header-section-number">16.4</span> 1. Formatting reads and filtering noisy cellular barcodes</h2>
+<section id="formatting-reads-and-filtering-noisy-cellular-barcodes" class="level2" data-number="17.4">
+<h2 data-number="17.4" class="anchored" data-anchor-id="formatting-reads-and-filtering-noisy-cellular-barcodes"><span class="header-section-number">17.4</span> 1. Formatting reads and filtering noisy cellular barcodes</h2>
 <p>The FASTQ files can then be used to parse out the cell barcodes, UMIs, and sample barcodes. For droplet-based methods, many of the cellular barcodes will match a low number of reads (&lt; 1000 reads) due to:</p>
 <ul>
 <li>encapsulation of free floating RNA from dying cells</li>
@@ -592,16 +640,16 @@ AGGAAGATGGAGGAGAGAAGGCGGTGAAAGAGACCTGTAAAAAGCCACCGN
 @@@DDBD&gt;=AFCF+&lt;CAFHDECII:DGGGHGIGGIIIEHGIIIGIIDHII#</code></pre>
 <p>Known cellular barcodes used in the library preparation method should be known, and unknown barcodes would be dropped, while allowing for an acceptable number of mismatches to the known cellular barcodes.</p>
 </section>
-<section id="demultiplexing-sample-reads" class="level2" data-number="16.5">
-<h2 data-number="16.5" class="anchored" data-anchor-id="demultiplexing-sample-reads"><span class="header-section-number">16.5</span> 2. Demultiplexing sample reads</h2>
+<section id="demultiplexing-sample-reads" class="level2" data-number="17.5">
+<h2 data-number="17.5" class="anchored" data-anchor-id="demultiplexing-sample-reads"><span class="header-section-number">17.5</span> 2. Demultiplexing sample reads</h2>
 <p>The next step of the process is to demultiplex the samples, if sequencing more than a single sample. This is the one step of this process not handled by the ‘umis’ tools, but is accomplished by ‘zUMIs’. We would need to parse the reads to determine the sample barcode associated with each cell.</p>
 </section>
-<section id="mappingpseudo-mapping-to-cdnas" class="level2" data-number="16.6">
-<h2 data-number="16.6" class="anchored" data-anchor-id="mappingpseudo-mapping-to-cdnas"><span class="header-section-number">16.6</span> 3. Mapping/pseudo-mapping to cDNAs</h2>
+<section id="mappingpseudo-mapping-to-cdnas" class="level2" data-number="17.6">
+<h2 data-number="17.6" class="anchored" data-anchor-id="mappingpseudo-mapping-to-cdnas"><span class="header-section-number">17.6</span> 3. Mapping/pseudo-mapping to cDNAs</h2>
 <p>To determine which gene the read originated from, the reads are aligned using traditional (STAR) or light-weight methods (Kallisto/RapMap).</p>
 </section>
-<section id="collapsing-umis-and-quantification-of-reads" class="level2" data-number="16.7">
-<h2 data-number="16.7" class="anchored" data-anchor-id="collapsing-umis-and-quantification-of-reads"><span class="header-section-number">16.7</span> 4. Collapsing UMIs and quantification of reads</h2>
+<section id="collapsing-umis-and-quantification-of-reads" class="level2" data-number="17.7">
+<h2 data-number="17.7" class="anchored" data-anchor-id="collapsing-umis-and-quantification-of-reads"><span class="header-section-number">17.7</span> 4. Collapsing UMIs and quantification of reads</h2>
 <p>The duplicate UMIs are collapsed, and only the unique UMIs are quantified using a tool like Kallisto or featureCounts. The resulting output is a cell by gene matrix of counts:</p>
 <p><img src="images/count_matrix2.png" class="img-fluid" width="448"></p>
 <blockquote class="blockquote">
@@ -1033,12 +1081,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="../../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">

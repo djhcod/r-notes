@@ -239,13 +239,14 @@ With the cells clustered, we can explore the cell type identities by looking for
 
 : 细胞类型marker基因 {#tbl-cell_type_markers}
 
-The `FeaturePlot()` function from Seurat makes it easy to visualize a handful of genes using the gene IDs stored in the Seurat object. We can easily explore the expression of known gene markers on top of our UMAP visualizations. Let's go through and determine the identities of the clusters. To access the normalized expression levels of all genes, we can use the normalized count data stored in the `RNA` assay slot.
+The `FeaturePlot()` function from Seurat makes it easy to visualize a handful of genes using the gene IDs stored in the Seurat object. We can easily explore the expression of known gene markers on top of our UMAP visualizations. Let's go through and determine the identities of the clusters.
 
 ::: callout-caution
 The `SCTransform` normalization was performed only on the **3000** most variable genes, so many of our genes of interest may not be present in this data ( @sec-perform_sctranform ).
 :::
 
-这里为了准确可视化marker基因的表达情况，我们将默认的assay改回“RNA”，然后运行`NormalizeData`：
+::: callout-warning
+在[原教程](https://hbctraining.github.io/scRNA-seq_online/lessons/08_SC_clustering_quality_control.html)中，由于采用了Seurat V5之前的工作流（如 @sec-Load_case_data 所述），所以为了准确可视化marker基因的表达情况，将默认的assay改回了“RNA”，然后运行`NormalizeData`：
 
 ```{r}
 #| cache-lazy: false
@@ -258,8 +259,9 @@ DefaultAssay(seurat_clustered) <- "RNA"
 seurat_clustered <- NormalizeData(seurat_clustered, verbose = FALSE)
 ```
 
-::: callout-tip
-Assay is a slot defined in the Seurat object, it has multiple slots within it. In a given assay, the `counts` layer stores non-normalized raw counts, and the `data` layer stores normalized expression data. Therefore, when we run the `NormalizeData()` function in the above code, the normalized data will be stored in the `data` layer of the RNA assay while the `counts` layer will remain unaltered.
+*Assay is a slot defined in the Seurat object, it has multiple slots within it. In a given assay, the `counts` slot stores non-normalized raw counts, and the `data` slot stores normalized expression data. Therefore, when we run the `NormalizeData()` function in the above code, the normalized data will be stored in the `data` slot of the RNA assay while the `counts` slot will remain unaltered.*
+
+而在Seurat V5的官方教程中（ @sec-sctransform ），经过了`SCTransform`之后绘制marker基因的表达情况时，并没有执行这一步，默认的assay仍然是“SCT”。这里为了和原教程的图像一致，所以也进行这一步。而对于以后的Seurat V5工作流考虑按照官方教程的做法。
 :::
 
 Depending on our markers of interest, they could be positive or negative markers for a particular cell type. The combined expression of our chosen handful of markers should give us an idea on whether a cluster corresponds to that particular cell type.

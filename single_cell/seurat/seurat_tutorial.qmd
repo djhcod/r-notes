@@ -5,9 +5,9 @@ editor_options:
 
 # Seurat细胞分群官方教程 {#sec-seurat_cell_clustering_official_tutorial}
 
-原文：[*Seurat - Guided Clustering Tutorial*](https://satijalab.org/seurat/articles/pbmc3k_tutorial)
-
-原文发布日期：2023年10月31日
+> 原文：[*Seurat - Guided Clustering Tutorial*](https://satijalab.org/seurat/articles/pbmc3k_tutorial)
+>
+> 原文发布日期：2023年10月31日
 
 ## Seurat对象构建
 
@@ -60,13 +60,13 @@ pbmc
 
     -   Low-quality / dying cells often exhibit extensive mitochondrial contamination
 
-    -   We calculate mitochondrial QC metrics with the [`PercentageFeatureSet()`](https://satijalab.org/seurat/reference/percentagefeatureset) function, which calculates the percentage of counts originating from a set of features
+    -   We calculate mitochondrial QC metrics with the `PercentageFeatureSet()` function, which calculates the percentage of counts originating from a set of features
 
     -   We use the set of all genes starting with `MT-` as a set of mitochondrial genes
 
 ### 计算线粒体基因比例
 
-通过`PercentageFeatureSet`函数计算每个细胞中线粒体基因的比例，并将其返回到Seurat对象的`meta.data`中，形成一个新列"percent.mt"。
+通过`PercentageFeatureSet()`函数计算每个细胞中线粒体基因的比例，并将其返回到Seurat对象的`meta.data`中，形成一个新列"percent.mt"。
 
 ```{r}
 pbmc[["percent.mt"]] <- PercentageFeatureSet(pbmc, pattern = "^MT-")
@@ -135,7 +135,7 @@ SCTransform() normalization workflow 就是这样的一种工作流. 针对这�
 
 We next calculate a subset of features that exhibit **high cell-to-cell variation** in the dataset (i.e, they are highly expressed in some cells, and lowly expressed in others). We and others [@brennecke2013] have found that focusing on these genes in downstream analysis helps to **highlight biological signal** in single-cell datasets.
 
-Our procedure in Seurat is described in detail here [@stuart2019] , and improves on previous versions by directly modeling the mean-variance relationship inherent in single-cell data, and is implemented in the [`FindVariableFeatures()`](https://satijalab.org/seurat/reference/findvariablefeatures) function. **By default, we return 2,000 features per dataset**. These will be used in downstream analysis, like PCA.
+Our procedure in Seurat is described in detail here [@stuart2019] , and improves on previous versions by directly modeling the mean-variance relationship inherent in single-cell data, and is implemented in the `FindVariableFeatures()` function. **By default, we return 2,000 features per dataset**. These will be used in downstream analysis, like PCA.
 
 ```{r}
 #| label: fig-识别高变基因
@@ -159,7 +159,7 @@ LabelPoints(plot = plot1, points = top10, repel = TRUE)
 
 ## 归一化（Scaling） {#sec-scaledata}
 
-Next, we apply a **linear transformation** ('scaling') that is a standard pre-processing step **prior to dimensional reduction** techniques like PCA. The [`ScaleData()`](https://satijalab.org/seurat/reference/scaledata) function:
+Next, we apply a **linear transformation** ('scaling') that is a standard pre-processing step **prior to dimensional reduction** techniques like PCA. The `ScaleData()` function:
 
 -   Shifts the expression of each gene, so that **the mean expression across cells is 0（每个基因在所有细胞的平均表达量为0）**
 
@@ -185,13 +185,13 @@ pbmc <- ScaleData(pbmc, features = all.genes)
 ::: callout-tip
 ## 去除单细胞数据中的非期望变异来源
 
-In Seurat, we also use the `ScaleData()` function to remove unwanted sources of variation from a single-cell dataset. For example, we could 'regress out' heterogeneity associated with (for example) [cell cycle stage](https://satijalab.org/seurat/articles/cell_cycle_vignette), or mitochondrial contamination i.e.:
+In Seurat, we also use the `ScaleData()` function to remove unwanted sources of variation from a single-cell dataset. For example, we could 'regress out' heterogeneity associated with (for example) cell cycle stage ( @sec-Elimination_of_cell_cycle_effects ), or mitochondrial contamination i.e.:
 
 ```{r}
 pbmc <- ScaleData(pbmc, vars.to.regress = "percent.mt")
 ```
 
-However, particularly for advanced users who would like to use this functionality, **we strongly recommend the use of our new normalization workflow, [`SCTransform()`](https://satijalab.org/seurat/reference/sctransform)**. The method is described in our paper [@choudhary2022a]. As with [`ScaleData()`](https://satijalab.org/seurat/reference/scaledata), the function [`SCTransform()`](https://satijalab.org/seurat/reference/sctransform) also includes a `vars.to.regress` parameter. 
+However, particularly for advanced users who would like to use this functionality, **we strongly recommend the use of our new normalization workflow, `SCTransform()`**. The method is described in our paper [@choudhary2022a]. As with `ScaleData()`, the function `SCTransform()` also includes a `vars.to.regress` parameter ( @sec-perform_sctransform ). 
 :::
 
 ## 线性降维
@@ -221,7 +221,7 @@ For the first principal components, Seurat outputs a list of genes with the most
 
 ### 降维可视化
 
-Seurat provides several useful ways of visualizing both cells and features that define the PCA, including `VizDimReduction()`, [`DimPlot()`](https://satijalab.org/seurat/reference/dimplot), and [`DimHeatmap()`](https://satijalab.org/seurat/reference/dimheatmap) .
+Seurat provides several useful ways of visualizing both cells and features that define the PCA, including `VizDimReduction()`, `DimPlot()`, and `DimHeatmap()` .
 
 ```{r}
 VizDimLoadings(pbmc, dims = 1:2, reduction = "pca")
@@ -334,7 +334,16 @@ saveRDS(pbmc, file = "output/seurat_official/pbmc_tutorial.rds")
 
 Seurat can help you find markers that define clusters via **differential expression (DE)**. By default, it identifies positive and negative markers of a single cluster (**specified in `ident.1`**), **compared to all other cells**. `FindAllMarkers()` automates this process for all clusters, but you can also test groups of clusters vs. each other, or against all cells.
 
-In Seurat v5, we use the **presto package** (as described [here](https://www.biorxiv.org/content/10.1101/653253v1) and available for installation [here](https://github.com/immunogenomics/presto)), to dramatically improve the speed of DE analysis, particularly for large datasets. For users who are not using presto, you can examine the documentation for this function ([`?FindMarkers`](https://satijalab.org/seurat/reference/findmarkers)) to explore the `min.pct` and `logfc.threshold` parameters, which can be increased in order to increase the speed of DE testing.
+::: callout-caution
+In Seurat v5, we use the **presto package** (as described [here](https://www.biorxiv.org/content/10.1101/653253v1) and available for installation [here](https://github.com/immunogenomics/presto)), to dramatically improve the speed of DE analysis, particularly for large datasets.
+
+```{r}
+#| eval: false
+devtools::install_github('immunogenomics/presto')
+```
+
+For users who are not using presto, you can examine the documentation for this function ([`?FindMarkers`](https://satijalab.org/seurat/reference/findmarkers)) to explore the `min.pct` and `logfc.threshold` parameters, which can be increased in order to increase the speed of DE testing.
+:::
 
 Find all markers of cluster 2：
 
@@ -473,6 +482,8 @@ DimPlot(pbmc,
 ```{r}
 saveRDS(pbmc, file = "output/seurat_official/pbmc3k_final.rds")
 ```
+
+------------------------------------------------------------------------
 
 ::: {.callout-note collapse="true" icon="false"}
 ## Session Info

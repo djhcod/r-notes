@@ -51,10 +51,14 @@ Before we start our marker identification we will explicitly set our default ass
 DefaultAssay(seurat_clustered_qc) <- "RNA"
 ```
 
-::: callout-caution
-The default assay should have already been `RNA`, because we set it up in the previous clustering quality control lesson ( @sec-explore_known_markers ). But we encourage you to run this line of code above to be absolutely sure in case the active slot was changed somewhere upstream in your analysis. Note that the raw and normalized counts are stored in the `counts` and `data` slots of `RNA` assay. By default, the functions for finding markers will use normalized data.
+::: callout-important
+[原教程](https://hbctraining.github.io/scRNA-seq_online/lessons/09_merged_SC_marker_identification.html)将默认的assay设置为了"RNA"，其解释如下：The default assay should have already been `RNA`, because we set it up in the previous clustering quality control lesson ( @sec-explore_known_markers ). But we encourage you to run this line of code above to be absolutely sure in case the active slot was changed somewhere upstream in your analysis. Note that the raw and normalized counts are stored in the `counts` and `data` slots of `RNA` assay. By default, the functions for finding markers will use normalized data. （关于`FindMarkers`为什么要使用"RNA" assay的更多解释，参阅[此链接](https://github.com/hbctraining/scRNA-seq_online/issues/58)）
 
-关于FindMarkers为什么要使用"RNA" assay，参阅：<https://github.com/hbctraining/scRNA-seq_online/issues/58>
+而在Seurat V5的官方教程中（ @sec-findmarkers_function ），对于经过`SCTransform`归一化处理后的单细胞数据，在进行`FindMarkers`差异分析之前，需要先运行`seurat_clustered_qc <- PrepSCTFindMarkers(seurat_clustered_qc)`，来预处理SCT assay。详细解释见[此链接](https://www.jianshu.com/p/fb2e43905559)。
+
+如果是基于`NormalizeData`标准化的单细胞数据，和这里一样，需要使用"RNA" assay进行差异分析，如果不是，需要通过`DefaultAssay(seurat_clustered_qc) <- "RNA"`进行设定。
+
+这里为了和原教程保持一致，默认的将assay设置为"RNA"。
 :::
 
 Our clustering analysis resulted in the following clusters:
@@ -115,7 +119,7 @@ The `FindAllMarkers()` function has **three important arguments** which provide 
 You could use any combination of these arguments depending on how stringent/lenient you want to be. Also, by default this function will return to you genes that exhibit both positive and negative expression changes. Typically, we add an argument `only.pos` to opt for keeping only the positive changes. The code to find markers for each cluster is shown below.
 
 ::: callout-important
-In Seurat v5, we use the **`presto`** package (as described [here](https://www.biorxiv.org/content/10.1101/653253v1) and available for installation [here](https://github.com/immunogenomics/presto)), to dramatically improve the speed of DE analysis, particularly for large datasets ( @sec-seurat_cluster_biomarkers ). 因此，需要先安装`presto`包：
+In Seurat v5, we use the **`presto`** package (as described [here](https://www.biorxiv.org/content/10.1101/653253v1) and available for installation [here](https://github.com/immunogenomics/presto)), to dramatically improve the speed of DE analysis, particularly for large datasets ( @sec-findmarkers_function ). 因此，需要先安装`presto`包：
 
 ```{r}
 #| eval: false
@@ -521,6 +525,10 @@ top_conserved_markers <- conserved_markers %>%
 
 ![](images/tcell_marker_table_SCTv2.png)
 
+可能的原因：
+
+> “In addition, in Seurat v5 we implement a **pseudocount** (when calculating log-FC) at the **group level** instead of the cell level. As a result, users will observe **higher logFC estimates** in v5 - but should note that these estimates may be more unstable - particularly for genes that are very lowly expressed in one of the two groups” （ @sec-changes_in_seurat_v5 ）
+
 这一小节的后续内容暂时以原教程的marker基因结果为准。
 :::
 
@@ -675,6 +683,8 @@ Now taking all of this information, we can surmise the cell types of the differe
 |     15     |        Megakaryocytes        |
 |     16     | Plasmacytoid dendritic cells |
 
+: 细胞注释结果 {#tbl-细胞注释结果}
+
 We can then reassign the identity of the clusters to these cell types:
 
 ```{r}
@@ -760,6 +770,8 @@ sink()
 
 ## 可选的后续分析:
 
+![](images/sc_workflow_2022-01.jpg){width="545"}
+
 -   Experimentally validate intriguing markers for our identified cell types.
 
 -   Explore a subset of the cell types to discover subclusters of cells
@@ -776,7 +788,7 @@ sink()
     Since subsetting the dataset can result in a much smaller number of cells, it is important to consider the total number of cells you are looking to cluster and some of the parameters that might be affected by the small numbers. For example, if integrating, there is a ‘K’ number of cells used for determining the neighborhoods for identifying and filtering anchors. Therefore, if your integration isn’t very good for a small dataset, you might want to consider **lowering the ‘K’ parameter (k.filter、k.weight)** in`IntegrateLayers`. However, if ‘K’ is too small, it could also lead to poor integration.
     :::
 
--   Perform **differential expression analysis** **between conditions** `ctrl` and `stim`
+-   Perform **differential expression analysis** **between conditions** `ctrl` and `stim`（即**寻找不同样本类型/条件间同一细胞类型内的差异基因**，方法详见 @sec-differential_expression ）
 
     -   Biological replicates are **necessary** to proceed with this analysis
 

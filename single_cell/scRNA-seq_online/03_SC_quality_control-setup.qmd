@@ -36,13 +36,13 @@ Some relevant metadata for our dataset is provided below:
 
 -   The samples were sequenced on the Illumina NextSeq 500
 
--   PBMC samples from eight individual lupus patients were separated into two aliquots each.
+-   PBMC samples from **eight** individual lupus patients were separated into two aliquots each.
 
     -   One aliquot of PBMCs was activated by 100 U/mL of **recombinant IFN-β for 6 hours**.
     -   The second aliquot was left **untreated**.
     -   After 6 hours, the eight samples for each condition were pooled together in two final pools (stimulated cells and control cells). We will be working with these two, pooled samples. (*We did not demultiplex the samples because SNP genotype information was used to demultiplex in the paper and the barcodes/sample IDs were not readily available for this data. Generally, you would demultiplex and perform QC on each individual sample rather than pooling the samples.*)
 
--   12,138 and 12,167 cells were identified (after removing doublets) for control and stimulated pooled samples, respectively.
+-   12,138 and 12,167 cells were identified (after removing doublets) for control and stimulated **pooled** samples, respectively.
 
 -   Since the samples are PBMCs, we will expect immune cells, such as:
 
@@ -59,27 +59,46 @@ None of the above cell types are expected to be low complexity or anticipated to
 
 ## Loading single-cell RNA-seq count data
 
+After processing 10X data using its proprietary software Cell Ranger, you will have an `outs` directory (always). Within this directory you will find a number of different files including the files listed below:
+
+-   **`web_summary.html`:** report that explores different QC metrics, including the mapping metrics, filtering thresholds, estimated number of cells after filtering, and information on the number of reads and genes per cell after filtering.
+-   `BAM alignment files`: files used for visualization of the mapped reads and for re-creation of FASTQ files, if needed
+-   **`filtered_feature_bc_matrix`:** folder containing all files needed to construct the count matrix using data **filtered** **by Cell Ranger**
+-   **`raw_feature_bc_matrix`:** folder containing all files needed to construct the count matrix using the raw **unfiltered data**
+
+While Cell Ranger performs filtering on the expression counts (see note below), we wish to perform our own QC and filtering because we want to account for the biology of our experiment/biological system. Given this **we are only interested in the `raw_feature_bc_matrix` folder** in the Cell Ranger output.
+
+::: {.callout-tip collapse="true"}
+###### Why do we not use the filtered_feature_bc_matrix folder?
+
+The `filtered_feature_bc_matrix` uses [internal filtering criteria by Cell Ranger](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/algorithms/overview), and we do not have control of what cells to keep or abandon.
+
+The filtering performed by Cell Ranger when generating the `filtered_feature_bc_matrix` is often good; however, sometimes data can be of very high quality and the **Cell Ranger filtering process can remove high quality cells**. In addition, it is generally preferable to explore your own data while taking into account the biology of the experiment for applying thresholds during filtering. For example, if you expect a particular cell type in your dataset to be smaller and/or not as transcriptionally active as other cell types in your dataset, these cells have the potential to be filtered out. However, with Cell Ranger v3 they have tried to account for cells of different sizes (for example, tumor vs infiltrating lymphocytes), and now may not filter as many low quality cells as needed.
+:::
+
 Regardless of the technology or pipeline used to process your raw single-cell RNA-seq sequence data, the output with quantified expression will generally be the same. That is, for each individual sample you will have the following **three files**:
 
 1.  a file with the **cell IDs**, representing all cells quantified
 2.  a file with the **gene IDs**, representing all genes quantified
 3.  a **matrix of counts** per gene for every cell
 
-We can explore these files by clicking the `data/ctrl_raw_feature_bc_matrix` folder:
+案例文件以`10X`格式数据储存。总文件夹为“original_10x”，其中每个样本有一个单独的文件夹，分别是“ctrl_raw_feature_bc_matrix”和“stim_raw_feature_bc_matrix”，每个样本文件夹由以下三个标准的`10X`文件组成：
 
-### 1. `barcodes.tsv`
+![数据文件夹的结构](images/截屏2023-12-24%2011.25.29.png){width="344"}
+
+**1. `barcodes.tsv`**
 
 This is a text file which contains all cellular barcodes present for that sample. Barcodes are listed in the order of data presented in the matrix file (i.e. these are the column names).
 
-![](images/cell_ids_new.png){width="194"}
+![](images/cell_ids_new.png){width="153"}
 
-### 2. `features.tsv`
+**2. `features.tsv`**
 
 This is a text file which contains the identifiers of the quantified genes. The source of the identifier can vary depending on what reference (i.e. Ensembl, NCBI, UCSC) you use in the quantification methods, but most often these are **official gene symbols**. The order of these genes corresponds to the order of the rows in the matrix file (i.e. these are the row names).
 
 ![](images/genes.png){width="313"}
 
-### 3. `matrix.mtx`
+**3. `matrix.mtx`**
 
 This is a text file which contains a matrix of count values. The **rows** are associated with the **gene IDs** above and **columns** correspond to the cellular **barcodes**. Note that there are **many zero values** in this matrix.
 
@@ -92,36 +111,20 @@ Different methods for reading in data include:
 1.  **`readMM()`**: This function is from the `Matrix` package and will convert our standard matrix into a sparse matrix. The `features.tsv` file and `barcodes.tsv` must first be individually loaded into R and then they can be combined. For specific code and instructions on how to do this please see [these additional material](https://github.com/hbctraining/scRNA-seq_online/blob/master/lessons/readMM_loadData.md).
 2.  **`Read10X()`**: This function is from the `Seurat` package and will use the Cell Ranger output directory as input, directly. With this method individual files do not need to be loaded in, instead the function will load and combine them into a sparse matrix. We will be using this function to load in our data!
 
-### Reading in a single sample
-
-After processing 10X data using its proprietary software Cell Ranger, you will have an `outs` directory (always). Within this directory you will find a number of different files including the files listed below:
-
--   **`web_summary.html`:** report that explores different QC metrics, including the mapping metrics, filtering thresholds, estimated number of cells after filtering, and information on the number of reads and genes per cell after filtering.
--   BAM alignment files: files used for visualization of the mapped reads and for re-creation of FASTQ files, if needed
--   **`filtered_feature_bc_matrix`:** folder containing all files needed to construct the count matrix using data **filtered** **by Cell Ranger**
--   **`raw_feature_bc_matrix`:** folder containing all files needed to construct the count matrix using the raw **unfiltered data**
-
-While Cell Ranger performs filtering on the expression counts (see note below), we wish to perform our own QC and filtering because we want to account for the biology of our experiment/biological system. Given this **we are only interested in the `raw_feature_bc_matrix` folder** in the Cell Ranger output.
-
-::: {.callout-note collapse="true"}
-## Why do we not use the filtered_feature_bc_matrix folder?
-
-The `filtered_feature_bc_matrix` uses [internal filtering criteria by Cell Ranger](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/algorithms/overview), and we do not have control of what cells to keep or abandon.
-
-The filtering performed by Cell Ranger when generating the `filtered_feature_bc_matrix` is often good; however, sometimes data can be of very high quality and the **Cell Ranger filtering process can remove high quality cells**. In addition, it is generally preferable to explore your own data while taking into account the biology of the experiment for applying thresholds during filtering. For example, if you expect a particular cell type in your dataset to be smaller and/or not as transcriptionally active as other cell types in your dataset, these cells have the potential to be filtered out. However, with Cell Ranger v3 they have tried to account for cells of different sizes (for example, tumor vs infiltrating lymphocytes), and now may not filter as many low quality cells as needed.
-:::
+### 首先尝试读取单个样本
 
 If we had a single sample, we could generate the count matrix and then subsequently create a Seurat object:
 
 ```{r}
 library(Seurat)
 # Read in 10X data for a single sample (output is a sparse matrix)
-ctrl_counts <- Read10X(data.dir = "data/scRNA-seq_online/ctrl_raw_feature_bc_matrix")
+ctrl_counts <- Read10X(data.dir = "data/scRNA-seq_online/original_10x/ctrl_raw_feature_bc_matrix")
 
 # Turn count matrix into a Seurat object (output is a Seurat object)
 ctrl <- CreateSeuratObject(counts = ctrl_counts,
                            project = "pbmc_ctrl",
                            min.features = 100)
+ctrl
 ```
 
 ::: callout-note
@@ -141,71 +144,60 @@ What do the columns of metadata mean?
 -   `nCount_RNA`: number of **UMIs** per cell
 -   `nFeature_RNA`: number of **genes** detected per cell
 
-### Reading in multiple samples with a `for loop`
+### 读取所有样本
 
-In practice, you will likely have several samples that you will need to read in data for, and that can get tedious and error-prone if you do it one at a time. So, to make the data import into R more efficient we can use a `for` loop, which will iterate over a series of commands for each of the inputs given and create seurat objects for each of our samples.
+1.  首先通过`list.dirs()`函数列出数据文件夹“original_10x”下所有子文件夹的相对路径，并形成一个包含了所有子文件夹相对路径的字符向量“files”
 
-Today we will use it to iterate over the two sample folders and execute two commands for each sample as we did above for a single sample - (1) read in the count data (`Read10X()`) and (2) create the Seurat objects from the read in data (`CreateSeuratObject()`):
+2.  然后通过`Read10X()`读取每个子文件夹。`Read10X`函数支持批量读取多个文件夹。
 
-```{r}
-for (file in c("ctrl_raw_feature_bc_matrix", "stim_raw_feature_bc_matrix")){
-        seurat_data <- Read10X(data.dir = paste0("data/scRNA-seq_online/", file))
-        seurat_obj <- CreateSeuratObject(counts = seurat_data, 
-                                         min.features = 100, 
-                                         project = file)
-        assign(file, seurat_obj)
-}
-```
-
-The last command `assign`s the Seurat object created (`seurat_obj`) to a new variable. In this way, when we iterate and move on to the next sample in our `input` we will not overwrite the Seurat object created in the previous iteration.
-
-Now that we have created both of these objects, let's take a quick look at the metadata:
+3.  最后，通过`CreateSeuratObject`构建Seurat对象。
 
 ```{r}
-head(ctrl_raw_feature_bc_matrix@meta.data)
-head(stim_raw_feature_bc_matrix@meta.data)
-```
+# 列出数据文件夹下所有子文件夹的相对路径
+list.dirs("data/scRNA-seq_online/original_10x")
+files <- list.dirs("data/scRNA-seq_online/original_10x")[-1]
 
-Next, we need to merge these objects together into a single Seurat object. This will make it easier to run the QC steps for both sample groups together and enable us to easily compare the data quality for all the samples.
+# 构建Seurat对象
+merged_seurat <- CreateSeuratObject(Read10X(files),
+                                    min.features = 100, 
+                                    project = "GSE96583")
+merged_seurat
 
-We can use the `merge()` function from the Seurat package to do this. 其中的`add.cell.id`参数用于给细胞barcode前面再加上表示其来源的样本的信息，这里有两种来源，即“ctrl”和“stim”。
-
-```{r}
-# Create a merged Seurat object
-merged_seurat <- merge(x = ctrl_raw_feature_bc_matrix, 
-                       y = stim_raw_feature_bc_matrix, 
-                       add.cell.id = c("ctrl", "stim")) 
-```
-
-合并前的每个样本的数据被存储在合并后的Seurat对象的不同layer中：
-
-![](images/截屏2023-12-14%2016.40.46.png)
-
-Because the same cell IDs can be used for different samples, we add a **sample-specific prefix** to each of our cell IDs using the `add.cell.id` argument.
-
-::: {.callout-tip collapse="true"}
-###### What if I am merging more than two samples?
-
-Seurat now has functionality to merge many samples together. You can do this quite easily by adding all sample objects to the `y` argument in a vector format. An example is provided below:
-
-```{r}
-#| eval: false
-#| echo: fenced
-merged_seurat <- merge(x = ctrl_raw_feature_bc_matrix, 
-                      y = c(stim1_raw_feature_bc_matrix, 
-                            stim2_raw_feature_bc_matrix, 
-                            stim3_raw_feature_bc_matrix),
-                      add.cell.id = c("ctrl", "stim1", "stim2", "stim3"))
-```
-:::
-
-If we look at the metadata of the merged object we should be able to see the prefixes in the rownames:
-
-```{r}
 # Check that the merged object has the appropriate sample-specific prefixes
-head(merged_seurat@meta.data)
-tail(merged_seurat@meta.data)
+head(merged_seurat)
+tail(merged_seurat)
+```
 
+可以发现，此时的细胞barcode按照我们读取10X文件的顺序，被分别赋予“1, 2, 3...”的前缀。为了后续便于识别细胞来自哪个样本，我们需要通过`gsub()`将这些前缀更改为样本名称（"ctrl" 和 “stim”）。
+
+```{r}
+colnames(merged_seurat) <- gsub(pattern = "^1_", 
+                                x = colnames(merged_seurat), 
+                                replacement = "ctrl_")
+colnames(merged_seurat) <- gsub(pattern = "^2_", 
+                                x = colnames(merged_seurat), 
+                                replacement = "stim_")
+
+# Re-check that the merged object has the appropriate sample-specific prefixes
+head(merged_seurat)
+tail(merged_seurat)
+```
+
+现在可以看到细胞barcode的前缀已被更改成了样本名称。接下来我们还可以进一步将样本信息添加到meta.data的新的一列“sample”中:
+
+```{r}
+# Create sample column
+library(stringr)
+merged_seurat$sample <- str_split(rownames(merged_seurat@meta.data),
+                                  "_",
+                                  simplify = TRUE)
+head(merged_seurat)
+table(merged_seurat$sample)
+```
+
+## 保存Seurat对象
+
+```{r}
 # 保存
 saveRDS(merged_seurat, file = "output/scRNA-seq_online/merged_seurat.rds")
 ```

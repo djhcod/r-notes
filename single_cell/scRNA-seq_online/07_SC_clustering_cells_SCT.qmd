@@ -189,7 +189,7 @@ DimPlot(seurat_integrated,
         label.size = 6)
 ```
 
-### 载入案例数据
+### 载入案例数据 {#sec-Load_case_data}
 
 **How does your UMAP plot compare to the one above?**
 
@@ -209,6 +209,16 @@ seurat_integrated
 head(seurat_integrated, 5)
 ```
 
+![](images/截屏2023-12-26%2009.51.32.png)
+
+::: callout-warning
+由于这里的案例数据是基于Seurat V5之前的版本创建的，所以数据结构和基于Seurat V5的结果有所差异。比较重要的区别是，这里的Seurat对象的没有layer结构；同时有一个“integrated” assay，用于存放整合后的信息，其类型仍属于SCT assay。而一个典型的经过SCTransform和整合的Seurat V5对象如下图所示（来自 @sec-integration_after_sct ）：
+
+![](images/截屏2023-12-26%2009.59.44.png)
+
+可以看到没有“integrated” assay，因此，为了和最新的Seurat V5流程保持一致，我们后续把本案例中的“integrated” assay看作整合后的Seurat V5的“SCT” assay。
+:::
+
 ------------------------------------------------------------------------
 
 ### 再次检查不同分辨率下的细胞分群情况
@@ -224,7 +234,6 @@ apply(seurat_integrated@meta.data[ ,grep("integrated_snn_res.",
 ```
 
 ```{r}
-#| eval: false
 # 批量绘制不同分辨率下的UMAP图
 library(ggplot2)
 library(patchwork)
@@ -243,14 +252,12 @@ lapply(grep("integrated_snn_res.",
   wrap_plots(ncol = 2)
 ```
 
-![](images/umap_at_dif_res.png)
-
 ------------------------------------------------------------------------
 
 We will now continue with the 0.8 resolution to check the quality control metrics and known markers for the anticipated cell types.
 
 ```{r}
-#| output: false
+#| cache-lazy: false
 # Assign identity of clusters
 Idents(seurat_integrated) <- "integrated_snn_res.0.8"
 
@@ -260,8 +267,6 @@ DimPlot(seurat_integrated,
         label = TRUE,
         label.size = 6)
 ```
-
-![](images/umap_at_res0.8.png){width="458"}
 
 ```{r}
 saveRDS(seurat_integrated, file = "output/scRNA-seq_online/seurat_clustered.rds")

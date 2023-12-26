@@ -1,8 +1,8 @@
 # 基于SCTransform的单细胞数据标准化 {#sec-sctransform}
 
-原文：[*Using sctransform in Seurat*](https://satijalab.org/seurat/articles/sctransform_vignette)
-
-原文发布日期：2023年10月31日
+> 原文：[*Using sctransform in Seurat*](https://satijalab.org/seurat/articles/sctransform_vignette)
+>
+> 原文发布日期：2023年10月31日
 
 **Biological heterogeneity** in single-cell RNA-seq data is often confounded by technical factors including **sequencing depth**. The **number of molecules detected in each cell** can vary significantly between cells, even within the same celltype. Interpretation of scRNA-seq data requires effective pre-processing and normalization to remove this **technical variability**.
 
@@ -28,9 +28,9 @@ pbmc <- PercentageFeatureSet(pbmc, pattern = "^MT-", col.name = "percent.mt")
 head(pbmc@meta.data, 5)
 ```
 
-## 运行`SCTransform`
+## 运行`SCTransform` {#sec-perform_sctransform}
 
--   `SCTransform`替代了传统单细胞数据分析流程中的`NormalizeData()`、`ScaleData()`和`FindVariableFeatures()`函数的功能，因此不再需要运行这些函数。
+-   `SCTransform()`替代了传统单细胞数据分析流程中的`NormalizeData()`、`ScaleData()`和`FindVariableFeatures()`函数的功能，因此不再需要运行这些函数。
 
 -   During normalization, we can also remove confounding sources of variation, for example, mitochondrial mapping percentage。`SCTransform`也可以移除一些非期望变异来源，如线粒体基因的比例。这在传统的单细胞数据分析流程中由`ScaleData`来完成（ @sec-scaledata ）。
 
@@ -132,6 +132,8 @@ FeaturePlot(pbmc,
             pt.size = 0.2,
             ncol = 3)
 ```
+
+------------------------------------------------------------------------
 
 ::: {.callout-note collapse="true" icon="false"}
 ## Session Info

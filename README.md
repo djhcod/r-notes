@@ -1,6 +1,6 @@
 # R语言学习笔记
 杜俊宏
-2023-12-19
+2023-12-26
 
 **网址：**<https://djhcod.github.io/r-notes/>**。**
 
@@ -41,6 +41,8 @@ Markdown——的编写和发布进行简单总结。目前该项目处于最开
 - Bookdown：<https://bookdown.org>
 
 ### 论坛/网站：
+
+- 交互式R语言学习网站：<https://www.codecademy.com/learn/learn-r>
 
 - R CODER：<https://r-coder.com>
 

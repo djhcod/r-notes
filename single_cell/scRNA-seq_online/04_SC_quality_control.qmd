@@ -87,23 +87,11 @@ We'll add a new column for **cell identifiers**. This information is currently l
 merged_seurat$cells <- rownames(merged_seurat@meta.data)
 ```
 
-You should see that each cell ID has a `ctrl_` or `stim_` prefix as we had specified when we merged the Seurat objects. We can use this prefix to create a new column indicating **which condition** each cell is classfied under. We will call this column `sample`:
-
-```{r}
-# Create sample column
-library(stringr)
-merged_seurat$sample <- str_split(rownames(merged_seurat@meta.data),
-                                  "_",
-                                  simplify = TRUE)
-table(merged_seurat$sample)
-head(merged_seurat@meta.data)
-```
-
 Now you are all setup with the metrics you need to assess the quality of your data! Your final metadata table will have rows that correspond to each cell, and columns with information about those cells.
 
 ```{r}
 # 保存
-saveRDS(merged_seurat, file = "output/scRNA-seq_online/merged_filtered_seurat.rds")
+saveRDS(merged_seurat, file = "output/scRNA-seq_online/merged_seurat_with_qc_metrics.rds")
 ```
 
 ## 质量评价 (Assessing the quality metrics)
@@ -139,7 +127,7 @@ The cell numbers can also vary by protocol, **producing cell numbers that are mu
 ```{r}
 # Visualize the number of cell counts per sample
 library(ggplot2)
-merged_seurat@meta.data %>% 
+merged_seurat@meta.data  |> 
     ggplot(aes(x = sample, fill = sample)) + 
     geom_bar() +
     theme_classic() +
@@ -156,7 +144,7 @@ We see over 15,000 cells per sample, which is quite a bit more than the 12-13,00
 
 ```{r}
 # Visualize the number UMIs/transcripts per cell
-merged_seurat@meta.data %>% 
+merged_seurat@meta.data |> 
     ggplot(aes(color = sample, x = nCount_RNA, fill = sample)) + 
     geom_density(alpha = 0.2) + 
     scale_x_log10() + 
@@ -179,7 +167,7 @@ Therefore, this threshold should be assessed with other metrics that we describe
 
 ```{r}
 # Visualize the distribution of genes detected per cell via histogram
-merged_seurat@meta.data %>% 
+merged_seurat@meta.data |>
     ggplot(aes(color = sample, x = nFeature_RNA, fill= sample)) + 
     geom_density(alpha = 0.2) + 
     theme_classic() +
@@ -193,7 +181,7 @@ We can evaluate each cell in terms of how complex the RNA species are by using a
 
 ```{r}
 # Visualize the overall complexity of the gene expression by visualizing the genes detected per UMI (novelty score)
-merged_seurat@meta.data %>%
+merged_seurat@meta.data |>
     ggplot(aes(x = log10GenesPerUMI, color = sample, fill=sample)) +
     geom_density(alpha = 0.2) +
     theme_classic() +
@@ -208,7 +196,7 @@ This metric can identify whether there is a large amount of mitochondrial contam
 
 ```{r}
 # Visualize the distribution of mitochondrial gene expression detected per cell
-merged_seurat@meta.data %>% 
+merged_seurat@meta.data |>
     ggplot(aes(color = sample, x = mitoRatio, fill = sample)) + 
     geom_density(alpha = 0.2) + 
     scale_x_log10() + 
@@ -238,7 +226,7 @@ Two metrics that are often evaluated together are the number of UMIs and the num
 
 ```{r}
 # Visualize the correlation between genes detected and number of UMIs and determine whether strong presence of cells with low numbers of genes/UMIs
-merged_seurat@meta.data %>% 
+merged_seurat@meta.data |> 
     ggplot(aes(x = nCount_RNA, y = nFeature_RNA, color = mitoRatio)) + 
     geom_point() + 
     scale_colour_gradient(low = "gray90", high = "black") +
@@ -263,7 +251,7 @@ Good cells will generally exhibit both higher number of genes per cell and highe
 
 **Mitochondrial read fractions are only high in particularly low count cells with few detected genes** (darker colored data points). This could be indicative of damaged/dying cells whose cytoplasmic mRNA has leaked out through a broken membrane, and thus, only mRNA located in the mitochondria is still conserved. We can see from the plot, that these cells are filtered out by our count and gene number thresholds.
 
-## 细胞/基因过滤 (Filtering)
+## 细胞/基因过滤 (Filtering) {#sec-filtering}
 
 ### Cell-level filtering
 
@@ -324,7 +312,7 @@ After performing the filtering, it's recommended to look back over the metrics t
 ```{r}
 #| layout-ncol: 3
 # Cell counts
-filtered_seurat@meta.data %>% 
+filtered_seurat@meta.data |> 
     ggplot(aes(x = sample, fill = sample)) + 
     geom_bar() +
     theme_classic() +
@@ -333,7 +321,7 @@ filtered_seurat@meta.data %>%
     ggtitle("NCells")
 
 # UMI counts
-filtered_seurat@meta.data %>% 
+filtered_seurat@meta.data |> 
     ggplot(aes(color = sample, x = nCount_RNA, fill = sample)) + 
     geom_density(alpha = 0.2) + 
     scale_x_log10() + 
@@ -342,7 +330,7 @@ filtered_seurat@meta.data %>%
     geom_vline(xintercept = 500)
 
 # Genes detected
-filtered_seurat@meta.data %>% 
+filtered_seurat@meta.data |> 
     ggplot(aes(color = sample, x = nFeature_RNA, fill= sample)) + 
     geom_density(alpha = 0.2) + 
     theme_classic() +
@@ -350,14 +338,14 @@ filtered_seurat@meta.data %>%
     geom_vline(xintercept = 250)
 
 # UMIs vs genes
-filtered_seurat@meta.data %>%
+filtered_seurat@meta.data |>
     ggplot(aes(x = log10GenesPerUMI, color = sample, fill=sample)) +
     geom_density(alpha = 0.2) +
     theme_classic() +
     geom_vline(xintercept = 0.8)
 
 # Mitochondrial counts ratio
-filtered_seurat@meta.data %>% 
+filtered_seurat@meta.data |> 
     ggplot(aes(color = sample, x = mitoRatio, fill = sample)) + 
     geom_density(alpha = 0.2) + 
     scale_x_log10() + 
@@ -365,14 +353,14 @@ filtered_seurat@meta.data %>%
     geom_vline(xintercept = 0.2)
 
 # Novelty
-filtered_seurat@meta.data %>%
+filtered_seurat@meta.data |>
     ggplot(aes(x = log10GenesPerUMI, color = sample, fill=sample)) +
     geom_density(alpha = 0.2) +
     theme_classic() +
     geom_vline(xintercept = 0.8)
 
 # Joint filtering effects
-filtered_seurat@meta.data %>% 
+filtered_seurat@meta.data |> 
     ggplot(aes(x = nCount_RNA, y = nFeature_RNA, color = mitoRatio)) + 
     geom_point() + 
     scale_colour_gradient(low = "gray90", high = "black") +
