@@ -50,7 +50,7 @@ DimHeatmap(marrow, dims = c(8, 10))
 
 ## 消除细胞周期的影响
 
-### 计算细胞周期评分
+### 计算细胞周期评分 {#sec-Calculating_cell_cycle_scores}
 
 First, we assign each cell a score, **based on its expression of G2/M and S phase markers**. These marker sets should be **anticorrelated** in their expression levels, and **cells expressing neither are likely not cycling and in G1 phase**.
 
@@ -67,15 +67,21 @@ First, we assign each cell a score, **based on its expression of G2/M and S phas
 
 细胞进入G1期可能出现三种情况，其中暂不继续增殖，如骨髓干细胞和处于不利状态下的癌细胞，但在某些刺激下，这些细胞又可以继续生长分裂，因此有人把这种**非增殖状态的G1期细胞称为G0期细胞**。以区别处于增殖状态的G1期细胞。 而分裂期通常分作分裂前期(Prophase)、前中期(Prometaphase)、中期(Metaphase)、后期(Anaphase)和末期(Telophase)5个阶段，在此期间进行细胞物质的平均分配并形成两个新的细胞。
 
+![](images/Cell_Cycle_2-2.svg.png){width="266"}
+
+-   **G0:** Quiescence or resting phase. The cell is not actively dividing, which is common for cells that are fully differentiated. Some types of cells enter G0 for long periods of time (many neuronal cells), while **other cell types never enter G0 by continuously dividing (epithelial cells)**.
+-   **G1:** Gap 1 phase represents the **beginning of interphase**. During G1 there is growth of the non-chromosomal components of the cells. From this phase, the cell may enter G0 or S phase.
+-   **S:** Synthesis phase for the replication of the chromosomes (also part of interphase).
+-   **G2:** Gap 2 phase represents the **end of interphase**, prior to entering the mitotic phase. During this phase th cell grows in preparation for mitosis and the spindle forms.
+-   **M:** M phase is the nuclear division of the cell (consisting of prophase, metaphase, anaphase and telophase).
+
 |   状态   |   阶段   |   缩写   |                                                            描述                                                            |
-|:--------:|:--------:|:--------:|:--------------------------------------------------------------------------------------------------------------------------:|
+|:-------:|:-------:|:-------:|:--------------------------------------------:|
 |   休息   |  G~0~期  | **G~0~** |                                               细胞离开周期并停止分裂的阶段。                                               |
 |   间期   |  G~1~期  |  **G1**  |                                       G~1~检查点控制机制确保一切准备好进行DNA合成。                                        |
 |   合成   |    S     |  **S**   |                                                  DNA复制发生在这个阶段。                                                   |
 |  G~2~期  |   G~2~   |  **G2**  |     在DNA合成和有丝分裂之间的差距期间，细胞将继续增长。 G~2~检查点控制机制确保一切准备好进入M（有丝分裂）阶段并分裂。      |
 | 细胞分裂 | 有丝分裂 |  **M**   | 细胞生长停止，细胞能量集中在有序地分裂成两个子细胞。有丝分裂中期的检查点（Metaphase Checkpoint）确保细胞可以完成细胞分裂。 |
-
-![](images/Cell_Cycle_2-2.svg.png){width="266"}
 :::
 
 We assign scores in the `CellCycleScoring()` function, which stores S and G2/M scores in object meta data, along with the **predicted classification of each cell in either G2M, S or G1 phase**. `CellCycleScoring()` can also set the identity of the Seurat object to the cell-cycle phase by passing `set.ident = TRUE` (the original identities are stored as `old.ident`). Please note that Seurat does not use the discrete classifications (G2M/G1/S) in downstream cell cycle regression. Instead, it uses the **quantitative scores for G2M and S phase**. However, we provide our predicted classifications in case they are of interest.
