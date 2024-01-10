@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>R语言学习笔记 - 29&nbsp; 细胞分群通用marker</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets.html" rel="next">
+<link href="../../single_cell/sc_supplementary/read_sc_data.html" rel="prev">
+<link href="../../images/logo.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script type="application/json" class="js-hypothesis-config">
+{
+  "theme": "classic",
+  "openSidebar": false,
+  "showHighlights": "always",
+  "enableExperimentalNewNoteButton": true
+}
+</script><script async="" src="https://hypothes.is/embed.js"></script>
+<meta name="twitter:title" content="R语言学习笔记 - 29&nbsp; 细胞分群通用marker">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/sc_supplementary/images/Image-01.jpg">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../images/logo.jpg" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">R语言学习笔记</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+<li class="nav-item">
+    <a class="nav-link active" href="../../index.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../intro.html" rel="" target="">
+ <span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parts" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Parts</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-parts">
+<li>
+    <a class="dropdown-item" href="../../r_basic/r_basics.html" rel="" target="">
+ <span class="dropdown-text">R语言基础</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../single_cell/seurat/seurat.html" rel="" target="">
+ <span class="dropdown-text">Seurat v5官方文档</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../single_cell/scRNA-seq_online/00_intro.html" rel="" target="">
+ <span class="dropdown-text">scRNA-seq_online学习材料</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
+ <span class="dropdown-text">Quarto基础</span></a>
+  </li>  
+    </ul>
+</li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../references.html" rel="" target="">
+ <span class="menu-text">References</span></a>
+  </li>  
+</ul>
+<ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="https://bookdown.org" rel="" target=""><i class="bi bi-book-fill" role="img">
+</i> 
+ <span class="menu-text">Bookdown</span></a>
+  </li>  
+</ul>
+<div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/djhcod/r-notes" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+<li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=%7Curl%7C">
+              <i class="bi bi-bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=%7Curl%7C">
+              <i class="bi bi-bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+</div>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/sc_supplementary/read_sc_data.html">单细胞补充内容</a></li><li class="breadcrumb-item"><a href="../../single_cell/sc_supplementary/universal_marker.html"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">细胞分群通用marker</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">主页</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">前言</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R语言基础</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rstudio环境配置</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/data_input_output.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">数据的读取与输出</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/basic_data_function.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据处理基本函数</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/character.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">字符的处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/loop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">循环</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../single_cell/seurat/seurat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat v5官方文档</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/seurat_command_list.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/sctransform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/marker_gene_identification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../single_cell/scRNA-seq_online/00_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">scRNA-seq_online学习材料</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">质控</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">单细胞补充内容</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/sc_supplementary/read_sc_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title"><strong>读取非标准格式的单细胞数据</strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/sc_supplementary/universal_marker.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">细胞分群通用marker</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto基础</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+ <span class="menu-text">参考文献</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#%E5%8C%BA%E5%88%86%E5%85%8D%E7%96%AB%E7%BB%86%E8%83%9E%E5%92%8C%E9%9D%9E%E5%85%8D%E7%96%AB%E7%BB%86%E8%83%9E" id="toc-区分免疫细胞和非免疫细胞" class="nav-link active" data-scroll-target="#%E5%8C%BA%E5%88%86%E5%85%8D%E7%96%AB%E7%BB%86%E8%83%9E%E5%92%8C%E9%9D%9E%E5%85%8D%E7%96%AB%E7%BB%86%E8%83%9E"><span class="header-section-number">29.1</span> 区分免疫细胞和非免疫细胞</a></li>
+  <li><a href="#%E5%8C%BA%E5%88%86%E5%87%BA%E6%81%B6%E6%80%A7%E7%BB%86%E8%83%9E" id="toc-区分出恶性细胞" class="nav-link" data-scroll-target="#%E5%8C%BA%E5%88%86%E5%87%BA%E6%81%B6%E6%80%A7%E7%BB%86%E8%83%9E"><span class="header-section-number">29.2</span> 区分出恶性细胞</a></li>
+  <li><a href="#%E7%BB%86%E8%83%9E%E5%88%9D%E6%AD%A5%E5%88%86%E7%BE%A4%E9%80%9A%E7%94%A8marker" id="toc-细胞初步分群通用marker" class="nav-link" data-scroll-target="#%E7%BB%86%E8%83%9E%E5%88%9D%E6%AD%A5%E5%88%86%E7%BE%A4%E9%80%9A%E7%94%A8marker"><span class="header-section-number">29.3</span> 细胞初步分群通用marker</a></li>
+  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/sc_supplementary/universal_marker.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/single_cell/sc_supplementary/universal_marker.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">
+<span class="chapter-number">29</span>&nbsp; <span class="chapter-title">细胞分群通用marker</span>
+</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><blockquote class="blockquote">
+<p>参考原文：</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzI1Njk4ODE0MQ==&amp;mid=2247487157&amp;idx=1&amp;sn=e2b59fd14c9a25d4331465cf6fdb1d3c&amp;scene=21#wechat_redirect">是否是免疫细胞很容易区分那是否是肿瘤细胞呢？</a></p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzI1Njk4ODE0MQ==&amp;mid=2247488742&amp;idx=1&amp;sn=43512abff6c516930b96316ca5332b23&amp;scene=21#wechat_redirect">CNS图表复现03—单细胞区分免疫细胞和肿瘤细胞</a></p>
+</blockquote>
+<section id="区分免疫细胞和非免疫细胞" class="level2" data-number="29.1"><h2 data-number="29.1" class="anchored" data-anchor-id="区分免疫细胞和非免疫细胞">
+<span class="header-section-number">29.1</span> 区分免疫细胞和非免疫细胞</h2>
+<ul>
+<li><p><strong>Immune: PTPRC (编码CD45)</strong></p></li>
+<li><p><strong>Epithelial/cancer：EPCAM</strong></p></li>
+<li><p>Stromal (CD10+,MME, fibo or CD31+,PECAM1,endo)</p></li>
+</ul>
+<p>Cells were defined as non-immune if belonging to a cluster low for <strong>PTPRC (gene for CD45)</strong> and high for any of the following genes:</p>
+<ul>
+<li><p>MUC5A (goblet cell marker)</p></li>
+<li><p>KRT5 (basal epithelial cell marker)</p></li>
+<li><p>SFTPD (secretory cell marker)</p></li>
+<li><p><strong>EPCAM</strong> <strong>(pan-epithelial cell marker)</strong></p></li>
+<li><p>CDH5 (endothelial cell marker)</p></li>
+<li><p><strong>COL1A2</strong> and <strong>ACTA2</strong> (fibroblast markers)</p></li>
+</ul>
+<p>所以你拿到自己的单细胞测序数据后，走完基础流程，可以直接看看这些基因的表达量分布图（气泡图或者小提琴图均可）。下面是一个例子：</p>
+<div class="cell" data-hash="universal_marker_cache/html/unnamed-chunk-1_e5d321d50dfe8a9c7a1c9b12d0aba00d">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">genes_to_check</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PTPRC"</span>,</span>
+<span>                   <span class="st">"EPCAM"</span>,</span>
+<span>                   <span class="st">"CD3G"</span>,<span class="st">"CD3E"</span>, <span class="co"># T cells</span></span>
+<span>                   <span class="st">"CD79A"</span>, <span class="st">"BLNK"</span>, <span class="st">"MS4A1"</span>, <span class="co"># B cells</span></span>
+<span>                   <span class="st">"CD68"</span>, <span class="st">"CSF1R"</span>, <span class="co"># Monocytes and macrophages</span></span>
+<span>                   <span class="st">"MARCO"</span>, <span class="st">"CD207"</span>, <span class="st">"PMEL"</span>, <span class="st">"ALB"</span>, <span class="st">"C1QB"</span>, <span class="st">"CLDN5"</span>, <span class="st">"FCGR3B"</span>, <span class="st">"COL1A1"</span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">DotPlot</span><span class="op">(</span><span class="va">sce</span>, features <span class="op">=</span> <span class="va">genes_to_check</span><span class="op">)</span> <span class="op">+</span> <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">p</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/Image-01.jpg" class="img-fluid"></p>
+<p>接下来我们直接根据PTPRC的总表达量的中位数将所有细胞分为免疫细胞和非免疫细胞：</p>
+<div class="cell" data-hash="universal_marker_cache/html/unnamed-chunk-2_20bf6c0bbdaf0ae636f4fb55db689ffc">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Annotate Immune vs Nonimmune clusters</span></span>
+<span><span class="co"># At this point we dont care for a more detailed annotation as we will annotate immune and non-immune separately later</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">p</span><span class="op">$</span><span class="va">data</span> </span>
+<span><span class="va">cd45</span> <span class="op">&lt;-</span> <span class="va">dat</span><span class="op">[</span><span class="va">dat</span><span class="op">$</span><span class="va">features.plot</span> <span class="op">==</span> <span class="st">'PTPRC'</span>,<span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/fivenum.html">fivenum</a></span><span class="op">(</span><span class="va">cd45</span><span class="op">$</span><span class="va">avg.exp.scaled</span><span class="op">)</span></span>
+<span><span class="va">imm</span> <span class="op">&lt;-</span> <span class="va">cd45</span><span class="op">[</span><span class="va">cd45</span><span class="op">$</span><span class="va">avg.exp.scaled</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">0.5</span>,<span class="op">]</span><span class="op">$</span><span class="va">id</span></span>
+<span><span class="va">imm</span></span>
+<span><span class="va">sce</span><span class="op">$</span><span class="va">immune_annotation</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">sce</span><span class="op">$</span><span class="va">RNA_snn_res.0.5</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">imm</span> ,<span class="st">'immune'</span>, <span class="st">'non-immune'</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">sce</span><span class="op">$</span><span class="va">immune_annotation</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>接下来可以进行 TSNE plot &nbsp;可视化，看到免疫细胞和非免疫细胞是泾渭分明：</p>
+<div class="cell" data-hash="universal_marker_cache/html/unnamed-chunk-3_e29e80b2ccb0e9aa3622f5617dfe0ca7">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">TSNEPlot</span><span class="op">(</span>object <span class="op">=</span> <span class="va">sce</span>, group.by <span class="op">=</span> <span class="st">'immune_annotation'</span><span class="op">)</span></span>
+<span><span class="va">p</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/Image2.jpg" class="img-fluid" width="527"></p>
+</section><section id="区分出恶性细胞" class="level2" data-number="29.2"><h2 data-number="29.2" class="anchored" data-anchor-id="区分出恶性细胞">
+<span class="header-section-number">29.2</span> 区分出恶性细胞</h2>
+<p>很多情况下是靠inferCNV算法的结果，比如发表于2017年12月，在CELL杂志：Single-Cell Transcriptomic Analysis of Primary and Metastatic Tumor Ecosystems in Head and Neck Cancer 的文献，就是使用inferCNV算法对来自18名患者的5,902个细胞，分成2215个恶性细胞和3363个非恶性细胞如下所示：</p>
+<p><img src="images/infercnv.png" class="img-fluid"></p>
+<p>可以看到，通过inferCNV算法，能发现非恶性细胞的CNV是几乎没有的，而恶性细胞呢，或多或少有一些染色体片段的拷贝数扩增或者缺失。</p>
+</section><section id="细胞初步分群通用marker" class="level2" data-number="29.3"><h2 data-number="29.3" class="anchored" data-anchor-id="细胞初步分群通用marker">
+<span class="header-section-number">29.3</span> 细胞初步分群通用marker</h2>
+<p>一般来说肿瘤样品的单细胞首先是按照如下所示的标记基因进行第一次分群 ：</p>
+<ul>
+<li><p>免疫细胞共同标记：PTPRC</p></li>
+<li><p>髓系细胞（myeloid）：CD16、AIF1</p></li>
+<li><p>T cells：CD3D、CD3E、CD4、CD8A</p></li>
+<li><p>B cells：CD19、CD79A、MS4A1（编码CD20）、SDC1、CD27、CD38</p></li>
+<li><p>Plasma cells：IGHG1、MZB1、SDC1（编码CD138）、JCHAIN</p></li>
+<li><p>Monocytes and macrophages：CD68、CD163、CD14</p></li>
+<li><p>Monocyte：S100A9、S100A8、MMP19</p></li>
+<li><p>Macrophages：C1QA、C1QB</p></li>
+<li><p>Mast cells：TPSAB1、TPSB2</p></li>
+<li><p>NK cells：KLRB1、KLRD1、NCR1、GNLY、NKG7</p></li>
+<li><p>【NK Cells：FGFBP2, FCG3RA, CX3CR1】</p></li>
+<li><p>Epithelial/cancer：EPCAM、KRT19、PROM1、ALDH1A1、CD24</p></li>
+<li><p>Endothelial cells：PECAM1、VWF</p></li>
+<li><p>Fibroblasts：FGF7、MME、ACTA2、COL3A1</p></li>
+</ul>
+<div class="cell" data-hash="universal_marker_cache/html/unnamed-chunk-4_709c647db3e1ee2f229185fc359e2ed6">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">genes_to_check</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'PTPRC'</span>, </span>
+<span>                   <span class="st">"CD163"</span>,<span class="st">"AIF1"</span>, </span>
+<span>                   <span class="st">'CD3D'</span>, <span class="st">'CD3E'</span>, <span class="st">'CD4'</span>, <span class="st">'CD8A'</span>, </span>
+<span>                   <span class="st">'CD19'</span>, <span class="st">'CD79A'</span>, <span class="st">'MS4A1'</span>, <span class="st">"SDC1"</span>, <span class="st">"CD27"</span>, <span class="st">"CD38"</span>,</span>
+<span>                   <span class="st">'IGHG1'</span>, <span class="st">'MZB1'</span>, <span class="st">'SDC1'</span>, <span class="st">"JCHAIN"</span>, </span>
+<span>                   <span class="st">'CD68'</span>, <span class="st">'CD163'</span>, <span class="st">'CD14'</span>, </span>
+<span>                   <span class="st">'S100A9'</span>, <span class="st">'S100A8'</span>, <span class="st">'MMP19'</span>,</span>
+<span>                   <span class="st">'C1QA'</span>,  <span class="st">'C1QB'</span>, </span>
+<span>                   <span class="st">'TPSAB1'</span>, <span class="st">'TPSB2'</span>, </span>
+<span>                   <span class="st">'KLRB1'</span>, <span class="st">"KLRD1"</span>, <span class="st">'NCR1'</span>, <span class="st">"GNLY"</span>, <span class="st">"NKG7"</span>, </span>
+<span>                   <span class="st">'FGF7'</span>, <span class="st">'MME'</span>, <span class="st">'ACTA2'</span>, <span class="st">"COL3A1"</span>, </span>
+<span>                   <span class="st">'PECAM1'</span>, <span class="st">'VWF'</span>, </span>
+<span>                   <span class="st">'EPCAM'</span>, <span class="st">'KRT19'</span>, <span class="st">'PROM1'</span>, <span class="st">'ALDH1A1'</span><span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+案例
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>来源：<a href="https://mp.weixin.qq.com/s?__biz=MzUzMTEwODk0Ng==&amp;mid=2247517274&amp;idx=1&amp;sn=e5c523d4a46757e6ea1ad15707333ca5&amp;scene=21#wechat_redirect">巨噬细胞新分类体系（一篇Science文献复现）</a></p>
+<div class="cell" data-hash="universal_marker_cache/html/unnamed-chunk-5_e57dda0d10688b20b45b5689e576ce2d">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">genes_to_check</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'PTPRC'</span>, <span class="st">'CD3D'</span>, <span class="st">'CD3E'</span>, <span class="st">'CD4'</span>,<span class="st">'CD8A'</span>,</span>
+<span>                   <span class="st">'CD19'</span>, <span class="st">'CD79A'</span>, <span class="st">'MS4A1'</span> ,</span>
+<span>                   <span class="st">'IGHG1'</span>, <span class="st">'MZB1'</span>, <span class="st">'SDC1'</span>,</span>
+<span>                   <span class="st">'CD68'</span>, <span class="st">'CD163'</span>, <span class="st">'CD14'</span>, </span>
+<span>                   <span class="st">'TPSAB1'</span> , <span class="st">'TPSB2'</span>, </span>
+<span>                   <span class="st">'RCVRN'</span>,<span class="st">'FPR1'</span> , <span class="st">'ITGAM'</span> ,</span>
+<span>                   <span class="st">'C1QA'</span>,  <span class="st">'C1QB'</span>,  </span>
+<span>                   <span class="st">'S100A9'</span>, <span class="st">'S100A8'</span>, <span class="st">'MMP19'</span>,</span>
+<span>                   <span class="st">'FCGR3A'</span>,<span class="st">'LAMP3'</span>, <span class="st">'IDO1'</span>,<span class="st">'IDO2'</span>,<span class="co">## DC3 </span></span>
+<span>                   <span class="st">'CD1E'</span>,<span class="st">'CD1C'</span>, <span class="co"># DC2</span></span>
+<span>                   <span class="st">'KLRB1'</span>,<span class="st">'NCR1'</span>, </span>
+<span>                   <span class="st">'FGF7'</span>,<span class="st">'MME'</span>, <span class="st">'ACTA2'</span>, </span>
+<span>                   <span class="st">'DCN'</span>, <span class="st">'LUM'</span>,  <span class="st">'GSN'</span> , <span class="co"># mouse PDAC fibo </span></span>
+<span>                   <span class="st">'PECAM1'</span>, <span class="st">'VWF'</span>,  </span>
+<span>                   <span class="st">'EPCAM'</span> , <span class="st">'KRT19'</span>,<span class="st">'KRT7'</span>, </span>
+<span>                   <span class="st">'FYXD2'</span>, <span class="st">'TM4SF4'</span>, <span class="st">'ANXA4'</span>,<span class="co"># 胆管上皮细胞</span></span>
+<span>                   <span class="st">'APOC3'</span>, <span class="st">'FABP1'</span>,  <span class="st">'APOA1'</span>,  <span class="co"># 肝细胞</span></span>
+<span>                   <span class="st">'Serpina1c'</span>,<span class="st">'PROM1'</span>, <span class="st">'ALDH1A1'</span> <span class="op">)</span></span>
+<span><span class="fu">DotPlot</span><span class="op">(</span><span class="va">sce.all</span>, </span>
+<span>        features <span class="op">=</span> <span class="va">genes_to_check</span>,</span>
+<span>        assay<span class="op">=</span><span class="st">'RNA'</span>,</span>
+<span>        group.by <span class="op">=</span> <span class="st">'celltype'</span> <span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">coord_flip</span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/640.png" class="img-fluid" width="499"></p>
+<p>根据气泡图所示的marker基因表达情况，确定细胞分群如下</p>
+<table class="table">
+<thead><tr class="header">
+<th>Cluster ID</th>
+<th>细胞类型</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>0, 7</td>
+<td>T cells</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Macrophages</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>Mast cells</td>
+</tr>
+<tr class="even">
+<td>1, 9, 10</td>
+<td>Epithelial/cancer cells</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>Fibroblasts</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>Endothelial cells</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>Cycling</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>B cells</td>
+</tr>
+</tbody>
+</table>
+<p><img src="images/640-2.png" class="img-fluid" width="296"></p>
+</div>
+</div>
+</div>
+<p>髓系免疫细胞亚群:</p>
+<div class="cell" data-hash="universal_marker_cache/html/unnamed-chunk-6_1865b8353c517beaa7cde1c8b620405f">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">th</span><span class="op">=</span><span class="fu">theme</span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>,</span>
+<span>                                    vjust <span class="op">=</span> <span class="fl">0.5</span>, hjust<span class="op">=</span><span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">myeloids</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>  Mac<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"C1QA"</span>,<span class="st">"C1QB"</span>,<span class="st">"C1QC"</span>,<span class="st">"SELENOP"</span>,<span class="st">"RNASE1"</span>,<span class="st">"DAB2"</span>,<span class="st">"LGMN"</span>,<span class="st">"PLTP"</span>,<span class="st">"MAF"</span>,<span class="st">"SLCO2B1"</span><span class="op">)</span>,</span>
+<span>  mono<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"VCAN"</span>,<span class="st">"FCN1"</span>,<span class="st">"CD300E"</span>,<span class="st">"S100A12"</span>,<span class="st">"EREG"</span>,<span class="st">"APOBEC3A"</span>,<span class="st">"STXBP2"</span>,<span class="st">"ASGR1"</span>,<span class="st">"CCR2"</span>,<span class="st">"NRG1"</span><span class="op">)</span>,</span>
+<span>  neutrophils <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"FCGR3B"</span>,<span class="st">"CXCR2"</span>,<span class="st">"SLC25A37"</span>,<span class="st">"G0S2"</span>,<span class="st">"CXCR1"</span>,<span class="st">"ADGRG3"</span>,<span class="st">"PROK2"</span>,<span class="st">"STEAP4"</span>,<span class="st">"CMTM2"</span> <span class="op">)</span>,</span>
+<span>  pDC <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"GZMB"</span>,<span class="st">"SCT"</span>,<span class="st">"CLIC3"</span>,<span class="st">"LRRC26"</span>,<span class="st">"LILRA4"</span>,<span class="st">"PACSIN1"</span>,<span class="st">"CLEC4C"</span>,<span class="st">"MAP1A"</span>,<span class="st">"PTCRA"</span>,<span class="st">"C12orf75"</span><span class="op">)</span>,</span>
+<span>  DC1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CLEC9A"</span>,<span class="st">"XCR1"</span>,<span class="st">"CLNK"</span>,<span class="st">"CADM1"</span>,<span class="st">"ENPP1"</span>,<span class="st">"SNX22"</span>,<span class="st">"NCALD"</span>,<span class="st">"DBN1"</span>,<span class="st">"HLA-DOB"</span>,<span class="st">"PPY"</span><span class="op">)</span>,</span>
+<span>  DC2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span> <span class="st">"CD1C"</span>,<span class="st">"FCER1A"</span>,<span class="st">"CD1E"</span>,<span class="st">"AL138899.1"</span>,<span class="st">"CD2"</span>,<span class="st">"GPAT3"</span>,<span class="st">"CCND2"</span>,<span class="st">"ENHO"</span>,<span class="st">"PKIB"</span>,<span class="st">"CD1B"</span><span class="op">)</span>,</span>
+<span>  DC3 <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"HMSD"</span>,<span class="st">"ANKRD33B"</span>,<span class="st">"LAD1"</span>,<span class="st">"CCR7"</span>,<span class="st">"LAMP3"</span>,<span class="st">"CCL19"</span>,<span class="st">"CCL22"</span>,<span class="st">"INSM1"</span>,<span class="st">"TNNT2"</span>,<span class="st">"TUBB2B"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">DotPlot</span><span class="op">(</span><span class="va">sce.all</span>, features <span class="op">=</span> <span class="va">myeloids</span>,</span>
+<span>             assay<span class="op">=</span><span class="st">'RNA'</span> ,group.by <span class="op">=</span> <span class="st">'celltype'</span> <span class="op">)</span>  <span class="op">+</span><span class="va">th</span></span>
+<span></span>
+<span><span class="va">p</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+<!-- -->
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+      }
+    }
+});
+</script><script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../../single_cell/sc_supplementary/read_sc_data.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title"><strong>读取非标准格式的单细胞数据</strong></span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb7" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "细胞分群通用marker"</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span><span class="co"> </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">  eval: false</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 参考原文：</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; </span><span class="co">[</span><span class="ot">是否是免疫细胞很容易区分那是否是肿瘤细胞呢？</span><span class="co">](https://mp.weixin.qq.com/s?__biz=MzI1Njk4ODE0MQ==&amp;mid=2247487157&amp;idx=1&amp;sn=e2b59fd14c9a25d4331465cf6fdb1d3c&amp;scene=21#wechat_redirect)</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; </span><span class="co">[</span><span class="ot">CNS图表复现03—单细胞区分免疫细胞和肿瘤细胞</span><span class="co">](https://mp.weixin.qq.com/s?__biz=MzI1Njk4ODE0MQ==&amp;mid=2247488742&amp;idx=1&amp;sn=43512abff6c516930b96316ca5332b23&amp;scene=21#wechat_redirect)</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## 区分免疫细胞和非免疫细胞</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Immune: PTPRC (编码CD45)**</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Epithelial/cancer：EPCAM**</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Stromal (CD10+,MME, fibo or CD31+,PECAM1,endo)</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>Cells were defined as non-immune if belonging to a cluster low for **PTPRC (gene for CD45)** and high for any of the following genes:</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>MUC5A (goblet cell marker)</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>KRT5 (basal epithelial cell marker)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>SFTPD (secretory cell marker)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**EPCAM** **(pan-epithelial cell marker)**</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>CDH5 (endothelial cell marker)</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**COL1A2** and **ACTA2** (fibroblast markers)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>所以你拿到自己的单细胞测序数据后，走完基础流程，可以直接看看这些基因的表达量分布图（气泡图或者小提琴图均可）。下面是一个例子：</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>genes_to_check <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"PTPRC"</span>,</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"EPCAM"</span>,</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"CD3G"</span>,<span class="st">"CD3E"</span>, <span class="co"># T cells</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"CD79A"</span>, <span class="st">"BLNK"</span>, <span class="st">"MS4A1"</span>, <span class="co"># B cells</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"CD68"</span>, <span class="st">"CSF1R"</span>, <span class="co"># Monocytes and macrophages</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"MARCO"</span>, <span class="st">"CD207"</span>, <span class="st">"PMEL"</span>, <span class="st">"ALB"</span>, <span class="st">"C1QB"</span>, <span class="st">"CLDN5"</span>, <span class="st">"FCGR3B"</span>, <span class="st">"COL1A1"</span>)</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">DotPlot</span>(sce, <span class="at">features =</span> genes_to_check) <span class="sc">+</span> <span class="fu">coord_flip</span>()</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/Image-01.jpg)</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>接下来我们直接根据PTPRC的总表达量的中位数将所有细胞分为免疫细胞和非免疫细胞：</span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Annotate Immune vs Nonimmune clusters</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="co"># At this point we dont care for a more detailed annotation as we will annotate immune and non-immune separately later</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> p<span class="sc">$</span>data </span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>cd45 <span class="ot">&lt;-</span> dat[dat<span class="sc">$</span>features.plot <span class="sc">==</span> <span class="st">'PTPRC'</span>,]</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="fu">fivenum</span>(cd45<span class="sc">$</span>avg.exp.scaled)</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>imm <span class="ot">&lt;-</span> cd45[cd45<span class="sc">$</span>avg.exp.scaled <span class="sc">&gt;</span> <span class="sc">-</span><span class="fl">0.5</span>,]<span class="sc">$</span>id</span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>imm</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>immune_annotation <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(sce<span class="sc">$</span>RNA_snn_res.<span class="fl">0.5</span> <span class="sc">%in%</span> imm ,<span class="st">'immune'</span>, <span class="st">'non-immune'</span>)</span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(sce<span class="sc">$</span>immune_annotation)</span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>接下来可以进行 TSNE plot &nbsp;可视化，看到免疫细胞和非免疫细胞是泾渭分明：</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">TSNEPlot</span>(<span class="at">object =</span> sce, <span class="at">group.by =</span> <span class="st">'immune_annotation'</span>)</span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/Image2.jpg)</span>{width="527"}</span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a><span class="fu">## 区分出恶性细胞</span></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>很多情况下是靠inferCNV算法的结果，比如发表于2017年12月，在CELL杂志：Single-Cell Transcriptomic Analysis of Primary and Metastatic Tumor Ecosystems in Head and Neck Cancer 的文献，就是使用inferCNV算法对来自18名患者的5,902个细胞，分成2215个恶性细胞和3363个非恶性细胞如下所示：</span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/infercnv.png)</span></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>可以看到，通过inferCNV算法，能发现非恶性细胞的CNV是几乎没有的，而恶性细胞呢，或多或少有一些染色体片段的拷贝数扩增或者缺失。</span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a><span class="fu">## 细胞初步分群通用marker</span></span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>一般来说肿瘤样品的单细胞首先是按照如下所示的标记基因进行第一次分群 ：</span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>免疫细胞共同标记：PTPRC</span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>髓系细胞（myeloid）：CD16、AIF1</span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>T cells：CD3D、CD3E、CD4、CD8A</span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>B cells：CD19、CD79A、MS4A1（编码CD20）、SDC1、CD27、CD38</span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Plasma cells：IGHG1、MZB1、SDC1（编码CD138）、JCHAIN</span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Monocytes and macrophages：CD68、CD163、CD14</span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Monocyte：S100A9、S100A8、MMP19</span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Macrophages：C1QA、C1QB</span>
+<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Mast cells：TPSAB1、TPSB2</span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>NK cells：KLRB1、KLRD1、NCR1、GNLY、NKG7</span>
+<span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>【NK Cells：FGFBP2, FCG3RA, CX3CR1】</span>
+<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Epithelial/cancer：EPCAM、KRT19、PROM1、ALDH1A1、CD24</span>
+<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Endothelial cells：PECAM1、VWF</span>
+<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Fibroblasts：FGF7、MME、ACTA2、COL3A1</span>
+<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-122"><a href="#cb7-122" aria-hidden="true" tabindex="-1"></a>genes_to_check <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PTPRC'</span>, </span>
+<span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"CD163"</span>,<span class="st">"AIF1"</span>, </span>
+<span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD3D'</span>, <span class="st">'CD3E'</span>, <span class="st">'CD4'</span>, <span class="st">'CD8A'</span>, </span>
+<span id="cb7-125"><a href="#cb7-125" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD19'</span>, <span class="st">'CD79A'</span>, <span class="st">'MS4A1'</span>, <span class="st">"SDC1"</span>, <span class="st">"CD27"</span>, <span class="st">"CD38"</span>,</span>
+<span id="cb7-126"><a href="#cb7-126" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'IGHG1'</span>, <span class="st">'MZB1'</span>, <span class="st">'SDC1'</span>, <span class="st">"JCHAIN"</span>, </span>
+<span id="cb7-127"><a href="#cb7-127" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD68'</span>, <span class="st">'CD163'</span>, <span class="st">'CD14'</span>, </span>
+<span id="cb7-128"><a href="#cb7-128" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'S100A9'</span>, <span class="st">'S100A8'</span>, <span class="st">'MMP19'</span>,</span>
+<span id="cb7-129"><a href="#cb7-129" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'C1QA'</span>,  <span class="st">'C1QB'</span>, </span>
+<span id="cb7-130"><a href="#cb7-130" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'TPSAB1'</span>, <span class="st">'TPSB2'</span>, </span>
+<span id="cb7-131"><a href="#cb7-131" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'KLRB1'</span>, <span class="st">"KLRD1"</span>, <span class="st">'NCR1'</span>, <span class="st">"GNLY"</span>, <span class="st">"NKG7"</span>, </span>
+<span id="cb7-132"><a href="#cb7-132" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'FGF7'</span>, <span class="st">'MME'</span>, <span class="st">'ACTA2'</span>, <span class="st">"COL3A1"</span>, </span>
+<span id="cb7-133"><a href="#cb7-133" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'PECAM1'</span>, <span class="st">'VWF'</span>, </span>
+<span id="cb7-134"><a href="#cb7-134" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'EPCAM'</span>, <span class="st">'KRT19'</span>, <span class="st">'PROM1'</span>, <span class="st">'ALDH1A1'</span>) </span>
+<span id="cb7-135"><a href="#cb7-135" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-136"><a href="#cb7-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-137"><a href="#cb7-137" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb7-138"><a href="#cb7-138" aria-hidden="true" tabindex="-1"></a><span class="fu">###### 案例</span></span>
+<span id="cb7-139"><a href="#cb7-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a>来源：<span class="co">[</span><span class="ot">巨噬细胞新分类体系（一篇Science文献复现）</span><span class="co">](https://mp.weixin.qq.com/s?__biz=MzUzMTEwODk0Ng==&amp;mid=2247517274&amp;idx=1&amp;sn=e5c523d4a46757e6ea1ad15707333ca5&amp;scene=21#wechat_redirect)</span></span>
+<span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-144"><a href="#cb7-144" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>genes_to_check <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PTPRC'</span>, <span class="st">'CD3D'</span>, <span class="st">'CD3E'</span>, <span class="st">'CD4'</span>,<span class="st">'CD8A'</span>,</span>
+<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD19'</span>, <span class="st">'CD79A'</span>, <span class="st">'MS4A1'</span> ,</span>
+<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'IGHG1'</span>, <span class="st">'MZB1'</span>, <span class="st">'SDC1'</span>,</span>
+<span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD68'</span>, <span class="st">'CD163'</span>, <span class="st">'CD14'</span>, </span>
+<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'TPSAB1'</span> , <span class="st">'TPSB2'</span>, </span>
+<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'RCVRN'</span>,<span class="st">'FPR1'</span> , <span class="st">'ITGAM'</span> ,</span>
+<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'C1QA'</span>,  <span class="st">'C1QB'</span>,  </span>
+<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'S100A9'</span>, <span class="st">'S100A8'</span>, <span class="st">'MMP19'</span>,</span>
+<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'FCGR3A'</span>,<span class="st">'LAMP3'</span>, <span class="st">'IDO1'</span>,<span class="st">'IDO2'</span>,<span class="do">## DC3 </span></span>
+<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD1E'</span>,<span class="st">'CD1C'</span>, <span class="co"># DC2</span></span>
+<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'KLRB1'</span>,<span class="st">'NCR1'</span>, </span>
+<span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'FGF7'</span>,<span class="st">'MME'</span>, <span class="st">'ACTA2'</span>, </span>
+<span id="cb7-157"><a href="#cb7-157" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'DCN'</span>, <span class="st">'LUM'</span>,  <span class="st">'GSN'</span> , <span class="co"># mouse PDAC fibo </span></span>
+<span id="cb7-158"><a href="#cb7-158" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'PECAM1'</span>, <span class="st">'VWF'</span>,  </span>
+<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'EPCAM'</span> , <span class="st">'KRT19'</span>,<span class="st">'KRT7'</span>, </span>
+<span id="cb7-160"><a href="#cb7-160" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'FYXD2'</span>, <span class="st">'TM4SF4'</span>, <span class="st">'ANXA4'</span>,<span class="co"># 胆管上皮细胞</span></span>
+<span id="cb7-161"><a href="#cb7-161" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'APOC3'</span>, <span class="st">'FABP1'</span>,  <span class="st">'APOA1'</span>,  <span class="co"># 肝细胞</span></span>
+<span id="cb7-162"><a href="#cb7-162" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'Serpina1c'</span>,<span class="st">'PROM1'</span>, <span class="st">'ALDH1A1'</span> )</span>
+<span id="cb7-163"><a href="#cb7-163" aria-hidden="true" tabindex="-1"></a><span class="fu">DotPlot</span>(sce.all, </span>
+<span id="cb7-164"><a href="#cb7-164" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> genes_to_check,</span>
+<span id="cb7-165"><a href="#cb7-165" aria-hidden="true" tabindex="-1"></a>        <span class="at">assay=</span><span class="st">'RNA'</span>,</span>
+<span id="cb7-166"><a href="#cb7-166" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="st">'celltype'</span> ) <span class="sc">+</span> </span>
+<span id="cb7-167"><a href="#cb7-167" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span>
+<span id="cb7-168"><a href="#cb7-168" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-169"><a href="#cb7-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-170"><a href="#cb7-170" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/640.png)</span>{width="499"}</span>
+<span id="cb7-171"><a href="#cb7-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-172"><a href="#cb7-172" aria-hidden="true" tabindex="-1"></a>根据气泡图所示的marker基因表达情况，确定细胞分群如下</span>
+<span id="cb7-173"><a href="#cb7-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-174"><a href="#cb7-174" aria-hidden="true" tabindex="-1"></a>| Cluster ID | 细胞类型                |</span>
+<span id="cb7-175"><a href="#cb7-175" aria-hidden="true" tabindex="-1"></a>|------------|-------------------------|</span>
+<span id="cb7-176"><a href="#cb7-176" aria-hidden="true" tabindex="-1"></a>| 0, 7       | T cells                 |</span>
+<span id="cb7-177"><a href="#cb7-177" aria-hidden="true" tabindex="-1"></a>| 2          | Macrophages             |</span>
+<span id="cb7-178"><a href="#cb7-178" aria-hidden="true" tabindex="-1"></a>| 8          | Mast cells              |</span>
+<span id="cb7-179"><a href="#cb7-179" aria-hidden="true" tabindex="-1"></a>| 1, 9, 10   | Epithelial/cancer cells |</span>
+<span id="cb7-180"><a href="#cb7-180" aria-hidden="true" tabindex="-1"></a>| 6          | Fibroblasts             |</span>
+<span id="cb7-181"><a href="#cb7-181" aria-hidden="true" tabindex="-1"></a>| 5          | Endothelial cells       |</span>
+<span id="cb7-182"><a href="#cb7-182" aria-hidden="true" tabindex="-1"></a>| 4          | Cycling                 |</span>
+<span id="cb7-183"><a href="#cb7-183" aria-hidden="true" tabindex="-1"></a>| 3          | B cells                 |</span>
+<span id="cb7-184"><a href="#cb7-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-185"><a href="#cb7-185" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/640-2.png)</span>{width="296"}</span>
+<span id="cb7-186"><a href="#cb7-186" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb7-187"><a href="#cb7-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-188"><a href="#cb7-188" aria-hidden="true" tabindex="-1"></a>髓系免疫细胞亚群:</span>
+<span id="cb7-189"><a href="#cb7-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-192"><a href="#cb7-192" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-193"><a href="#cb7-193" aria-hidden="true" tabindex="-1"></a>th<span class="ot">=</span><span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>,</span>
+<span id="cb7-194"><a href="#cb7-194" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="fl">0.5</span>))</span>
+<span id="cb7-195"><a href="#cb7-195" aria-hidden="true" tabindex="-1"></a>myeloids <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb7-196"><a href="#cb7-196" aria-hidden="true" tabindex="-1"></a>  <span class="at">Mac=</span><span class="fu">c</span>(<span class="st">"C1QA"</span>,<span class="st">"C1QB"</span>,<span class="st">"C1QC"</span>,<span class="st">"SELENOP"</span>,<span class="st">"RNASE1"</span>,<span class="st">"DAB2"</span>,<span class="st">"LGMN"</span>,<span class="st">"PLTP"</span>,<span class="st">"MAF"</span>,<span class="st">"SLCO2B1"</span>),</span>
+<span id="cb7-197"><a href="#cb7-197" aria-hidden="true" tabindex="-1"></a>  <span class="at">mono=</span><span class="fu">c</span>(<span class="st">"VCAN"</span>,<span class="st">"FCN1"</span>,<span class="st">"CD300E"</span>,<span class="st">"S100A12"</span>,<span class="st">"EREG"</span>,<span class="st">"APOBEC3A"</span>,<span class="st">"STXBP2"</span>,<span class="st">"ASGR1"</span>,<span class="st">"CCR2"</span>,<span class="st">"NRG1"</span>),</span>
+<span id="cb7-198"><a href="#cb7-198" aria-hidden="true" tabindex="-1"></a>  <span class="at">neutrophils =</span> <span class="fu">c</span>(<span class="st">"FCGR3B"</span>,<span class="st">"CXCR2"</span>,<span class="st">"SLC25A37"</span>,<span class="st">"G0S2"</span>,<span class="st">"CXCR1"</span>,<span class="st">"ADGRG3"</span>,<span class="st">"PROK2"</span>,<span class="st">"STEAP4"</span>,<span class="st">"CMTM2"</span> ),</span>
+<span id="cb7-199"><a href="#cb7-199" aria-hidden="true" tabindex="-1"></a>  <span class="at">pDC =</span> <span class="fu">c</span>(<span class="st">"GZMB"</span>,<span class="st">"SCT"</span>,<span class="st">"CLIC3"</span>,<span class="st">"LRRC26"</span>,<span class="st">"LILRA4"</span>,<span class="st">"PACSIN1"</span>,<span class="st">"CLEC4C"</span>,<span class="st">"MAP1A"</span>,<span class="st">"PTCRA"</span>,<span class="st">"C12orf75"</span>),</span>
+<span id="cb7-200"><a href="#cb7-200" aria-hidden="true" tabindex="-1"></a>  <span class="at">DC1 =</span> <span class="fu">c</span>(<span class="st">"CLEC9A"</span>,<span class="st">"XCR1"</span>,<span class="st">"CLNK"</span>,<span class="st">"CADM1"</span>,<span class="st">"ENPP1"</span>,<span class="st">"SNX22"</span>,<span class="st">"NCALD"</span>,<span class="st">"DBN1"</span>,<span class="st">"HLA-DOB"</span>,<span class="st">"PPY"</span>),</span>
+<span id="cb7-201"><a href="#cb7-201" aria-hidden="true" tabindex="-1"></a>  <span class="at">DC2 =</span> <span class="fu">c</span>( <span class="st">"CD1C"</span>,<span class="st">"FCER1A"</span>,<span class="st">"CD1E"</span>,<span class="st">"AL138899.1"</span>,<span class="st">"CD2"</span>,<span class="st">"GPAT3"</span>,<span class="st">"CCND2"</span>,<span class="st">"ENHO"</span>,<span class="st">"PKIB"</span>,<span class="st">"CD1B"</span>),</span>
+<span id="cb7-202"><a href="#cb7-202" aria-hidden="true" tabindex="-1"></a>  <span class="at">DC3 =</span>  <span class="fu">c</span>(<span class="st">"HMSD"</span>,<span class="st">"ANKRD33B"</span>,<span class="st">"LAD1"</span>,<span class="st">"CCR7"</span>,<span class="st">"LAMP3"</span>,<span class="st">"CCL19"</span>,<span class="st">"CCL22"</span>,<span class="st">"INSM1"</span>,<span class="st">"TNNT2"</span>,<span class="st">"TUBB2B"</span>)</span>
+<span id="cb7-203"><a href="#cb7-203" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-204"><a href="#cb7-204" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">DotPlot</span>(sce.all, <span class="at">features =</span> myeloids,</span>
+<span id="cb7-205"><a href="#cb7-205" aria-hidden="true" tabindex="-1"></a>             <span class="at">assay=</span><span class="st">'RNA'</span> ,<span class="at">group.by =</span> <span class="st">'celltype'</span> )  <span class="sc">+</span>th</span>
+<span id="cb7-206"><a href="#cb7-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-207"><a href="#cb7-207" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb7-208"><a href="#cb7-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+      <ul class="footer-items list-unstyled">
+<li class="nav-item">
+ This book was built with Quarto
+  </li>  
+</ul>
+</div>   
+    <div class="nav-footer-center">Copyright 2023, Du Junhong</div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+<li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/djhcod">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+</div>
+  </div>
+</footer>
+
+
+</body></html>

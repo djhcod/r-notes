@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.3.450">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>R语言学习笔记 - 22&nbsp; Normalization and regressing out unwanted variation</title>
+<title>R语言学习笔记 - 23&nbsp; Normalization and regressing out unwanted variation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -119,7 +119,7 @@ div.csl-indent {
   "enableExperimentalNewNoteButton": true
 }
 </script><script async="" src="https://hypothes.is/embed.js"></script>
-<meta name="twitter:title" content="R语言学习笔记 - 22&nbsp; Normalization and regressing out unwanted variation">
+<meta name="twitter:title" content="R语言学习笔记 - 23&nbsp; Normalization and regressing out unwanted variation">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/images/sc_workflow_2022-01.jpg">
 <meta name="twitter:card" content="summary_large_image">
@@ -211,7 +211,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -273,6 +273,12 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">字符的处理</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/loop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">循环</span></span></a>
+  </div>
+</li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -287,61 +293,61 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_command_list.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/sctransform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/marker_gene_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
   </div>
 </li>
       </ul>
@@ -358,67 +364,67 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">质控</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">质控</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
   </div>
 </li>
       </ul>
@@ -435,37 +441,37 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
@@ -497,13 +503,13 @@ div.csl-indent {
    
   <ul>
 <li>
-<a href="#%E6%A0%87%E5%87%86%E5%8C%96normalization%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%B1%BB%E5%9E%8B" id="toc-标准化normalization的原理和类型" class="nav-link active" data-scroll-target="#%E6%A0%87%E5%87%86%E5%8C%96normalization%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%B1%BB%E5%9E%8B"><span class="header-section-number">22.1</span> 标准化（Normalization）的原理和类型</a>
+<a href="#%E6%A0%87%E5%87%86%E5%8C%96normalization%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%B1%BB%E5%9E%8B" id="toc-标准化normalization的原理和类型" class="nav-link active" data-scroll-target="#%E6%A0%87%E5%87%86%E5%8C%96normalization%E7%9A%84%E5%8E%9F%E7%90%86%E5%92%8C%E7%B1%BB%E5%9E%8B"><span class="header-section-number">23.1</span> 标准化（Normalization）的原理和类型</a>
   <ul class="collapse">
 <li><a href="#methods-for-scrna-seq-normalization" id="toc-methods-for-scrna-seq-normalization" class="nav-link" data-scroll-target="#methods-for-scrna-seq-normalization">Methods for scRNA-seq normalization</a></li>
   </ul>
 </li>
   <li>
-<a href="#%E5%9F%BA%E4%BA%8E%E4%BC%A0%E7%BB%9F%E6%A0%87%E5%87%86%E5%8C%96%E6%B5%81%E7%A8%8B%E5%AF%B9%E9%9D%9E%E6%9C%9F%E6%9C%9B%E5%8F%98%E5%BC%82%E6%9D%A5%E6%BA%90%E8%BF%9B%E8%A1%8C%E8%AF%84%E4%BC%B0" id="toc-基于传统标准化流程对非期望变异来源进行评估" class="nav-link" data-scroll-target="#%E5%9F%BA%E4%BA%8E%E4%BC%A0%E7%BB%9F%E6%A0%87%E5%87%86%E5%8C%96%E6%B5%81%E7%A8%8B%E5%AF%B9%E9%9D%9E%E6%9C%9F%E6%9C%9B%E5%8F%98%E5%BC%82%E6%9D%A5%E6%BA%90%E8%BF%9B%E8%A1%8C%E8%AF%84%E4%BC%B0"><span class="header-section-number">22.2</span> 基于传统标准化流程对非期望变异来源进行评估</a>
+<a href="#%E5%9F%BA%E4%BA%8E%E4%BC%A0%E7%BB%9F%E6%A0%87%E5%87%86%E5%8C%96%E6%B5%81%E7%A8%8B%E5%AF%B9%E9%9D%9E%E6%9C%9F%E6%9C%9B%E5%8F%98%E5%BC%82%E6%9D%A5%E6%BA%90%E8%BF%9B%E8%A1%8C%E8%AF%84%E4%BC%B0" id="toc-基于传统标准化流程对非期望变异来源进行评估" class="nav-link" data-scroll-target="#%E5%9F%BA%E4%BA%8E%E4%BC%A0%E7%BB%9F%E6%A0%87%E5%87%86%E5%8C%96%E6%B5%81%E7%A8%8B%E5%AF%B9%E9%9D%9E%E6%9C%9F%E6%9C%9B%E5%8F%98%E5%BC%82%E6%9D%A5%E6%BA%90%E8%BF%9B%E8%A1%8C%E8%AF%84%E4%BC%B0"><span class="header-section-number">23.2</span> 基于传统标准化流程对非期望变异来源进行评估</a>
   <ul class="collapse">
 <li><a href="#set-up" id="toc-set-up" class="nav-link" data-scroll-target="#set-up">Set-up</a></li>
   <li><a href="#sec-evaluating_effects_of_cell_cycle" id="toc-sec-evaluating_effects_of_cell_cycle" class="nav-link" data-scroll-target="#sec-evaluating_effects_of_cell_cycle">评估细胞周期的影响（Evaluating effects of cell cycle）</a></li>
@@ -511,7 +517,7 @@ div.csl-indent {
   </ul>
 </li>
   <li>
-<a href="#sctransform-based-normalization-and-regressing-out-sources-of-unwanted-variation" id="toc-sctransform-based-normalization-and-regressing-out-sources-of-unwanted-variation" class="nav-link" data-scroll-target="#sctransform-based-normalization-and-regressing-out-sources-of-unwanted-variation"><span class="header-section-number">22.3</span> <code>SCTransform</code>-based Normalization and regressing out sources of unwanted variation</a>
+<a href="#sctransform-based-normalization-and-regressing-out-sources-of-unwanted-variation" id="toc-sctransform-based-normalization-and-regressing-out-sources-of-unwanted-variation" class="nav-link" data-scroll-target="#sctransform-based-normalization-and-regressing-out-sources-of-unwanted-variation"><span class="header-section-number">23.3</span> <code>SCTransform</code>-based Normalization and regressing out sources of unwanted variation</a>
   <ul class="collapse">
 <li><a href="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5" id="toc-数据导入" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5">数据导入</a></li>
   <li><a href="#%E6%89%A7%E8%A1%8Csctransform" id="toc-执行sctransform" class="nav-link" data-scroll-target="#%E6%89%A7%E8%A1%8Csctransform">执行<code>SCTransform</code></a></li>
@@ -525,7 +531,7 @@ div.csl-indent {
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span id="sec-normalization-and-regressing-out-unwanted-variation" class="quarto-section-identifier"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-normalization-and-regressing-out-unwanted-variation" class="quarto-section-identifier"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -575,8 +581,8 @@ div.csl-indent {
 <strong>Regress out</strong> number of <strong>UMIs</strong> (default using <code>SCTransform</code>), <strong>mitochondrial content</strong>, and <strong>cell cycle</strong>, if needed and appropriate for experiment, so not to drive clustering downstream</li>
 </ul>
 <hr>
-<section id="标准化normalization的原理和类型" class="level2" data-number="22.1"><h2 data-number="22.1" class="anchored" data-anchor-id="标准化normalization的原理和类型">
-<span class="header-section-number">22.1</span> 标准化（Normalization）的原理和类型</h2>
+<section id="标准化normalization的原理和类型" class="level2" data-number="23.1"><h2 data-number="23.1" class="anchored" data-anchor-id="标准化normalization的原理和类型">
+<span class="header-section-number">23.1</span> 标准化（Normalization）的原理和类型</h2>
 <p>An essential first step in the majority of mRNA expression analyses is normalization, whereby systematic variations are adjusted for to <strong>make expression counts comparable across genes and/or samples</strong>. The counts of mapped reads for each gene is proportional to the expression of RNA (“interesting”) in addition to many other factors (“uninteresting”). Normalization is the process of adjusting raw count values to account for the “uninteresting” factors.</p>
 <p>The main factors often considered during normalization are:</p>
 <ul>
@@ -627,8 +633,8 @@ Note
 <li><p>Not just a consideration of the expression level is, but also the distribution of expression</p></li>
 </ul>
 <p>In this workshop we will demonstrate the use of both transformations at different steps in the workflow.</p>
-</section></section><section id="基于传统标准化流程对非期望变异来源进行评估" class="level2" data-number="22.2"><h2 data-number="22.2" class="anchored" data-anchor-id="基于传统标准化流程对非期望变异来源进行评估">
-<span class="header-section-number">22.2</span> 基于传统标准化流程对非期望变异来源进行评估</h2>
+</section></section><section id="基于传统标准化流程对非期望变异来源进行评估" class="level2" data-number="23.2"><h2 data-number="23.2" class="anchored" data-anchor-id="基于传统标准化流程对非期望变异来源进行评估">
+<span class="header-section-number">23.2</span> 基于传统标准化流程对非期望变异来源进行评估</h2>
 <p>The most common biological data correction (or source of “uninteresting” variation) in single cell RNA-seq is the effects of the <strong>cell cycle</strong> on the transcriptome. We need to explore the data and see if we observe any effects in our data.</p>
 <section id="set-up" class="level3"><h3 class="anchored" data-anchor-id="set-up">Set-up</h3>
 <p>Before we make any comparisons across cells, we will apply a <strong>simple normalization.</strong> <strong>This is solely for the purpose of exploring the sources of variation in our data.</strong></p>
@@ -673,6 +679,19 @@ Active assay: RNA (14065 features, 0 variable features)
 <p>可以发现，运行<code>NormalizeDataNext</code>后的数据多出了新的layer：data, 里面即储存了标准化后的数据。Next, we take this normalized data and check to see if data correction methods are necessary.</p>
 </section><section id="sec-evaluating_effects_of_cell_cycle" class="level3"><h3 class="anchored" data-anchor-id="sec-evaluating_effects_of_cell_cycle">评估细胞周期的影响（Evaluating effects of cell cycle）</h3>
 <section id="计算细胞周期评分" class="level4"><h4 class="anchored" data-anchor-id="计算细胞周期评分">计算细胞周期评分</h4>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>关于细胞周期的详细说明，见 <a href="../seurat/cell_cycle_regression.html#sec-Calculating_cell_cycle_scores"><span>Section&nbsp;11.2.1</span></a> 。</p>
+</div>
+</div>
 <p>To assign each cell a score based on its expression of G2/M and S phase markers, we can use the Seuart function <code><a href="https://satijalab.org/seurat/reference/CellCycleScoring.html">CellCycleScoring()</a></code>. This function calculates cell cycle phase scores based on canonical markers that required as input.</p>
 <p>A list of cell cycle markers, from Tirosh et al, 2015, is loaded with Seurat. We can segregate this list into markers of G2/M phase and markers of S phase. However, if you are not working with human data we have <a href="https://hbctraining.github.io/scRNA-seq_online/lessons/cell_cycle_scoring.html">additional materials</a> detailing how to acquire cell cycle markers for other organisms of interest.</p>
 <div class="cell" data-hash="06_SC_SCT_normalization_cache/html/unnamed-chunk-2_31b1dc53b562428dee2d82e6172d1f6e">
@@ -761,7 +780,7 @@ ctrl_AAACATACCTCGCT-1  0.03421052  0.02033139     S</code></pre>
 </div>
 <p><strong>We do not see large differences due to cell cycle phase. Based on this plot, we would not regress out the variation due to cell cycle.</strong></p>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -770,9 +789,9 @@ When should cell cycle phase be regressed out?
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Below are two PCA plots taken from <a href="../seurat/cell_cycle_regression.html"><span>Chapter&nbsp;10</span></a> 。This first plot is similar to what we plotted above, it is a PCA prior to regression to evaluate if the cell cycle is playing a big role in driving PC1 and PC2. Clearly, the cells are separating by cell type in this case, so it suggests regressing out these effects.</p>
+<p>Below are two PCA plots taken from <a href="../seurat/cell_cycle_regression.html"><span>Chapter&nbsp;11</span></a> 。This first plot is similar to what we plotted above, it is a PCA prior to regression to evaluate if the cell cycle is playing a big role in driving PC1 and PC2. Clearly, the cells are separating by cell type in this case, so it suggests regressing out these effects.</p>
 <p><img src="images/unnamed-chunk-6-1.png" class="img-fluid" width="427"></p>
 <p>This second PCA plot is post-regression, and displays how effective the regression was in removing the effect we observed.</p>
 <p><img src="images/unnamed-chunk-10-1.png" class="img-fluid" width="430"></p>
@@ -789,7 +808,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>在需要消除细胞周期的影响时，如何通过<code>ScaleData</code>回归掉（regress out）细胞周期的影响，以及如何在消除细胞周期的影响同时保留增殖细胞与静止细胞的区分，参考 <a href="../seurat/cell_cycle_regression.html"><span>Chapter&nbsp;10</span></a> 。</p>
+<p>在需要消除细胞周期的影响时，如何通过<code>ScaleData</code>回归掉（regress out）细胞周期的影响，以及如何在消除细胞周期的影响同时保留增殖细胞与静止细胞的区分，参考 <a href="../seurat/cell_cycle_regression.html"><span>Chapter&nbsp;11</span></a> 。</p>
 </div>
 </div>
 <hr></section></section><section id="评估线粒体基因表达的影响" class="level3"><h3 class="anchored" data-anchor-id="评估线粒体基因表达的影响">评估线粒体基因表达的影响</h3>
@@ -838,8 +857,8 @@ Tip
 <p>We do not see large differences due to mitochondrial expression. Based on this plot, we would not regress out the variation due to mitochondrial expression.</p>
 </li>
 </ol>
-<hr></section></section><section id="sctransform-based-normalization-and-regressing-out-sources-of-unwanted-variation" class="level2" data-number="22.3"><h2 data-number="22.3" class="anchored" data-anchor-id="sctransform-based-normalization-and-regressing-out-sources-of-unwanted-variation">
-<span class="header-section-number">22.3</span> <code>SCTransform</code>-based Normalization and regressing out sources of unwanted variation</h2>
+<hr></section></section><section id="sctransform-based-normalization-and-regressing-out-sources-of-unwanted-variation" class="level2" data-number="23.3"><h2 data-number="23.3" class="anchored" data-anchor-id="sctransform-based-normalization-and-regressing-out-sources-of-unwanted-variation">
+<span class="header-section-number">23.3</span> <code>SCTransform</code>-based Normalization and regressing out sources of unwanted variation</h2>
 <p>Now that we have established which effects are observed in our data, we can use the <code>SCTransform</code> method to regress out these effects. The <code>SCTransform</code> method was proposed as a better alternative to the log transform normalization method that we used for exploring sources of unwanted variation. The method not only <strong>normalizes data, but it also performs a variance stabilization and allows for additional covariates to be regressed out</strong>.</p>
 <p>As described earlier, all genes cannot be treated the same. As such, the <code>SCTransform</code> <strong>method constructs a generalized linear model (GLM) for each gene</strong> with UMI counts as the response and sequencing depth as the explanatory variable. Information is pooled across genes with similar abundances, to regularize parameter estimates and <strong>obtain residuals which represent effectively normalized data values</strong> which are no longer correlated with sequencing depth.</p>
 <p><img src="images/SCT_UMAP.png" class="img-fluid" width="532"></p>
@@ -1085,7 +1104,7 @@ Tip
 </div>
 <hr>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1094,7 +1113,7 @@ Session Info
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-hash="06_SC_SCT_normalization_cache/html/unnamed-chunk-15_7c92f6dad57b5352def4548afbf3d82f">
 <div class="cell-output cell-output-stdout">
@@ -1615,12 +1634,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script><script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">PCA原理</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">PCA原理</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
@@ -1743,293 +1762,297 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb47-119"><a href="#cb47-119" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb47-120"><a href="#cb47-120" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 计算细胞周期评分</span></span>
 <span id="cb47-121"><a href="#cb47-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-122"><a href="#cb47-122" aria-hidden="true" tabindex="-1"></a>To assign each cell a score based on its expression of G2/M and S phase markers, we can use the Seuart function <span class="in">`CellCycleScoring()`</span>. This function calculates cell cycle phase scores based on canonical markers that required as input.</span>
-<span id="cb47-123"><a href="#cb47-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-124"><a href="#cb47-124" aria-hidden="true" tabindex="-1"></a>A list of cell cycle markers, from Tirosh et al, 2015, is loaded with Seurat. We can segregate this list into markers of G2/M phase and markers of S phase. However, if you are not working with human data we have <span class="co">[</span><span class="ot">additional materials</span><span class="co">](https://hbctraining.github.io/scRNA-seq_online/lessons/cell_cycle_scoring.html)</span> detailing how to acquire cell cycle markers for other organisms of interest.</span>
+<span id="cb47-122"><a href="#cb47-122" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
+<span id="cb47-123"><a href="#cb47-123" aria-hidden="true" tabindex="-1"></a>关于细胞周期的详细说明，见 @sec-Calculating_cell_cycle_scores 。</span>
+<span id="cb47-124"><a href="#cb47-124" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb47-125"><a href="#cb47-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-128"><a href="#cb47-128" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb47-129"><a href="#cb47-129" aria-hidden="true" tabindex="-1"></a><span class="co"># Load cell cycle markers</span></span>
-<span id="cb47-130"><a href="#cb47-130" aria-hidden="true" tabindex="-1"></a>s.genes <span class="ot">&lt;-</span> cc.genes<span class="sc">$</span>s.genes</span>
-<span id="cb47-131"><a href="#cb47-131" aria-hidden="true" tabindex="-1"></a>g2m.genes <span class="ot">&lt;-</span> cc.genes<span class="sc">$</span>g2m.genes</span>
-<span id="cb47-132"><a href="#cb47-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-133"><a href="#cb47-133" aria-hidden="true" tabindex="-1"></a><span class="co"># Score cells for cell cycle</span></span>
-<span id="cb47-134"><a href="#cb47-134" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">CellCycleScoring</span>(seurat_phase, </span>
-<span id="cb47-135"><a href="#cb47-135" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">g2m.features =</span> g2m.genes, </span>
-<span id="cb47-136"><a href="#cb47-136" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">s.features =</span> s.genes)</span>
-<span id="cb47-137"><a href="#cb47-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-138"><a href="#cb47-138" aria-hidden="true" tabindex="-1"></a><span class="co"># 现在的meta.data中多出了细胞周期评分“S.Score”和“G2M.Score”，以及推断的细胞所处的周期“Phase”</span></span>
-<span id="cb47-139"><a href="#cb47-139" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(seurat_phase<span class="sc">@</span>meta.data)</span>
-<span id="cb47-140"><a href="#cb47-140" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看一下细胞周期的分布情况</span></span>
-<span id="cb47-141"><a href="#cb47-141" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(seurat_phase<span class="sc">$</span>Phase)</span>
-<span id="cb47-142"><a href="#cb47-142" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb47-143"><a href="#cb47-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-144"><a href="#cb47-144" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 使用PCA确定细胞周期是否是我们数据集中的主要变异来源</span></span>
-<span id="cb47-145"><a href="#cb47-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-146"><a href="#cb47-146" aria-hidden="true" tabindex="-1"></a>After scoring the cells for cell cycle, we would like to determine **whether cell cycle is a major source of variation in our dataset using PCA（PCA的原理详见：** @sec-pca_theory **）**.</span>
+<span id="cb47-126"><a href="#cb47-126" aria-hidden="true" tabindex="-1"></a>To assign each cell a score based on its expression of G2/M and S phase markers, we can use the Seuart function <span class="in">`CellCycleScoring()`</span>. This function calculates cell cycle phase scores based on canonical markers that required as input.</span>
+<span id="cb47-127"><a href="#cb47-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-128"><a href="#cb47-128" aria-hidden="true" tabindex="-1"></a>A list of cell cycle markers, from Tirosh et al, 2015, is loaded with Seurat. We can segregate this list into markers of G2/M phase and markers of S phase. However, if you are not working with human data we have <span class="co">[</span><span class="ot">additional materials</span><span class="co">](https://hbctraining.github.io/scRNA-seq_online/lessons/cell_cycle_scoring.html)</span> detailing how to acquire cell cycle markers for other organisms of interest.</span>
+<span id="cb47-129"><a href="#cb47-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-132"><a href="#cb47-132" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-133"><a href="#cb47-133" aria-hidden="true" tabindex="-1"></a><span class="co"># Load cell cycle markers</span></span>
+<span id="cb47-134"><a href="#cb47-134" aria-hidden="true" tabindex="-1"></a>s.genes <span class="ot">&lt;-</span> cc.genes<span class="sc">$</span>s.genes</span>
+<span id="cb47-135"><a href="#cb47-135" aria-hidden="true" tabindex="-1"></a>g2m.genes <span class="ot">&lt;-</span> cc.genes<span class="sc">$</span>g2m.genes</span>
+<span id="cb47-136"><a href="#cb47-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-137"><a href="#cb47-137" aria-hidden="true" tabindex="-1"></a><span class="co"># Score cells for cell cycle</span></span>
+<span id="cb47-138"><a href="#cb47-138" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">CellCycleScoring</span>(seurat_phase, </span>
+<span id="cb47-139"><a href="#cb47-139" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">g2m.features =</span> g2m.genes, </span>
+<span id="cb47-140"><a href="#cb47-140" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">s.features =</span> s.genes)</span>
+<span id="cb47-141"><a href="#cb47-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-142"><a href="#cb47-142" aria-hidden="true" tabindex="-1"></a><span class="co"># 现在的meta.data中多出了细胞周期评分“S.Score”和“G2M.Score”，以及推断的细胞所处的周期“Phase”</span></span>
+<span id="cb47-143"><a href="#cb47-143" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(seurat_phase<span class="sc">@</span>meta.data)</span>
+<span id="cb47-144"><a href="#cb47-144" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看一下细胞周期的分布情况</span></span>
+<span id="cb47-145"><a href="#cb47-145" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(seurat_phase<span class="sc">$</span>Phase)</span>
+<span id="cb47-146"><a href="#cb47-146" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb47-147"><a href="#cb47-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-148"><a href="#cb47-148" aria-hidden="true" tabindex="-1"></a>To perform PCA, we need to **first choose the most variable features, then scale the data**. Since highly expressed genes exhibit the highest amount of variation and we don't want our 'highly variable genes' only to reflect high expression, we need to scale the data to scale variation with expression level. The Seurat <span class="in">`ScaleData()`</span> function will scale the data by:</span>
+<span id="cb47-148"><a href="#cb47-148" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 使用PCA确定细胞周期是否是我们数据集中的主要变异来源</span></span>
 <span id="cb47-149"><a href="#cb47-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-150"><a href="#cb47-150" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>adjusting the expression of each gene **to give a mean expression across cells to be 0**</span>
-<span id="cb47-151"><a href="#cb47-151" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>scaling expression of each gene **to give a variance across cells to be 1**</span>
-<span id="cb47-152"><a href="#cb47-152" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-155"><a href="#cb47-155" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb47-156"><a href="#cb47-156" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify the most variable genes</span></span>
-<span id="cb47-157"><a href="#cb47-157" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(seurat_phase, </span>
-<span id="cb47-158"><a href="#cb47-158" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="co"># 默认值</span></span>
-<span id="cb47-159"><a href="#cb47-159" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">nfeatures =</span> <span class="dv">2000</span>) <span class="co"># 默认值</span></span>
-<span id="cb47-160"><a href="#cb47-160" aria-hidden="true" tabindex="-1"></a>             </span>
-<span id="cb47-161"><a href="#cb47-161" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale the counts</span></span>
-<span id="cb47-162"><a href="#cb47-162" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(seurat_phase)</span>
-<span id="cb47-163"><a href="#cb47-163" aria-hidden="true" tabindex="-1"></a><span class="fu">Layers</span>(seurat_phase)</span>
-<span id="cb47-164"><a href="#cb47-164" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb47-165"><a href="#cb47-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-166"><a href="#cb47-166" aria-hidden="true" tabindex="-1"></a>可以发现，运行<span class="in">`ScaleData`</span>后的数据多出了新的layer：scale.data, 里面即储存了归一化后的数据。Now, we can perform the PCA analysis and plot the first two principal components against each other. We also split the figure by cell cycle phase, to evaluate similarities and/or differences.</span>
-<span id="cb47-167"><a href="#cb47-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-170"><a href="#cb47-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb47-171"><a href="#cb47-171" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
-<span id="cb47-172"><a href="#cb47-172" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform PCA。如果没有指定features，RunPCA默认使用FindVariableFeatures找到的高变基因作为PCA输入.</span></span>
-<span id="cb47-173"><a href="#cb47-173" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(seurat_phase)</span>
-<span id="cb47-174"><a href="#cb47-174" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-175"><a href="#cb47-175" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the PCA colored by cell cycle phase</span></span>
-<span id="cb47-176"><a href="#cb47-176" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
-<span id="cb47-177"><a href="#cb47-177" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb47-178"><a href="#cb47-178" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by=</span> <span class="st">"Phase"</span>)</span>
-<span id="cb47-179"><a href="#cb47-179" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
-<span id="cb47-180"><a href="#cb47-180" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb47-181"><a href="#cb47-181" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by=</span> <span class="st">"Phase"</span>,</span>
-<span id="cb47-182"><a href="#cb47-182" aria-hidden="true" tabindex="-1"></a>              <span class="at">split.by =</span> <span class="st">"Phase"</span>)</span>
-<span id="cb47-183"><a href="#cb47-183" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
-<span id="cb47-184"><a href="#cb47-184" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
-<span id="cb47-185"><a href="#cb47-185" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb47-186"><a href="#cb47-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-187"><a href="#cb47-187" aria-hidden="true" tabindex="-1"></a>**We do not see large differences due to cell cycle phase. Based on this plot, we would not regress out the variation due to cell cycle.**</span>
-<span id="cb47-188"><a href="#cb47-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-189"><a href="#cb47-189" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
-<span id="cb47-190"><a href="#cb47-190" aria-hidden="true" tabindex="-1"></a><span class="fu">###### When should cell cycle phase be regressed out?</span></span>
-<span id="cb47-191"><a href="#cb47-191" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-192"><a href="#cb47-192" aria-hidden="true" tabindex="-1"></a>Below are two PCA plots taken from @sec-Elimination_of_cell_cycle_effects 。This first plot is similar to what we plotted above, it is a PCA prior to regression to evaluate if the cell cycle is playing a big role in driving PC1 and PC2. Clearly, the cells are separating by cell type in this case, so it suggests regressing out these effects.</span>
-<span id="cb47-193"><a href="#cb47-193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-194"><a href="#cb47-194" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/unnamed-chunk-6-1.png)</span>{width="427"}</span>
+<span id="cb47-150"><a href="#cb47-150" aria-hidden="true" tabindex="-1"></a>After scoring the cells for cell cycle, we would like to determine **whether cell cycle is a major source of variation in our dataset using PCA（PCA的原理详见：** @sec-pca_theory **）**.</span>
+<span id="cb47-151"><a href="#cb47-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-152"><a href="#cb47-152" aria-hidden="true" tabindex="-1"></a>To perform PCA, we need to **first choose the most variable features, then scale the data**. Since highly expressed genes exhibit the highest amount of variation and we don't want our 'highly variable genes' only to reflect high expression, we need to scale the data to scale variation with expression level. The Seurat <span class="in">`ScaleData()`</span> function will scale the data by:</span>
+<span id="cb47-153"><a href="#cb47-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-154"><a href="#cb47-154" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>adjusting the expression of each gene **to give a mean expression across cells to be 0**</span>
+<span id="cb47-155"><a href="#cb47-155" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>scaling expression of each gene **to give a variance across cells to be 1**</span>
+<span id="cb47-156"><a href="#cb47-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-159"><a href="#cb47-159" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-160"><a href="#cb47-160" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify the most variable genes</span></span>
+<span id="cb47-161"><a href="#cb47-161" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(seurat_phase, </span>
+<span id="cb47-162"><a href="#cb47-162" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">selection.method =</span> <span class="st">"vst"</span>, <span class="co"># 默认值</span></span>
+<span id="cb47-163"><a href="#cb47-163" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">nfeatures =</span> <span class="dv">2000</span>) <span class="co"># 默认值</span></span>
+<span id="cb47-164"><a href="#cb47-164" aria-hidden="true" tabindex="-1"></a>             </span>
+<span id="cb47-165"><a href="#cb47-165" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale the counts</span></span>
+<span id="cb47-166"><a href="#cb47-166" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(seurat_phase)</span>
+<span id="cb47-167"><a href="#cb47-167" aria-hidden="true" tabindex="-1"></a><span class="fu">Layers</span>(seurat_phase)</span>
+<span id="cb47-168"><a href="#cb47-168" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-169"><a href="#cb47-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-170"><a href="#cb47-170" aria-hidden="true" tabindex="-1"></a>可以发现，运行<span class="in">`ScaleData`</span>后的数据多出了新的layer：scale.data, 里面即储存了归一化后的数据。Now, we can perform the PCA analysis and plot the first two principal components against each other. We also split the figure by cell cycle phase, to evaluate similarities and/or differences.</span>
+<span id="cb47-171"><a href="#cb47-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-174"><a href="#cb47-174" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-175"><a href="#cb47-175" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb47-176"><a href="#cb47-176" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform PCA。如果没有指定features，RunPCA默认使用FindVariableFeatures找到的高变基因作为PCA输入.</span></span>
+<span id="cb47-177"><a href="#cb47-177" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(seurat_phase)</span>
+<span id="cb47-178"><a href="#cb47-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-179"><a href="#cb47-179" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the PCA colored by cell cycle phase</span></span>
+<span id="cb47-180"><a href="#cb47-180" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
+<span id="cb47-181"><a href="#cb47-181" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
+<span id="cb47-182"><a href="#cb47-182" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by=</span> <span class="st">"Phase"</span>)</span>
+<span id="cb47-183"><a href="#cb47-183" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
+<span id="cb47-184"><a href="#cb47-184" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
+<span id="cb47-185"><a href="#cb47-185" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by=</span> <span class="st">"Phase"</span>,</span>
+<span id="cb47-186"><a href="#cb47-186" aria-hidden="true" tabindex="-1"></a>              <span class="at">split.by =</span> <span class="st">"Phase"</span>)</span>
+<span id="cb47-187"><a href="#cb47-187" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb47-188"><a href="#cb47-188" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
+<span id="cb47-189"><a href="#cb47-189" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-190"><a href="#cb47-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-191"><a href="#cb47-191" aria-hidden="true" tabindex="-1"></a>**We do not see large differences due to cell cycle phase. Based on this plot, we would not regress out the variation due to cell cycle.**</span>
+<span id="cb47-192"><a href="#cb47-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-193"><a href="#cb47-193" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb47-194"><a href="#cb47-194" aria-hidden="true" tabindex="-1"></a><span class="fu">###### When should cell cycle phase be regressed out?</span></span>
 <span id="cb47-195"><a href="#cb47-195" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-196"><a href="#cb47-196" aria-hidden="true" tabindex="-1"></a>This second PCA plot is post-regression, and displays how effective the regression was in removing the effect we observed.</span>
+<span id="cb47-196"><a href="#cb47-196" aria-hidden="true" tabindex="-1"></a>Below are two PCA plots taken from @sec-Elimination_of_cell_cycle_effects 。This first plot is similar to what we plotted above, it is a PCA prior to regression to evaluate if the cell cycle is playing a big role in driving PC1 and PC2. Clearly, the cells are separating by cell type in this case, so it suggests regressing out these effects.</span>
 <span id="cb47-197"><a href="#cb47-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-198"><a href="#cb47-198" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/unnamed-chunk-10-1.png)</span>{width="430"}</span>
-<span id="cb47-199"><a href="#cb47-199" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb47-200"><a href="#cb47-200" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-201"><a href="#cb47-201" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
-<span id="cb47-202"><a href="#cb47-202" aria-hidden="true" tabindex="-1"></a>在需要消除细胞周期的影响时，如何通过<span class="in">`ScaleData`</span>回归掉（regress out）细胞周期的影响，以及如何在消除细胞周期的影响同时保留增殖细胞与静止细胞的区分，参考 @sec-Elimination_of_cell_cycle_effects 。</span>
+<span id="cb47-198"><a href="#cb47-198" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/unnamed-chunk-6-1.png)</span>{width="427"}</span>
+<span id="cb47-199"><a href="#cb47-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-200"><a href="#cb47-200" aria-hidden="true" tabindex="-1"></a>This second PCA plot is post-regression, and displays how effective the regression was in removing the effect we observed.</span>
+<span id="cb47-201"><a href="#cb47-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-202"><a href="#cb47-202" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/unnamed-chunk-10-1.png)</span>{width="430"}</span>
 <span id="cb47-203"><a href="#cb47-203" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb47-204"><a href="#cb47-204" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-205"><a href="#cb47-205" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb47-206"><a href="#cb47-206" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-207"><a href="#cb47-207" aria-hidden="true" tabindex="-1"></a><span class="fu">### 评估线粒体基因表达的影响</span></span>
+<span id="cb47-205"><a href="#cb47-205" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
+<span id="cb47-206"><a href="#cb47-206" aria-hidden="true" tabindex="-1"></a>在需要消除细胞周期的影响时，如何通过<span class="in">`ScaleData`</span>回归掉（regress out）细胞周期的影响，以及如何在消除细胞周期的影响同时保留增殖细胞与静止细胞的区分，参考 @sec-Elimination_of_cell_cycle_effects 。</span>
+<span id="cb47-207"><a href="#cb47-207" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb47-208"><a href="#cb47-208" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-209"><a href="#cb47-209" aria-hidden="true" tabindex="-1"></a>Mitochondrial expression is another factor which can greatly influence clustering. Oftentimes, it is useful to regress out variation due to mitochondrial expression. However, **if the differences in mitochondrial gene expression represent a biological phenomenon that may help to distinguish cell clusters, then we advise not regressing this out**. In this exercise, we can perform a quick check similar to looking at cell cycle and decide whether or not we want to regress it out.</span>
+<span id="cb47-209"><a href="#cb47-209" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb47-210"><a href="#cb47-210" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-211"><a href="#cb47-211" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>First, turn the mitochondrial ratio variable into a new categorical variable based on quartiles. 根据各细胞线粒体基因的比例的四分位数将所有细胞分为低线粒体基因比例细胞、中线粒体基因比例细胞···</span>
+<span id="cb47-211"><a href="#cb47-211" aria-hidden="true" tabindex="-1"></a><span class="fu">### 评估线粒体基因表达的影响</span></span>
 <span id="cb47-212"><a href="#cb47-212" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-213"><a href="#cb47-213" aria-hidden="true" tabindex="-1"></a>    <span class="in">```{r}</span></span>
-<span id="cb47-214"><a href="#cb47-214" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check quartile values</span></span>
-<span id="cb47-215"><a href="#cb47-215" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summary</span>(seurat_phase<span class="sc">$</span>mitoRatio)</span>
+<span id="cb47-213"><a href="#cb47-213" aria-hidden="true" tabindex="-1"></a>Mitochondrial expression is another factor which can greatly influence clustering. Oftentimes, it is useful to regress out variation due to mitochondrial expression. However, **if the differences in mitochondrial gene expression represent a biological phenomenon that may help to distinguish cell clusters, then we advise not regressing this out**. In this exercise, we can perform a quick check similar to looking at cell cycle and decide whether or not we want to regress it out.</span>
+<span id="cb47-214"><a href="#cb47-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-215"><a href="#cb47-215" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>First, turn the mitochondrial ratio variable into a new categorical variable based on quartiles. 根据各细胞线粒体基因的比例的四分位数将所有细胞分为低线粒体基因比例细胞、中线粒体基因比例细胞···</span>
 <span id="cb47-216"><a href="#cb47-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-217"><a href="#cb47-217" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Turn mitoRatio into categorical factor vector based on quartile values</span></span>
-<span id="cb47-218"><a href="#cb47-218" aria-hidden="true" tabindex="-1"></a>    seurat_phase<span class="sc">$</span>mitoFr <span class="ot">&lt;-</span> <span class="fu">cut</span>(seurat_phase<span class="sc">@</span>meta.data<span class="sc">$</span>mitoRatio, </span>
-<span id="cb47-219"><a href="#cb47-219" aria-hidden="true" tabindex="-1"></a>                               <span class="at">breaks=</span><span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="fl">0.0144</span>, <span class="fl">0.0199</span>, <span class="fl">0.0267</span>, <span class="cn">Inf</span>), </span>
-<span id="cb47-220"><a href="#cb47-220" aria-hidden="true" tabindex="-1"></a>                               <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Low"</span>, <span class="st">"Medium"</span>, <span class="st">"Medium high"</span>, <span class="st">"High"</span>))</span>
-<span id="cb47-221"><a href="#cb47-221" aria-hidden="true" tabindex="-1"></a>    <span class="fu">table</span>(seurat_phase<span class="sc">$</span>mitoFr)</span>
-<span id="cb47-222"><a href="#cb47-222" aria-hidden="true" tabindex="-1"></a>    <span class="in">```</span></span>
-<span id="cb47-223"><a href="#cb47-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-224"><a href="#cb47-224" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Next, plot the PCA similar to how we did with cell cycle regression. *Hint: use the new `mitoFr` variable to split cells and color them accordingly.*</span>
-<span id="cb47-225"><a href="#cb47-225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-226"><a href="#cb47-226" aria-hidden="true" tabindex="-1"></a>    <span class="in">```{r}</span></span>
-<span id="cb47-227"><a href="#cb47-227" aria-hidden="true" tabindex="-1"></a>    <span class="co">#| fig-width: 20</span></span>
-<span id="cb47-228"><a href="#cb47-228" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 根据各细胞线粒体基因的比例信息绘制PCA</span></span>
-<span id="cb47-229"><a href="#cb47-229" aria-hidden="true" tabindex="-1"></a>    p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
-<span id="cb47-230"><a href="#cb47-230" aria-hidden="true" tabindex="-1"></a>                  <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb47-231"><a href="#cb47-231" aria-hidden="true" tabindex="-1"></a>                  <span class="at">group.by=</span> <span class="st">"mitoFr"</span>)</span>
-<span id="cb47-232"><a href="#cb47-232" aria-hidden="true" tabindex="-1"></a>    p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
-<span id="cb47-233"><a href="#cb47-233" aria-hidden="true" tabindex="-1"></a>                  <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb47-234"><a href="#cb47-234" aria-hidden="true" tabindex="-1"></a>                  <span class="at">group.by=</span> <span class="st">"mitoFr"</span>,</span>
-<span id="cb47-235"><a href="#cb47-235" aria-hidden="true" tabindex="-1"></a>                  <span class="at">split.by =</span> <span class="st">"mitoFr"</span>)</span>
-<span id="cb47-236"><a href="#cb47-236" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_grid</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
-<span id="cb47-237"><a href="#cb47-237" aria-hidden="true" tabindex="-1"></a>    <span class="in">```</span></span>
-<span id="cb47-238"><a href="#cb47-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-239"><a href="#cb47-239" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Evaluate the PCA plot.</span>
-<span id="cb47-240"><a href="#cb47-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-241"><a href="#cb47-241" aria-hidden="true" tabindex="-1"></a>    We do not see large differences due to mitochondrial expression. Based on this plot, we would not regress out the variation due to mitochondrial expression.</span>
+<span id="cb47-217"><a href="#cb47-217" aria-hidden="true" tabindex="-1"></a>    <span class="in">```{r}</span></span>
+<span id="cb47-218"><a href="#cb47-218" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check quartile values</span></span>
+<span id="cb47-219"><a href="#cb47-219" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summary</span>(seurat_phase<span class="sc">$</span>mitoRatio)</span>
+<span id="cb47-220"><a href="#cb47-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-221"><a href="#cb47-221" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Turn mitoRatio into categorical factor vector based on quartile values</span></span>
+<span id="cb47-222"><a href="#cb47-222" aria-hidden="true" tabindex="-1"></a>    seurat_phase<span class="sc">$</span>mitoFr <span class="ot">&lt;-</span> <span class="fu">cut</span>(seurat_phase<span class="sc">@</span>meta.data<span class="sc">$</span>mitoRatio, </span>
+<span id="cb47-223"><a href="#cb47-223" aria-hidden="true" tabindex="-1"></a>                               <span class="at">breaks=</span><span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="fl">0.0144</span>, <span class="fl">0.0199</span>, <span class="fl">0.0267</span>, <span class="cn">Inf</span>), </span>
+<span id="cb47-224"><a href="#cb47-224" aria-hidden="true" tabindex="-1"></a>                               <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Low"</span>, <span class="st">"Medium"</span>, <span class="st">"Medium high"</span>, <span class="st">"High"</span>))</span>
+<span id="cb47-225"><a href="#cb47-225" aria-hidden="true" tabindex="-1"></a>    <span class="fu">table</span>(seurat_phase<span class="sc">$</span>mitoFr)</span>
+<span id="cb47-226"><a href="#cb47-226" aria-hidden="true" tabindex="-1"></a>    <span class="in">```</span></span>
+<span id="cb47-227"><a href="#cb47-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-228"><a href="#cb47-228" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Next, plot the PCA similar to how we did with cell cycle regression. *Hint: use the new `mitoFr` variable to split cells and color them accordingly.*</span>
+<span id="cb47-229"><a href="#cb47-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-230"><a href="#cb47-230" aria-hidden="true" tabindex="-1"></a>    <span class="in">```{r}</span></span>
+<span id="cb47-231"><a href="#cb47-231" aria-hidden="true" tabindex="-1"></a>    <span class="co">#| fig-width: 20</span></span>
+<span id="cb47-232"><a href="#cb47-232" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 根据各细胞线粒体基因的比例信息绘制PCA</span></span>
+<span id="cb47-233"><a href="#cb47-233" aria-hidden="true" tabindex="-1"></a>    p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
+<span id="cb47-234"><a href="#cb47-234" aria-hidden="true" tabindex="-1"></a>                  <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
+<span id="cb47-235"><a href="#cb47-235" aria-hidden="true" tabindex="-1"></a>                  <span class="at">group.by=</span> <span class="st">"mitoFr"</span>)</span>
+<span id="cb47-236"><a href="#cb47-236" aria-hidden="true" tabindex="-1"></a>    p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
+<span id="cb47-237"><a href="#cb47-237" aria-hidden="true" tabindex="-1"></a>                  <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
+<span id="cb47-238"><a href="#cb47-238" aria-hidden="true" tabindex="-1"></a>                  <span class="at">group.by=</span> <span class="st">"mitoFr"</span>,</span>
+<span id="cb47-239"><a href="#cb47-239" aria-hidden="true" tabindex="-1"></a>                  <span class="at">split.by =</span> <span class="st">"mitoFr"</span>)</span>
+<span id="cb47-240"><a href="#cb47-240" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_grid</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
+<span id="cb47-241"><a href="#cb47-241" aria-hidden="true" tabindex="-1"></a>    <span class="in">```</span></span>
 <span id="cb47-242"><a href="#cb47-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-243"><a href="#cb47-243" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb47-243"><a href="#cb47-243" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Evaluate the PCA plot.</span>
 <span id="cb47-244"><a href="#cb47-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-245"><a href="#cb47-245" aria-hidden="true" tabindex="-1"></a><span class="fu">## `SCTransform`-based Normalization and regressing out sources of unwanted variation</span></span>
+<span id="cb47-245"><a href="#cb47-245" aria-hidden="true" tabindex="-1"></a>    We do not see large differences due to mitochondrial expression. Based on this plot, we would not regress out the variation due to mitochondrial expression.</span>
 <span id="cb47-246"><a href="#cb47-246" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-247"><a href="#cb47-247" aria-hidden="true" tabindex="-1"></a>Now that we have established which effects are observed in our data, we can use the <span class="in">`SCTransform`</span> method to regress out these effects. The <span class="in">`SCTransform`</span> method was proposed as a better alternative to the log transform normalization method that we used for exploring sources of unwanted variation. The method not only **normalizes data, but it also performs a variance stabilization and allows for additional covariates to be regressed out**.</span>
+<span id="cb47-247"><a href="#cb47-247" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb47-248"><a href="#cb47-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-249"><a href="#cb47-249" aria-hidden="true" tabindex="-1"></a>As described earlier, all genes cannot be treated the same. As such, the <span class="in">`SCTransform`</span> **method constructs a generalized linear model (GLM) for each gene** with UMI counts as the response and sequencing depth as the explanatory variable. Information is pooled across genes with similar abundances, to regularize parameter estimates and **obtain residuals which represent effectively normalized data values** which are no longer correlated with sequencing depth.</span>
+<span id="cb47-249"><a href="#cb47-249" aria-hidden="true" tabindex="-1"></a><span class="fu">## `SCTransform`-based Normalization and regressing out sources of unwanted variation</span></span>
 <span id="cb47-250"><a href="#cb47-250" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-251"><a href="#cb47-251" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/SCT_UMAP.png)</span>{width="532"}</span>
+<span id="cb47-251"><a href="#cb47-251" aria-hidden="true" tabindex="-1"></a>Now that we have established which effects are observed in our data, we can use the <span class="in">`SCTransform`</span> method to regress out these effects. The <span class="in">`SCTransform`</span> method was proposed as a better alternative to the log transform normalization method that we used for exploring sources of unwanted variation. The method not only **normalizes data, but it also performs a variance stabilization and allows for additional covariates to be regressed out**.</span>
 <span id="cb47-252"><a href="#cb47-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-253"><a href="#cb47-253" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Image credit: Hafemeister C and Satija R. Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression, Genom Biology 2019 (</span><span class="ot">&lt;https://doi.org/10.1101/576827)_&gt;</span></span>
+<span id="cb47-253"><a href="#cb47-253" aria-hidden="true" tabindex="-1"></a>As described earlier, all genes cannot be treated the same. As such, the <span class="in">`SCTransform`</span> **method constructs a generalized linear model (GLM) for each gene** with UMI counts as the response and sequencing depth as the explanatory variable. Information is pooled across genes with similar abundances, to regularize parameter estimates and **obtain residuals which represent effectively normalized data values** which are no longer correlated with sequencing depth.</span>
 <span id="cb47-254"><a href="#cb47-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-255"><a href="#cb47-255" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
-<span id="cb47-256"><a href="#cb47-256" aria-hidden="true" tabindex="-1"></a>Since the UMI counts are part of the GLM, the effects are automatically regressed out. The user can include any additional covariates (<span class="in">`vars.to.regress`</span>) that may have an effect on expression and will be included in the model.</span>
-<span id="cb47-257"><a href="#cb47-257" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb47-255"><a href="#cb47-255" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/SCT_UMAP.png)</span>{width="532"}</span>
+<span id="cb47-256"><a href="#cb47-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-257"><a href="#cb47-257" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Image credit: Hafemeister C and Satija R. Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression, Genom Biology 2019 (</span><span class="ot">&lt;https://doi.org/10.1101/576827)_&gt;</span></span>
 <span id="cb47-258"><a href="#cb47-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-259"><a href="#cb47-259" aria-hidden="true" tabindex="-1"></a><span class="fu">### 数据导入</span></span>
-<span id="cb47-260"><a href="#cb47-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-261"><a href="#cb47-261" aria-hidden="true" tabindex="-1"></a>前面的流程和此前一样</span>
+<span id="cb47-259"><a href="#cb47-259" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
+<span id="cb47-260"><a href="#cb47-260" aria-hidden="true" tabindex="-1"></a>Since the UMI counts are part of the GLM, the effects are automatically regressed out. The user can include any additional covariates (<span class="in">`vars.to.regress`</span>) that may have an effect on expression and will be included in the model.</span>
+<span id="cb47-261"><a href="#cb47-261" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb47-262"><a href="#cb47-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-265"><a href="#cb47-265" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb47-266"><a href="#cb47-266" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
-<span id="cb47-267"><a href="#cb47-267" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-268"><a href="#cb47-268" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb47-269"><a href="#cb47-269" aria-hidden="true" tabindex="-1"></a>filtered_seurat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/scRNA-seq_online/seurat_filtered.rds"</span>)</span>
-<span id="cb47-270"><a href="#cb47-270" aria-hidden="true" tabindex="-1"></a>filtered_seurat</span>
-<span id="cb47-271"><a href="#cb47-271" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(filtered_seurat<span class="sc">@</span>meta.data)</span>
-<span id="cb47-272"><a href="#cb47-272" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb47-273"><a href="#cb47-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-274"><a href="#cb47-274" aria-hidden="true" tabindex="-1"></a><span class="fu">### 执行`SCTransform`</span></span>
-<span id="cb47-275"><a href="#cb47-275" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-276"><a href="#cb47-276" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>这里先运行一次<span class="in">`SCTransform`</span>以便后面评估细胞周期、线粒体基因等非期望变异来源（**This is solely for the purpose of exploring the sources of variation in our data**）</span>
+<span id="cb47-263"><a href="#cb47-263" aria-hidden="true" tabindex="-1"></a><span class="fu">### 数据导入</span></span>
+<span id="cb47-264"><a href="#cb47-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-265"><a href="#cb47-265" aria-hidden="true" tabindex="-1"></a>前面的流程和此前一样</span>
+<span id="cb47-266"><a href="#cb47-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-269"><a href="#cb47-269" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-270"><a href="#cb47-270" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
+<span id="cb47-271"><a href="#cb47-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-272"><a href="#cb47-272" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb47-273"><a href="#cb47-273" aria-hidden="true" tabindex="-1"></a>filtered_seurat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/scRNA-seq_online/seurat_filtered.rds"</span>)</span>
+<span id="cb47-274"><a href="#cb47-274" aria-hidden="true" tabindex="-1"></a>filtered_seurat</span>
+<span id="cb47-275"><a href="#cb47-275" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(filtered_seurat<span class="sc">@</span>meta.data)</span>
+<span id="cb47-276"><a href="#cb47-276" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb47-277"><a href="#cb47-277" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-278"><a href="#cb47-278" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`SCTransform`</span>替代了传统单细胞数据分析流程中的<span class="in">`NormalizeData()`</span>、<span class="in">`ScaleData()`</span>和<span class="in">`FindVariableFeatures()`</span>函数的功能，因此不再需要运行这些函数。</span>
+<span id="cb47-278"><a href="#cb47-278" aria-hidden="true" tabindex="-1"></a><span class="fu">### 执行`SCTransform`</span></span>
 <span id="cb47-279"><a href="#cb47-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-280"><a href="#cb47-280" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>In Seurat v5, SCT v2 is applied by default. You can revert to v1 by setting&nbsp;<span class="in">`vst.flavor = 'v1'`</span>。</span>
+<span id="cb47-280"><a href="#cb47-280" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>这里先运行一次<span class="in">`SCTransform`</span>以便后面评估细胞周期、线粒体基因等非期望变异来源（**This is solely for the purpose of exploring the sources of variation in our data**）</span>
 <span id="cb47-281"><a href="#cb47-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-282"><a href="#cb47-282" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`SCTransform`</span>的运算调用了<span class="co">[</span><span class="ot">`glmGamPoi`</span><span class="co">](https://bioconductor.org/packages/release/bioc/html/glmGamPoi.html)</span>包以显著提升运算速度。所以事先需要通过<span class="in">`BiocManager`</span>安装该包。</span>
+<span id="cb47-282"><a href="#cb47-282" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`SCTransform`</span>替代了传统单细胞数据分析流程中的<span class="in">`NormalizeData()`</span>、<span class="in">`ScaleData()`</span>和<span class="in">`FindVariableFeatures()`</span>函数的功能，因此不再需要运行这些函数。</span>
 <span id="cb47-283"><a href="#cb47-283" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-286"><a href="#cb47-286" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb47-287"><a href="#cb47-287" aria-hidden="true" tabindex="-1"></a><span class="co"># SCTranform</span></span>
-<span id="cb47-288"><a href="#cb47-288" aria-hidden="true" tabindex="-1"></a><span class="co"># BiocManager::install("glmGamPoi")</span></span>
-<span id="cb47-289"><a href="#cb47-289" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(filtered_seurat, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb47-290"><a href="#cb47-290" aria-hidden="true" tabindex="-1"></a>seurat_phase</span>
-<span id="cb47-291"><a href="#cb47-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-292"><a href="#cb47-292" aria-hidden="true" tabindex="-1"></a><span class="co"># Check which assays are stored in objects</span></span>
-<span id="cb47-293"><a href="#cb47-293" aria-hidden="true" tabindex="-1"></a>seurat_phase<span class="sc">@</span>assays</span>
-<span id="cb47-294"><a href="#cb47-294" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看目前默认的assay</span></span>
-<span id="cb47-295"><a href="#cb47-295" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_phase)</span>
-<span id="cb47-296"><a href="#cb47-296" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看默认assay的layers</span></span>
-<span id="cb47-297"><a href="#cb47-297" aria-hidden="true" tabindex="-1"></a><span class="fu">Layers</span>(seurat_phase)</span>
-<span id="cb47-298"><a href="#cb47-298" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb47-299"><a href="#cb47-299" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-300"><a href="#cb47-300" aria-hidden="true" tabindex="-1"></a>Note, the last line of output specifies **"Set default assay to SCT"**. 表明运行<span class="in">`SCTransform`</span>之后，会将默认的assay指定为<span class="in">`SCTransform`</span>之后的数据。This specifies that moving forward we would like to use the data after SCT was implemented. We can view the different assays that we have stored in our seurat object.</span>
-<span id="cb47-301"><a href="#cb47-301" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-302"><a href="#cb47-302" aria-hidden="true" tabindex="-1"></a><span class="fu">### 评估细胞周期的影响</span></span>
+<span id="cb47-284"><a href="#cb47-284" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>In Seurat v5, SCT v2 is applied by default. You can revert to v1 by setting&nbsp;<span class="in">`vst.flavor = 'v1'`</span>。</span>
+<span id="cb47-285"><a href="#cb47-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-286"><a href="#cb47-286" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`SCTransform`</span>的运算调用了<span class="co">[</span><span class="ot">`glmGamPoi`</span><span class="co">](https://bioconductor.org/packages/release/bioc/html/glmGamPoi.html)</span>包以显著提升运算速度。所以事先需要通过<span class="in">`BiocManager`</span>安装该包。</span>
+<span id="cb47-287"><a href="#cb47-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-290"><a href="#cb47-290" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-291"><a href="#cb47-291" aria-hidden="true" tabindex="-1"></a><span class="co"># SCTranform</span></span>
+<span id="cb47-292"><a href="#cb47-292" aria-hidden="true" tabindex="-1"></a><span class="co"># BiocManager::install("glmGamPoi")</span></span>
+<span id="cb47-293"><a href="#cb47-293" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(filtered_seurat, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb47-294"><a href="#cb47-294" aria-hidden="true" tabindex="-1"></a>seurat_phase</span>
+<span id="cb47-295"><a href="#cb47-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-296"><a href="#cb47-296" aria-hidden="true" tabindex="-1"></a><span class="co"># Check which assays are stored in objects</span></span>
+<span id="cb47-297"><a href="#cb47-297" aria-hidden="true" tabindex="-1"></a>seurat_phase<span class="sc">@</span>assays</span>
+<span id="cb47-298"><a href="#cb47-298" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看目前默认的assay</span></span>
+<span id="cb47-299"><a href="#cb47-299" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_phase)</span>
+<span id="cb47-300"><a href="#cb47-300" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看默认assay的layers</span></span>
+<span id="cb47-301"><a href="#cb47-301" aria-hidden="true" tabindex="-1"></a><span class="fu">Layers</span>(seurat_phase)</span>
+<span id="cb47-302"><a href="#cb47-302" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb47-303"><a href="#cb47-303" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-306"><a href="#cb47-306" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb47-307"><a href="#cb47-307" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
-<span id="cb47-308"><a href="#cb47-308" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-309"><a href="#cb47-309" aria-hidden="true" tabindex="-1"></a><span class="co"># Load cell cycle markers</span></span>
-<span id="cb47-310"><a href="#cb47-310" aria-hidden="true" tabindex="-1"></a>s.genes <span class="ot">&lt;-</span> cc.genes<span class="sc">$</span>s.genes</span>
-<span id="cb47-311"><a href="#cb47-311" aria-hidden="true" tabindex="-1"></a>g2m.genes <span class="ot">&lt;-</span> cc.genes<span class="sc">$</span>g2m.genes</span>
+<span id="cb47-304"><a href="#cb47-304" aria-hidden="true" tabindex="-1"></a>Note, the last line of output specifies **"Set default assay to SCT"**. 表明运行<span class="in">`SCTransform`</span>之后，会将默认的assay指定为<span class="in">`SCTransform`</span>之后的数据。This specifies that moving forward we would like to use the data after SCT was implemented. We can view the different assays that we have stored in our seurat object.</span>
+<span id="cb47-305"><a href="#cb47-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-306"><a href="#cb47-306" aria-hidden="true" tabindex="-1"></a><span class="fu">### 评估细胞周期的影响</span></span>
+<span id="cb47-307"><a href="#cb47-307" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-310"><a href="#cb47-310" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-311"><a href="#cb47-311" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
 <span id="cb47-312"><a href="#cb47-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-313"><a href="#cb47-313" aria-hidden="true" tabindex="-1"></a><span class="co"># Score cells for cell cycle</span></span>
-<span id="cb47-314"><a href="#cb47-314" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">CellCycleScoring</span>(seurat_phase, </span>
-<span id="cb47-315"><a href="#cb47-315" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">g2m.features =</span> g2m.genes, </span>
-<span id="cb47-316"><a href="#cb47-316" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">s.features =</span> s.genes)</span>
-<span id="cb47-317"><a href="#cb47-317" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-318"><a href="#cb47-318" aria-hidden="true" tabindex="-1"></a><span class="co"># 现在的meta.data中多出了细胞周期评分“S.Score”和“G2M.Score”，以及推断的细胞所处的周期“Phase”</span></span>
-<span id="cb47-319"><a href="#cb47-319" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(seurat_phase<span class="sc">@</span>meta.data)</span>
-<span id="cb47-320"><a href="#cb47-320" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看一下细胞周期的分布情况</span></span>
-<span id="cb47-321"><a href="#cb47-321" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(seurat_phase<span class="sc">$</span>Phase)</span>
-<span id="cb47-322"><a href="#cb47-322" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-323"><a href="#cb47-323" aria-hidden="true" tabindex="-1"></a><span class="co"># 执行PCA</span></span>
-<span id="cb47-324"><a href="#cb47-324" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(seurat_phase)</span>
-<span id="cb47-325"><a href="#cb47-325" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-326"><a href="#cb47-326" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the PCA colored by cell cycle phase</span></span>
-<span id="cb47-327"><a href="#cb47-327" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
-<span id="cb47-328"><a href="#cb47-328" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb47-329"><a href="#cb47-329" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by=</span> <span class="st">"Phase"</span>)</span>
-<span id="cb47-330"><a href="#cb47-330" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
-<span id="cb47-331"><a href="#cb47-331" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb47-332"><a href="#cb47-332" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by=</span> <span class="st">"Phase"</span>,</span>
-<span id="cb47-333"><a href="#cb47-333" aria-hidden="true" tabindex="-1"></a>              <span class="at">split.by =</span> <span class="st">"Phase"</span>)</span>
-<span id="cb47-334"><a href="#cb47-334" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
-<span id="cb47-335"><a href="#cb47-335" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
-<span id="cb47-336"><a href="#cb47-336" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb47-337"><a href="#cb47-337" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-338"><a href="#cb47-338" aria-hidden="true" tabindex="-1"></a><span class="fu">### 评估线粒体基因的影响</span></span>
-<span id="cb47-339"><a href="#cb47-339" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-342"><a href="#cb47-342" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb47-343"><a href="#cb47-343" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 20</span></span>
-<span id="cb47-344"><a href="#cb47-344" aria-hidden="true" tabindex="-1"></a><span class="co"># Check quartile values</span></span>
-<span id="cb47-345"><a href="#cb47-345" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(seurat_phase<span class="sc">$</span>mitoRatio)</span>
-<span id="cb47-346"><a href="#cb47-346" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-347"><a href="#cb47-347" aria-hidden="true" tabindex="-1"></a><span class="co"># Turn mitoRatio into categorical factor vector based on quartile values</span></span>
-<span id="cb47-348"><a href="#cb47-348" aria-hidden="true" tabindex="-1"></a>seurat_phase<span class="sc">$</span>mitoFr <span class="ot">&lt;-</span> <span class="fu">cut</span>(seurat_phase<span class="sc">@</span>meta.data<span class="sc">$</span>mitoRatio, </span>
-<span id="cb47-349"><a href="#cb47-349" aria-hidden="true" tabindex="-1"></a>                           <span class="at">breaks=</span><span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="fl">0.0144</span>, <span class="fl">0.0199</span>, <span class="fl">0.0267</span>, <span class="cn">Inf</span>), </span>
-<span id="cb47-350"><a href="#cb47-350" aria-hidden="true" tabindex="-1"></a>                           <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Low"</span>, <span class="st">"Medium"</span>, <span class="st">"Medium high"</span>, <span class="st">"High"</span>))</span>
-<span id="cb47-351"><a href="#cb47-351" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(seurat_phase<span class="sc">$</span>mitoFr)</span>
-<span id="cb47-352"><a href="#cb47-352" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-353"><a href="#cb47-353" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-354"><a href="#cb47-354" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the PCA colored by cell cycle phase</span></span>
-<span id="cb47-355"><a href="#cb47-355" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
-<span id="cb47-356"><a href="#cb47-356" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb47-357"><a href="#cb47-357" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by=</span> <span class="st">"mitoFr"</span>)</span>
-<span id="cb47-358"><a href="#cb47-358" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
-<span id="cb47-359"><a href="#cb47-359" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb47-360"><a href="#cb47-360" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by=</span> <span class="st">"mitoFr"</span>,</span>
-<span id="cb47-361"><a href="#cb47-361" aria-hidden="true" tabindex="-1"></a>              <span class="at">split.by =</span> <span class="st">"mitoFr"</span>)</span>
-<span id="cb47-362"><a href="#cb47-362" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
-<span id="cb47-363"><a href="#cb47-363" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb47-364"><a href="#cb47-364" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-365"><a href="#cb47-365" aria-hidden="true" tabindex="-1"></a><span class="fu">### 分割layer，再次执行`SCTranform`</span></span>
-<span id="cb47-366"><a href="#cb47-366" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-367"><a href="#cb47-367" aria-hidden="true" tabindex="-1"></a>Since we have two samples in our dataset (from two conditions), we want to keep them as separate layers and transform them as that is **what is required for integration**.</span>
+<span id="cb47-313"><a href="#cb47-313" aria-hidden="true" tabindex="-1"></a><span class="co"># Load cell cycle markers</span></span>
+<span id="cb47-314"><a href="#cb47-314" aria-hidden="true" tabindex="-1"></a>s.genes <span class="ot">&lt;-</span> cc.genes<span class="sc">$</span>s.genes</span>
+<span id="cb47-315"><a href="#cb47-315" aria-hidden="true" tabindex="-1"></a>g2m.genes <span class="ot">&lt;-</span> cc.genes<span class="sc">$</span>g2m.genes</span>
+<span id="cb47-316"><a href="#cb47-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-317"><a href="#cb47-317" aria-hidden="true" tabindex="-1"></a><span class="co"># Score cells for cell cycle</span></span>
+<span id="cb47-318"><a href="#cb47-318" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">CellCycleScoring</span>(seurat_phase, </span>
+<span id="cb47-319"><a href="#cb47-319" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">g2m.features =</span> g2m.genes, </span>
+<span id="cb47-320"><a href="#cb47-320" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">s.features =</span> s.genes)</span>
+<span id="cb47-321"><a href="#cb47-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-322"><a href="#cb47-322" aria-hidden="true" tabindex="-1"></a><span class="co"># 现在的meta.data中多出了细胞周期评分“S.Score”和“G2M.Score”，以及推断的细胞所处的周期“Phase”</span></span>
+<span id="cb47-323"><a href="#cb47-323" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(seurat_phase<span class="sc">@</span>meta.data)</span>
+<span id="cb47-324"><a href="#cb47-324" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看一下细胞周期的分布情况</span></span>
+<span id="cb47-325"><a href="#cb47-325" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(seurat_phase<span class="sc">$</span>Phase)</span>
+<span id="cb47-326"><a href="#cb47-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-327"><a href="#cb47-327" aria-hidden="true" tabindex="-1"></a><span class="co"># 执行PCA</span></span>
+<span id="cb47-328"><a href="#cb47-328" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(seurat_phase)</span>
+<span id="cb47-329"><a href="#cb47-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-330"><a href="#cb47-330" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the PCA colored by cell cycle phase</span></span>
+<span id="cb47-331"><a href="#cb47-331" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
+<span id="cb47-332"><a href="#cb47-332" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
+<span id="cb47-333"><a href="#cb47-333" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by=</span> <span class="st">"Phase"</span>)</span>
+<span id="cb47-334"><a href="#cb47-334" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
+<span id="cb47-335"><a href="#cb47-335" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
+<span id="cb47-336"><a href="#cb47-336" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by=</span> <span class="st">"Phase"</span>,</span>
+<span id="cb47-337"><a href="#cb47-337" aria-hidden="true" tabindex="-1"></a>              <span class="at">split.by =</span> <span class="st">"Phase"</span>)</span>
+<span id="cb47-338"><a href="#cb47-338" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb47-339"><a href="#cb47-339" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
+<span id="cb47-340"><a href="#cb47-340" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-341"><a href="#cb47-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-342"><a href="#cb47-342" aria-hidden="true" tabindex="-1"></a><span class="fu">### 评估线粒体基因的影响</span></span>
+<span id="cb47-343"><a href="#cb47-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-346"><a href="#cb47-346" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-347"><a href="#cb47-347" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 20</span></span>
+<span id="cb47-348"><a href="#cb47-348" aria-hidden="true" tabindex="-1"></a><span class="co"># Check quartile values</span></span>
+<span id="cb47-349"><a href="#cb47-349" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(seurat_phase<span class="sc">$</span>mitoRatio)</span>
+<span id="cb47-350"><a href="#cb47-350" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-351"><a href="#cb47-351" aria-hidden="true" tabindex="-1"></a><span class="co"># Turn mitoRatio into categorical factor vector based on quartile values</span></span>
+<span id="cb47-352"><a href="#cb47-352" aria-hidden="true" tabindex="-1"></a>seurat_phase<span class="sc">$</span>mitoFr <span class="ot">&lt;-</span> <span class="fu">cut</span>(seurat_phase<span class="sc">@</span>meta.data<span class="sc">$</span>mitoRatio, </span>
+<span id="cb47-353"><a href="#cb47-353" aria-hidden="true" tabindex="-1"></a>                           <span class="at">breaks=</span><span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="fl">0.0144</span>, <span class="fl">0.0199</span>, <span class="fl">0.0267</span>, <span class="cn">Inf</span>), </span>
+<span id="cb47-354"><a href="#cb47-354" aria-hidden="true" tabindex="-1"></a>                           <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Low"</span>, <span class="st">"Medium"</span>, <span class="st">"Medium high"</span>, <span class="st">"High"</span>))</span>
+<span id="cb47-355"><a href="#cb47-355" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(seurat_phase<span class="sc">$</span>mitoFr)</span>
+<span id="cb47-356"><a href="#cb47-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-357"><a href="#cb47-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-358"><a href="#cb47-358" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the PCA colored by cell cycle phase</span></span>
+<span id="cb47-359"><a href="#cb47-359" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
+<span id="cb47-360"><a href="#cb47-360" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
+<span id="cb47-361"><a href="#cb47-361" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by=</span> <span class="st">"mitoFr"</span>)</span>
+<span id="cb47-362"><a href="#cb47-362" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
+<span id="cb47-363"><a href="#cb47-363" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
+<span id="cb47-364"><a href="#cb47-364" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by=</span> <span class="st">"mitoFr"</span>,</span>
+<span id="cb47-365"><a href="#cb47-365" aria-hidden="true" tabindex="-1"></a>              <span class="at">split.by =</span> <span class="st">"mitoFr"</span>)</span>
+<span id="cb47-366"><a href="#cb47-366" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
+<span id="cb47-367"><a href="#cb47-367" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb47-368"><a href="#cb47-368" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-371"><a href="#cb47-371" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb47-372"><a href="#cb47-372" aria-hidden="true" tabindex="-1"></a><span class="co"># Split RNA assay by condition to perform cell cycle scoring and SCT on all samples</span></span>
-<span id="cb47-373"><a href="#cb47-373" aria-hidden="true" tabindex="-1"></a>seurat_phase[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">split</span>(seurat_phase[[<span class="st">"RNA"</span>]], </span>
-<span id="cb47-374"><a href="#cb47-374" aria-hidden="true" tabindex="-1"></a>                               <span class="at">f =</span> seurat_phase<span class="sc">$</span>sample) <span class="co"># 按照meta.data中的“sample”列进行分割</span></span>
-<span id="cb47-375"><a href="#cb47-375" aria-hidden="true" tabindex="-1"></a>seurat_phase</span>
-<span id="cb47-376"><a href="#cb47-376" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb47-377"><a href="#cb47-377" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-378"><a href="#cb47-378" aria-hidden="true" tabindex="-1"></a>现在可以发现RNA assay的<span class="in">`counts`</span>和<span class="in">`data`</span>按照"seurat_phase\$sample"（ctrl vs. stim）被分别分割成了2个layer：</span>
-<span id="cb47-379"><a href="#cb47-379" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-380"><a href="#cb47-380" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-12-19%2010.46.18.png)</span></span>
+<span id="cb47-369"><a href="#cb47-369" aria-hidden="true" tabindex="-1"></a><span class="fu">### 分割layer，再次执行`SCTranform`</span></span>
+<span id="cb47-370"><a href="#cb47-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-371"><a href="#cb47-371" aria-hidden="true" tabindex="-1"></a>Since we have two samples in our dataset (from two conditions), we want to keep them as separate layers and transform them as that is **what is required for integration**.</span>
+<span id="cb47-372"><a href="#cb47-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-375"><a href="#cb47-375" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-376"><a href="#cb47-376" aria-hidden="true" tabindex="-1"></a><span class="co"># Split RNA assay by condition to perform cell cycle scoring and SCT on all samples</span></span>
+<span id="cb47-377"><a href="#cb47-377" aria-hidden="true" tabindex="-1"></a>seurat_phase[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">split</span>(seurat_phase[[<span class="st">"RNA"</span>]], </span>
+<span id="cb47-378"><a href="#cb47-378" aria-hidden="true" tabindex="-1"></a>                               <span class="at">f =</span> seurat_phase<span class="sc">$</span>sample) <span class="co"># 按照meta.data中的“sample”列进行分割</span></span>
+<span id="cb47-379"><a href="#cb47-379" aria-hidden="true" tabindex="-1"></a>seurat_phase</span>
+<span id="cb47-380"><a href="#cb47-380" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb47-381"><a href="#cb47-381" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-382"><a href="#cb47-382" aria-hidden="true" tabindex="-1"></a>Now we will run the <span class="in">`SCTransform()`</span> on each sample, and regress out mitochondrial expression by specifying in the <span class="in">`vars.to.regress`</span> argument of the <span class="in">`SCTransform()`</span> function.</span>
+<span id="cb47-382"><a href="#cb47-382" aria-hidden="true" tabindex="-1"></a>现在可以发现RNA assay的<span class="in">`counts`</span>和<span class="in">`data`</span>按照"seurat_phase\$sample"（ctrl vs. stim）被分别分割成了2个layer：</span>
 <span id="cb47-383"><a href="#cb47-383" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-384"><a href="#cb47-384" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
-<span id="cb47-385"><a href="#cb47-385" aria-hidden="true" tabindex="-1"></a>The output of <span class="in">`SCTransform()`</span> can generate large R objects/variables in terms of memory. If we have a large dataset, then we might need to **adjust the limit for allowable object sizes within R** (*Default is 500* 1024 \^ 2 = 500 Mb<span class="sc">\*</span>) using the following code:</span>
-<span id="cb47-386"><a href="#cb47-386" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-389"><a href="#cb47-389" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb47-390"><a href="#cb47-390" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb47-391"><a href="#cb47-391" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
-<span id="cb47-392"><a href="#cb47-392" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">future.globals.maxSize =</span> <span class="dv">4000</span> <span class="sc">*</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb47-393"><a href="#cb47-393" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb47-394"><a href="#cb47-394" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb47-395"><a href="#cb47-395" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-396"><a href="#cb47-396" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 执行`SCTranform` {#sec-perform_sctranform}</span></span>
-<span id="cb47-397"><a href="#cb47-397" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-400"><a href="#cb47-400" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb47-401"><a href="#cb47-401" aria-hidden="true" tabindex="-1"></a><span class="co"># SCTranform</span></span>
-<span id="cb47-402"><a href="#cb47-402" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(seurat_phase, </span>
-<span id="cb47-403"><a href="#cb47-403" aria-hidden="true" tabindex="-1"></a>                            <span class="at">vars.to.regress =</span> <span class="fu">c</span>(<span class="st">"mitoRatio"</span>),</span>
-<span id="cb47-404"><a href="#cb47-404" aria-hidden="true" tabindex="-1"></a>                            <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb47-405"><a href="#cb47-405" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb47-406"><a href="#cb47-406" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-407"><a href="#cb47-407" aria-hidden="true" tabindex="-1"></a>By default, after normalizing, adjusting the variance, and regressing out uninteresting sources of variation, <span class="in">`SCTransform`</span> will rank the genes by residual variance and output the **3000** most variant genes. If the dataset has larger cell numbers, then it may be beneficial to adjust this parameter higher using the <span class="in">`variable.features.n`</span> argument.</span>
-<span id="cb47-408"><a href="#cb47-408" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-409"><a href="#cb47-409" aria-hidden="true" tabindex="-1"></a>Now we can see that in addition to the raw RNA counts, we now have a SCT component in our <span class="in">`assays`</span> slot. The most variable features will be the only genes stored inside the SCT assay. As we move through the scRNA-seq analysis, we will choose the most appropriate assay to use for the different steps in the analysis.</span>
+<span id="cb47-384"><a href="#cb47-384" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-12-19%2010.46.18.png)</span></span>
+<span id="cb47-385"><a href="#cb47-385" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-386"><a href="#cb47-386" aria-hidden="true" tabindex="-1"></a>Now we will run the <span class="in">`SCTransform()`</span> on each sample, and regress out mitochondrial expression by specifying in the <span class="in">`vars.to.regress`</span> argument of the <span class="in">`SCTransform()`</span> function.</span>
+<span id="cb47-387"><a href="#cb47-387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-388"><a href="#cb47-388" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
+<span id="cb47-389"><a href="#cb47-389" aria-hidden="true" tabindex="-1"></a>The output of <span class="in">`SCTransform()`</span> can generate large R objects/variables in terms of memory. If we have a large dataset, then we might need to **adjust the limit for allowable object sizes within R** (*Default is 500* 1024 \^ 2 = 500 Mb<span class="sc">\*</span>) using the following code:</span>
+<span id="cb47-390"><a href="#cb47-390" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-393"><a href="#cb47-393" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-394"><a href="#cb47-394" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb47-395"><a href="#cb47-395" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
+<span id="cb47-396"><a href="#cb47-396" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">future.globals.maxSize =</span> <span class="dv">4000</span> <span class="sc">*</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb47-397"><a href="#cb47-397" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-398"><a href="#cb47-398" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb47-399"><a href="#cb47-399" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-400"><a href="#cb47-400" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 执行`SCTranform` {#sec-perform_sctranform}</span></span>
+<span id="cb47-401"><a href="#cb47-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-404"><a href="#cb47-404" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-405"><a href="#cb47-405" aria-hidden="true" tabindex="-1"></a><span class="co"># SCTranform</span></span>
+<span id="cb47-406"><a href="#cb47-406" aria-hidden="true" tabindex="-1"></a>seurat_phase <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(seurat_phase, </span>
+<span id="cb47-407"><a href="#cb47-407" aria-hidden="true" tabindex="-1"></a>                            <span class="at">vars.to.regress =</span> <span class="fu">c</span>(<span class="st">"mitoRatio"</span>),</span>
+<span id="cb47-408"><a href="#cb47-408" aria-hidden="true" tabindex="-1"></a>                            <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb47-409"><a href="#cb47-409" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb47-410"><a href="#cb47-410" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-411"><a href="#cb47-411" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb47-411"><a href="#cb47-411" aria-hidden="true" tabindex="-1"></a>By default, after normalizing, adjusting the variance, and regressing out uninteresting sources of variation, <span class="in">`SCTransform`</span> will rank the genes by residual variance and output the **3000** most variant genes. If the dataset has larger cell numbers, then it may be beneficial to adjust this parameter higher using the <span class="in">`variable.features.n`</span> argument.</span>
 <span id="cb47-412"><a href="#cb47-412" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-413"><a href="#cb47-413" aria-hidden="true" tabindex="-1"></a><span class="fu">### Save the object!</span></span>
+<span id="cb47-413"><a href="#cb47-413" aria-hidden="true" tabindex="-1"></a>Now we can see that in addition to the raw RNA counts, we now have a SCT component in our <span class="in">`assays`</span> slot. The most variable features will be the only genes stored inside the SCT assay. As we move through the scRNA-seq analysis, we will choose the most appropriate assay to use for the different steps in the analysis.</span>
 <span id="cb47-414"><a href="#cb47-414" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-417"><a href="#cb47-417" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb47-418"><a href="#cb47-418" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(seurat_phase, <span class="st">"output/scRNA-seq_online/split_seurat.rds"</span>)</span>
-<span id="cb47-419"><a href="#cb47-419" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb47-420"><a href="#cb47-420" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-421"><a href="#cb47-421" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb47-422"><a href="#cb47-422" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-423"><a href="#cb47-423" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb47-424"><a href="#cb47-424" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
-<span id="cb47-425"><a href="#cb47-425" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-428"><a href="#cb47-428" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb47-429"><a href="#cb47-429" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb47-430"><a href="#cb47-430" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb47-431"><a href="#cb47-431" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb47-432"><a href="#cb47-432" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb47-415"><a href="#cb47-415" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb47-416"><a href="#cb47-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-417"><a href="#cb47-417" aria-hidden="true" tabindex="-1"></a><span class="fu">### Save the object!</span></span>
+<span id="cb47-418"><a href="#cb47-418" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-421"><a href="#cb47-421" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-422"><a href="#cb47-422" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(seurat_phase, <span class="st">"output/scRNA-seq_online/split_seurat.rds"</span>)</span>
+<span id="cb47-423"><a href="#cb47-423" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-424"><a href="#cb47-424" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-425"><a href="#cb47-425" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb47-426"><a href="#cb47-426" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-427"><a href="#cb47-427" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb47-428"><a href="#cb47-428" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb47-429"><a href="#cb47-429" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-432"><a href="#cb47-432" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-433"><a href="#cb47-433" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb47-434"><a href="#cb47-434" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb47-435"><a href="#cb47-435" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-436"><a href="#cb47-436" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

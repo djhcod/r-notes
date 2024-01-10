@@ -1,6 +1,46 @@
 # 循环
 
-`assign()`函数
+## `apply`函数家族
+
+主要应用apply()函数。apply()以数据帧或矩阵作为输入，并以向量、列表或数组的形式给出输出。apply()函数主要用于避免显式使用循环结构。与之类似的lapply()函数返回与输入列表对象长度相似的列表对象，其中的每个元素都是应用指定函数到列表中相应元素的结果，其作用相当于避免了for循环的使用，更适合转换数据类型等操作。
+
+生成案例数据
+
+```{r}
+mydata <- matrix(1:9, ncol = 3,nrow = 6) #生成一个3列、6行的矩阵数据
+mydata[3,3] <- NA #生成一个缺失值
+mydata <- as.data.frame(mydata) #如果要生成新的一列需要转换为数据框形式
+mydata
+```
+
+计算mydata数据集中每一行的均值并添加到每一行后面
+
+```{r}
+mydata$Row_Means <- apply(mydata,
+                          MARGIN = 1, #1:对每行进行运算；2:对列进行运算；MARGIN=c(1,2)对行、列运算
+                        mean, #要应用的函数
+                        na.rm = T) #是否忽略缺失值
+mydata
+```
+
+对mydata的第一列和第二列数据求均值
+
+```{r}
+mydata$Row_Means12 <- apply(mydata[, c(1:2)], MARGIN = 1, mean,na.rm = T)
+mydata
+```
+
+对mydata的每一列进行求和运算
+
+```{r}
+Col_Sums <- apply(mydata, MARGIN = 2, sum,na.rm = T)
+mydata <- rbind(mydata, Col_Sums)
+mydata
+```
+
+## 在循环语句中的其他常用函数
+
+### `assign()`函数
 
 `assign`函数能够将某个值赋值给指定名称，从而实现循环中将每次运行的结果保存到一个对象中，而不覆盖上一次运行的结果。
 
@@ -17,4 +57,48 @@ for (x in c("A", "B", "C", "D")){
 }
 ```
 
-![](images/截屏2023-12-24 12.24.12.png){width="282"}
+### `append`函数
+
+`append()`函数被广泛应用于将新的向量添加到现有的向量、列表或数据框中。
+
+-   将新向量添加到已有向量中：
+
+```{r}
+v1 <- c(1, 2, 3, 4, 5)
+v2 <- c(6, 7, 8)
+
+v3 <- append(v1, v2)
+v3
+
+#等价于
+v3 <- c(v1, v2)
+```
+
+-   将新列表添加到已有列表中：
+
+```{r}
+list1 <- list(a = 1, b = 2, c = 3)
+list2 <- list(d = 4, e = 5, f = 6)
+list3 <- append(list1, list2)
+list3
+```
+
+实际应用场景：在批量读取构建Seurat对象时，通过append()函数将每次的Seurat对象添加到列表中，最终得到一个包含了所有样本的单细胞数据的列表：
+
+```{r}
+#| eval: false
+for (file in file_list) {
+  # 拼接文件路径
+  data.path <- paste0("data/other_single_cell_content/GSE234933_MGH_HNSCC_gex_raw_counts/", file)
+  # 读取RDS文件数据
+  seurat_data <- readRDS(data.path)
+  # 创建Seurat对象，并指定项目名称为文件名（去除后缀）
+  sample_name <- file_path_sans_ext(file)
+  seurat_obj <- CreateSeuratObject(counts = seurat_data,
+                                   project = sample_name,
+                                   min.features = 200,
+                                   min.cells = 3)
+  # 将Seurat对象添加到列表中
+  seurat_list <- append(seurat_list, seurat_obj)
+}
+```

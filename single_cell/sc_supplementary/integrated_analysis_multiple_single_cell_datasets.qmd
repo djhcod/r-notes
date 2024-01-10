@@ -1,0 +1,37 @@
+---
+title: "多个单细胞数据集整合分析"
+---
+
+> 参考：[单细胞多数据集整合示例](https://mp.weixin.qq.com/s/51PtUi7ZKp1nbrFGElU74A)
+
+有时候，为了扩大数据量和得到更加可靠的结论，我们可能获取和下载了多个单细胞数据集。如果我们只关注某一细胞类型，如T cells或B cells或髓系细胞，那么就需要合并分析这些数据集，提取感兴趣的细胞亚群。这时候有两种方法可以选择：
+
+-   **对各个数据集分别降维分群，然后提取各个数据集的感兴趣细胞亚群并整合到一起**
+
+-   **在一开始分析的时候就对这些数据集进行整合，然后分群，提起感兴趣细胞群**
+
+**这个部分怎么分析并没有一个特定的答案或者规则，具体还是得看数据集适合以上提出的哪种分析顺序。**
+
+例如[@gong2023]就用了第二种方法。选取了三个鼻咽癌单细胞转录组数据： GSE150825, GSE150430, GSE162025。首先对三组数据进行整合，然后选取其中的一部分T细胞进行进一步分析。
+
+![](images/截屏2024-01-10%2012.00.48.png){width="600"}
+
+这里我们介绍第一种方式，即**对各数据集分别降维分群，然后提取并整合各个数据集的感兴趣细胞亚群。**
+
+案例数据来自2020年的文章《Single-cell transcriptomics reveals regulators underlying immune cell diversity and immune subtypes associated with prognosis in nasopharyngeal carcinoma》。以15例鼻咽癌患者作为研究对象，1例慢性鼻咽炎患者的正常鼻咽上皮组织作为对照。所有样品均采用10x genomics V2 3'单细胞RNA测序。数据链接：[**GSE150430**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE150430)**。**
+
+## 数据读取
+
+```{r}
+library(data.table)
+```
+
+```{r}
+#| cache-lazy: false
+# options(future.globals.maxSize = 8 * 1024 * 1024^2)
+
+counts <- fread("data/sc_supplementary/GSE150430_npc_scRNA_hg19_processed_data.txt", 
+                data.table = F)
+dim(counts)
+counts[1:4, 1:4]
+```

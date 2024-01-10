@@ -413,44 +413,6 @@ datstd <- dat %>% unite("datehour",date,hour,sep = ' ',remove = T) %>% unite("da
 datstd
 ```
 
-## `apply`函数家族
-
-主要应用apply()函数。apply()以数据帧或矩阵作为输入，并以向量、列表或数组的形式给出输出。apply()函数主要用于避免显式使用循环结构。与之类似的lapply()函数返回与输入列表对象长度相似的列表对象，其中的每个元素都是应用指定函数到列表中相应元素的结果，其作用相当于避免了for循环的使用，更适合转换数据类型等操作。
-
-生成案例数据
-
-```{r}
-mydata<-matrix(1:9,ncol = 3,nrow=6)#生成一个3列、6行的矩阵数据
-mydata[3,3]<-NA#生成一个缺失值
-mydata<-as.data.frame(mydata)#如果要生成新的一列需要转换为数据框形式
-mydata
-```
-
-计算mydata数据集中每一行的均值并添加到每一行后面
-
-```{r}
-mydata$Row_Means<-apply(mydata,
-                        MARGIN=1,#1:对每行进行运算；2:对列进行运算；MARGIN=c(1,2)对行、列运算
-                        mean,#要应用的函数
-                        na.rm=T)#是否忽略缺失值
-mydata
-```
-
-对mydata的第一列和第二列数据求均值
-
-```{r}
-mydata$Row_Means12<-apply(mydata[,c(1:2)],MARGIN=1,mean,na.rm=T)
-mydata
-```
-
-对mydata的每一列进行求和运算
-
-```{r}
-Col_Sums<-apply(mydata,MARGIN=2,sum,na.rm=T)
-mydata<-rbind(mydata,Col_Sums)
-mydata
-```
-
 ## 自定义函数
 
 R语言可以自定义函数，也可以使用其自带的函数。

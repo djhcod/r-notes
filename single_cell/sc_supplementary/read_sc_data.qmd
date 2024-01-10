@@ -1,0 +1,342 @@
+# **读取非标准格式的单细胞数据**
+
+## 读取非标准10X格式文件 {#sec-Read_non-standard_10x_files}
+
+该案例来自文献 [@xu2022]。该研究为了系统地研究高级别浆膜上皮卵巢癌（HGSOC）的肿瘤内异质性，采用深层单细胞RNA测序技术(scRNA-seq)**对7例初治HGSOC早期和晚期患者及5例年龄匹配的非恶性卵巢组织标本进行肿瘤分析。**共获得59,324个HGSOC和非恶性卵巢组织的单细胞，其中，33264个细胞（56%）来⾃HGSOC肿瘤患者组织，26060个（44%）来⾃⾮恶性卵巢组织标本。原始数据：[GSE184880](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE184880)。
+
+![](images/640-01.png)
+
+可以看到原始数据以10X格式提供:
+
+![](images/截屏2024-01-08%2011.17.00.png){width="465"}
+
+但是，**没有按照标准的10X格式的三个文件命名，并且没有按照样本分别建立文件夹**。所以需要对其进行整理：
+
+-   首先给每个样本建立文件夹
+
+-   然后将对应的10X标准格式的三个文件分别复制到各个样本文件夹内
+
+-   最后将文件重命名为10X格式要求的标准形式，即**“barcodes.tsv.gz”、"features.tsv.gz"、"matrix.mtx.gz"**
+
+```{r}
+library(Seurat)
+library(stringr)
+```
+
+```{r}
+#| warning: false
+# 给每个样本建立文件夹
+files <- list.files("data/sc_supplementary/GSE184880_RAW")
+files
+dirnames <- gsub(pattern = ".barcodes.tsv.gz|.genes.tsv.gz|.matrix.mtx.gz", 
+                 replacement = "", 
+                 x = files) %>%  
+  unique() %>% 
+  paste0("data/sc_supplementary/GSE184880_RAW/", .)
+dirnames
+```
+
+```{r}
+#| output: false
+lapply(dirnames, dir.create, showWarnings = FALSE)
+```
+
+```{r}
+#| output: false
+lapply(files, function(files) {
+  # 复制相应的10X文件到各个样本文件夹内
+  new_dir <- gsub(pattern = ".barcodes.tsv.gz|.genes.tsv.gz|.matrix.mtx.gz", 
+                  replacement = "", 
+                  x = files) %>%  
+    paste0("data/sc_supplementary/GSE184880_RAW/", .)
+  file.copy(from = paste0("data/sc_supplementary/GSE184880_RAW/", files), 
+            to = new_dir)
+  # 重命名3个10X文件
+  new_filename <- ifelse(grepl(pattern = "barcodes", x = files), "barcodes.tsv.gz", 
+                         ifelse(grepl(pattern = "genes", x = files), "features.tsv.gz", 
+                         "matrix.mtx.gz"))
+  file.rename(from = paste(new_dir, files, sep  = "/"),
+              to = paste(new_dir, new_filename, sep = "/"))
+  })
+```
+
+::: {.callout-tip collapse="true"}
+###### 用setwd简化对文件路径的定义
+
+由于在渲染本文档时，knitr会将工作目录恢复为Rproject根目录，所以不能使用getwd指定工作目录。在实际应用中，可以设置工作目录到目标数据文件夹下以简化对文件路径的定义：
+
+```{r}
+#| eval: false
+root_dir <- getwd()
+setwd("data/sc_supplementary/GSE184880_RAW")
+```
+
+```{r}
+#| eval: false
+# 给每个样本建立文件夹
+files <- list.files()
+files
+dirnames <- gsub(pattern = ".barcodes.tsv.gz|.genes.tsv.gz|.matrix.mtx.gz", 
+                 replacement = "", 
+                 x = files) |> unique()
+dirnames
+lapply(dirnames, dir.create)
+
+
+lapply(files, function(files) {
+  # 复制相应的10X文件到各个样本文件夹内
+  new_dir <- gsub(pattern = ".barcodes.tsv.gz|.genes.tsv.gz|.matrix.mtx.gz", 
+                      replacement = "", 
+                      x = files) 
+  file.copy(from = files, 
+            to = new_dir)
+  # 重命名3个10X文件
+  new_filename <- ifelse(grepl(pattern = "barcodes", x = files), "barcodes.tsv.gz", 
+                         ifelse(grepl(pattern = "genes", x = files), "features.tsv.gz", 
+                         "matrix.mtx.gz"))
+  file.rename(from = paste(new_dir, files, sep  = "/"),
+              to = paste(new_dir, new_filename, sep = "/"))
+  })
+```
+
+```{r}
+#| eval: false
+seurat_list <- lapply(dirnames, function(dirnames) {
+  print(dirnames)
+  sce <- CreateSeuratObject(counts =  Read10X(dirnames),
+                            project =  str_split(string = dirnames, 
+                                                 pattern = "_", 
+                                                 simplify = T)[,2],
+                            min.cells = 5,
+                            min.features = 500)
+  return(sce)
+})
+merged_seurat <- merge(x = seurat_list[[1]],
+                       y = seurat_list[-1],
+                       add.cell.ids = str_split(string = dirnames, 
+                                                pattern = "_", 
+                                                simplify = T)[,2])
+
+merged_seurat
+merged_seurat <- JoinLayers(merged_seurat)
+merged_seurat
+head(merged_seurat)
+tail(merged_seurat)
+unique(merged_seurat$orig.ident)
+
+# 将样本信息添加到meta.data的新的一列“sample”中:
+merged_seurat$sample <- merged_seurat$orig.ident
+```
+
+后续如有需要可以随时将工作目录恢复为Rproject根目录：
+
+```{r}
+#| eval: false
+setwd(root_dir)
+```
+:::
+
+接下来，就可以进行常规的Seurat对象构建：
+
+```{r}
+seurat_list <- lapply(dirnames, function(dirnames) {
+  print(dirnames)
+  sce <- CreateSeuratObject(counts =  Read10X(dirnames),
+                            project =  str_split(string = dirnames, 
+                                                 pattern = "_", 
+                                                 simplify = T)[,4],
+                            min.cells = 5,
+                            min.features = 500)
+  return(sce)
+})
+merged_seurat <- merge(x = seurat_list[[1]],
+                       y = seurat_list[-1],
+                       add.cell.ids = str_split(string = dirnames, 
+                                                pattern = "_", 
+                                                simplify = T)[,4])
+
+merged_seurat
+merged_seurat <- JoinLayers(merged_seurat)
+merged_seurat
+head(merged_seurat)
+tail(merged_seurat)
+unique(merged_seurat$orig.ident)
+
+# 将样本信息添加到meta.data的新的一列“sample”中:
+merged_seurat$sample <- merged_seurat$orig.ident
+```
+
+------------------------------------------------------------------------
+
+## 读取raw_counts形式的数据
+
+案例来自[@Bill2023]。样本来自头颈部鳞状细胞癌（HNSCC）患者，总共52例标本，包括24例原发肿瘤、16例局部复发和12例多器官远处转移。原发部位包括口腔、喉/下咽、口咽和鼻咽。其中15份样本HPV阳性。原始数据：[GSE234933](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE234933)。
+
+可以看到该数据集没有提供标准的10X格式的3个文件。
+
+![](images/截屏2024-01-03%2020.56.56.png)
+
+其中的“raw_counts”文件解压后是52个RDS文件，对应了每个样本的单细胞测序数据，是一个已经包含了表达量、基因名和细胞barcode的矩阵，所以可以通过批量读取这些文件建立Seurat对象。
+
+![](images/截屏2024-01-09%2011.10.35.png){width="492"}
+
+“sample_annotation.txt”文件包含了对每个样本的详细临床病理资料的注释，因此可以将其添加到meta.data中。
+
+![](images/截屏2024-01-09%2011.11.45.png)
+
+“cell_annotation.txt”文件则是原作者对细胞类型的注释，可以不添加。
+
+![](images/截屏2024-01-09%2011.12.14.png)
+
+### 读取raw_counts矩阵
+
+```{r}
+rm(list = ls())
+library(Seurat)
+library(stringr)
+library(tibble)
+```
+
+```{r}
+#| cache-lazy: false
+# 获取所有rds文件的列表
+file_list <- list.files("data/sc_supplementary/GSE234933/GSE234933_MGH_HNSCC_gex_raw_counts", pattern = ".rds")
+file_list
+
+# 循环读取每个rds文件的数据并创建Seurat对象
+seurat_list <- lapply(file_list, function(file) {
+  # 拼接文件路径
+  data.path <- paste0("data/sc_supplementary/GSE234933/GSE234933_MGH_HNSCC_gex_raw_counts/", file)
+  # 创建Seurat对象
+  seurat_obj <- CreateSeuratObject(counts = readRDS(data.path),
+                                   min.features = 200,
+                                   min.cells = 3)
+  return(seurat_obj)
+})
+
+# 合并Seurat对象
+seurat_combined <- merge(seurat_list[[1]],
+                         y = seurat_list[-1],
+                         add.cell.ids = str_split(string = file_list, 
+                                                  pattern = "_", 
+                                                  simplify = T)[,1])
+seurat_combined
+head(seurat_combined) # 可以看到这个案例实际上不需要添加cell.ids
+unique(seurat_combined$orig.ident)
+```
+
+### 添加样本信息
+
+```{r}
+#| cache-lazy: false
+sample_anno <- read.table("data/sc_supplementary/GSE234933/GSE234933_MGH_HNSCC_sample_annotation.txt", 
+                          sep = "\t", 
+                          header = T)
+head(sample_anno)
+sample_anno$Sample
+
+old_meta.data <- rownames_to_column(seurat_combined@meta.data, var = "cell_id")
+new_meta.data <- merge(x = old_meta.data,
+                       y = sample_anno,
+                       by.x = "orig.ident",
+                       by.y = "Sample",
+                       all.x = T) 
+new_meta.data$sample <- new_meta.data$orig.ident
+head(new_meta.data)
+rownames(new_meta.data) <- new_meta.data$cell_id
+new_meta.data$cell_id <- NULL
+new_meta.data[,c(4, 6:10)] <- lapply(new_meta.data[,c(4, 5, 7:10)], as.factor)
+summary(new_meta.data)
+seurat_combined@meta.data <- new_meta.data
+```
+
+## 读取txt/tsv/csv等文本文件表达量矩阵信息
+
+以2020的文章：《Single-Cell Transcriptome Analysis Reveals Dynamic Cell Populations and Differential Gene Expression Patterns in Control and Aneurysmal Human Aortic Tissue》[@Li2020] 举例说明。数据集链接：[**GSE155468**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155468)**。**
+
+![](images/截屏2024-01-10%2011.02.14.png){width="565"}
+
+该案例提供了11个人体主动脉组织样品的单细胞转录组测序数据，其中8名患者为升胸主动脉瘤（ATAA）and 3名患者作为对照。每个样品都是一个独立的txt文本文件，蕴藏着其表达量矩阵信息。
+
+首先我们读取其中一个文件看一下其形式：
+
+```{r}
+rm(list = ls())
+library(data.table)
+library(Seurat)
+library(ggplot2)
+```
+
+```{r}
+# 列出所有的文件名
+files <- list.files("data/sc_supplementary/GSE155468_RAW")
+files
+# 简化文件名用作样本名
+samples <- gsub(pattern = "GSM.*._|.txt.gz", replacement = "", x = files)
+samples
+# 试读取其中一个文件
+test <- fread("data/sc_supplementary/GSE155468_RAW/GSM4704931_Con4.txt.gz", data.table = F)
+test[1:3, 1:3]
+```
+
+可以看到，该表达矩阵的问题是行名不是基因名没有作为行名，而是以单独的一列显示，因此需要进行预处理后再用上面类似的方法批量读取和创建Seurat对象：
+
+```{r}
+seurat_list <- lapply(files, function(file) {
+  filepath <- paste0("data/sc_supplementary/GSE155468_RAW/", file)
+  counts <- fread(filepath, data.table = F)
+  rownames(counts) <- counts[,1]
+  counts <- counts[,-1]
+  CreateSeuratObject(counts = counts,
+                     project = gsub(pattern = "GSM.*._|.txt.gz", 
+                                    replacement = "", 
+                                    x = file),
+                     min.cells = 5,
+                     min.features = 300)
+})
+
+
+merged_seurat <- merge(x = seurat_list[[1]], 
+                       y = seurat_list[-1], 
+                       add.cell.ids = samples)
+merged_seurat
+head(merged_seurat)
+
+# 新增样本列
+merged_seurat$samples <- merged_seurat$orig.ident
+```
+
+简单查看一下细胞/基因数：
+
+```{r}
+#| fig-width: 7
+#| layout-ncol: 2
+# Visualize the number of cell counts per sample
+merged_seurat@meta.data  |> 
+    ggplot(aes(x = samples, fill = samples)) + 
+    geom_bar() +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+    theme(plot.title = element_text(hjust = 0.5, face = "bold")) +
+    ggtitle("NCells")
+
+# Visualize the number UMIs/transcripts per cell
+merged_seurat@meta.data |> 
+    ggplot(aes(color = samples, x = nCount_RNA, fill = samples)) + 
+    geom_density(alpha = 0.2) + 
+    scale_x_log10() + 
+    theme_classic() +
+    ylab("Cell density") +
+    geom_vline(xintercept = 500)
+```
+
+------------------------------------------------------------------------
+
+::: {.callout-note collapse="true" icon="false"}
+## Session Info
+
+```{r}
+#| echo: false
+sessionInfo()
+```
+:::

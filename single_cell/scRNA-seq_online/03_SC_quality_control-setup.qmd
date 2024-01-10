@@ -152,6 +152,12 @@ What do the columns of metadata mean?
 
 3.  最后，通过`CreateSeuratObject`构建Seurat对象。
 
+::: callout-caution
+这里利用了`Read10X`函数支持批量读取多个文件夹的特性，直接创建一个合并后的Seurat对象“merged_seurat”。但是，这只适用于读取以标准10X格式保存的数据，即**每个样本为一个文件夹**，每个文件夹内有三个文件，文件名为：**“barcodes.tsv.gz”、"features.tsv.gz"、"matrix.mtx.gz"。**
+
+另外一种更通用的方法是通过循环依次读取每个文件夹内的3个10X文件，得到一个Seurat对象列表，然后通过`merge()`函数合并这些Seurat对象，详见： @sec-Read_non-standard_10x_files 。
+:::
+
 ```{r}
 # 列出数据文件夹下所有子文件夹的相对路径
 list.dirs("data/scRNA-seq_online/original_10x")
