@@ -115,7 +115,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <meta name="twitter:title" content="R语言学习笔记 - 35&nbsp; 在Quarto中嵌入Shiny应用程序">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://djhcod.github.io/r-notes/quarto_foundation/images/截屏2024-01-13 18.28.35.png">
+<meta name="twitter:image-height" content="1236">
+<meta name="twitter:image-width" content="2624">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 
 <body class="nav-sidebar docked nav-fixed">
@@ -538,7 +542,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#安装shinylive包" id="toc-安装shinylive包" class="nav-link active" data-scroll-target="#安装shinylive包"><span class="header-section-number">35.1</span> 安装<code>shinylive</code>包</a></li>
+  <li><a href="#建立quarto-project" id="toc-建立quarto-project" class="nav-link" data-scroll-target="#建立quarto-project"><span class="header-section-number">35.2</span> 建立Quarto Project</a></li>
+  <li><a href="#安装shinylive扩展程序" id="toc-安装shinylive扩展程序" class="nav-link" data-scroll-target="#安装shinylive扩展程序"><span class="header-section-number">35.3</span> <strong>安装shinylive扩展程序</strong></a></li>
+  <li><a href="#yaml设置" id="toc-yaml设置" class="nav-link" data-scroll-target="#yaml设置"><span class="header-section-number">35.4</span> YAML设置</a></li>
+  <li><a href="#编写shiny程序" id="toc-编写shiny程序" class="nav-link" data-scroll-target="#编写shiny程序"><span class="header-section-number">35.5</span> 编写Shiny程序</a></li>
+  <li><a href="#渲染quarto文档" id="toc-渲染quarto文档" class="nav-link" data-scroll-target="#渲染quarto文档"><span class="header-section-number">35.6</span> 渲染Quarto文档</a></li>
+  <li><a href="#发布quarto文档" id="toc-发布quarto文档" class="nav-link" data-scroll-target="#发布quarto文档"><span class="header-section-number">35.7</span> 发布Quarto文档</a></li>
+  <li><a href="#案例" id="toc-案例" class="nav-link" data-scroll-target="#案例"><span class="header-section-number">35.8</span> 案例</a>
+  <ul class="collapse">
+  <li><a href="#案例一" id="toc-案例一" class="nav-link" data-scroll-target="#案例一">案例一</a></li>
+  <li><a href="#案例二" id="toc-案例二" class="nav-link" data-scroll-target="#案例二">案例二</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/quarto_foundation/quarto_shiny.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/quarto_foundation/quarto_shiny.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -560,6 +581,193 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
+<blockquote class="blockquote">
+<p>参考：<a href="https://quarto.thecoatlessprofessor.com/r-shinylive-demo/"><em>R-shinylive app in Quarto!</em></a></p>
+</blockquote>
+<p>本节主要介绍如何在Quarto文档中嵌入Shiny交互式应用程序，而无需依赖服务器。这是一个Quarto的全新特性，感谢Barret Schloerke等人开发的<a href="https://posit-dev.github.io/r-shinylive/index.html"><code>shinylive</code>包</a>让这一特性得以实现，该包的第一个<a href="https://cloud.r-project.org/web/packages/shinylive/index.html">CRAN版本</a>于2023年10月11日首次发布。</p>
+<blockquote class="blockquote">
+<p>For writing online books (with Quarto), I’d like to be able to demonstrate concepts and results dynamically. To some extent, we can do this with&nbsp;<a href="https://gganimate.com/"><code>gganimate</code></a>, but it is very limiting. We’d like to use&nbsp;<a href="https://shiny.posit.co/"><code>shiny</code></a>. At the 2023 posit conference, Joe Cheng unveiled&nbsp;<a href="https://github.com/posit-dev/shinylive"><code>shinylive-r</code></a>, a tool to embed R and&nbsp;<code>shiny</code>&nbsp;into a webpage using WebAssembly (aka Wasm) using&nbsp;<a href="https://docs.r-wasm.org/webr/latest/"><code>webR</code></a>.</p>
+<p>Shinylive is a serverless version of Shiny, which enables running Shiny applications in a web browser without needing a backend server. It was first introduced for Python during Posit Conf 2022 using WebAssembly and Pyodide, and its R version during the Posit Conf 2023 using WebR (引自：<a href="https://github.com/RamiKrispin/shinylive-r"><strong>shinylive-r</strong></a>).</p>
+</blockquote>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>本节不会涉及<code>Shiny</code>包的教程，请在学习本节前确保已基本掌握Shiny的使用，Shiny官方提供了一个很好的<a href="https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/index.html">Shiny入门指南</a>，通过它可以对Shiny应用程序的开发有一个全局的了解。</p>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><a href="https://shiny.posit.co"><img src="images/截屏2024-01-13 18.28.35.png" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>视频教程：</p>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/6y2FnAugP8E" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><img src="images/shinylive-webr.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Shinylive archticture, source: Joe Cheng “Running Shiny without a server”</figcaption>
+</figure>
+</div>
+<blockquote class="blockquote">
+<p>Currently, there are three methods (or formats) to use Shinylive applications:</p>
+<ul>
+<li><p><a href="https://github.com/RamiKrispin/shinylive-r">Render a Shiny app into HTML static file using the shinylive package</a></p></li>
+<li><p>Host a Shiny app in Fiddle - a built-in web application to run Shiny R and Python applications</p></li>
+<li><p>Embed Shiny app in Quarto documentation using the quarto-shinylive extension for Quarto (引自：<a href="https://github.com/RamiKrispin/shinylive-r"><strong>shinylive-r</strong></a>)。</p></li>
+</ul>
+</blockquote>
+<section id="安装shinylive包" class="level2" data-number="35.1">
+<h2 data-number="35.1" class="anchored" data-anchor-id="安装shinylive包"><span class="header-section-number">35.1</span> 安装<code>shinylive</code>包</h2>
+<p>要首先Shiny应用程序的嵌入，需要依赖<code>shinylive</code>包，可以从CRAN直接安装该包：</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>install.packages("shinylive")</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="建立quarto-project" class="level2" data-number="35.2">
+<h2 data-number="35.2" class="anchored" data-anchor-id="建立quarto-project"><span class="header-section-number">35.2</span> 建立Quarto Project</h2>
+<p>创建Quarto项目的方法详见 <a href="yaml_settings.html#sec-project_setting"><span>Section&nbsp;31.1</span></a> 。需要注意的是，<code>shinylive</code> 扩展程序必须在 Quarto 项目目录内使用，否则在尝试渲染文档时会报错。错误信息如下：</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="an">ERROR:</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>The shinylive extension must be used in a Quarto project directory</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>(with a _quarto.yml file).</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="安装shinylive扩展程序" class="level2" data-number="35.3">
+<h2 data-number="35.3" class="anchored" data-anchor-id="安装shinylive扩展程序"><span class="header-section-number">35.3</span> <strong>安装shinylive扩展程序</strong></h2>
+<p>为Quarto安装<code>shinylive</code><strong>扩展程序。</strong>在Rstudio终端（Terminal）面板中输入：</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>quarto add quarto-ext/shinylive</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="images/install-shinylive-in-terminal.png" class="img-fluid"></p>
+</section>
+<section id="yaml设置" class="level2" data-number="35.4">
+<h2 data-number="35.4" class="anchored" data-anchor-id="yaml设置"><span class="header-section-number">35.4</span> YAML设置</h2>
+<p>为了让Quarto能够调用Shiny应用程序，需要在Quarto文档的YAML设置中加上<code>filters-shinylive</code>命令，如下：</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Our first r-shinylive Quarto document!"</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="an">filters:</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>shinylive</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>---</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="编写shiny程序" class="level2" data-number="35.5">
+<h2 data-number="35.5" class="anchored" data-anchor-id="编写shiny程序"><span class="header-section-number">35.5</span> 编写Shiny程序</h2>
+<p>我们需要把Shiny程序的代码放到一个特殊的<code>{shinylive-r}</code>代码块内：</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-r}</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">shiny</span><span class="kw">)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your Shiny UI here</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- fluidPage<span class="er">(</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Your UI components go here</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your Shiny server logic here</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output, session<span class="kw">)</span> <span class="kw">{</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Your server code goes here</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create and launch the Shiny app</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui,</span> server<span class="kw">)</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>{shinylive-r}</code>代码块必须包含 <code>#| standalone: true</code>，这表示代码代表了一个完整的独立 Shiny 应用程序。目前，我们需要把完整的Shiny应用程序的代码，包括ui、server等全部包括进一个代码块内。未来，Quarto可能会支持在一个qmd文档内的多个代码块内分别包含ui、server等结构。</p>
+</div>
+</div>
+</section>
+<section id="渲染quarto文档" class="level2" data-number="35.6">
+<h2 data-number="35.6" class="anchored" data-anchor-id="渲染quarto文档"><span class="header-section-number">35.6</span> 渲染Quarto文档</h2>
+<p>编写好所有内容后，我们即可以通过点击“Render”按钮渲染嵌入了Shiny应用程序的Quarto文档了。渲染后，会在我们的Quarto项目根目录下生成一个<code>_extensions</code>文件夹，其结构如下：</p>
+<p><img src="images/截屏2024-01-13 17.45.20.png" class="img-fluid"></p>
+</section>
+<section id="发布quarto文档" class="level2" data-number="35.7">
+<h2 data-number="35.7" class="anchored" data-anchor-id="发布quarto文档"><span class="header-section-number">35.7</span> 发布Quarto文档</h2>
+<p>一旦制作完成了令人满意的Quarto文档，就可以GitHub Pages和Quarto Pub<strong>等</strong>通过多种途径发布您的作品了。后面，我们对如何发布GitHub Pages有详细的说明（ <a href="github_pages.html"><span>Chapter&nbsp;32</span></a> ）。</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>更多关于shinylive的信息，参阅：<a href="https://quarto.thecoatlessprofessor.com/r-shinylive-demo/"><em>R-shinylive app in Quarto!</em></a></p>
+</div>
+</div>
+<hr>
+</section>
+<section id="案例" class="level2" data-number="35.8">
+<h2 data-number="35.8" class="anchored" data-anchor-id="案例"><span class="header-section-number">35.8</span> 案例</h2>
+<section id="案例一" class="level3">
+<h3 class="anchored" data-anchor-id="案例一">案例一</h3>
+<p>下面是一个来自<a href="https://quarto.thecoatlessprofessor.com/r-shinylive-demo/R-shinylive-demo.html">Joe’s shiny app</a>的示例：</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-r}</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| viewerHeight: 600</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">shiny</span><span class="kw">)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">bslib</span><span class="kw">)</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI for app that draws a histogram ----</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- page_sidebar<span class="er">(</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">sidebar</span> = sidebar<span class="er">(</span><span class="ex">open</span> = <span class="st">"open"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="ex">numericInput</span><span class="er">(</span><span class="st">"n"</span><span class="ex">,</span> <span class="st">"Sample count"</span>, 100<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="ex">checkboxInput</span><span class="er">(</span><span class="st">"pause"</span><span class="ex">,</span> <span class="st">"Pause"</span>, FALSE<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="ex">plotOutput</span><span class="er">(</span><span class="st">"plot"</span><span class="ex">,</span> width=1100<span class="kw">)</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output, session<span class="kw">)</span> <span class="kw">{</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="ex">data</span> <span class="op">&lt;</span>- reactive<span class="er">(</span><span class="kw">{</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input</span><span class="va">$resample</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">(</span><span class="ex">!isTRUE</span><span class="er">(</span><span class="ex">input</span><span class="va">$pause</span><span class="kw">))</span> <span class="kw">{</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>      <span class="ex">invalidateLater</span><span class="er">(</span><span class="ex">1000</span><span class="kw">)</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">}</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="ex">rnorm</span><span class="er">(</span><span class="ex">input</span><span class="va">$n</span><span class="kw">)</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">})</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="ex">output</span><span class="va">$plot</span> <span class="op">&lt;</span>- renderPlot<span class="er">(</span><span class="kw">{</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="ex">hist</span><span class="er">(</span><span class="fu">data()</span><span class="ex">,</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>      <span class="ex">breaks</span> = 40,</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>      <span class="ex">xlim</span> = c<span class="er">(</span><span class="ex">-2,</span> 2<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>      <span class="ex">ylim</span> = c<span class="er">(</span><span class="ex">0,</span> 1<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>      <span class="ex">lty</span> = <span class="st">"blank"</span>,</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>      <span class="ex">xlab</span> = <span class="st">"value"</span>,</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>      <span class="ex">freq</span> = FALSE,</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>      <span class="ex">main</span> = <span class="st">""</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    <span class="ex">x</span> <span class="op">&lt;</span>- seq<span class="er">(</span><span class="ex">from</span> = <span class="at">-2,</span> to = 2, length.out = 500<span class="kw">)</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    <span class="ex">y</span> <span class="op">&lt;</span>- dnorm<span class="er">(</span><span class="ex">x</span><span class="kw">)</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="ex">lines</span><span class="er">(</span><span class="ex">x,</span> y, lwd=1.5<span class="kw">)</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    <span class="ex">lwd</span> <span class="op">&lt;</span>- 5</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    <span class="ex">abline</span><span class="er">(</span><span class="va">v</span><span class="op">=</span>0, <span class="va">col</span><span class="op">=</span><span class="st">"red"</span>, <span class="va">lwd</span><span class="op">=</span>lwd, <span class="va">lty</span><span class="op">=</span>2<span class="kw">)</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    <span class="ex">abline</span><span class="er">(</span><span class="va">v</span><span class="op">=</span>mean<span class="kw">(</span><span class="fu">data()</span><span class="kw">)</span><span class="ex">,</span> col=<span class="st">"blue"</span>, lwd=lwd, lty=1<span class="kw">)</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    <span class="ex">legend</span><span class="er">(</span><span class="ex">legend</span> = c<span class="er">(</span><span class="st">"Normal"</span><span class="ex">,</span> <span class="st">"Mean"</span>, <span class="st">"Sample mean"</span><span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>      <span class="fu">col</span> = c<span class="er">(</span><span class="st">"black"</span><span class="ex">,</span> <span class="st">"red"</span>, <span class="st">"blue"</span><span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>      <span class="ex">lty</span> = c<span class="er">(</span><span class="ex">1,</span> 2, 1<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>      <span class="ex">lwd</span> = c<span class="er">(</span><span class="ex">1,</span> lwd, lwd<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>      <span class="ex">x</span> = 1,</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>      <span class="ex">y</span> = 0.9</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>  <span class="ex">},</span> res=140<span class="er">)</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Shiny app ----</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui</span> = ui, server = server<span class="kw">)</span></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <pre class="shinylive-r" data-engine="r"><code>#| standalone: true
 #| viewerHeight: 600
 library(shiny)
@@ -620,12 +828,109 @@ server &lt;- function(input, output) {
 }
 
 # Run the app ----
-shinyApp(ui = ui, server = server)
-</code></pre>
+shinyApp(ui = ui, server = server)</code></pre>
+</section>
+<section id="案例二" class="level3">
+<h3 class="anchored" data-anchor-id="案例二">案例二</h3>
+<pre class="shinylive-r" data-engine="r"><code>#| standalone: true
+#| viewerHeight: 500
+#| label: fig-shiny-spline
+
+webr::install("ggplot2")
+webr::install("htmltools")   #&lt;- only needed to use SVG images 
+
+
+ui &lt;- fluidPage(
+  
+  fluidRow(
+    column(8, 
+           sliderInput(
+             "deg_free", 
+             label = "Spline degrees of freedom:",
+             min = 3L, value = 3L, max = 8L, step = 1L
+           )
+    ),
+    
+    imageOutput("spline_contours", height = "400px")
+  )
+)
+
+
+server &lt;- function(input, output, session) {
+  
+  # ------------------------------------------------------------------------
+  # Input data from remote locations on GitHub
+  
+  pred_path &lt;-
+    paste(                                                  
+      "https://raw.githubusercontent.com",                  
+      "topepo", "shinylive-in-book-test",                   
+      "main", "predicted_values.RData",                     
+      sep = "/"                                             
+    )                                                       
+  data_path &lt;-                                              
+    paste(                                                  
+      "https://raw.githubusercontent.com",                  
+      "topepo", "shinylive-in-book-test",                   
+      "main", "sim_val.RData",                              
+      sep = "/"                                             
+    )                                                       
+  
+  rdata_file &lt;- tempfile()
+  download.file(pred_path, destfile = rdata_file)           
+  load(rdata_file)                                          
+  download.file(data_path, destfile = rdata_file)           
+  load(rdata_file)                                          
+  
+  # Set some ranges for the plot
+  rngs &lt;- list(A = c(-3.3, 3.3), B = c(-4.4, 4.4))
+  
+  output$spline_contours &lt;-
+    renderImage({
+      
+      preds &lt;- predicted_values[predicted_values$deg_free == input$deg_free,]
+      
+      p &lt;-
+        ggplot(preds, aes(A, B)) +
+        # Plot the validation set
+        geom_point(
+          data = sim_val, 
+          aes(col = class, pch = class), 
+          alpha = 1 / 2,
+          cex = 3
+        ) +
+        # Show the class boundary
+        geom_contour(
+          aes(z = .pred_one),
+          breaks = 1 / 2,
+          linewidth = 3 / 2,
+          col = "black"
+        ) +
+        # Formatting
+        lims(x = rngs$A, y = rngs$B) +
+        theme_bw() + 
+        theme(legend.position = "top")
+      
+      file &lt;-
+        htmltools::capturePlot(
+          print(p), 
+          tempfile(fileext = ".svg"),
+          grDevices::svg,
+          width = 4, 
+          height = 4
+        )
+      list(src = file)
+    }, 
+    deleteFile = TRUE)
+}
+
+shinyApp(ui = ui, server = server)</code></pre>
 
 
 <!-- -->
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1055,76 +1360,350 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "在Quarto中嵌入Shiny应用程序"</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="an">filters:</span><span class="co"> </span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">  - shinylive</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-r}</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#| viewerHeight: 600</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">shiny</span><span class="kw">)</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI ----</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- fluidPage<span class="er">(</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># App title ----</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="ex">titlePanel</span><span class="er">(</span><span class="st">"Hello World!"</span><span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sidebar layout with input and output definitions ----</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="ex">sidebarLayout</span><span class="er">(</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sidebar panel for inputs ----</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="ex">sidebarPanel</span><span class="er">(</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Input: Slider for the number of bins ----</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>      <span class="ex">sliderInput</span><span class="er">(</span><span class="ex">inputId</span> = <span class="st">"bins"</span>,</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">label</span> = <span class="st">"Number of bins:"</span>,</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">min</span> = 5,</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">max</span> = 50,</span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">value</span> = 30<span class="kw">)</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Main panel for displaying outputs ----</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="ex">mainPanel</span><span class="er">(</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Output: Histogram ----</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>      <span class="ex">plotOutput</span><span class="er">(</span><span class="ex">outputId</span> = <span class="st">"distPlot"</span><span class="kw">)</span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="kw">)</span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Define server logic required to draw a histogram ----</span></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output<span class="kw">)</span> <span class="kw">{</span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Histogram of the Old Faithful Geyser Data ----</span></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># with requested number of bins</span></span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  <span class="co"># This expression that generates a histogram is wrapped in a call</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>  <span class="co"># to renderPlot to indicate that:</span></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1. It is "reactive" and therefore should be automatically</span></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>  <span class="co">#    re-executed when inputs (input$bins) change</span></span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. Its output type is a plot</span></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  <span class="ex">output</span><span class="va">$distPlot</span> <span class="op">&lt;</span>- renderPlot<span class="er">(</span><span class="kw">{</span></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    <span class="ex">x</span>    <span class="op">&lt;</span>- faithful<span class="va">$waiting</span></span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    <span class="ex">bins</span> <span class="op">&lt;</span>- seq<span class="er">(</span><span class="ex">min</span><span class="er">(</span><span class="ex">x</span><span class="kw">)</span><span class="ex">,</span> max<span class="er">(</span><span class="ex">x</span><span class="kw">)</span><span class="ex">,</span> length.out = input<span class="va">$bins</span> + 1<span class="kw">)</span></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>    <span class="ex">hist</span><span class="er">(</span><span class="ex">x,</span> breaks = bins, col = <span class="st">"#007bc2"</span>, border = <span class="st">"orange"</span>,</span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>         <span class="ex">xlab</span> = <span class="st">"Waiting time to next eruption (in mins)"</span>,</span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>         <span class="ex">main</span> = <span class="st">"Histogram of waiting times"</span><span class="kw">)</span></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>    <span class="kw">})</span></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the app ----</span></span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui</span> = ui, server = server<span class="kw">)</span></span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb9" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "在Quarto中嵌入Shiny应用程序"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="an">filters:</span><span class="co"> </span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">  - shinylive</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 参考：</span><span class="co">[</span><span class="ot">*R-shinylive app in Quarto!*</span><span class="co">](https://quarto.thecoatlessprofessor.com/r-shinylive-demo/)</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>本节主要介绍如何在Quarto文档中嵌入Shiny交互式应用程序，而无需依赖服务器。这是一个Quarto的全新特性，感谢Barret Schloerke等人开发的<span class="co">[</span><span class="ot">`shinylive`包</span><span class="co">](https://posit-dev.github.io/r-shinylive/index.html)</span>让这一特性得以实现，该包的第一个<span class="co">[</span><span class="ot">CRAN版本</span><span class="co">](https://cloud.r-project.org/web/packages/shinylive/index.html)</span>于2023年10月11日首次发布。</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; For writing online books (with Quarto), I’d like to be able to demonstrate concepts and results dynamically. To some extent, we can do this with&nbsp;</span><span class="co">[</span><span class="ot">`gganimate`</span><span class="co">](https://gganimate.com/)</span><span class="at">, but it is very limiting. We’d like to use&nbsp;</span><span class="co">[</span><span class="ot">`shiny`</span><span class="co">](https://shiny.posit.co/)</span><span class="at">. At the 2023 posit conference, Joe Cheng unveiled&nbsp;</span><span class="co">[</span><span class="ot">`shinylive-r`</span><span class="co">](https://github.com/posit-dev/shinylive)</span><span class="at">, a tool to embed R and&nbsp;</span><span class="in">`shiny`</span><span class="at">&nbsp;into a webpage using WebAssembly (aka Wasm) using&nbsp;</span><span class="co">[</span><span class="ot">`webR`</span><span class="co">](https://docs.r-wasm.org/webr/latest/)</span><span class="at">.</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Shinylive is a serverless version of Shiny, which enables running Shiny applications in a web browser without needing a backend server. It was first introduced for Python during Posit Conf 2022 using WebAssembly and Pyodide, and its R version during the Posit Conf 2023 using WebR (引自：</span><span class="co">[</span><span class="ot">**shinylive-r**</span><span class="co">](https://github.com/RamiKrispin/shinylive-r)</span><span class="at">).</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>::: callout-important</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>本节不会涉及<span class="in">`Shiny`</span>包的教程，请在学习本节前确保已基本掌握Shiny的使用，Shiny官方提供了一个很好的<span class="co">[</span><span class="ot">Shiny入门指南</span><span class="co">](https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/index.html)</span>，通过它可以对Shiny应用程序的开发有一个全局的了解。</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="al">![](images/截屏2024-01-13 18.28.35.png)</span><span class="co">](https://shiny.posit.co)</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>视频教程：</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>{{&lt; video https://www.youtube.com/watch?v=6y2FnAugP8E &gt;}}</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="al">![Shinylive archticture, source: Joe Cheng "Running Shiny without a server"](images/shinylive-webr.png)</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Currently, there are three methods (or formats) to use Shinylive applications:</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; -   </span><span class="co">[</span><span class="ot">Render a Shiny app into HTML static file using the shinylive package</span><span class="co">](https://github.com/RamiKrispin/shinylive-r)</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; -   Host a Shiny app in Fiddle - a built-in web application to run Shiny R and Python applications</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; -   Embed Shiny app in Quarto documentation using the quarto-shinylive extension for Quarto (引自：</span><span class="co">[</span><span class="ot">**shinylive-r**</span><span class="co">](https://github.com/RamiKrispin/shinylive-r)</span><span class="at">)。</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="fu">## 安装`shinylive`包</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>要首先Shiny应用程序的嵌入，需要依赖<span class="in">`shinylive`</span>包，可以从CRAN直接安装该包：</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="in">``` md</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>install.packages("shinylive")</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="fu">## 建立Quarto Project</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>创建Quarto项目的方法详见 @sec-project_setting 。需要注意的是，<span class="in">`shinylive`</span> 扩展程序必须在 Quarto 项目目录内使用，否则在尝试渲染文档时会报错。错误信息如下：</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="in">``` md</span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>ERROR:</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>The shinylive extension must be used in a Quarto project directory</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>(with a _quarto.yml file).</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a><span class="fu">## **安装shinylive扩展程序**</span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>为Quarto安装<span class="in">`shinylive`</span>**扩展程序。**在Rstudio终端（Terminal）面板中输入：</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="in">``` md</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>quarto add quarto-ext/shinylive</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/install-shinylive-in-terminal.png)</span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="fu">## YAML设置</span></span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>为了让Quarto能够调用Shiny应用程序，需要在Quarto文档的YAML设置中加上<span class="in">`filters-shinylive`</span>命令，如下：</span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a><span class="in">``` md</span></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>title: "Our first r-shinylive Quarto document!"</span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>filters:</span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a><span class="ss">  - </span>shinylive</span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a><span class="fu">## 编写Shiny程序</span></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>我们需要把Shiny程序的代码放到一个特殊的<span class="in">`{shinylive-r}`</span>代码块内：</span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a><span class="in">```` md</span></span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-r}</span></span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">shiny</span><span class="kw">)</span></span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your Shiny UI here</span></span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- fluidPage<span class="er">(</span></span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Your UI components go here</span></span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your Shiny server logic here</span></span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output, session<span class="kw">)</span> <span class="kw">{</span></span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Your server code goes here</span></span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Create and launch the Shiny app</span></span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui,</span> server<span class="kw">)</span></span>
+<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb9-97"><a href="#cb9-97" aria-hidden="true" tabindex="-1"></a><span class="in">````</span></span>
+<span id="cb9-98"><a href="#cb9-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-99"><a href="#cb9-99" aria-hidden="true" tabindex="-1"></a>::: callout-caution</span>
+<span id="cb9-100"><a href="#cb9-100" aria-hidden="true" tabindex="-1"></a><span class="in">`{shinylive-r}`</span>代码块必须包含 <span class="in">`#| standalone: true`</span>，这表示代码代表了一个完整的独立 Shiny 应用程序。目前，我们需要把完整的Shiny应用程序的代码，包括ui、server等全部包括进一个代码块内。未来，Quarto可能会支持在一个qmd文档内的多个代码块内分别包含ui、server等结构。</span>
+<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb9-102"><a href="#cb9-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-103"><a href="#cb9-103" aria-hidden="true" tabindex="-1"></a><span class="fu">## 渲染Quarto文档</span></span>
+<span id="cb9-104"><a href="#cb9-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-105"><a href="#cb9-105" aria-hidden="true" tabindex="-1"></a>编写好所有内容后，我们即可以通过点击“Render”按钮渲染嵌入了Shiny应用程序的Quarto文档了。渲染后，会在我们的Quarto项目根目录下生成一个<span class="in">`_extensions`</span>文件夹，其结构如下：</span>
+<span id="cb9-106"><a href="#cb9-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-107"><a href="#cb9-107" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-13%2017.45.20.png)</span></span>
+<span id="cb9-108"><a href="#cb9-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-109"><a href="#cb9-109" aria-hidden="true" tabindex="-1"></a><span class="fu">## 发布Quarto文档</span></span>
+<span id="cb9-110"><a href="#cb9-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-111"><a href="#cb9-111" aria-hidden="true" tabindex="-1"></a>一旦制作完成了令人满意的Quarto文档，就可以GitHub Pages和Quarto Pub**等**通过多种途径发布您的作品了。后面，我们对如何发布GitHub Pages有详细的说明（ @sec-publish_github_pages ）。</span>
+<span id="cb9-112"><a href="#cb9-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-113"><a href="#cb9-113" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
+<span id="cb9-114"><a href="#cb9-114" aria-hidden="true" tabindex="-1"></a>更多关于shinylive的信息，参阅：<span class="co">[</span><span class="ot">*R-shinylive app in Quarto!*</span><span class="co">](https://quarto.thecoatlessprofessor.com/r-shinylive-demo/)</span></span>
+<span id="cb9-115"><a href="#cb9-115" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb9-116"><a href="#cb9-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-117"><a href="#cb9-117" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb9-118"><a href="#cb9-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-119"><a href="#cb9-119" aria-hidden="true" tabindex="-1"></a><span class="fu">## 案例</span></span>
+<span id="cb9-120"><a href="#cb9-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-121"><a href="#cb9-121" aria-hidden="true" tabindex="-1"></a><span class="fu">### 案例一</span></span>
+<span id="cb9-122"><a href="#cb9-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-123"><a href="#cb9-123" aria-hidden="true" tabindex="-1"></a>下面是一个来自<span class="co">[</span><span class="ot">Joe’s shiny app</span><span class="co">](https://quarto.thecoatlessprofessor.com/r-shinylive-demo/R-shinylive-demo.html)</span>的示例：</span>
+<span id="cb9-124"><a href="#cb9-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-125"><a href="#cb9-125" aria-hidden="true" tabindex="-1"></a><span class="in">```` md</span></span>
+<span id="cb9-126"><a href="#cb9-126" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-r}</span></span>
+<span id="cb9-127"><a href="#cb9-127" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb9-128"><a href="#cb9-128" aria-hidden="true" tabindex="-1"></a><span class="co">#| viewerHeight: 600</span></span>
+<span id="cb9-129"><a href="#cb9-129" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">shiny</span><span class="kw">)</span></span>
+<span id="cb9-130"><a href="#cb9-130" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">bslib</span><span class="kw">)</span></span>
+<span id="cb9-131"><a href="#cb9-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-132"><a href="#cb9-132" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI for app that draws a histogram ----</span></span>
+<span id="cb9-133"><a href="#cb9-133" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- page_sidebar<span class="er">(</span></span>
+<span id="cb9-134"><a href="#cb9-134" aria-hidden="true" tabindex="-1"></a>  <span class="ex">sidebar</span> = sidebar<span class="er">(</span><span class="ex">open</span> = <span class="st">"open"</span>,</span>
+<span id="cb9-135"><a href="#cb9-135" aria-hidden="true" tabindex="-1"></a>    <span class="ex">numericInput</span><span class="er">(</span><span class="st">"n"</span><span class="ex">,</span> <span class="st">"Sample count"</span>, 100<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-136"><a href="#cb9-136" aria-hidden="true" tabindex="-1"></a>    <span class="ex">checkboxInput</span><span class="er">(</span><span class="st">"pause"</span><span class="ex">,</span> <span class="st">"Pause"</span>, FALSE<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-137"><a href="#cb9-137" aria-hidden="true" tabindex="-1"></a>  <span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-138"><a href="#cb9-138" aria-hidden="true" tabindex="-1"></a>  <span class="ex">plotOutput</span><span class="er">(</span><span class="st">"plot"</span><span class="ex">,</span> width=1100<span class="kw">)</span></span>
+<span id="cb9-139"><a href="#cb9-139" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb9-140"><a href="#cb9-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-141"><a href="#cb9-141" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output, session<span class="kw">)</span> <span class="kw">{</span></span>
+<span id="cb9-142"><a href="#cb9-142" aria-hidden="true" tabindex="-1"></a>  <span class="ex">data</span> <span class="op">&lt;</span>- reactive<span class="er">(</span><span class="kw">{</span></span>
+<span id="cb9-143"><a href="#cb9-143" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input</span><span class="va">$resample</span></span>
+<span id="cb9-144"><a href="#cb9-144" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">(</span><span class="ex">!isTRUE</span><span class="er">(</span><span class="ex">input</span><span class="va">$pause</span><span class="kw">))</span> <span class="kw">{</span></span>
+<span id="cb9-145"><a href="#cb9-145" aria-hidden="true" tabindex="-1"></a>      <span class="ex">invalidateLater</span><span class="er">(</span><span class="ex">1000</span><span class="kw">)</span></span>
+<span id="cb9-146"><a href="#cb9-146" aria-hidden="true" tabindex="-1"></a>    <span class="kw">}</span></span>
+<span id="cb9-147"><a href="#cb9-147" aria-hidden="true" tabindex="-1"></a>    <span class="ex">rnorm</span><span class="er">(</span><span class="ex">input</span><span class="va">$n</span><span class="kw">)</span></span>
+<span id="cb9-148"><a href="#cb9-148" aria-hidden="true" tabindex="-1"></a>  <span class="kw">})</span></span>
+<span id="cb9-149"><a href="#cb9-149" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-150"><a href="#cb9-150" aria-hidden="true" tabindex="-1"></a>  <span class="ex">output</span><span class="va">$plot</span> <span class="op">&lt;</span>- renderPlot<span class="er">(</span><span class="kw">{</span></span>
+<span id="cb9-151"><a href="#cb9-151" aria-hidden="true" tabindex="-1"></a>    <span class="ex">hist</span><span class="er">(</span><span class="fu">data()</span><span class="ex">,</span></span>
+<span id="cb9-152"><a href="#cb9-152" aria-hidden="true" tabindex="-1"></a>      <span class="ex">breaks</span> = 40,</span>
+<span id="cb9-153"><a href="#cb9-153" aria-hidden="true" tabindex="-1"></a>      <span class="ex">xlim</span> = c<span class="er">(</span><span class="ex">-2,</span> 2<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-154"><a href="#cb9-154" aria-hidden="true" tabindex="-1"></a>      <span class="ex">ylim</span> = c<span class="er">(</span><span class="ex">0,</span> 1<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-155"><a href="#cb9-155" aria-hidden="true" tabindex="-1"></a>      <span class="ex">lty</span> = <span class="st">"blank"</span>,</span>
+<span id="cb9-156"><a href="#cb9-156" aria-hidden="true" tabindex="-1"></a>      <span class="ex">xlab</span> = <span class="st">"value"</span>,</span>
+<span id="cb9-157"><a href="#cb9-157" aria-hidden="true" tabindex="-1"></a>      <span class="ex">freq</span> = FALSE,</span>
+<span id="cb9-158"><a href="#cb9-158" aria-hidden="true" tabindex="-1"></a>      <span class="ex">main</span> = <span class="st">""</span></span>
+<span id="cb9-159"><a href="#cb9-159" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span></span>
+<span id="cb9-160"><a href="#cb9-160" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-161"><a href="#cb9-161" aria-hidden="true" tabindex="-1"></a>    <span class="ex">x</span> <span class="op">&lt;</span>- seq<span class="er">(</span><span class="ex">from</span> = <span class="at">-2,</span> to = 2, length.out = 500<span class="kw">)</span></span>
+<span id="cb9-162"><a href="#cb9-162" aria-hidden="true" tabindex="-1"></a>    <span class="ex">y</span> <span class="op">&lt;</span>- dnorm<span class="er">(</span><span class="ex">x</span><span class="kw">)</span></span>
+<span id="cb9-163"><a href="#cb9-163" aria-hidden="true" tabindex="-1"></a>    <span class="ex">lines</span><span class="er">(</span><span class="ex">x,</span> y, lwd=1.5<span class="kw">)</span></span>
+<span id="cb9-164"><a href="#cb9-164" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-165"><a href="#cb9-165" aria-hidden="true" tabindex="-1"></a>    <span class="ex">lwd</span> <span class="op">&lt;</span>- 5</span>
+<span id="cb9-166"><a href="#cb9-166" aria-hidden="true" tabindex="-1"></a>    <span class="ex">abline</span><span class="er">(</span><span class="va">v</span><span class="op">=</span>0, <span class="va">col</span><span class="op">=</span><span class="st">"red"</span>, <span class="va">lwd</span><span class="op">=</span>lwd, <span class="va">lty</span><span class="op">=</span>2<span class="kw">)</span></span>
+<span id="cb9-167"><a href="#cb9-167" aria-hidden="true" tabindex="-1"></a>    <span class="ex">abline</span><span class="er">(</span><span class="va">v</span><span class="op">=</span>mean<span class="kw">(</span><span class="fu">data()</span><span class="kw">)</span><span class="ex">,</span> col=<span class="st">"blue"</span>, lwd=lwd, lty=1<span class="kw">)</span></span>
+<span id="cb9-168"><a href="#cb9-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-169"><a href="#cb9-169" aria-hidden="true" tabindex="-1"></a>    <span class="ex">legend</span><span class="er">(</span><span class="ex">legend</span> = c<span class="er">(</span><span class="st">"Normal"</span><span class="ex">,</span> <span class="st">"Mean"</span>, <span class="st">"Sample mean"</span><span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-170"><a href="#cb9-170" aria-hidden="true" tabindex="-1"></a>      <span class="fu">col</span> = c<span class="er">(</span><span class="st">"black"</span><span class="ex">,</span> <span class="st">"red"</span>, <span class="st">"blue"</span><span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-171"><a href="#cb9-171" aria-hidden="true" tabindex="-1"></a>      <span class="ex">lty</span> = c<span class="er">(</span><span class="ex">1,</span> 2, 1<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-172"><a href="#cb9-172" aria-hidden="true" tabindex="-1"></a>      <span class="ex">lwd</span> = c<span class="er">(</span><span class="ex">1,</span> lwd, lwd<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-173"><a href="#cb9-173" aria-hidden="true" tabindex="-1"></a>      <span class="ex">x</span> = 1,</span>
+<span id="cb9-174"><a href="#cb9-174" aria-hidden="true" tabindex="-1"></a>      <span class="ex">y</span> = 0.9</span>
+<span id="cb9-175"><a href="#cb9-175" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span></span>
+<span id="cb9-176"><a href="#cb9-176" aria-hidden="true" tabindex="-1"></a>  <span class="ex">},</span> res=140<span class="er">)</span></span>
+<span id="cb9-177"><a href="#cb9-177" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb9-178"><a href="#cb9-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-179"><a href="#cb9-179" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Shiny app ----</span></span>
+<span id="cb9-180"><a href="#cb9-180" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui</span> = ui, server = server<span class="kw">)</span></span>
+<span id="cb9-181"><a href="#cb9-181" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb9-182"><a href="#cb9-182" aria-hidden="true" tabindex="-1"></a><span class="kw">````</span></span>
+<span id="cb9-183"><a href="#cb9-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-184"><a href="#cb9-184" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{shinylive-r}</span>
+<span id="cb9-185"><a href="#cb9-185" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb9-186"><a href="#cb9-186" aria-hidden="true" tabindex="-1"></a><span class="co">#| viewerHeight: 600</span></span>
+<span id="cb9-187"><a href="#cb9-187" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">shiny</span><span class="kw">)</span></span>
+<span id="cb9-188"><a href="#cb9-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-189"><a href="#cb9-189" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI ----</span></span>
+<span id="cb9-190"><a href="#cb9-190" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- fluidPage<span class="er">(</span></span>
+<span id="cb9-191"><a href="#cb9-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-192"><a href="#cb9-192" aria-hidden="true" tabindex="-1"></a>  <span class="co"># App title ----</span></span>
+<span id="cb9-193"><a href="#cb9-193" aria-hidden="true" tabindex="-1"></a>  <span class="ex">titlePanel</span><span class="er">(</span><span class="st">"Hello World!"</span><span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-194"><a href="#cb9-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-195"><a href="#cb9-195" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sidebar layout with input and output definitions ----</span></span>
+<span id="cb9-196"><a href="#cb9-196" aria-hidden="true" tabindex="-1"></a>  <span class="ex">sidebarLayout</span><span class="er">(</span></span>
+<span id="cb9-197"><a href="#cb9-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-198"><a href="#cb9-198" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sidebar panel for inputs ----</span></span>
+<span id="cb9-199"><a href="#cb9-199" aria-hidden="true" tabindex="-1"></a>    <span class="ex">sidebarPanel</span><span class="er">(</span></span>
+<span id="cb9-200"><a href="#cb9-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-201"><a href="#cb9-201" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Input: Slider for the number of bins ----</span></span>
+<span id="cb9-202"><a href="#cb9-202" aria-hidden="true" tabindex="-1"></a>      <span class="ex">sliderInput</span><span class="er">(</span><span class="ex">inputId</span> = <span class="st">"bins"</span>,</span>
+<span id="cb9-203"><a href="#cb9-203" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">label</span> = <span class="st">"Number of bins:"</span>,</span>
+<span id="cb9-204"><a href="#cb9-204" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">min</span> = 5,</span>
+<span id="cb9-205"><a href="#cb9-205" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">max</span> = 50,</span>
+<span id="cb9-206"><a href="#cb9-206" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">value</span> = 30<span class="kw">)</span></span>
+<span id="cb9-207"><a href="#cb9-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-208"><a href="#cb9-208" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-209"><a href="#cb9-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-210"><a href="#cb9-210" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Main panel for displaying outputs ----</span></span>
+<span id="cb9-211"><a href="#cb9-211" aria-hidden="true" tabindex="-1"></a>    <span class="ex">mainPanel</span><span class="er">(</span></span>
+<span id="cb9-212"><a href="#cb9-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-213"><a href="#cb9-213" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Output: Histogram ----</span></span>
+<span id="cb9-214"><a href="#cb9-214" aria-hidden="true" tabindex="-1"></a>      <span class="ex">plotOutput</span><span class="er">(</span><span class="ex">outputId</span> = <span class="st">"distPlot"</span><span class="kw">)</span></span>
+<span id="cb9-215"><a href="#cb9-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-216"><a href="#cb9-216" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span></span>
+<span id="cb9-217"><a href="#cb9-217" aria-hidden="true" tabindex="-1"></a>  <span class="kw">)</span></span>
+<span id="cb9-218"><a href="#cb9-218" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb9-219"><a href="#cb9-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-220"><a href="#cb9-220" aria-hidden="true" tabindex="-1"></a><span class="co"># Define server logic required to draw a histogram ----</span></span>
+<span id="cb9-221"><a href="#cb9-221" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output<span class="kw">)</span> <span class="kw">{</span></span>
+<span id="cb9-222"><a href="#cb9-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-223"><a href="#cb9-223" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Histogram of the Old Faithful Geyser Data ----</span></span>
+<span id="cb9-224"><a href="#cb9-224" aria-hidden="true" tabindex="-1"></a>  <span class="co"># with requested number of bins</span></span>
+<span id="cb9-225"><a href="#cb9-225" aria-hidden="true" tabindex="-1"></a>  <span class="co"># This expression that generates a histogram is wrapped in a call</span></span>
+<span id="cb9-226"><a href="#cb9-226" aria-hidden="true" tabindex="-1"></a>  <span class="co"># to renderPlot to indicate that:</span></span>
+<span id="cb9-227"><a href="#cb9-227" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
+<span id="cb9-228"><a href="#cb9-228" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1. It is "reactive" and therefore should be automatically</span></span>
+<span id="cb9-229"><a href="#cb9-229" aria-hidden="true" tabindex="-1"></a>  <span class="co">#    re-executed when inputs (input$bins) change</span></span>
+<span id="cb9-230"><a href="#cb9-230" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. Its output type is a plot</span></span>
+<span id="cb9-231"><a href="#cb9-231" aria-hidden="true" tabindex="-1"></a>  <span class="ex">output</span><span class="va">$distPlot</span> <span class="op">&lt;</span>- renderPlot<span class="er">(</span><span class="kw">{</span></span>
+<span id="cb9-232"><a href="#cb9-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-233"><a href="#cb9-233" aria-hidden="true" tabindex="-1"></a>    <span class="ex">x</span>    <span class="op">&lt;</span>- faithful<span class="va">$waiting</span></span>
+<span id="cb9-234"><a href="#cb9-234" aria-hidden="true" tabindex="-1"></a>    <span class="ex">bins</span> <span class="op">&lt;</span>- seq<span class="er">(</span><span class="ex">min</span><span class="er">(</span><span class="ex">x</span><span class="kw">)</span><span class="ex">,</span> max<span class="er">(</span><span class="ex">x</span><span class="kw">)</span><span class="ex">,</span> length.out = input<span class="va">$bins</span> + 1<span class="kw">)</span></span>
+<span id="cb9-235"><a href="#cb9-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-236"><a href="#cb9-236" aria-hidden="true" tabindex="-1"></a>    <span class="ex">hist</span><span class="er">(</span><span class="ex">x,</span> breaks = bins, col = <span class="st">"#007bc2"</span>, border = <span class="st">"orange"</span>,</span>
+<span id="cb9-237"><a href="#cb9-237" aria-hidden="true" tabindex="-1"></a>         <span class="ex">xlab</span> = <span class="st">"Waiting time to next eruption (in mins)"</span>,</span>
+<span id="cb9-238"><a href="#cb9-238" aria-hidden="true" tabindex="-1"></a>         <span class="ex">main</span> = <span class="st">"Histogram of waiting times"</span><span class="kw">)</span></span>
+<span id="cb9-239"><a href="#cb9-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-240"><a href="#cb9-240" aria-hidden="true" tabindex="-1"></a>    <span class="kw">})</span></span>
+<span id="cb9-241"><a href="#cb9-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-242"><a href="#cb9-242" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb9-243"><a href="#cb9-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-244"><a href="#cb9-244" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the app ----</span></span>
+<span id="cb9-245"><a href="#cb9-245" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui</span> = ui, server = server<span class="kw">)</span></span>
+<span id="cb9-246"><a href="#cb9-246" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb9-247"><a href="#cb9-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-248"><a href="#cb9-248" aria-hidden="true" tabindex="-1"></a><span class="co">### 案例二</span></span>
+<span id="cb9-249"><a href="#cb9-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-250"><a href="#cb9-250" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{shinylive-r}</span>
+<span id="cb9-251"><a href="#cb9-251" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb9-252"><a href="#cb9-252" aria-hidden="true" tabindex="-1"></a><span class="co">#| viewerHeight: 500</span></span>
+<span id="cb9-253"><a href="#cb9-253" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-shiny-spline</span></span>
+<span id="cb9-254"><a href="#cb9-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-255"><a href="#cb9-255" aria-hidden="true" tabindex="-1"></a><span class="ex">webr::install</span><span class="er">(</span><span class="st">"ggplot2"</span><span class="kw">)</span></span>
+<span id="cb9-256"><a href="#cb9-256" aria-hidden="true" tabindex="-1"></a><span class="ex">webr::install</span><span class="er">(</span><span class="st">"htmltools"</span><span class="kw">)</span>   <span class="co">#&lt;- only needed to use SVG images </span></span>
+<span id="cb9-257"><a href="#cb9-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-258"><a href="#cb9-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-259"><a href="#cb9-259" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- fluidPage<span class="er">(</span></span>
+<span id="cb9-260"><a href="#cb9-260" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-261"><a href="#cb9-261" aria-hidden="true" tabindex="-1"></a>  <span class="ex">fluidRow</span><span class="er">(</span></span>
+<span id="cb9-262"><a href="#cb9-262" aria-hidden="true" tabindex="-1"></a>    <span class="ex">column</span><span class="er">(</span><span class="ex">8,</span> </span>
+<span id="cb9-263"><a href="#cb9-263" aria-hidden="true" tabindex="-1"></a>           <span class="ex">sliderInput</span><span class="er">(</span></span>
+<span id="cb9-264"><a href="#cb9-264" aria-hidden="true" tabindex="-1"></a>             <span class="st">"deg_free"</span><span class="ex">,</span> </span>
+<span id="cb9-265"><a href="#cb9-265" aria-hidden="true" tabindex="-1"></a>             <span class="ex">label</span> = <span class="st">"Spline degrees of freedom:"</span>,</span>
+<span id="cb9-266"><a href="#cb9-266" aria-hidden="true" tabindex="-1"></a>             <span class="ex">min</span> = 3L, value = 3L, max = 8L, step = 1L</span>
+<span id="cb9-267"><a href="#cb9-267" aria-hidden="true" tabindex="-1"></a>           <span class="kw">)</span></span>
+<span id="cb9-268"><a href="#cb9-268" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-269"><a href="#cb9-269" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-270"><a href="#cb9-270" aria-hidden="true" tabindex="-1"></a>    <span class="ex">imageOutput</span><span class="er">(</span><span class="st">"spline_contours"</span><span class="ex">,</span> height = <span class="st">"400px"</span><span class="kw">)</span></span>
+<span id="cb9-271"><a href="#cb9-271" aria-hidden="true" tabindex="-1"></a>  <span class="kw">)</span></span>
+<span id="cb9-272"><a href="#cb9-272" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb9-273"><a href="#cb9-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-274"><a href="#cb9-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-275"><a href="#cb9-275" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output, session<span class="kw">)</span> <span class="kw">{</span></span>
+<span id="cb9-276"><a href="#cb9-276" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-277"><a href="#cb9-277" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ------------------------------------------------------------------------</span></span>
+<span id="cb9-278"><a href="#cb9-278" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Input data from remote locations on GitHub</span></span>
+<span id="cb9-279"><a href="#cb9-279" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-280"><a href="#cb9-280" aria-hidden="true" tabindex="-1"></a>  <span class="ex">pred_path</span> <span class="op">&lt;</span>-</span>
+<span id="cb9-281"><a href="#cb9-281" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span><span class="er">(</span>                                                  </span>
+<span id="cb9-282"><a href="#cb9-282" aria-hidden="true" tabindex="-1"></a>      <span class="st">"https://raw.githubusercontent.com"</span><span class="ex">,</span>                  </span>
+<span id="cb9-283"><a href="#cb9-283" aria-hidden="true" tabindex="-1"></a>      <span class="st">"topepo"</span><span class="ex">,</span> <span class="st">"shinylive-in-book-test"</span>,                   </span>
+<span id="cb9-284"><a href="#cb9-284" aria-hidden="true" tabindex="-1"></a>      <span class="st">"main"</span><span class="ex">,</span> <span class="st">"predicted_values.RData"</span>,                     </span>
+<span id="cb9-285"><a href="#cb9-285" aria-hidden="true" tabindex="-1"></a>      <span class="ex">sep</span> = <span class="st">"/"</span>                                             </span>
+<span id="cb9-286"><a href="#cb9-286" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span>                                                       </span>
+<span id="cb9-287"><a href="#cb9-287" aria-hidden="true" tabindex="-1"></a>  <span class="ex">data_path</span> <span class="op">&lt;</span>-                                              </span>
+<span id="cb9-288"><a href="#cb9-288" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span><span class="er">(</span>                                                  </span>
+<span id="cb9-289"><a href="#cb9-289" aria-hidden="true" tabindex="-1"></a>      <span class="st">"https://raw.githubusercontent.com"</span><span class="ex">,</span>                  </span>
+<span id="cb9-290"><a href="#cb9-290" aria-hidden="true" tabindex="-1"></a>      <span class="st">"topepo"</span><span class="ex">,</span> <span class="st">"shinylive-in-book-test"</span>,                   </span>
+<span id="cb9-291"><a href="#cb9-291" aria-hidden="true" tabindex="-1"></a>      <span class="st">"main"</span><span class="ex">,</span> <span class="st">"sim_val.RData"</span>,                              </span>
+<span id="cb9-292"><a href="#cb9-292" aria-hidden="true" tabindex="-1"></a>      <span class="ex">sep</span> = <span class="st">"/"</span>                                             </span>
+<span id="cb9-293"><a href="#cb9-293" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span>                                                       </span>
+<span id="cb9-294"><a href="#cb9-294" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-295"><a href="#cb9-295" aria-hidden="true" tabindex="-1"></a>  <span class="ex">rdata_file</span> <span class="op">&lt;</span>- tempfile<span class="er">(</span><span class="kw">)</span></span>
+<span id="cb9-296"><a href="#cb9-296" aria-hidden="true" tabindex="-1"></a>  <span class="ex">download.file</span><span class="er">(</span><span class="ex">pred_path,</span> destfile = rdata_file<span class="kw">)</span>           </span>
+<span id="cb9-297"><a href="#cb9-297" aria-hidden="true" tabindex="-1"></a>  <span class="ex">load</span><span class="er">(</span><span class="ex">rdata_file</span><span class="kw">)</span>                                          </span>
+<span id="cb9-298"><a href="#cb9-298" aria-hidden="true" tabindex="-1"></a>  <span class="ex">download.file</span><span class="er">(</span><span class="ex">data_path,</span> destfile = rdata_file<span class="kw">)</span>           </span>
+<span id="cb9-299"><a href="#cb9-299" aria-hidden="true" tabindex="-1"></a>  <span class="ex">load</span><span class="er">(</span><span class="ex">rdata_file</span><span class="kw">)</span>                                          </span>
+<span id="cb9-300"><a href="#cb9-300" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-301"><a href="#cb9-301" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set some ranges for the plot</span></span>
+<span id="cb9-302"><a href="#cb9-302" aria-hidden="true" tabindex="-1"></a>  <span class="ex">rngs</span> <span class="op">&lt;</span>- list<span class="er">(</span><span class="ex">A</span> = c<span class="er">(</span><span class="ex">-3.3,</span> 3.3<span class="kw">)</span><span class="ex">,</span> B = c<span class="er">(</span><span class="ex">-4.4,</span> 4.4<span class="kw">))</span></span>
+<span id="cb9-303"><a href="#cb9-303" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-304"><a href="#cb9-304" aria-hidden="true" tabindex="-1"></a>  <span class="ex">output</span><span class="va">$spline_contours</span> <span class="op">&lt;</span>-</span>
+<span id="cb9-305"><a href="#cb9-305" aria-hidden="true" tabindex="-1"></a>    <span class="ex">renderImage</span><span class="er">(</span><span class="kw">{</span></span>
+<span id="cb9-306"><a href="#cb9-306" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb9-307"><a href="#cb9-307" aria-hidden="true" tabindex="-1"></a>      <span class="ex">preds</span> <span class="op">&lt;</span>- predicted_values[predicted_values<span class="va">$deg_free</span> == input<span class="va">$deg_free</span>,]</span>
+<span id="cb9-308"><a href="#cb9-308" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb9-309"><a href="#cb9-309" aria-hidden="true" tabindex="-1"></a>      <span class="ex">p</span> <span class="op">&lt;</span>-</span>
+<span id="cb9-310"><a href="#cb9-310" aria-hidden="true" tabindex="-1"></a>        <span class="ex">ggplot</span><span class="er">(</span><span class="ex">preds,</span> aes<span class="er">(</span><span class="ex">A,</span> B<span class="kw">))</span> <span class="ex">+</span></span>
+<span id="cb9-311"><a href="#cb9-311" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Plot the validation set</span></span>
+<span id="cb9-312"><a href="#cb9-312" aria-hidden="true" tabindex="-1"></a>        <span class="ex">geom_point</span><span class="er">(</span></span>
+<span id="cb9-313"><a href="#cb9-313" aria-hidden="true" tabindex="-1"></a>          <span class="ex">data</span> = sim_val, </span>
+<span id="cb9-314"><a href="#cb9-314" aria-hidden="true" tabindex="-1"></a>          <span class="ex">aes</span><span class="er">(</span><span class="fu">col</span> = class, pch = class<span class="kw">)</span><span class="ex">,</span> </span>
+<span id="cb9-315"><a href="#cb9-315" aria-hidden="true" tabindex="-1"></a>          <span class="ex">alpha</span> = 1 / 2,</span>
+<span id="cb9-316"><a href="#cb9-316" aria-hidden="true" tabindex="-1"></a>          <span class="ex">cex</span> = 3</span>
+<span id="cb9-317"><a href="#cb9-317" aria-hidden="true" tabindex="-1"></a>        <span class="kw">)</span> <span class="ex">+</span></span>
+<span id="cb9-318"><a href="#cb9-318" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Show the class boundary</span></span>
+<span id="cb9-319"><a href="#cb9-319" aria-hidden="true" tabindex="-1"></a>        <span class="ex">geom_contour</span><span class="er">(</span></span>
+<span id="cb9-320"><a href="#cb9-320" aria-hidden="true" tabindex="-1"></a>          <span class="ex">aes</span><span class="er">(</span><span class="ex">z</span> = .pred_one<span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-321"><a href="#cb9-321" aria-hidden="true" tabindex="-1"></a>          <span class="ex">breaks</span> = 1 / 2,</span>
+<span id="cb9-322"><a href="#cb9-322" aria-hidden="true" tabindex="-1"></a>          <span class="ex">linewidth</span> = 3 / 2,</span>
+<span id="cb9-323"><a href="#cb9-323" aria-hidden="true" tabindex="-1"></a>          <span class="fu">col</span> = <span class="st">"black"</span></span>
+<span id="cb9-324"><a href="#cb9-324" aria-hidden="true" tabindex="-1"></a>        <span class="kw">)</span> <span class="ex">+</span></span>
+<span id="cb9-325"><a href="#cb9-325" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Formatting</span></span>
+<span id="cb9-326"><a href="#cb9-326" aria-hidden="true" tabindex="-1"></a>        <span class="ex">lims</span><span class="er">(</span><span class="ex">x</span> = rngs<span class="va">$A</span>, y = rngs<span class="va">$B</span><span class="kw">)</span> <span class="ex">+</span></span>
+<span id="cb9-327"><a href="#cb9-327" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_bw()</span> <span class="ex">+</span> </span>
+<span id="cb9-328"><a href="#cb9-328" aria-hidden="true" tabindex="-1"></a>        <span class="ex">theme</span><span class="er">(</span><span class="ex">legend.position</span> = <span class="st">"top"</span><span class="kw">)</span></span>
+<span id="cb9-329"><a href="#cb9-329" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb9-330"><a href="#cb9-330" aria-hidden="true" tabindex="-1"></a>      <span class="fu">file</span> <span class="op">&lt;</span>-</span>
+<span id="cb9-331"><a href="#cb9-331" aria-hidden="true" tabindex="-1"></a>        <span class="ex">htmltools::capturePlot</span><span class="er">(</span></span>
+<span id="cb9-332"><a href="#cb9-332" aria-hidden="true" tabindex="-1"></a>          <span class="ex">print</span><span class="er">(</span><span class="ex">p</span><span class="kw">)</span><span class="ex">,</span> </span>
+<span id="cb9-333"><a href="#cb9-333" aria-hidden="true" tabindex="-1"></a>          <span class="fu">tempfile</span><span class="er">(</span><span class="ex">fileext</span> = <span class="st">".svg"</span><span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb9-334"><a href="#cb9-334" aria-hidden="true" tabindex="-1"></a>          <span class="ex">grDevices::svg,</span></span>
+<span id="cb9-335"><a href="#cb9-335" aria-hidden="true" tabindex="-1"></a>          <span class="ex">width</span> = 4, </span>
+<span id="cb9-336"><a href="#cb9-336" aria-hidden="true" tabindex="-1"></a>          <span class="ex">height</span> = 4</span>
+<span id="cb9-337"><a href="#cb9-337" aria-hidden="true" tabindex="-1"></a>        <span class="kw">)</span></span>
+<span id="cb9-338"><a href="#cb9-338" aria-hidden="true" tabindex="-1"></a>      <span class="ex">list</span><span class="er">(</span><span class="ex">src</span> = file<span class="kw">)</span></span>
+<span id="cb9-339"><a href="#cb9-339" aria-hidden="true" tabindex="-1"></a>    <span class="ex">},</span> </span>
+<span id="cb9-340"><a href="#cb9-340" aria-hidden="true" tabindex="-1"></a>    <span class="ex">deleteFile</span> = TRUE<span class="er">)</span></span>
+<span id="cb9-341"><a href="#cb9-341" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb9-342"><a href="#cb9-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-343"><a href="#cb9-343" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui</span> = ui, server = server<span class="kw">)</span></span>
+<span id="cb9-344"><a href="#cb9-344" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">
@@ -1136,7 +1715,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </li>  
 </ul>
     </div>   
-    <div class="nav-footer-center">Copyright 2023, Du Junhong<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/quarto_foundation/quarto_shiny.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/quarto_foundation/quarto_shiny.qmd" class="toc-action">Edit this page</a></p></div></div></div>
+    <div class="nav-footer-center">Copyright 2023, Du Junhong</div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

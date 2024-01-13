@@ -4,6 +4,183 @@ filters:
   - shinylive
 ---
 
+> 参考：[*R-shinylive app in Quarto!*](https://quarto.thecoatlessprofessor.com/r-shinylive-demo/)
+
+本节主要介绍如何在Quarto文档中嵌入Shiny交互式应用程序，而无需依赖服务器。这是一个Quarto的全新特性，感谢Barret Schloerke等人开发的[`shinylive`包](https://posit-dev.github.io/r-shinylive/index.html)让这一特性得以实现，该包的第一个[CRAN版本](https://cloud.r-project.org/web/packages/shinylive/index.html)于2023年10月11日首次发布。
+
+> For writing online books (with Quarto), I’d like to be able to demonstrate concepts and results dynamically. To some extent, we can do this with [`gganimate`](https://gganimate.com/), but it is very limiting. We’d like to use [`shiny`](https://shiny.posit.co/). At the 2023 posit conference, Joe Cheng unveiled [`shinylive-r`](https://github.com/posit-dev/shinylive), a tool to embed R and `shiny` into a webpage using WebAssembly (aka Wasm) using [`webR`](https://docs.r-wasm.org/webr/latest/).
+>
+> Shinylive is a serverless version of Shiny, which enables running Shiny applications in a web browser without needing a backend server. It was first introduced for Python during Posit Conf 2022 using WebAssembly and Pyodide, and its R version during the Posit Conf 2023 using WebR (引自：[**shinylive-r**](https://github.com/RamiKrispin/shinylive-r)).
+
+::: callout-important
+本节不会涉及`Shiny`包的教程，请在学习本节前确保已基本掌握Shiny的使用，Shiny官方提供了一个很好的[Shiny入门指南](https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/index.html)，通过它可以对Shiny应用程序的开发有一个全局的了解。
+
+[![](images/截屏2024-01-13 18.28.35.png)](https://shiny.posit.co)
+:::
+
+视频教程：
+
+{{< video https://www.youtube.com/watch?v=6y2FnAugP8E >}}
+
+![Shinylive archticture, source: Joe Cheng "Running Shiny without a server"](images/shinylive-webr.png)
+
+> Currently, there are three methods (or formats) to use Shinylive applications:
+>
+> -   [Render a Shiny app into HTML static file using the shinylive package](https://github.com/RamiKrispin/shinylive-r)
+>
+> -   Host a Shiny app in Fiddle - a built-in web application to run Shiny R and Python applications
+>
+> -   Embed Shiny app in Quarto documentation using the quarto-shinylive extension for Quarto (引自：[**shinylive-r**](https://github.com/RamiKrispin/shinylive-r))。
+
+## 安装`shinylive`包
+
+要首先Shiny应用程序的嵌入，需要依赖`shinylive`包，可以从CRAN直接安装该包：
+
+``` md
+install.packages("shinylive")
+```
+
+## 建立Quarto Project
+
+创建Quarto项目的方法详见 @sec-project_setting 。需要注意的是，`shinylive` 扩展程序必须在 Quarto 项目目录内使用，否则在尝试渲染文档时会报错。错误信息如下：
+
+``` md
+ERROR:
+The shinylive extension must be used in a Quarto project directory
+(with a _quarto.yml file).
+```
+
+## **安装shinylive扩展程序**
+
+为Quarto安装`shinylive`**扩展程序。**在Rstudio终端（Terminal）面板中输入：
+
+``` md
+quarto add quarto-ext/shinylive
+```
+
+![](images/install-shinylive-in-terminal.png)
+
+## YAML设置
+
+为了让Quarto能够调用Shiny应用程序，需要在Quarto文档的YAML设置中加上`filters-shinylive`命令，如下：
+
+``` md
+title: "Our first r-shinylive Quarto document!"
+filters:
+  - shinylive
+---
+```
+
+## 编写Shiny程序
+
+我们需要把Shiny程序的代码放到一个特殊的`{shinylive-r}`代码块内：
+
+```` md
+```{shinylive-r}
+#| standalone: true
+
+library(shiny)
+
+# Define your Shiny UI here
+ui <- fluidPage(
+  # Your UI components go here
+)
+
+# Define your Shiny server logic here
+server <- function(input, output, session) {
+  # Your server code goes here
+}
+
+# Create and launch the Shiny app
+shinyApp(ui, server)
+```
+````
+
+::: callout-caution
+`{shinylive-r}`代码块必须包含 `#| standalone: true`，这表示代码代表了一个完整的独立 Shiny 应用程序。目前，我们需要把完整的Shiny应用程序的代码，包括ui、server等全部包括进一个代码块内。未来，Quarto可能会支持在一个qmd文档内的多个代码块内分别包含ui、server等结构。
+:::
+
+## 渲染Quarto文档
+
+编写好所有内容后，我们即可以通过点击“Render”按钮渲染嵌入了Shiny应用程序的Quarto文档了。渲染后，会在我们的Quarto项目根目录下生成一个`_extensions`文件夹，其结构如下：
+
+![](images/截屏2024-01-13%2017.45.20.png)
+
+## 发布Quarto文档
+
+一旦制作完成了令人满意的Quarto文档，就可以GitHub Pages和Quarto Pub**等**通过多种途径发布您的作品了。后面，我们对如何发布GitHub Pages有详细的说明（ @sec-publish_github_pages ）。
+
+::: callout-tip
+更多关于shinylive的信息，参阅：[*R-shinylive app in Quarto!*](https://quarto.thecoatlessprofessor.com/r-shinylive-demo/)
+:::
+
+------------------------------------------------------------------------
+
+## 案例
+
+### 案例一
+
+下面是一个来自[Joe’s shiny app](https://quarto.thecoatlessprofessor.com/r-shinylive-demo/R-shinylive-demo.html)的示例：
+
+```` md
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 600
+library(shiny)
+library(bslib)
+
+# Define UI for app that draws a histogram ----
+ui <- page_sidebar(
+  sidebar = sidebar(open = "open",
+    numericInput("n", "Sample count", 100),
+    checkboxInput("pause", "Pause", FALSE),
+  ),
+  plotOutput("plot", width=1100)
+)
+
+server <- function(input, output, session) {
+  data <- reactive({
+    input$resample
+    if (!isTRUE(input$pause)) {
+      invalidateLater(1000)
+    }
+    rnorm(input$n)
+  })
+  
+  output$plot <- renderPlot({
+    hist(data(),
+      breaks = 40,
+      xlim = c(-2, 2),
+      ylim = c(0, 1),
+      lty = "blank",
+      xlab = "value",
+      freq = FALSE,
+      main = ""
+    )
+    
+    x <- seq(from = -2, to = 2, length.out = 500)
+    y <- dnorm(x)
+    lines(x, y, lwd=1.5)
+    
+    lwd <- 5
+    abline(v=0, col="red", lwd=lwd, lty=2)
+    abline(v=mean(data()), col="blue", lwd=lwd, lty=1)
+
+    legend(legend = c("Normal", "Mean", "Sample mean"),
+      col = c("black", "red", "blue"),
+      lty = c(1, 2, 1),
+      lwd = c(1, lwd, lwd),
+      x = 1,
+      y = 0.9
+    )
+  }, res=140)
+}
+
+# Create Shiny app ----
+shinyApp(ui = ui, server = server)
+```
+````
+
 ```{shinylive-r}
 #| standalone: true
 #| viewerHeight: 600
@@ -66,5 +243,102 @@ server <- function(input, output) {
 
 # Run the app ----
 shinyApp(ui = ui, server = server)
+```
 
+### 案例二
+
+```{shinylive-r}
+#| standalone: true
+#| viewerHeight: 500
+#| label: fig-shiny-spline
+
+webr::install("ggplot2")
+webr::install("htmltools")   #<- only needed to use SVG images 
+
+
+ui <- fluidPage(
+  
+  fluidRow(
+    column(8, 
+           sliderInput(
+             "deg_free", 
+             label = "Spline degrees of freedom:",
+             min = 3L, value = 3L, max = 8L, step = 1L
+           )
+    ),
+    
+    imageOutput("spline_contours", height = "400px")
+  )
+)
+
+
+server <- function(input, output, session) {
+  
+  # ------------------------------------------------------------------------
+  # Input data from remote locations on GitHub
+  
+  pred_path <-
+    paste(                                                  
+      "https://raw.githubusercontent.com",                  
+      "topepo", "shinylive-in-book-test",                   
+      "main", "predicted_values.RData",                     
+      sep = "/"                                             
+    )                                                       
+  data_path <-                                              
+    paste(                                                  
+      "https://raw.githubusercontent.com",                  
+      "topepo", "shinylive-in-book-test",                   
+      "main", "sim_val.RData",                              
+      sep = "/"                                             
+    )                                                       
+  
+  rdata_file <- tempfile()
+  download.file(pred_path, destfile = rdata_file)           
+  load(rdata_file)                                          
+  download.file(data_path, destfile = rdata_file)           
+  load(rdata_file)                                          
+  
+  # Set some ranges for the plot
+  rngs <- list(A = c(-3.3, 3.3), B = c(-4.4, 4.4))
+  
+  output$spline_contours <-
+    renderImage({
+      
+      preds <- predicted_values[predicted_values$deg_free == input$deg_free,]
+      
+      p <-
+        ggplot(preds, aes(A, B)) +
+        # Plot the validation set
+        geom_point(
+          data = sim_val, 
+          aes(col = class, pch = class), 
+          alpha = 1 / 2,
+          cex = 3
+        ) +
+        # Show the class boundary
+        geom_contour(
+          aes(z = .pred_one),
+          breaks = 1 / 2,
+          linewidth = 3 / 2,
+          col = "black"
+        ) +
+        # Formatting
+        lims(x = rngs$A, y = rngs$B) +
+        theme_bw() + 
+        theme(legend.position = "top")
+      
+      file <-
+        htmltools::capturePlot(
+          print(p), 
+          tempfile(fileext = ".svg"),
+          grDevices::svg,
+          width = 4, 
+          height = 4
+        )
+      list(src = file)
+    }, 
+    deleteFile = TRUE)
+}
+
+shinyApp(ui = ui, server = server)
 ```
