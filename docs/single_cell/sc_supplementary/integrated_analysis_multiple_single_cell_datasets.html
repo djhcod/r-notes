@@ -495,14 +495,20 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">在Quarto中嵌入Shiny应用程序</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
@@ -533,7 +539,14 @@ div.csl-indent {
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96" id="toc-数据读取" class="nav-link active" data-scroll-target="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96"><span class="header-section-number">30.1</span> 数据读取</a></li>
+<li><a href="#%E5%8A%A0%E8%BD%BD%E5%8C%85" id="toc-加载包" class="nav-link active" data-scroll-target="#%E5%8A%A0%E8%BD%BD%E5%8C%85"><span class="header-section-number">30.1</span> 加载包</a></li>
+  <li>
+<a href="#gse150430" id="toc-gse150430" class="nav-link" data-scroll-target="#gse150430"><span class="header-section-number">30.2</span> GSE150430</a>
+  <ul class="collapse">
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5" id="toc-数据导入" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5">数据导入</a></li>
+  <li><a href="#%E8%B4%A8%E6%8E%A7" id="toc-质控" class="nav-link" data-scroll-target="#%E8%B4%A8%E6%8E%A7">质控</a></li>
+  </ul>
+</li>
   </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
 <!-- main -->
@@ -565,28 +578,58 @@ div.csl-indent {
 <p>例如<span class="citation" data-cites="gong2023">(<a href="../../references.html#ref-gong2023" role="doc-biblioref">Gong et al. 2023</a>)</span>就用了第二种方法。选取了三个鼻咽癌单细胞转录组数据： GSE150825, GSE150430, GSE162025。首先对三组数据进行整合，然后选取其中的一部分T细胞进行进一步分析。</p>
 <p><img src="images/截屏2024-01-10 12.00.48.png" class="img-fluid" width="600"></p>
 <p>这里我们介绍第一种方式，即<strong>对各数据集分别降维分群，然后提取并整合各个数据集的感兴趣细胞亚群。</strong></p>
-<p>案例数据来自2020年的文章《Single-cell transcriptomics reveals regulators underlying immune cell diversity and immune subtypes associated with prognosis in nasopharyngeal carcinoma》。以15例鼻咽癌患者作为研究对象，1例慢性鼻咽炎患者的正常鼻咽上皮组织作为对照。所有样品均采用10x genomics V2 3’单细胞RNA测序。数据链接：<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE150430"><strong>GSE150430</strong></a><strong>。</strong></p>
-<section id="数据读取" class="level2" data-number="30.1"><h2 data-number="30.1" class="anchored" data-anchor-id="数据读取">
-<span class="header-section-number">30.1</span> 数据读取</h2>
-<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_cache/html/unnamed-chunk-1_ef419aa23a8335df2889ade2673890a2">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com">data.table</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="加载包" class="level2" data-number="30.1"><h2 data-number="30.1" class="anchored" data-anchor-id="加载包">
+<span class="header-section-number">30.1</span> 加载包</h2>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_cache/html/unnamed-chunk-1_8f52b6f4764162fe88b067132f510007">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_cache/html/unnamed-chunk-2_0815b6ddeb0e4c2c9ea522c534b37e76">
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># options(future.globals.maxSize = 8 * 1024 * 1024^2)</span></span>
-<span></span>
-<span><span class="va">counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/fread.html">fread</a></span><span class="op">(</span><span class="st">"data/sc_supplementary/GSE150430_npc_scRNA_hg19_processed_data.txt"</span>, </span>
-<span>                data.table <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">counts</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section><section id="gse150430" class="level2" data-number="30.2"><h2 data-number="30.2" class="anchored" data-anchor-id="gse150430">
+<span class="header-section-number">30.2</span> GSE150430</h2>
+<p>这里我们直接载入 <a href="read_sc_data.html#sec-reading_non_standard_large_volume_text"><span>Section&nbsp;28.4</span></a> 中构建好的Seurat对象，该案例数据的介绍及读取过程参见该章节。</p>
+<section id="数据导入" class="level3"><h3 class="anchored" data-anchor-id="数据导入">数据导入</h3>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_cache/html/unnamed-chunk-2_b5dcb0ad3ec93e3f5de0e13bf2fab8be">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">merged_seurat_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/sc_supplementary/GSE150430_merged_seurat.rds"</span><span class="op">)</span></span>
+<span><span class="va">merged_seurat_1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 24720 48585</code></pre>
+<pre><code>An object of class Seurat 
+24720 features across 48584 samples within 1 assay 
+Active assay: RNA (24720 features, 0 variable features)
+ 16 layers present: counts.1, counts.2, counts.3, counts.4, counts.5, counts.6, counts.7, counts.8, counts.9, counts.10, counts.11, counts.12, counts.13, counts.14, counts.15, counts.16</code></pre>
 </div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">counts</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">merged_seurat_1</span>, <span class="fl">4</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     Cell_type CAFs CAFs.1 CAFs.2
-1 RP11-34P13.7    0      0      0
-2 RP11-34P13.8    0      0      0
-3   AL627309.1    0      0      0
-4   AP006222.2    0      0      0</code></pre>
+<pre><code>                       orig.ident nCount_RNA nFeature_RNA samples
+N01_CAGAATCAGTAATCCC.1        N01   3470.970         4173     N01
+N01_TGCGGGTAGTACGTAA.1        N01   3155.725         2994     N01
+N01_AAACCTGAGGGTTTCT.1        N01   2347.034         1946     N01
+N01_AAACCTGAGTTCCACA.1        N01   2362.495         1993     N01</code></pre>
+</div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">merged_seurat_1</span><span class="op">$</span><span class="va">samples</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "N01" "P01" "P02" "P03" "P04" "P05" "P06" "P07" "P08" "P09" "P10" "P11"
+[13] "P12" "P13" "P14" "P15"</code></pre>
+</div>
+</div>
+</section><section id="质控" class="level3"><h3 class="anchored" data-anchor-id="质控">质控</h3>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_cache/html/unnamed-chunk-3_22ac7b43d5e2c8b1716881248de00892">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Add number of genes per UMI for each cell to metadata</span></span>
+<span><span class="va">merged_seurat_1</span><span class="op">$</span><span class="va">log10GenesPerUMI</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log10</a></span><span class="op">(</span><span class="va">merged_seurat_1</span><span class="op">$</span><span class="va">nFeature_RNA</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log10</a></span><span class="op">(</span><span class="va">merged_seurat_1</span><span class="op">$</span><span class="va">nCount_RNA</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">merged_seurat_1</span><span class="op">@</span><span class="va">meta.data</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                       orig.ident nCount_RNA nFeature_RNA samples
+N01_CAGAATCAGTAATCCC.1        N01   3470.970         4173     N01
+N01_TGCGGGTAGTACGTAA.1        N01   3155.725         2994     N01
+N01_AAACCTGAGGGTTTCT.1        N01   2347.034         1946     N01
+N01_AAACCTGAGTTCCACA.1        N01   2362.495         1993     N01
+N01_AAACCTGGTTCTCATT.1        N01   2130.465         1459     N01
+N01_AAACGGGGTCCTCCAT.1        N01   2772.010         2573     N01
+                       log10GenesPerUMI
+N01_CAGAATCAGTAATCCC.1        1.0225953
+N01_TGCGGGTAGTACGTAA.1        0.9934705
+N01_AAACCTGAGGGTTTCT.1        0.9758564
+N01_AAACCTGAGTTCCACA.1        0.9781039
+N01_AAACCTGGTTCTCATT.1        0.9506023
+N01_AAACGGGGTCCTCCAT.1        0.9906021</code></pre>
 </div>
 </div>
 
@@ -598,7 +641,7 @@ div.csl-indent {
 Gong, Lanqi, Jie Luo, Yu Zhang, Yuma Yang, Shanshan Li, Xiaona Fang, Baifeng Zhang, et al. 2023. <span>“Nasopharyngeal Carcinoma Cells Promote Regulatory T Cell Development and Suppressive Activity via CD70-CD27 Interaction.”</span> <em>Nature Communications</em> 14 (1). <a href="https://doi.org/10.1038/s41467-023-37614-6">https://doi.org/10.1038/s41467-023-37614-6</a>.
 </div>
 </div>
-</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1022,43 +1065,52 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb6" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "多个单细胞数据集整合分析"</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 参考：</span><span class="co">[</span><span class="ot">单细胞多数据集整合示例</span><span class="co">](https://mp.weixin.qq.com/s/51PtUi7ZKp1nbrFGElU74A)</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>有时候，为了扩大数据量和得到更加可靠的结论，我们可能获取和下载了多个单细胞数据集。如果我们只关注某一细胞类型，如T cells或B cells或髓系细胞，那么就需要合并分析这些数据集，提取感兴趣的细胞亚群。这时候有两种方法可以选择：</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**对各个数据集分别降维分群，然后提取各个数据集的感兴趣细胞亚群并整合到一起**</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**在一开始分析的时候就对这些数据集进行整合，然后分群，提起感兴趣细胞群**</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>**这个部分怎么分析并没有一个特定的答案或者规则，具体还是得看数据集适合以上提出的哪种分析顺序。**</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>例如<span class="co">[</span><span class="ot">@gong2023</span><span class="co">]</span>就用了第二种方法。选取了三个鼻咽癌单细胞转录组数据： GSE150825, GSE150430, GSE162025。首先对三组数据进行整合，然后选取其中的一部分T细胞进行进一步分析。</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-10%2012.00.48.png)</span>{width="600"}</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>这里我们介绍第一种方式，即**对各数据集分别降维分群，然后提取并整合各个数据集的感兴趣细胞亚群。**</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>案例数据来自2020年的文章《Single-cell transcriptomics reveals regulators underlying immune cell diversity and immune subtypes associated with prognosis in nasopharyngeal carcinoma》。以15例鼻咽癌患者作为研究对象，1例慢性鼻咽炎患者的正常鼻咽上皮组织作为对照。所有样品均采用10x genomics V2 3'单细胞RNA测序。数据链接：<span class="co">[</span><span class="ot">**GSE150430**</span><span class="co">](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE150430)</span>**。**</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## 数据读取</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache-lazy: false</span></span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="co"># options(future.globals.maxSize = 8 * 1024 * 1024^2)</span></span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">fread</span>(<span class="st">"data/sc_supplementary/GSE150430_npc_scRNA_hg19_processed_data.txt"</span>, </span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>                <span class="at">data.table =</span> F)</span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(counts)</span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>counts[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="sourceCode" id="cb10" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "多个单细胞数据集整合分析"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 参考：</span><span class="co">[</span><span class="ot">单细胞多数据集整合示例</span><span class="co">](https://mp.weixin.qq.com/s/51PtUi7ZKp1nbrFGElU74A)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>有时候，为了扩大数据量和得到更加可靠的结论，我们可能获取和下载了多个单细胞数据集。如果我们只关注某一细胞类型，如T cells或B cells或髓系细胞，那么就需要合并分析这些数据集，提取感兴趣的细胞亚群。这时候有两种方法可以选择：</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**对各个数据集分别降维分群，然后提取各个数据集的感兴趣细胞亚群并整合到一起**</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**在一开始分析的时候就对这些数据集进行整合，然后分群，提起感兴趣细胞群**</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>**这个部分怎么分析并没有一个特定的答案或者规则，具体还是得看数据集适合以上提出的哪种分析顺序。**</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>例如<span class="co">[</span><span class="ot">@gong2023</span><span class="co">]</span>就用了第二种方法。选取了三个鼻咽癌单细胞转录组数据： GSE150825, GSE150430, GSE162025。首先对三组数据进行整合，然后选取其中的一部分T细胞进行进一步分析。</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-10%2012.00.48.png)</span>{width="600"}</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>这里我们介绍第一种方式，即**对各数据集分别降维分群，然后提取并整合各个数据集的感兴趣细胞亚群。**</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="fu">## 加载包</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## GSE150430</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>这里我们直接载入 @sec-reading_non_standard_large_volume_text 中构建好的Seurat对象，该案例数据的介绍及读取过程参见该章节。</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="fu">### 数据导入</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>merged_seurat_1 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/sc_supplementary/GSE150430_merged_seurat.rds"</span>)</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>merged_seurat_1</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(merged_seurat_1, <span class="dv">4</span>)</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(merged_seurat_1<span class="sc">$</span>samples)</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a><span class="fu">### 质控</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Add number of genes per UMI for each cell to metadata</span></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>merged_seurat_1<span class="sc">$</span>log10GenesPerUMI <span class="ot">&lt;-</span> <span class="fu">log10</span>(merged_seurat_1<span class="sc">$</span>nFeature_RNA) <span class="sc">/</span> <span class="fu">log10</span>(merged_seurat_1<span class="sc">$</span>nCount_RNA)</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(merged_seurat_1<span class="sc">@</span>meta.data)</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

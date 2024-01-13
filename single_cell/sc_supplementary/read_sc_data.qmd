@@ -188,7 +188,7 @@ merged_seurat$sample <- merged_seurat$orig.ident
 
 ![](images/截屏2024-01-09%2011.12.14.png)
 
-### 读取raw_counts矩阵
+### 读取raw_counts矩阵 {#sec-read_raw_counts}
 
 ```{r}
 rm(list = ls())
@@ -328,6 +328,167 @@ merged_seurat@meta.data |>
     theme_classic() +
     ylab("Cell density") +
     geom_vline(xintercept = 500)
+```
+
+------------------------------------------------------------------------
+
+## 读取非标准大体积文本文件单细胞数据 {#sec-reading_non_standard_large_volume_text}
+
+案例数据来自2020年的文章《[*Single-cell transcriptomics reveals regulators underlying immune cell diversity and immune subtypes associated with prognosis in nasopharyngeal carcinoma*](https://www.nature.com/articles/s41422-020-0374-x)》。该研究以15例鼻咽癌患者作为研究对象，1例慢性鼻咽炎患者的正常鼻咽上皮组织作为对照。所有样品均采用10x genomics V2 3'单细胞RNA测序。数据链接：[**GSE150430**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE150430)**。**
+
+![](images/截屏2024-01-10%2012.07.54.png)
+
+### 加载包
+
+```{r}
+#| eval: false
+rm(list = ls())
+library(data.table)
+library(stringr)
+library(dplyr)
+library(purrr)
+library(Seurat)
+```
+
+### 数据读取
+
+下载数据之后，首先按照通常做法通过`data.table`包的`fread()`函数尝试读取之后，发现无法正确读取列名，即cell barcode：
+
+```{r}
+#| eval: false
+counts <- fread("data/sc_supplementary/GSE150430_npc_scRNA_hg19_processed_data.txt",
+                data.table = F)
+```
+
+![](images/截屏2024-01-10%2017.28.25.png)
+
+而用`read.table()`函数读取这个文件是可以正确读取列名的:
+
+```{r}
+#| eval: false
+counts <- read.table("data/sc_supplementary/GSE150430_npc_scRNA_hg19_processed_data.txt")
+```
+
+读取后的数据如下：
+
+![](images/截屏2024-01-10%2015.53.59.png)
+
+可以发现该表达矩阵行名为基因，列为cell barcode，同时有代表样本的前缀。但是**第一行为作者注释的细胞类型**，因此，可能是由于这样的表头结构导致`fread`不能正确的读取这个数据。但是用基础的`read.table`读取这种大型数据非常耗时间，因此下面**首先用`read.table`读取前两行的数据，即cell barcode和细胞类型；然后通过`fread`读取剩余的表达矩阵；最后将cell barcode和表达矩阵进行合并以构建Seurat对象**。
+
+### 数据整理
+
+```{r}
+#| eval: false
+# 单独读取表头
+head <- read.table("data/sc_supplementary/GSE150430_npc_scRNA_hg19_processed_data.txt",
+                   nrows = 1,
+                   header = T)
+```
+
+![](images/截屏2024-01-11%2020.32.16.png)
+
+```{r}
+#| eval: false
+# 读取表达矩阵
+counts <- fread("data/sc_supplementary/GSE150430_npc_scRNA_hg19_processed_data.txt",
+                data.table = F, 
+                skip = 2) # 跳过前两行
+```
+
+![](images/截屏2024-01-10%2017.43.49.png)
+
+```{r}
+#| eval: false
+# 将第一列（基因名）作为行名
+rownames(counts) <- counts[,1]
+counts <- counts[,-1]
+
+# 添加列名（cell barcode）
+colnames(counts) <- colnames(head)
+```
+
+![此时，我们就得到了一个满足Seurat对象构建的counts矩阵了。但是，当我们直接用`CreateSeuratObject()`去创建Seurat对象时，由于该数据包含了所有样本的单细胞测序数据，导致其体积过大超出了R的内存上限。因此，接下来，我们**将这个数据根据样本拆分成不同的RDS文件**，然后再用[上面](#sec-read_raw_counts)类似的方法依次读取这些RDS文件，避免一次性读取导致的内存溢出。](images/截屏2024-01-10%2017.45.43.png)
+
+```{r}
+#| eval: false
+# 提取样本标签
+samples <-  str_split(string = colnames(counts), 
+                      pattern = "_", 
+                      simplify = T)[,1] %>% 
+  unique()
+samples
+```
+
+```{r}
+# [1] "N01" "P01" "P03" "P05" "P06" "P09" "P11" "P12" "P13" "P14" "P15" "P02"
+# [13] "P04" "P07" "P08" "P10"
+```
+
+```{r}
+#| eval: false
+# 逐一提取不同样本的测序数据，分别导出为RDS文件
+map(samples, function(sample) {
+  print(sample)
+  sub_exp <- grep(pattern = sample, 
+                  x = colnames(counts)) %>% 
+    counts[,.]
+  saveRDS(sub_exp, 
+          file = paste0("output/sc_supplementary/GSE150430/", sample, ".rds"))
+})
+```
+
+### 构建Seurat对象
+
+```{r}
+#| eval: false
+filenames <- list.files("output/sc_supplementary/GSE150430")
+filenames
+```
+
+```{r}
+#  [1] "N01.rds" "P01.rds" "P02.rds" "P03.rds" "P04.rds" "P05.rds" "P06.rds"
+#  [8] "P07.rds" "P08.rds" "P09.rds" "P10.rds" "P11.rds" "P12.rds" "P13.rds"
+# [15] "P14.rds" "P15.rds"
+```
+
+```{r}
+#| eval: false
+# 循环读取每个rds文件的数据并创建Seurat对象
+seurat_list <- lapply(filenames, function(file) {
+  # 拼接文件路径
+  data.path <- paste0("output/sc_supplementary/GSE150430/", file)
+  # 创建Seurat对象
+  seurat_obj <- CreateSeuratObject(counts = readRDS(data.path))
+  return(seurat_obj)
+})
+
+# 合并Seurat对象
+merged_seurat <- merge(seurat_list[[1]],
+                       y = seurat_list[-1])
+merged_seurat
+```
+
+```{r}
+# An object of class Seurat 
+# 24720 features across 48584 samples within 1 assay 
+# Active assay: RNA (24720 features, 0 variable features)
+#  16 layers present: counts.1, counts.2, counts.3, counts.4, counts.5, counts.6, counts.7, counts.8, counts.9, counts.10, counts.11, counts.12, counts.13, counts.14, counts.15, counts.16
+```
+
+```{r}
+#| eval: false
+head(merged_seurat) 
+```
+
+![](images/截屏2024-01-11%2020.36.33.png){width="434"}
+
+```{r}
+#| eval: false
+# 添加样本列
+merged_seurat$samples <- merged_seurat$orig.ident
+
+# 保存
+saveRDS(merged_seurat, file = "output/sc_supplementary/GSE150430_merged_seurat.rds")
 ```
 
 ------------------------------------------------------------------------

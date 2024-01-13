@@ -18,20 +18,29 @@ title: "多个单细胞数据集整合分析"
 
 这里我们介绍第一种方式，即**对各数据集分别降维分群，然后提取并整合各个数据集的感兴趣细胞亚群。**
 
-案例数据来自2020年的文章《Single-cell transcriptomics reveals regulators underlying immune cell diversity and immune subtypes associated with prognosis in nasopharyngeal carcinoma》。以15例鼻咽癌患者作为研究对象，1例慢性鼻咽炎患者的正常鼻咽上皮组织作为对照。所有样品均采用10x genomics V2 3'单细胞RNA测序。数据链接：[**GSE150430**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE150430)**。**
-
-## 数据读取
+## 加载包
 
 ```{r}
-library(data.table)
+library(Seurat)
 ```
 
-```{r}
-#| cache-lazy: false
-# options(future.globals.maxSize = 8 * 1024 * 1024^2)
+## GSE150430
 
-counts <- fread("data/sc_supplementary/GSE150430_npc_scRNA_hg19_processed_data.txt", 
-                data.table = F)
-dim(counts)
-counts[1:4, 1:4]
+这里我们直接载入 @sec-reading_non_standard_large_volume_text 中构建好的Seurat对象，该案例数据的介绍及读取过程参见该章节。
+
+### 数据导入
+
+```{r}
+merged_seurat_1 <- readRDS("output/sc_supplementary/GSE150430_merged_seurat.rds")
+merged_seurat_1
+head(merged_seurat_1, 4)
+unique(merged_seurat_1$samples)
+```
+
+### 质控
+
+```{r}
+# Add number of genes per UMI for each cell to metadata
+merged_seurat_1$log10GenesPerUMI <- log10(merged_seurat_1$nFeature_RNA) / log10(merged_seurat_1$nCount_RNA)
+head(merged_seurat_1@meta.data)
 ```
