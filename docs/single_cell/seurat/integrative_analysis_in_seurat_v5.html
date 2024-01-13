@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.3.450">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>R语言学习笔记 - 12&nbsp; Seurat v5单细胞数据整合分析</title>
+<title>R语言学习笔记 - 13&nbsp; Seurat v5单细胞数据整合分析</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -119,7 +119,7 @@ div.csl-indent {
   "enableExperimentalNewNoteButton": true
 }
 </script><script async="" src="https://hypothes.is/embed.js"></script>
-<meta name="twitter:title" content="R语言学习笔记 - 12&nbsp; Seurat v5单细胞数据整合分析">
+<meta name="twitter:title" content="R语言学习笔记 - 13&nbsp; Seurat v5单细胞数据整合分析">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/seurat/images/截屏2023-11-28 21.02.46.png">
 <meta name="twitter:image-height" content="1388">
@@ -169,6 +169,10 @@ div.csl-indent {
  <span class="dropdown-text">scRNA-seq_online学习材料</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="../../single_cell/sc_supplementary/read_sc_data.html" rel="" target="">
+ <span class="dropdown-text">单细胞补充内容</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
  <span class="dropdown-text">Quarto基础</span></a>
   </li>  
@@ -213,7 +217,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -275,6 +279,12 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">字符的处理</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/loop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">循环</span></span></a>
+  </div>
+</li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -289,61 +299,61 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_command_list.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/sctransform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/marker_gene_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
   </div>
 </li>
       </ul>
@@ -360,67 +370,96 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">质控</span></span></a>
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">质控</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false">
+ <span class="menu-text">单细胞补充内容</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/sc_supplementary/read_sc_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title"><strong>读取非标准格式的单细胞数据</strong></span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/sc_supplementary/universal_marker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">细胞分群通用marker</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析</span></span></a>
   </div>
 </li>
       </ul>
@@ -429,45 +468,51 @@ div.csl-indent {
       <div class="sidebar-item-container"> 
             <a href="../../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quarto基础</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">在Quarto中嵌入Shiny应用程序</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
   </div>
 </li>
       </ul>
@@ -475,13 +520,13 @@ div.csl-indent {
         <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
  <span class="menu-text">参考文献</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../references.html" class="sidebar-item-text sidebar-link">
@@ -498,26 +543,26 @@ div.csl-indent {
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE" id="toc-加载数据" class="nav-link active" data-scroll-target="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE"><span class="header-section-number">12.1</span> 加载数据</a></li>
-  <li><a href="#%E6%95%B0%E6%8D%AE%E8%B4%A8%E6%8E%A7" id="toc-数据质控" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E8%B4%A8%E6%8E%A7"><span class="header-section-number">12.2</span> 数据质控</a></li>
-  <li><a href="#%E5%88%86%E5%89%B2%E6%95%B0%E6%8D%AE" id="toc-分割数据" class="nav-link" data-scroll-target="#%E5%88%86%E5%89%B2%E6%95%B0%E6%8D%AE"><span class="header-section-number">12.3</span> 分割数据</a></li>
+<li><a href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE" id="toc-加载数据" class="nav-link active" data-scroll-target="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE"><span class="header-section-number">13.1</span> 加载数据</a></li>
+  <li><a href="#%E6%95%B0%E6%8D%AE%E8%B4%A8%E6%8E%A7" id="toc-数据质控" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E8%B4%A8%E6%8E%A7"><span class="header-section-number">13.2</span> 数据质控</a></li>
+  <li><a href="#%E5%88%86%E5%89%B2%E6%95%B0%E6%8D%AE" id="toc-分割数据" class="nav-link" data-scroll-target="#%E5%88%86%E5%89%B2%E6%95%B0%E6%8D%AE"><span class="header-section-number">13.3</span> 分割数据</a></li>
   <li>
-<a href="#%E6%9C%AA%E6%95%B4%E5%90%88%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E6%A0%87%E5%87%86scrna-seq%E5%88%86%E6%9E%90%E6%B5%81%E7%A8%8B" id="toc-未整合情况下的标准scrna-seq分析流程" class="nav-link" data-scroll-target="#%E6%9C%AA%E6%95%B4%E5%90%88%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E6%A0%87%E5%87%86scrna-seq%E5%88%86%E6%9E%90%E6%B5%81%E7%A8%8B"><span class="header-section-number">12.4</span> 未整合情况下的标准scRNA-seq分析流程</a>
+<a href="#%E6%9C%AA%E6%95%B4%E5%90%88%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E6%A0%87%E5%87%86scrna-seq%E5%88%86%E6%9E%90%E6%B5%81%E7%A8%8B" id="toc-未整合情况下的标准scrna-seq分析流程" class="nav-link" data-scroll-target="#%E6%9C%AA%E6%95%B4%E5%90%88%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E6%A0%87%E5%87%86scrna-seq%E5%88%86%E6%9E%90%E6%B5%81%E7%A8%8B"><span class="header-section-number">13.4</span> 未整合情况下的标准scRNA-seq分析流程</a>
   <ul class="collapse">
 <li><a href="#%E6%A0%87%E5%87%86%E5%8C%96%E6%89%BE%E9%AB%98%E5%8F%98%E5%9F%BA%E5%9B%A0%E5%BD%92%E4%B8%80%E5%8C%96%E9%99%8D%E7%BB%B4" id="toc-标准化找高变基因归一化降维" class="nav-link" data-scroll-target="#%E6%A0%87%E5%87%86%E5%8C%96%E6%89%BE%E9%AB%98%E5%8F%98%E5%9F%BA%E5%9B%A0%E5%BD%92%E4%B8%80%E5%8C%96%E9%99%8D%E7%BB%B4">标准化、找高变基因、归一化、降维</a></li>
   <li><a href="#%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96" id="toc-聚类可视化" class="nav-link" data-scroll-target="#%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96">聚类、可视化</a></li>
   </ul>
 </li>
-  <li><a href="#sec-sc_integration" id="toc-sec-sc_integration" class="nav-link" data-scroll-target="#sec-sc_integration"><span class="header-section-number">12.5</span> 数据整合</a></li>
-  <li><a href="#%E9%87%8D%E6%96%B0%E9%99%8D%E7%BB%B4%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96" id="toc-重新降维聚类可视化" class="nav-link" data-scroll-target="#%E9%87%8D%E6%96%B0%E9%99%8D%E7%BB%B4%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="header-section-number">12.6</span> 重新降维、聚类、可视化</a></li>
-  <li><a href="#%E6%A3%80%E9%AA%8C%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8Bmarker%E5%9F%BA%E5%9B%A0%E7%9A%84%E8%A1%A8%E8%BE%BE" id="toc-检验细胞类型marker基因的表达" class="nav-link" data-scroll-target="#%E6%A3%80%E9%AA%8C%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8Bmarker%E5%9F%BA%E5%9B%A0%E7%9A%84%E8%A1%A8%E8%BE%BE"><span class="header-section-number">12.7</span> 检验细胞类型marker基因的表达</a></li>
-  <li><a href="#%E9%87%8D%E6%96%B0%E5%90%88%E5%B9%B6layers" id="toc-重新合并layers" class="nav-link" data-scroll-target="#%E9%87%8D%E6%96%B0%E5%90%88%E5%B9%B6layers"><span class="header-section-number">12.8</span> 重新合并layers</a></li>
-  <li><a href="#%E5%AF%B9sctransform%E5%A4%84%E7%90%86%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E7%9A%84%E6%95%B4%E5%90%88" id="toc-对sctransform处理后的数据的整合" class="nav-link" data-scroll-target="#%E5%AF%B9sctransform%E5%A4%84%E7%90%86%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E7%9A%84%E6%95%B4%E5%90%88"><span class="header-section-number">12.9</span> 对<code>SCTransform</code>处理后的数据的整合</a></li>
+  <li><a href="#sec-sc_integration" id="toc-sec-sc_integration" class="nav-link" data-scroll-target="#sec-sc_integration"><span class="header-section-number">13.5</span> 数据整合</a></li>
+  <li><a href="#%E9%87%8D%E6%96%B0%E9%99%8D%E7%BB%B4%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96" id="toc-重新降维聚类可视化" class="nav-link" data-scroll-target="#%E9%87%8D%E6%96%B0%E9%99%8D%E7%BB%B4%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="header-section-number">13.6</span> 重新降维、聚类、可视化</a></li>
+  <li><a href="#%E6%A3%80%E9%AA%8C%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8Bmarker%E5%9F%BA%E5%9B%A0%E7%9A%84%E8%A1%A8%E8%BE%BE" id="toc-检验细胞类型marker基因的表达" class="nav-link" data-scroll-target="#%E6%A3%80%E9%AA%8C%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8Bmarker%E5%9F%BA%E5%9B%A0%E7%9A%84%E8%A1%A8%E8%BE%BE"><span class="header-section-number">13.7</span> 检验细胞类型marker基因的表达</a></li>
+  <li><a href="#%E9%87%8D%E6%96%B0%E5%90%88%E5%B9%B6layers" id="toc-重新合并layers" class="nav-link" data-scroll-target="#%E9%87%8D%E6%96%B0%E5%90%88%E5%B9%B6layers"><span class="header-section-number">13.8</span> 重新合并layers</a></li>
+  <li><a href="#%E5%AF%B9sctransform%E5%A4%84%E7%90%86%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E7%9A%84%E6%95%B4%E5%90%88" id="toc-对sctransform处理后的数据的整合" class="nav-link" data-scroll-target="#%E5%AF%B9sctransform%E5%A4%84%E7%90%86%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E7%9A%84%E6%95%B4%E5%90%88"><span class="header-section-number">13.9</span> 对<code>SCTransform</code>处理后的数据的整合</a></li>
   </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/seurat/integrative_analysis_in_seurat_v5.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/single_cell/seurat/integrative_analysis_in_seurat_v5.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span id="sec-Integrated_analysis_of_seurat-v5" class="quarto-section-identifier"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-Integrated_analysis_of_seurat-v5" class="quarto-section-identifier"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -539,8 +584,8 @@ div.csl-indent {
 <p>In Seurat v5, we introduce more flexible and streamlined infrastructure to run different integration algorithms with a single line of code. This makes it easier to explore the results of different integration methods, and to compare these results to a workflow that excludes integration steps.</p>
 <p>For this vignette, we use a&nbsp;dataset of human PBMC profiled with <strong>seven different technologies</strong> <span class="citation" data-cites="ding2020">(<a href="../../references.html#ref-ding2020" role="doc-biblioref">Ding et al. 2020</a>)</span>, profiled as part of a systematic comparative analysis (<code>pbmcsca</code>). The data is available as part of our&nbsp;SeuratData&nbsp;package.</p>
 <p><img src="images/截屏2023-11-28 21.02.46.png" class="img-fluid" width="526"></p>
-<section id="加载数据" class="level2" data-number="12.1"><h2 data-number="12.1" class="anchored" data-anchor-id="加载数据">
-<span class="header-section-number">12.1</span> 加载数据</h2>
+<section id="加载数据" class="level2" data-number="13.1"><h2 data-number="13.1" class="anchored" data-anchor-id="加载数据">
+<span class="header-section-number">13.1</span> 加载数据</h2>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -619,8 +664,8 @@ pbmc1_SM2_Cell_143 Smart-seq2</code></pre>
 </div>
 </div>
 <p>The object contains data from <strong>nine different batches</strong> (stored in the&nbsp;<code>Method</code>&nbsp;column in the object metadata), representing <strong>seven different technologies</strong>. We will aim to integrate the different batches together.</p>
-</section><section id="数据质控" class="level2" data-number="12.2"><h2 data-number="12.2" class="anchored" data-anchor-id="数据质控">
-<span class="header-section-number">12.2</span> 数据质控</h2>
+</section><section id="数据质控" class="level2" data-number="13.2"><h2 data-number="13.2" class="anchored" data-anchor-id="数据质控">
+<span class="header-section-number">13.2</span> 数据质控</h2>
 <p>过滤低质量细胞：</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-3_354b741552fc5c2f25fd6c5308dc3871">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">obj</span>, <span class="va">nFeature_RNA</span> <span class="op">&gt;</span> <span class="fl">1000</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -642,8 +687,8 @@ Plasmacytoid dendritic cell                  Unassigned
                          78                           8 </code></pre>
 </div>
 </div>
-</section><section id="分割数据" class="level2" data-number="12.3"><h2 data-number="12.3" class="anchored" data-anchor-id="分割数据">
-<span class="header-section-number">12.3</span> 分割数据</h2>
+</section><section id="分割数据" class="level2" data-number="13.3"><h2 data-number="13.3" class="anchored" data-anchor-id="分割数据">
+<span class="header-section-number">13.3</span> 分割数据</h2>
 <p>In previous versions of Seurat, if we want to integrate this data, we would require the data to be represented as nine different Seurat objects. When using Seurat v5 assays, we can instead keep all the data in one object, but simply split the layers:</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-5_c7f13ec95e35450b05a9981b4af6dad6">
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">obj</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html">split</a></span><span class="op">(</span><span class="va">obj</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>, f <span class="op">=</span> <span class="va">obj</span><span class="op">$</span><span class="va">Method</span><span class="op">)</span></span>
@@ -656,8 +701,8 @@ Active assay: RNA (33694 features, 0 variable features)
 </div>
 </div>
 <p>After splitting, there are now <strong>18 layers</strong> (<strong>a&nbsp;<code>counts</code>&nbsp;and&nbsp;<code>data</code>&nbsp;layer for each batch</strong>).</p>
-</section><section id="未整合情况下的标准scrna-seq分析流程" class="level2" data-number="12.4"><h2 data-number="12.4" class="anchored" data-anchor-id="未整合情况下的标准scrna-seq分析流程">
-<span class="header-section-number">12.4</span> 未整合情况下的标准scRNA-seq分析流程</h2>
+</section><section id="未整合情况下的标准scrna-seq分析流程" class="level2" data-number="13.4"><h2 data-number="13.4" class="anchored" data-anchor-id="未整合情况下的标准scrna-seq分析流程">
+<span class="header-section-number">13.4</span> 未整合情况下的标准scRNA-seq分析流程</h2>
 <section id="标准化找高变基因归一化降维" class="level3"><h3 class="anchored" data-anchor-id="标准化找高变基因归一化降维">标准化、找高变基因、归一化、降维</h3>
 <p>We can now run a standard scRNA-seq analysis (i.e.&nbsp;without integration). Note that since the data is split into layers, normalization and variable feature identification is performed for each batch independently (a consensus set of variable features is automatically identified).</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-6_ee0c4b8c6b8ae42e647bab4bb58e5064">
@@ -694,8 +739,8 @@ Elapsed time: 0 seconds</code></pre>
 </div>
 </div>
 <p>可以看到，不同的测序技术间的细胞类型差异较大。因此需要对数据进行整合。</p>
-</section></section><section id="sec-sc_integration" class="level2" data-number="12.5"><h2 data-number="12.5" class="anchored" data-anchor-id="sec-sc_integration">
-<span class="header-section-number">12.5</span> 数据整合</h2>
+</section></section><section id="sec-sc_integration" class="level2" data-number="13.5"><h2 data-number="13.5" class="anchored" data-anchor-id="sec-sc_integration">
+<span class="header-section-number">13.5</span> 数据整合</h2>
 <p>Seurat v5 enables streamlined integrative analysis using the&nbsp;<code>IntegrateLayers</code>&nbsp;function. The method currently supports <strong>five integration methods</strong>. Each of these methods performs integration in low-dimensional space, and <strong>returns a dimensional reduction</strong> (i.e.&nbsp;<code>integrated.rpca</code>) that aims to co-embed shared cell types across batches:</p>
 <ul>
 <li><p><strong>Anchor-based CCA integration</strong> (<code>method=CCAIntegration</code>)</p></li>
@@ -773,8 +818,8 @@ Elapsed time: 0 seconds</code></pre>
 <span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(obj<span class="sc">@</span>reductions)</span>
 <span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="重新降维聚类可视化" class="level2" data-number="12.6"><h2 data-number="12.6" class="anchored" data-anchor-id="重新降维聚类可视化">
-<span class="header-section-number">12.6</span> 重新降维、聚类、可视化</h2>
+</section><section id="重新降维聚类可视化" class="level2" data-number="13.6"><h2 data-number="13.6" class="anchored" data-anchor-id="重新降维聚类可视化">
+<span class="header-section-number">13.6</span> 重新降维、聚类、可视化</h2>
 <p><code>CCAIntegration</code>：</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-13_7ad99618a1d7bf59a8d20a163b6ea8db">
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html">RunUMAP</a></span><span class="op">(</span><span class="va">obj</span>, </span>
@@ -849,8 +894,8 @@ Elapsed time: 1 seconds</code></pre>
 <p><img src="integrative_analysis_in_seurat_v5_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="1248"></p>
 </div>
 </div>
-</section><section id="检验细胞类型marker基因的表达" class="level2" data-number="12.7"><h2 data-number="12.7" class="anchored" data-anchor-id="检验细胞类型marker基因的表达">
-<span class="header-section-number">12.7</span> 检验细胞类型marker基因的表达</h2>
+</section><section id="检验细胞类型marker基因的表达" class="level2" data-number="13.7"><h2 data-number="13.7" class="anchored" data-anchor-id="检验细胞类型marker基因的表达">
+<span class="header-section-number">13.7</span> 检验细胞类型marker基因的表达</h2>
 <p>We hope that by simplifying the process of performing integrative analysis, users can more carefully evaluate the biological information retained in the integrated dataset. For example, users can compare the expression of biological markers based on different clustering solutions, or visualize one method’s clustering solution on different UMAP visualizations.</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-16_594593a3211033131947d69b5f7be288">
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
@@ -877,8 +922,8 @@ Elapsed time: 1 seconds</code></pre>
 <p><img src="integrative_analysis_in_seurat_v5_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="1440"></p>
 </div>
 </div>
-</section><section id="重新合并layers" class="level2" data-number="12.8"><h2 data-number="12.8" class="anchored" data-anchor-id="重新合并layers">
-<span class="header-section-number">12.8</span> 重新合并layers</h2>
+</section><section id="重新合并layers" class="level2" data-number="13.8"><h2 data-number="13.8" class="anchored" data-anchor-id="重新合并layers">
+<span class="header-section-number">13.8</span> 重新合并layers</h2>
 <p>Once integrative analysis is complete, you can rejoin the layers - which collapses the individual datasets together and recreates the original&nbsp;<code>counts</code>&nbsp;and&nbsp;<code>data</code>&nbsp;layers. <strong>You will need to do this before performing any differential expression analysis</strong>. However, you can always resplit the layers in case you would like to reperform integrative analysis.</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-17_5624b7679f6e9c27e6d945251573698f">
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/SplitLayers.html">JoinLayers</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span>
@@ -891,9 +936,9 @@ Active assay: RNA (33694 features, 2000 variable features)
  6 dimensional reductions calculated: pca, umap.unintegrated, integrated.cca, harmony, umap.cca, umap.harmony</code></pre>
 </div>
 </div>
-</section><section id="对sctransform处理后的数据的整合" class="level2" data-number="12.9"><h2 data-number="12.9" class="anchored" data-anchor-id="对sctransform处理后的数据的整合">
-<span class="header-section-number">12.9</span> 对<code>SCTransform</code>处理后的数据的整合</h2>
-<p>Users can also perform integration using sctransform-normalized data (see <a href="sctransform.html"><span>Chapter&nbsp;9</span></a> for more information), by first running <code>SCTransform</code> normalization, and then s<strong>etting the&nbsp;<code>normalization.method</code>&nbsp;argument in&nbsp;<code>IntegrateLayers</code></strong>（和 <a href="integration.html#sec-integration_after_sct"><span>Section&nbsp;11.4.2</span></a> 中一样）。</p>
+</section><section id="对sctransform处理后的数据的整合" class="level2" data-number="13.9"><h2 data-number="13.9" class="anchored" data-anchor-id="对sctransform处理后的数据的整合">
+<span class="header-section-number">13.9</span> 对<code>SCTransform</code>处理后的数据的整合</h2>
+<p>Users can also perform integration using sctransform-normalized data (see <a href="sctransform.html"><span>Chapter&nbsp;10</span></a> for more information), by first running <code>SCTransform</code> normalization, and then s<strong>etting the&nbsp;<code>normalization.method</code>&nbsp;argument in&nbsp;<code>IntegrateLayers</code></strong>（和 <a href="integration.html#sec-integration_after_sct"><span>Section&nbsp;12.4.2</span></a> 中一样）。</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-18_714a1e1ba9fed6201b3c1716de97d143">
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#重新载入数据、质控、分割</span></span>
@@ -1441,12 +1486,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script><script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../../single_cell/seurat/integration.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">整合（integration）</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">整合（integration）</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../single_cell/seurat/marker_gene_identification.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">

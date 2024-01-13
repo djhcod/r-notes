@@ -169,6 +169,10 @@ div.csl-indent {
  <span class="dropdown-text">scRNA-seq_online学习材料</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="../../single_cell/sc_supplementary/read_sc_data.html" rel="" target="">
+ <span class="dropdown-text">单细胞补充内容</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
  <span class="dropdown-text">Quarto基础</span></a>
   </li>  
@@ -578,7 +582,7 @@ div.csl-indent {
 
 </header><section id="sec-Read_non-standard_10x_files" class="level2" data-number="28.1"><h2 data-number="28.1" class="anchored" data-anchor-id="sec-Read_non-standard_10x_files">
 <span class="header-section-number">28.1</span> 读取非标准10X格式文件</h2>
-<p>该案例来自文献 <span class="citation" data-cites="xu2022">(<a href="#ref-xu2022" role="doc-biblioref">Xu et al. 2022</a>)</span>。该研究为了系统地研究高级别浆膜上皮卵巢癌（HGSOC）的肿瘤内异质性，采用深层单细胞RNA测序技术(scRNA-seq)<strong>对7例初治HGSOC早期和晚期患者及5例年龄匹配的非恶性卵巢组织标本进行肿瘤分析。</strong>共获得59,324个HGSOC和非恶性卵巢组织的单细胞，其中，33264个细胞（56%）来⾃HGSOC肿瘤患者组织，26060个（44%）来⾃⾮恶性卵巢组织标本。原始数据：<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE184880">GSE184880</a>。</p>
+<p>该案例来自文献 <span class="citation" data-cites="xu2022">(<a href="../../references.html#ref-xu2022" role="doc-biblioref">Xu et al. 2022</a>)</span>。该研究为了系统地研究高级别浆膜上皮卵巢癌（HGSOC）的肿瘤内异质性，采用深层单细胞RNA测序技术(scRNA-seq)<strong>对7例初治HGSOC早期和晚期患者及5例年龄匹配的非恶性卵巢组织标本进行肿瘤分析。</strong>共获得59,324个HGSOC和非恶性卵巢组织的单细胞，其中，33264个细胞（56%）来⾃HGSOC肿瘤患者组织，26060个（44%）来⾃⾮恶性卵巢组织标本。原始数据：<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE184880">GSE184880</a>。</p>
 <p><img src="images/640-01.png" class="img-fluid"></p>
 <p>可以看到原始数据以10X格式提供:</p>
 <p><img src="images/截屏2024-01-08 11.17.00.png" class="img-fluid" width="465"></p>
@@ -825,7 +829,7 @@ Cancer7_TTTGTTGGTGATCATC-1    Cancer7       4245          508</code></pre>
 </div>
 <hr></section><section id="读取raw_counts形式的数据" class="level2" data-number="28.2"><h2 data-number="28.2" class="anchored" data-anchor-id="读取raw_counts形式的数据">
 <span class="header-section-number">28.2</span> 读取raw_counts形式的数据</h2>
-<p>案例来自<span class="citation" data-cites="Bill2023">(<a href="#ref-Bill2023" role="doc-biblioref">Bill et al. 2023</a>)</span>。样本来自头颈部鳞状细胞癌（HNSCC）患者，总共52例标本，包括24例原发肿瘤、16例局部复发和12例多器官远处转移。原发部位包括口腔、喉/下咽、口咽和鼻咽。其中15份样本HPV阳性。原始数据：<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE234933">GSE234933</a>。</p>
+<p>案例来自<span class="citation" data-cites="Bill2023">(<a href="../../references.html#ref-Bill2023" role="doc-biblioref">Bill et al. 2023</a>)</span>。样本来自头颈部鳞状细胞癌（HNSCC）患者，总共52例标本，包括24例原发肿瘤、16例局部复发和12例多器官远处转移。原发部位包括口腔、喉/下咽、口咽和鼻咽。其中15份样本HPV阳性。原始数据：<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE234933">GSE234933</a>。</p>
 <p>可以看到该数据集没有提供标准的10X格式的3个文件。</p>
 <p><img src="images/截屏2024-01-03 20.56.56.png" class="img-fluid"></p>
 <p>其中的“raw_counts”文件解压后是52个RDS文件，对应了每个样本的单细胞测序数据，是一个已经包含了表达量、基因名和细胞barcode的矩阵，所以可以通过批量读取这些文件建立Seurat对象。</p>
@@ -1023,7 +1027,7 @@ HN1_HN1_AAACGGGCACATTTCT-1        HN1        426          249</code></pre>
 </div>
 </section></section><section id="读取txttsvcsv等文本文件表达量矩阵信息" class="level2" data-number="28.3"><h2 data-number="28.3" class="anchored" data-anchor-id="读取txttsvcsv等文本文件表达量矩阵信息">
 <span class="header-section-number">28.3</span> 读取txt/tsv/csv等文本文件表达量矩阵信息</h2>
-<p>以2020的文章：《Single-Cell Transcriptome Analysis Reveals Dynamic Cell Populations and Differential Gene Expression Patterns in Control and Aneurysmal Human Aortic Tissue》<span class="citation" data-cites="Li2020">(<a href="#ref-Li2020" role="doc-biblioref">Li et al. 2020</a>)</span> 举例说明。数据集链接：<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155468"><strong>GSE155468</strong></a><strong>。</strong></p>
+<p>以2020的文章：《Single-Cell Transcriptome Analysis Reveals Dynamic Cell Populations and Differential Gene Expression Patterns in Control and Aneurysmal Human Aortic Tissue》<span class="citation" data-cites="Li2020">(<a href="../../references.html#ref-Li2020" role="doc-biblioref">Li et al. 2020</a>)</span> 举例说明。数据集链接：<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155468"><strong>GSE155468</strong></a><strong>。</strong></p>
 <p><img src="images/截屏2024-01-10 11.02.14.png" class="img-fluid" width="565"></p>
 <p>该案例提供了11个人体主动脉组织样品的单细胞转录组测序数据，其中8名患者为升胸主动脉瘤（ATAA）and 3名患者作为对照。每个样品都是一个独立的txt文本文件，蕴藏着其表达量矩阵信息。</p>
 <p>首先我们读取其中一个文件看一下其形式：</p>
@@ -1333,7 +1337,7 @@ loaded via a namespace (and not attached):
 
 <!-- -->
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
 <div id="ref-Bill2023" class="csl-entry" role="listitem">
 Bill, Ruben, Pratyaksha Wirapati, Marius Messemaker, Whijae Roh, Beatrice Zitti, Florent Duval, Máté Kiss, et al. 2023. <span>“<span><em>CXCL9:SPP1</em></span> Macrophage Polarity Identifies a Network of Cellular Programs That Control Human Cancers.”</span> <em>Science</em> 381 (6657): 515–24. <a href="https://doi.org/10.1126/science.ade2292">https://doi.org/10.1126/science.ade2292</a>.
 </div>
