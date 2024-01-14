@@ -731,7 +731,7 @@ Caution
 </div>
 </section><section id="分析细胞周期是否影响细胞分群" class="level2" data-number="26.4"><h2 data-number="26.4" class="anchored" data-anchor-id="分析细胞周期是否影响细胞分群">
 <span class="header-section-number">26.4</span> 分析细胞周期是否影响细胞分群</h2>
-<p>Next, we can explore whether the <strong>cells cluster influenced by the different cell cycle phases</strong>. We did not regress out variation due to cell cycle phase when we performed the <code>SCTransform</code> normalization ( <a href="06_SC_SCT_normalization.html#sec-evaluating_effects_of_cell_cycle"><span>Section&nbsp;23.2.2</span></a> ). <strong>If our cell clusters showed large differences in cell cycle expression, this would be an indication we would want to re-run the <code>SCTransform</code> and add the <code>S.Score</code> and <code>G2M.Score</code> to our variables to regress, then re-run the rest of the steps.</strong></p>
+<p>Next, we can explore whether the <strong>cells cluster influenced by the different cell cycle phases</strong>. We did not regress out variation due to cell cycle phase when we performed the <code>SCTransform</code> normalization ( <a href="#sec-evaluating_effects_of_cell_cycle"><span class="quarto-unresolved-ref">sec-evaluating_effects_of_cell_cycle</span></a> ). <strong>If our cell clusters showed large differences in cell cycle expression, this would be an indication we would want to re-run the <code>SCTransform</code> and add the <code>S.Score</code> and <code>G2M.Score</code> to our variables to regress, then re-run the rest of the steps.</strong></p>
 <div class="cell" data-hash="08_SC_clustering_quality_control_cache/html/unnamed-chunk-4_3d96f320f2c062904b4bb855bc89f13e">
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Explore whether clusters segregate by cell cycle phase</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">seurat_clustered</span>,</span>
@@ -821,7 +821,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>How did we know in the <code><a href="https://rdrr.io/pkg/SeuratObject/man/FetchData.html">FetchData()</a></code> function to include <code>UMAP_1</code> to obtain the UMAP coordinates? <a href="../seurat/seurat_command_list.html"><span>Chapter&nbsp;7</span></a> describes the function as being able to pull any data from the expression matrices, cell embeddings, or metadata.</p>
+<p>How did we know in the <code><a href="https://rdrr.io/pkg/SeuratObject/man/FetchData.html">FetchData()</a></code> function to include <code>UMAP_1</code> to obtain the UMAP coordinates? <a href="#sec-seurat_command_list"><span class="quarto-unresolved-ref">sec-seurat_command_list</span></a> describes the function as being able to pull any data from the expression matrices, cell embeddings, or metadata.</p>
 <p>For instance, if you explore the <code>seurat_clustered@reductions</code> list object, the first component is for PCA, and includes a slot for <code>cell.embeddings</code> (坐标数据). We can use the column names (<code>PC_1</code>, <code>PC_2</code>, <code>PC_3</code>, etc.) to pull out the coordinates or PC scores corresponding to each cell for each of the PCs (提取每个细胞在指定主成分上的坐标).</p>
 <p>We could do the same thing for UMAP:</p>
 <div class="cell" data-hash="08_SC_clustering_quality_control_cache/html/unnamed-chunk-7_e18727bd660ed2c1dd9d4c25a9c28820">
@@ -912,7 +912,7 @@ Positive:  GNLY, CCL5, NKG7, GZMB, FGFBP2
 Negative:  CD74, IGHM, IGKC, HLA-DRA, CD79A </code></pre>
 </div>
 </div>
-<p>With the <strong>GNLY</strong> and <strong>NKG7</strong> genes as positive markers of <code>PC_2</code>, <strong>we can hypothesize that clusters 8 and 12 correspond to NK cells (</strong> <a href="#tbl-cell_type_markers">Table&nbsp;<span>26.1</span></a> <strong>)</strong>. This just hints at what the clusters identity could be, with the identities of the clusters being determined through a combination of the PCs.</p>
+<p>With the <strong>GNLY</strong> and <strong>NKG7</strong> genes as positive markers of <code>PC_2</code>, <strong>we can hypothesize that clusters 8 and 12 correspond to NK cells (</strong> <a href="#tbl-cell_type_markers">Table&nbsp;<span class="quarto-unresolved-ref">tbl-cell_type_markers</span></a> <strong>)</strong>. This just hints at what the clusters identity could be, with the identities of the clusters being determined through a combination of the PCs.</p>
 <p>To truly determine the identity of the clusters and whether the <code>resolution</code> is appropriate, it is helpful to explore a handful of known gene markers for the cell types expected.</p>
 </section><section id="sec-explore_known_markers" class="level2" data-number="26.7"><h2 data-number="26.7" class="anchored" data-anchor-id="sec-explore_known_markers">
 <span class="header-section-number">26.7</span> 探索已知的cell type markers的表达</h2>
@@ -987,7 +987,7 @@ Caution
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The <code>SCTransform</code> normalization was performed only on the <strong>3000</strong> most variable genes, so many of our genes of interest may not be present in this data ( <a href="06_SC_SCT_normalization.html#sec-perform_sctranform"><span>Section&nbsp;23.3.5.1</span></a> ).</p>
+<p>The <code>SCTransform</code> normalization was performed only on the <strong>3000</strong> most variable genes, so many of our genes of interest may not be present in this data ( <a href="#sec-perform_sctranform"><span class="quarto-unresolved-ref">sec-perform_sctranform</span></a> ).</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -1000,7 +1000,7 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>在<a href="https://hbctraining.github.io/scRNA-seq_online/lessons/08_SC_clustering_quality_control.html">原教程</a>中，由于采用了Seurat V5之前的工作流（如 <a href="07_SC_clustering_cells_SCT.html#sec-Load_case_data"><span>Section&nbsp;25.4.1</span></a> 所述），所以为了准确可视化marker基因的表达情况，将默认的assay改回了“RNA”，然后运行<code>NormalizeData</code>：</p>
+<p>在<a href="https://hbctraining.github.io/scRNA-seq_online/lessons/08_SC_clustering_quality_control.html">原教程</a>中，由于采用了Seurat V5之前的工作流（如 <a href="#sec-Load_case_data"><span class="quarto-unresolved-ref">sec-Load_case_data</span></a> 所述），所以为了准确可视化marker基因的表达情况，将默认的assay改回了“RNA”，然后运行<code>NormalizeData</code>：</p>
 <div class="cell" data-hash="08_SC_clustering_quality_control_cache/html/unnamed-chunk-12_9541c04da210d8b8041130dfdd3bb9c5">
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/DefaultAssay.html">DefaultAssay</a></span><span class="op">(</span><span class="va">seurat_clustered</span><span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1013,7 +1013,7 @@ Warning
 <span><span class="va">seurat_clustered</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">seurat_clustered</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><em>Assay is a slot defined in the Seurat object, it has multiple slots within it. In a given assay, the&nbsp;<code>counts</code>&nbsp;slot stores non-normalized raw counts, and the&nbsp;<code>data</code>&nbsp;slot stores normalized expression data. Therefore, when we run the&nbsp;<code><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData()</a></code>&nbsp;function in the above code, the normalized data will be stored in the&nbsp;<code>data</code>&nbsp;slot of the RNA assay while the&nbsp;<code>counts</code>&nbsp;slot will remain unaltered.</em></p>
-<p>而在Seurat V5的官方教程中（ <a href="../seurat/sctransform.html"><span>Chapter&nbsp;10</span></a> ），经过了<code>SCTransform</code>之后绘制marker基因的表达情况时，并没有执行这一步，默认的assay仍然是“SCT”。这里为了和原教程的图像一致，所以也进行这一步。而对于以后的Seurat V5工作流考虑按照官方教程的做法。</p>
+<p>而在Seurat V5的官方教程中（ <a href="#sec-sctransform"><span class="quarto-unresolved-ref">sec-sctransform</span></a> ），经过了<code>SCTransform</code>之后绘制marker基因的表达情况时，并没有执行这一步，默认的assay仍然是“SCT”。这里为了和原教程的图像一致，所以也进行这一步。而对于以后的Seurat V5工作流考虑按照官方教程的做法。</p>
 </div>
 </div>
 <p>Depending on our markers of interest, they could be positive or negative markers for a particular cell type. The combined expression of our chosen handful of markers should give us an idea on whether a cluster corresponds to that particular cell type.</p>
@@ -1147,7 +1147,7 @@ Warning
 <p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
-<p>cluster 8, 12属于NK细胞。这和我们在前面的 <a href="#sec-Effect_of_pcs_clustering"><span>Section&nbsp;26.6</span></a> 中的结论（第二主成分的top基因GNLY和NKG7在cluster 8和cluster 12中高表达）一致。</p>
+<p>cluster 8, 12属于NK细胞。这和我们在前面的 <a href="#sec-Effect_of_pcs_clustering"><span class="quarto-unresolved-ref">sec-Effect_of_pcs_clustering</span></a> 中的结论（第二主成分的top基因GNLY和NKG7在cluster 8和cluster 12中高表达）一致。</p>
 </section><section id="megakaryocytes巨核细胞" class="level3"><h3 class="anchored" data-anchor-id="megakaryocytes巨核细胞">Megakaryocytes（巨核细胞）</h3>
 <div class="cell" data-hash="08_SC_clustering_quality_control_cache/html/unnamed-chunk-23_4f538bcefbcf8f0ecd8a7efc553d4414">
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">seurat_clustered</span>, </span>

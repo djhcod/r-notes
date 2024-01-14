@@ -600,7 +600,7 @@ Learning Objectives:
 <span class="header-section-number">24.1</span> 不进行整合时检验细胞分群情况</h2>
 <p>Generally, we always look at our clustering <strong>without integration</strong> before deciding whether we need to perform any alignment. <strong>Do not just always perform integration because you think there might be differences - explore the data.</strong> If we had performed the normalization on both conditions together in a Seurat object and visualized the similarity between cells, we would have seen condition-specific clustering.</p>
 <section id="数据导入" class="level3"><h3 class="anchored" data-anchor-id="数据导入">数据导入</h3>
-<p>We use the <code>split_seurat</code> object from the previous lesson ( <a href="06_SC_SCT_normalization.html"><span>Chapter&nbsp;23</span></a> ).</p>
+<p>We use the <code>split_seurat</code> object from the previous lesson ( <a href="#sec-normalization-and-regressing-out-unwanted-variation"><span class="quarto-unresolved-ref">sec-normalization-and-regressing-out-unwanted-variation</span></a> ).</p>
 <div class="cell" data-hash="06_integration_cache/html/unnamed-chunk-1_cbaa5da497e5a9910aa358babc831889">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
 <span><span class="va">split_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/scRNA-seq_online/split_seurat.rds"</span><span class="op">)</span></span>
@@ -685,7 +685,7 @@ Top 10 variable features:
 <p>We want to identify <strong>cell types which are present in all samples/conditions/modalities</strong> within our dataset, and therefore would like to observe a representation of cells from both samples/conditions/modalities in every cluster. This will enable more interpretable results downstream (i.e.&nbsp;DE analysis, ligand-receptor analysis, differential abundance analysis…).</p>
 </div>
 </div>
-<p>In this lesson, we will cover the integration of our samples across conditions, which is adapted from <a href="../seurat/integration.html"><span>Chapter&nbsp;12</span></a> .</p>
+<p>In this lesson, we will cover the integration of our samples across conditions, which is adapted from <a href="#sec-Single-cell_data_integration"><span class="quarto-unresolved-ref">sec-Single-cell_data_integration</span></a> .</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -696,7 +696,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>在此前的 <a href="../seurat/sctransform.html"><span>Chapter&nbsp;10</span></a> 中我们学习了how to run through the workflow from normalization to clustering without integration. Other steps in the workflow remain fairly similar, but the <strong>samples would not necessarily be split</strong> in the beginning and integration would not be performed.</p>
+<p>在此前的 <a href="#sec-sctransform"><span class="quarto-unresolved-ref">sec-sctransform</span></a> 中我们学习了how to run through the workflow from normalization to clustering without integration. Other steps in the workflow remain fairly similar, but the <strong>samples would not necessarily be split</strong> in the beginning and integration would not be performed.</p>
 <p>It can help to first run conditions individually if unsure what clusters to expect or expecting some different cell types between conditions (e.g.&nbsp;tumor and control samples), then run them together to see whether there are condition-specific clusters for cell types present in both conditions. Oftentimes, when clustering cells from multiple conditions there are condition-specific clusters and integration can help ensure the same cell types cluster together.</p>
 </div>
 </div>
@@ -816,7 +816,7 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>如何调用Seurat嵌入的其他整合算法进行整合，参考：<a href="../seurat/integrative_analysis_in_seurat_v5.html"><span>Chapter&nbsp;13</span></a> 。</p>
+<p>如何调用Seurat嵌入的其他整合算法进行整合，参考：<a href="#sec-Integrated_analysis_of_seurat-v5"><span class="quarto-unresolved-ref">sec-Integrated_analysis_of_seurat-v5</span></a> 。</p>
 </div>
 </div>
 </section></section><section id="整合后检验细胞分群情况" class="level2" data-number="24.3"><h2 data-number="24.3" class="anchored" data-anchor-id="整合后检验细胞分群情况">
@@ -869,7 +869,7 @@ Tip
 <p>Not all tools may perform as well on every task, and complex datasets may require testing several data integration approaches. You might want to analyze independently each of the batches you consider to integrate across, in order to define cell identities at this level before integrating and checking that the initially annotated cell types are mixed as expected.</p>
 <section id="harmonizing-as-a-method-of-integration" class="level3"><h3 class="anchored" data-anchor-id="harmonizing-as-a-method-of-integration">Harmonizing as a method of integration</h3>
 <p>Harmony (<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019">Korsunsky et al.&nbsp;2019</a>) was devleoped in 2019, and is an example of <strong>a tool that can work with complex integration tasks</strong>. It is available as an <a href="#0">GitHub</a> and <a href="#0">CRAN</a>, and it has functions for standalone and Seurat pipeline analyses. It has been shown to perform incredibly well from recent benchmarking studies (<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020">Tran et al.&nbsp;2020</a>).</p>
-<p>在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用<code>Harmony</code>包（available on <a href="https://github.com/immunogenomics/harmony">GitHub</a> and <a href="https://cran.r-project.org/web/packages/harmony/index.html">CRAN</a>），详见<a href="https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html">该教程</a>。同时，Seurat V5中的<code>IntegrateLayers</code>函数集成了Harmony整合算法，可以直接调用，详见：<a href="../seurat/integrative_analysis_in_seurat_v5.html"><span>Chapter&nbsp;13</span></a> 。Compared to other algorithms,&nbsp;<code>Harmony</code>&nbsp;notably presents the following advantages (<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019">Korsunsky et al.&nbsp;2019</a>,&nbsp;<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020">Tran et al.&nbsp;2020</a>):</p>
+<p>在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用<code>Harmony</code>包（available on <a href="https://github.com/immunogenomics/harmony">GitHub</a> and <a href="https://cran.r-project.org/web/packages/harmony/index.html">CRAN</a>），详见<a href="https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html">该教程</a>。同时，Seurat V5中的<code>IntegrateLayers</code>函数集成了Harmony整合算法，可以直接调用，详见：<a href="#sec-Integrated_analysis_of_seurat-v5"><span class="quarto-unresolved-ref">sec-Integrated_analysis_of_seurat-v5</span></a> 。Compared to other algorithms,&nbsp;<code>Harmony</code>&nbsp;notably presents the following advantages (<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019">Korsunsky et al.&nbsp;2019</a>,&nbsp;<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020">Tran et al.&nbsp;2020</a>):</p>
 <ol type="1">
 <li><p>Possibility to integrate data across several variables (for example, by experimental batch and by condition)</p></li>
 <li><p>Significant gain in speed and lower memory requirements for integration of large datasets</p></li>

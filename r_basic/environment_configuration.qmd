@@ -72,6 +72,78 @@ packagecheck <- function(x) {
 lapply(packages, packagecheck)
 ```
 
+## 调整矢量/内存分配上限
+
+### 提高矢量大小上限
+
+在R语言中如果我们要处理的数据集较大，如在处理单细胞数据时（ @sec-perform_sctranform ），可能会出现如下报错：
+
+``` md
+Error: cannot allocate vector of size *** Mb
+```
+
+这是因为 R 中有对象大小的限制（默认值为 500 1024 \^ 2 = 500 Mb）。可以通过如下代码进行调整：
+
+```{r}
+#| eval: false
+# 调整允许对象大小限制为6GB
+options(future.globals.maxSize = 6 * 1024 * 1024^2)
+```
+
+### 提高R内存分配上限（macOS） {#sec-Raising_memory_limit}
+
+如果在运行大量的数据处理时，出现如下报错：
+
+``` md
+Error: vector memory exhausted (limit reached?)
+```
+
+那么说明脚本的运行超出了R语言内存分配的上限，这一般就是Mac的物理内存大小。但是，我们可以通过如下的方式来通过分配SWAP虚拟内存的方式，使得代码能够继续运行（来自stackoverflow上的[这篇](https://stackoverflow.com/questions/51295402/r-on-macos-error-vector-memory-exhausted-limit-reached)帖子）。
+
+【方法一：通过[usethis](https://usethis.r-lib.org/)包配置】
+
+在R中运行：
+
+```{r}
+usethis::edit_r_environ()
+```
+
+::: callout-tip
+`usethis` is a package that facilitates interactive workflows for R project creation and development
+:::
+
+运行后会在RStudio中以新标签页的方式打开一个.Renviron文件。在其中输入：
+
+``` md
+R_MAX_VSIZE=50Gb
+```
+
+::: callout-caution
+注意这里的内存数值包括了物理内存和虚拟内存，所以如果你的电脑的实际内存为16GB，那么在这里需要输入比16GB更大的数值，输入16GB是不会有帮助的。
+:::
+
+保存这个文件后，重启RStudio，这时候内存上限就被修改好了。
+
+![RStudio调用虚拟内存执行脚本](images/截屏2024-01-14 10.33.37.png){width="290"}
+
+【方法二：通过终端配置】
+
+打开终端（Terminal），在其中输入：
+
+``` md
+cd ~
+touch .Renviron
+open .Renviron
+```
+
+这时会打开.Renviron文件，在其中输入：
+
+``` md
+R_MAX_VSIZE=50Gb
+```
+
+保存文件，重启RStudio。
+
 ## 自动整理代码
 
 [The tidyverse style guide](https://style.tidyverse.org/index.html)**对代码编写时的规范格式进行了详细说明。通过**[styler包](https://styler.r-lib.org)可以实现对代码的自动整理，有助于保持不同项目之间的代码风格一致，并促进协作。安装styler后通过运行下面的命令即可自动整理当前打开的文档的代码。
