@@ -276,4 +276,17 @@ seurat_integrated <- RunUMAP(seurat_integrated,
 p3 <- DimPlot(seurat_integrated, reduction = "umap", group.by = "samples")
 p4 <- DimPlot(seurat_integrated, reduction = "umap", split.by = "samples")
 plot_grid(p1, p2, p3, p4, ncol = 2, labels = c("Before Harmony", "", "After Harmony", ""))
+
+# 保存
+saveRDS(seurat_integrated, file = "output/sc_supplementary/GSE150430_seurat_integrated.RDS"); beep()
+```
+
+### 聚类
+
+```{r}
+#| cache-lazy: false
+rm(list = ls())
+gc()
+
+seurat_integrated <- readRDS("output/sc_supplementary/GSE150430_seurat_integrated.RDS")
 ```

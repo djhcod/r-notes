@@ -1,19 +1,32 @@
----
-execute: 
-  eval: false
----
-
 # Seurat常用函数清单 {#sec-seurat_command_list}
 
 > 原文：[*Seurat Command List*](https://satijalab.org/seurat/articles/essential_commands)
 >
 > 原文发布日期：2023年10月31日
 
+为了演示各函数的效果，这里的案例数据选取了在 @sec-seurat_cell_clustering_official_tutorial 中用到的包含了2700个细胞的外周血单核细胞数据（`pbmc`）。数据可在[此链接](https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz)下载。
+
+```{r}
+library(Seurat)
+
+# 读取PBMC数据集
+counts <- Read10X(data.dir = "data/seurat_official/filtered_gene_bc_matrices/hg19")
+# Initialize the Seurat object with the raw (non-normalized data).
+pbmc <- CreateSeuratObject(counts = counts, 
+                           project = "pbmc3k", 
+                           min.cells = 3, 
+                           min.features = 200)
+pbmc
+```
+
+------------------------------------------------------------------------
+
 ## 标准Seurat流程基本函数
 
 见 @sec-seurat_cell_clustering_official_tutorial 。
 
 ```{r}
+#| eval: false
 pbmc <- NormalizeData(object = pbmc)
 pbmc <- FindVariableFeatures(object = pbmc)
 pbmc <- ScaleData(object = pbmc)
@@ -29,17 +42,18 @@ DimPlot(object = pbmc, reduction = "umap")
 见 @sec-sctransform 。
 
 ```{r}
-pbmc <- SCTransform(object = pbmc)
-pbmc <- RunPCA(object = pbmc)
-pbmc <- FindNeighbors(object = pbmc, dims = 1:30)
-pbmc <- FindClusters(object = pbmc)
-pbmc <- RunUMAP(object = pbmc, dims = 1:30)
+pbmc <- SCTransform(object = pbmc, verbose = F)
+pbmc <- RunPCA(object = pbmc, verbose = F)
+pbmc <- FindNeighbors(object = pbmc, dims = 1:30, verbose = F)
+pbmc <- FindClusters(object = pbmc, verbose = F)
+pbmc <- RunUMAP(object = pbmc, dims = 1:30, verbose = F)
 DimPlot(object = pbmc, reduction = "umap")
 ```
 
 或者通过管道函数：
 
 ```{r}
+#| eval: false
 pbmc <- SCTransform(pbmc) %>%
     RunPCA() %>%
     FindNeighbors(dims = 1:30) %>%
@@ -47,93 +61,163 @@ pbmc <- SCTransform(pbmc) %>%
     RunUMAP(dims = 1:30)
 ```
 
+------------------------------------------------------------------------
+
 ## 提取`Seurat`对象内的各数据
 
 ### 获取细胞、基因、assays、layers名称
 
-获取所有细胞的barcode：
+#### 获取细胞的barcode：
 
 ```{r}
-colnames(pbmc)
-Cells(pbmc) # 效果同上
+colnames(pbmc)[1:10]
+Cells(pbmc)[1:10] # 效果同上
 ```
 
-获取所有的基因（feature）名。可以添加`layer`参数，用于指定提取哪一个layer下的基因名，如果未指定，则提取默认layer内的基因名。
+#### 获取基因（feature）名。
 
 ```{r}
-Features(pbmc)
-rownames(pbmc) # 同上
-
-# 获取指定assay（如“RNA”）下的基因名
-Features(seurat_integrated[["RNA"]])
+Features(pbmc)[1:10]
+rownames(pbmc)[1:10] # 同上
 ```
 
-获取细胞和基因的数量：
+可以指定提取哪一个assay下的基因名，如果未指定，则提取默认assay内的基因名。这里的pbmc数据经过了**`SCTransform`，**所以有两个assay，默认的归一化之后的“SCT”assay，另一个是原始的“RNA”assay。
+
+```{r}
+# 获取“SCT” assay下的基因名
+Features(pbmc[["SCT"]])[1:10]
+# 获取“RNA” assay下的基因名
+Features(pbmc[["RNA"]])[1:10]
+# 或
+Features(pbmc, assay = "RNA")[1:10]
+```
+
+也可以通过添加`layer`参数，提取指定layer下的基因名：
+
+```{r}
+# 提取“counts” layer下的基因名
+Features(pbmc, layer = "counts")[1:10]
+# 提取"scale.data"的基因名
+Features(pbmc, layer = "scale.data")[1:10]
+```
+
+#### 获取细胞和基因的数量：
 
 ```{r}
 ncol(pbmc) # 细胞数量
 nrow(pbmc) # 基因（feature）数量
 ```
 
-获取运行`FindVariableFeatures`函数之后的高变基因列表（ @sec-highly_variable_features ）：
+#### 获取高变基因列表
+
+详见 @sec-highly_variable_features 。
 
 ```{r}
-VariableFeatures(pbmc)
+VariableFeatures(pbmc)[1:10]
 ```
 
-获取/设定默认的layer：一个Seurat对象可以包括多个assay对象，但是在某个时刻，只有一个assay对象是默认激活的。
+#### 列出layers
 
 ```{r}
 # 列出所有的layers
 Layers(pbmc)
-
-# 获取默认的layer
-DefaultLayer(pbmc)
-
-# 设定默认的layer
-DefaultLayer(pbmc) <- "value"
 ```
 
-列出所有的assay，如"RNA"、运行`SCTransform`之后的"SCT" assay:
+#### 获取/设定assay：
+
+列出所有的assay，如"RNA" assay、运行`SCTransform`之后的"SCT" assay。一个Seurat对象可以包括多个assay对象，但是在某个时刻，只有一个assay对象是默认激活的。
 
 实际应用场景见 @sec-findmarkers_function 。
 
 ```{r}
-# 列出所有的assay，如"RNA"、运行SCTransform之后的"SCT" assay:
+# 列出所有的assay
 Assays(pbmc)
 
 # 获取目前的默认assay名称
 DefaultAssay(pbmc)
 
 # 设定默认assay
-DefaultAssay(pbmc) <- "value"
+DefaultAssay(pbmc) <- "RNA"
+DefaultAssay(pbmc) <- "SCT"
 ```
+
+#### 转换不同版本的Seurat对象：
+
+上面我们使用的pbmc对象使用V5版本的Seurat包创建的，可以通过如下命令查看：
+
+```{r}
+# 查看Seurat对象是用哪个版本的Seurat包创建的
+pbmc@version
+```
+
+这里我们导入在 @sec-Load_case_data 中用到的案例数据，这个Seurat对象是使用V4版本的`Seurat`包创建的。
+
+```{r}
+#| cache-lazy: false
+load(bzfile("data/scRNA-seq_online/additional_data/seurat_integrated.RData.bz2"))
+seurat_integrated
+seurat_integrated@version
+```
+
+![](images/截屏2024-01-15%2019.49.57.png)
+
+可以看到，这个seurat_integrated对象的“RNA” assay没有layers结构，是典型的V5版本之前的Seurat对象的结构。我们可以通过as()函数将V4或V3版本的“RNA” assay转换成V5版本的“RNA” assay：
+
+```{r}
+#| cache-lazy: false
+# convert a v4 or v3 assay to a v5 assay
+seurat_integrated[["RNA5"]] <- as(object = seurat_integrated[["RNA"]], 
+                                  Class = "Assay5")
+DefaultAssay(seurat_integrated) = "RNA5"
+```
+
+![](images/截屏2024-01-15%2019.54.40.png)
+
+转换后seurat_integrated\[\["RNA5"\]\]里面是V5版的Seurat结构。如果不想要原来的“RNA” assay可以将其删除：
+
+```{r}
+#| cache-lazy: false
+seurat_integrated[["RNA"]] <- NULL
+```
+
+也可以将V5版本的“RNA” assay转换成V4或V3版本的“RNA” assay：
+
+```{r}
+# convert a v5 assay to a v4 or v3 assay
+pbmc[["RNA3"]] <- as(object = pbmc[["RNA"]], Class = "Assay")
+```
+
+![](images/截屏2024-01-15%2020.01.30.png)
 
 ### 获取细胞注释信息（cell identities）
 
-查看cell identities：即**细胞的类型**，在Seurat对象中，细胞可能有好几种不同方法注释的类型，但是在某一时刻，只有一种细胞类型是默认激活的。
+#### 查看cell identities：
+
+即**细胞的类型**，在Seurat对象中，细胞可能有好几种不同方法注释的类型，但是在某一时刻，只有一种细胞类型是默认激活的。
 
 ```{r}
-Idents(pbmc)
+Idents(pbmc)[1:5]
 table(Idents(pbmc))
 
 # 查看目前cell identities的水平
 levels(pbmc)
 ```
 
-设定细胞identities：
+#### 设定细胞identities：
 
 实际应用场景见 @sec-findmarkers_function 。
 
 ```{r}
 # 将meta.data中的"seurat_clusters"列设置为cell identities
-Idents(object = pbmc) <- "seurat_clusters"
+Idents(pbmc) <- "seurat_clusters"
 
 # 重命名细胞注释标签或重新排序细胞类型标签
-Idents(ifnb) <- factor(Idents(ifnb), 
-                       levels = c("pDC", "Eryth", "Mk", "DC", "CD14 Mono", "CD16 Mono", 
+Idents(pbmc) <- factor(Idents(pbmc), 
+                       levels = levels(pbmc),
+                       labels = c("pDC", "Mk", "DC", "CD14 Mono", "CD16 Mono", 
                                   "B Activated", "B", "CD8 T", "NK", "T activated", 
-                                  "CD4 Naive T", "CD4 Memory T"))
+                                  "CD4 Naive T", "CD4 Memory T", "epi"))
+Idents(pbmc) |> unique()
 ```
 
 将目前的cell identities保存到meta.data新的一列中：
@@ -146,23 +230,28 @@ pbmc[["old.ident"]] <- Idents(pbmc)
 重命名某个cell identities：
 
 ```{r}
-pbmc <- RenameIdents(object = pbmc, 
-                     `FCGR3A+ Mono` = "monocyte")
+pbmc <- RenameIdents(pbmc, 
+                     "B" = "B cell")
+Idents(pbmc) |> unique()
 ```
 
 ### 获取meta.data
 
 ```{r}
 # View metadata data frame, stored in object@meta.data
-pbmc@meta.data
+pbmc@meta.data |> head()
 # 或
-pbmc[[]]
+pbmc[[]] |> head()
+# 如果是展示前6行的话也可以直接这样写：
+head(pbmc)
 
 # Retrieve specific values from the metadata
-pbmc$nCount_RNA
-pbmc[[c("percent.mito", "nFeature_RNA")]]
+pbmc$nCount_RNA[1:5]
+pbmc[[c("nCount_RNA", "nFeature_RNA")]][1:5,]
 
 # Add metadata, see ?AddMetaData
+random_group_labels <- c(rep("Cancer", nrow(pbmc@meta.data)/2), 
+                         rep("Control", nrow(pbmc@meta.data)/2))
 pbmc$groups <- random_group_labels
 ```
 
@@ -170,22 +259,17 @@ pbmc$groups <- random_group_labels
 
 ```{r}
 # Retrieve data in an expression matrix RNA counts matrix
-pbmc[["RNA"]]$counts
+pbmc[["RNA"]]$counts[1:5, 1:5]
 # 或
-LayerData(pbmc, assay = "RNA", layer = "counts")
-
-# GetAssayData from Seurat v4 is still supported
-GetAssayData(object = pbmc, assay = "RNA", slot = "counts")
+LayerData(pbmc, assay = "RNA", layer = "counts")[1:5, 1:5]
 ```
 
 ```{r}
+#| eval: false
 # Set expression data assume new.data is a new expression matrix
 pbmc[["RNA"]]$counts <- new.data
 # 或
 LayerData(pbmc, assay = "RNA", layer = "counts") <- new.data
-
-# SetAssayData from Seurat v4 is still supported
-pbmc <- SetAssayData(object = pbmc, slot = "counts", new.data = new.data)
 ```
 
 ### 获取PCA降维信息
@@ -194,20 +278,21 @@ pbmc <- SetAssayData(object = pbmc, slot = "counts", new.data = new.data)
 
 ```{r}
 # 获取细胞在所有主成分上的评分（坐标）
-Embeddings(pbmc, reduction = "pca")
+Embeddings(pbmc, reduction = "pca")[1:5, 1:5]
 # 或
-pbmc[['pca']]@cell.embeddings
+pbmc[['pca']]@cell.embeddings[1:5, 1:5]
 
 # 获取基因在所有主成分上的评分（坐标）
-Loadings(pbmc, reduction = "pca")
+Loadings(pbmc, reduction = "pca")[1:5, 1:5]
 # 或
-pbmc[["pca"]]@feature.loadings
+pbmc[["pca"]]@feature.loadings[1:5, 1:5]
 
 # 提取PCA信息中的第二主成分，并展示对该主成分影响最大的前5个基因名
 print(pbmc[["pca"]], dims = 2, nfeatures = 5)
 ```
 
 ```{r}
+#| eval: false
 # Create custom dimensional reduction loadings matrix is optional
 new_reduction <- CreateDimReducObject(embeddings = new.embeddings, 
                                       loadings = new.loadings, 
@@ -223,8 +308,10 @@ pbmc[["custom_pca"]] <- new_reduction
 ```{r}
 FetchData(object = pbmc, 
           vars = c("PC_1", "nFeature_RNA", "MS4A1"), 
-          layer = "counts")
+          layer = "counts") |> head()
 ```
+
+------------------------------------------------------------------------
 
 ## Seurat对象取子集和合并
 
@@ -234,19 +321,19 @@ FetchData(object = pbmc,
 
 ```{r}
 # 根据meta data中的信息取子集
-subset(x = pbmc, subset = groups == "g1")
+subset(x = pbmc, subset = groups == "Cancer")
 
 # 提取特定cell identities, also see ?SubsetData
-subset(x = pbmc, idents = "B")
+subset(x = pbmc, idents = "B cell")
 # 反选
-subset(x = pbmc, idents = c("Naive CD4 T", "CD8 T"), invert = TRUE)
+subset(x = pbmc, idents = c("CD4 Naive T", "CD8 T"), invert = TRUE)
 
 # 根据特定gene/feature表达水平取子集
-subset(x = pbmc, subset = MS4A1 > 2.5)
+subset(x = pbmc, subset = S100A9 > 1.5)
 
 # 采用多个标准取子集
-subset(x = pbmc, subset = MS4A1 > 2.5 & PC_1 > 5)
-subset(x = pbmc, subset = MS4A1 > 2.5, idents = "B")
+subset(x = pbmc, subset = S100A9 > 1.5 & PC_1 > 5)
+subset(x = pbmc, subset = S100A9 > 1.5, idents = "CD8 T")
 
 # Downsample the number of cells per identity class
 subset(x = pbmc, downsample = 100)
@@ -257,34 +344,44 @@ subset(x = pbmc, downsample = 100)
 In Seurat v5, users can now split in object directly into different layers keeps expression data in one object, but splits multiple samples into layers can proceed directly to integration workflow after splitting layers。实际应用场景见 @sec-Single-cell_data_integration 。
 
 ```{r}
+DefaultAssay(pbmc) <- "RNA"
 # 按照meta.data中的stim列分割layer
-ifnb[["RNA"]] <- split(ifnb[["RNA"]], f = ifnb$stim)
-Layers(ifnb)
+pbmc[["RNA"]] <- split(pbmc[["RNA"]], f = pbmc$groups)
+```
 
-# If desired, for example after intergation, the layers can be joined together again
-ifnb <- JoinLayers(ifnb)
+![](images/截屏2024-01-15%2018.36.23.png)
+
+如果需要，例如在整合之后，可以将各layers再次合并在一起：
+
+```{r}
+pbmc[["RNA"]] <- JoinLayers(pbmc[["RNA"]])
 ```
 
 ### 分割Seurat
 
-In line with prior workflows, you can also split your Seurat object into a list of multiple objects based on a metadata column creates a list of two objects
+In line with prior workflows, you can also split your Seurat object into a **list** of multiple objects based on a metadata column creates a list of two objects。通过`SplitObject()`分割Seurat之后生成的是包含多个Seurat对象的列表。
 
 ```{r}
-ifnb_list <- SplitObject(ifnb, split.by = "stim")
-ifnb_list$CTRL
-ifnb_list$STIM
+seurat_list <- SplitObject(pbmc, split.by = "groups")
+seurat_list
 ```
+
+![](images/截屏2024-01-15%2018.42.35.png)
 
 ### Merge objects (without integration)
 
-In Seurat v5, merging creates a single object, but keeps the expression information split into different layers for integration. If not proceeding with integration, rejoin the layers after merging. 实际应用场景，见[此链接](https://hbctraining.github.io/scRNA-seq_online/lessons/03_SC_quality_control-setup.html)。
+In Seurat v5, merging creates a single object, but **keeps the expression information split into different layers** for integration. If not proceeding with integration, rejoin the layers after merging. 实际应用场景，见[此链接](https://hbctraining.github.io/scRNA-seq_online/lessons/03_SC_quality_control-setup.html)。
 
 ```{r}
 # Merge two Seurat objects
-merged_obj <- merge(x = ifnb_list$CTRL, 
-                    y = ifnb_list$STIM)
-merged_obj[["RNA"]] <- JoinLayers(merged_obj)
+merged_pbmc <- merge(x = seurat_list[["Control"]], 
+                     y = seurat_list[["Cancer"]])
+```
 
+![](images/截屏2024-01-15%2018.19.15.png)
+
+```{r}
+#| eval: false
 # Example to merge more than two Seurat objects
 merge(x = pbmc1, 
       y = list(pbmc2, pbmc3))
@@ -295,19 +392,19 @@ merge(x = pbmc1,
 关于单细胞数据的整合，参考： @sec-Single-cell_data_integration 。
 
 ```{r}
-merged_obj <- merge(x = ifnb_list$CTRL, y = ifnb_list$STIM)
-merged_obj <- NormalizeData(merged_obj)
-merged_obj <- FindVariableFeatures(merged_obj)
-merged_obj <- ScaleData(merged_obj)
-merged_obj <- RunPCA(merged_obj)
-merged_obj <- IntegrateLayers(object = obj, 
-                              method = RPCAIntegration, 
-                              orig.reduction = "pca", 
-                              new.reduction = "integrated.rpca",
-                              verbose = FALSE)
+merged_pbmc <- NormalizeData(merged_pbmc, verbose = F)
+merged_pbmc <- FindVariableFeatures(merged_pbmc, verbose = F)
+merged_pbmc <- ScaleData(merged_pbmc, verbose = F)
+merged_pbmc <- RunPCA(merged_pbmc, verbose = F)
+merged_pbmc <- IntegrateLayers(object = merged_pbmc, 
+                               method = RPCAIntegration, 
+                               orig.reduction = "pca", 
+                               new.reduction = "integrated.rpca",
+                               verbose = FALSE)
 
 # now that integration is complete, rejoin layers
-merged_obj[["RNA"]] <- JoinLayers(merged_obj)
+merged_pbmc[["RNA"]] <- JoinLayers(merged_pbmc[["RNA"]])
+merged_pbmc
 ```
 
 ------------------------------------------------------------------------
@@ -320,4 +417,15 @@ Users who are particularly interested in some of the technical changes to data s
 -   [SeuratObject manual](https://mojaveazure.github.io/seurat-object/)
 
 -   [Seurat v5 and Assay5 introductory vignette](https://satijalab.org/seurat/articles/seurat5_essential_commands)
+:::
+
+------------------------------------------------------------------------
+
+::: {.callout-note collapse="true" icon="false"}
+## Session Info
+
+```{r}
+#| echo: false
+sessionInfo()
+```
 :::
