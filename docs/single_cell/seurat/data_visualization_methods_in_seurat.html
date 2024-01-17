@@ -642,84 +642,121 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Calculate feature-specific contrast levels based on quantiles of non-zero expression. Particularly useful when plotting multiple markers。</p>
-<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-12_0323006ab621f3daf580ccdc8ac7a4c1">
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
-<span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MS4A1"</span>, <span class="st">"PTPRCAP"</span><span class="op">)</span>, </span>
-<span>            min.cutoff <span class="op">=</span> <span class="st">"q10"</span>, </span>
-<span>            max.cutoff <span class="op">=</span> <span class="st">"q90"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>调整颜色：</strong></p>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-12_187f9a6400818bdc2886dc79a8dfd21b">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, features <span class="op">=</span> <span class="st">"MS4A1"</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lightblue"</span>, <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 通过RColorBrewer包取色</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">RColorBrewer</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, features <span class="op">=</span> <span class="st">"MS4A1"</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span>, name <span class="op">=</span> <span class="st">"RdBu"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid" width="672"></p>
 </div>
-<p>Visualize co-expression of two features simultaneously。添加<code>blend = TRUE</code>。</p>
-<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-13_63620e9112e82173e483251df7d4077d">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
-<span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MS4A1"</span>, <span class="st">"CD79A"</span><span class="op">)</span>, </span>
-<span>            blend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>也可以通过ggplot语法修改颜色：</p>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-13_eb059a13ca647ee13889030d4cc7b524">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, features <span class="op">=</span> <span class="st">"MS4A1"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html">scale_colour_gradientn</a></span><span class="op">(</span>colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span>, name <span class="op">=</span> <span class="st">"RdBu"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>通过添加<code>split.by</code>参数，来按照不同的样本组别来分别展示marker gene的表达。</p>
-<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-14_3869a40d2c46f777cf8ea6f8aae2698e">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
-<span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MS4A1"</span>, <span class="st">"CD79A"</span><span class="op">)</span>, </span>
-<span>            split.by <span class="op">=</span> <span class="st">"groups"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Calculate feature-specific contrast levels based on quantiles of non-zero expression. Particularly useful when plotting multiple markers。</p>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-14_8be2b78fecb8776cb049aa1425b0372f">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
+<span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MS4A1"</span>, <span class="st">"PTPRCAP"</span><span class="op">)</span>, </span>
+<span>            min.cutoff <span class="op">=</span> <span class="st">"q10"</span>, </span>
+<span>            max.cutoff <span class="op">=</span> <span class="st">"q90"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</section></section><section id="dot-plots" class="level3"><h3 class="anchored" data-anchor-id="dot-plots">Dot plots</h3>
-<p>The <strong>size</strong> of the dot corresponds to <strong>the percentage of cells expressing the feature in each cluster</strong>. The <strong>color</strong> represents the <strong>average expression level</strong></p>
-<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-15_2bf26c42dcc5d6cacd4670ff1c31620d">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DotPlot.html">DotPlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
-<span>        features <span class="op">=</span> <span class="va">features</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">RotatedAxis</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>多基因FeaturePlot：</strong></p>
+<p>通过添加<code>split.by</code>参数，来按照不同的样本组别来分别展示marker gene的表达。</p>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-15_c7b33c1f09acb7fadbd83ae802a678bd">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
+<span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CD3D"</span>, <span class="st">"MS4A1"</span>, <span class="st">"CD79A"</span><span class="op">)</span>, </span>
+<span>            split.by <span class="op">=</span> <span class="st">"groups"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>通过添加<code>split.by</code>参数，来按照不同的样本组别来分别展示marker gene的表达。</p>
-<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-16_4ebee70ba6311219f0c07df4989748ac">
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DotPlot.html">DotPlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
-<span>        features <span class="op">=</span> <span class="va">features</span>, </span>
-<span>        split.by <span class="op">=</span> <span class="st">"groups"</span><span class="op">)</span> <span class="op">+</span> </span>
-<span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">RotatedAxis</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><code><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot()</a></code>中还提供了<code>blend</code> 参数，来可视化两个基因的共表达情况（添加<code>blend = TRUE</code>）。注意<code>blend = TRUE</code><strong>只能适用于2个基因</strong>，多个基因会报错 。</p>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-16_94f6c7bf94e5f5bb4624f07970308ff8">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
+<span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MS4A1"</span>, <span class="st">"CD79A"</span><span class="op">)</span>, </span>
+<span>            blend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>如果想实现多个基因的话，可以使用<code>scCustomize</code>包中的<code><a href="https://samuel-marsh.github.io/scCustomize/reference/Plot_Density_Joint_Only.html">Plot_Density_Joint_Only()</a></code>函数绘制多基因联合密度图。该函数还依赖于Nebulosa包，因此还需要先从BiocManager安装该包：</p>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-17_5d57bde7279acd7c1eb6aa551f5dca29">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"scCustomize"</span><span class="op">)</span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html">install</a></span><span class="op">(</span><span class="st">"Nebulosa"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-18_a28e9353cf13231a100df7cec99708a3">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/samuel-marsh/scCustomize">scCustomize</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://samuel-marsh.github.io/scCustomize/reference/Plot_Density_Joint_Only.html">Plot_Density_Joint_Only</a></span><span class="op">(</span>seurat_object <span class="op">=</span> <span class="va">pbmc3k.final</span>, </span>
+<span>                        features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CD3D"</span>, <span class="st">"MS4A1"</span>, <span class="st">"CD79A"</span><span class="op">)</span>,</span>
+<span>                        custom_palette <span class="op">=</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/CustomPalette.html">BlueAndRed</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section></section><section id="dot-plots" class="level3"><h3 class="anchored" data-anchor-id="dot-plots">Dot plots</h3>
+<p>The <strong>size</strong> of the dot corresponds to <strong>the percentage of cells expressing the feature in each cluster</strong>. The <strong>color</strong> represents the <strong>average expression level</strong></p>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-19_4365cd57624aad54c621cfe063e4f680">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DotPlot.html">DotPlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
+<span>        features <span class="op">=</span> <span class="va">features</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">RotatedAxis</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>通过添加<code>split.by</code>参数，来按照不同的样本组别来分别展示marker gene的表达。</p>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-20_85c94759fc298bb3253c0d2076a5fd45">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DotPlot.html">DotPlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
+<span>        features <span class="op">=</span> <span class="va">features</span>, </span>
+<span>        split.by <span class="op">=</span> <span class="st">"groups"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">RotatedAxis</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 </section><section id="heatmap" class="level3"><h3 class="anchored" data-anchor-id="heatmap">Heatmap</h3>
-<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-17_4c1305b1835b22598c585914e98028a5">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DoHeatmap.html">DoHeatmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, downsample <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, </span>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-21_57e350639a05dad39d2b1e5b7e1fa2ba">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DoHeatmap.html">DoHeatmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, downsample <span class="op">=</span> <span class="fl">100</span><span class="op">)</span>, </span>
 <span>          features <span class="op">=</span> <span class="va">features</span>, </span>
 <span>          size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>DoHeatmap now shows a grouping bar, splitting the heatmap into groups or clusters. This can be changed with the <code>group.by</code> parameter. 默认的<code>group.by</code>为细胞分群信息，即按照细胞的分群作为分组依据来绘制热图：</p>
-<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-18_8d0e14a1c00e77c32d8b5113b8796c05">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DoHeatmap.html">DoHeatmap</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-22_f3f3d9eecede881fb9ba643a92886c34">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DoHeatmap.html">DoHeatmap</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
 <span>          features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/VariableFeatures.html">VariableFeatures</a></span><span class="op">(</span><span class="va">pbmc3k.final</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span>, </span>
 <span>          cells <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, </span>
 <span>          size <span class="op">=</span> <span class="fl">4</span>, <span class="co"># 分组文字的大小</span></span>
 <span>          angle <span class="op">=</span> <span class="fl">45</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># 分组文字角度</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">NoLegend</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>我们用meta.data中的任何列作为分群依据。例如这里的”groups”列：</p>
-<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-19_30d0af0ea0dc1ec0328ddc869cbae445">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">pbmc3k.final</span><span class="op">@</span><span class="va">meta.data</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-23_995f9ff5afbf8406d6b6cea9015ac38b">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">pbmc3k.final</span><span class="op">@</span><span class="va">meta.data</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "orig.ident"         "nCount_RNA"         "nFeature_RNA"      
 [4] "seurat_annotations" "percent.mt"         "RNA_snn_res.0.5"   
 [7] "seurat_clusters"    "groups"            </code></pre>
 </div>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DoHeatmap.html">DoHeatmap</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DoHeatmap.html">DoHeatmap</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, </span>
 <span>          features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/VariableFeatures.html">VariableFeatures</a></span><span class="op">(</span><span class="va">pbmc3k.final</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span>, </span>
 <span>          group.by <span class="op">=</span> <span class="st">"groups"</span>,</span>
 <span>          cells <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, </span>
@@ -727,29 +764,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>          angle <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># 分组文字角度</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">NoLegend</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section></section><section id="细胞分群图" class="level2" data-number="9.2"><h2 data-number="9.2" class="anchored" data-anchor-id="细胞分群图">
 <span class="header-section-number">9.2</span> 细胞分群图</h2>
-<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-20_99e49681b2cb1d6183fa363971b922da">
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, reduction <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-24_4fbdc496a7a8ca3f34ca96e8fad08bd5">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, reduction <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid" width="672"></p>
+<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-24-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>进一步修饰</p>
-<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-21_0199eac3ed5fc5223482b669d26d0935">
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-25_af8778094d37bdb74a69f34aa9557776">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Clustering of 2,700 PBMCs"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <hr>
@@ -765,8 +802,8 @@ Session Info
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-22_098c9a4888a816e695f16691ae99c8a1">
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-26_d2159b51da2c94df8f8b49f9fb1a23b4">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.3.2 (2023-10-31)
 Platform: aarch64-apple-darwin20 (64-bit)
@@ -786,47 +823,85 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] ggplot2_3.4.4      Seurat_5.0.1       SeuratObject_5.0.1 sp_2.1-2          
+[1] scCustomize_2.0.1  RColorBrewer_1.1-3 ggplot2_3.4.4      Seurat_5.0.1      
+[5] SeuratObject_5.0.1 sp_2.1-2          
 
 loaded via a namespace (and not attached):
-  [1] deldir_2.0-2           pbapply_1.7-2          gridExtra_2.3         
-  [4] rlang_1.1.2            magrittr_2.0.3         RcppAnnoy_0.0.21      
-  [7] spatstat.geom_3.2-7    matrixStats_1.2.0      ggridges_0.5.5        
- [10] compiler_4.3.2         png_0.1-8              vctrs_0.6.5           
- [13] reshape2_1.4.4         stringr_1.5.1          pkgconfig_2.0.3       
- [16] fastmap_1.1.1          ellipsis_0.3.2         labeling_0.4.3        
- [19] utf8_1.2.4             promises_1.2.1         rmarkdown_2.25        
- [22] purrr_1.0.2            xfun_0.41              jsonlite_1.8.8        
- [25] goftest_1.2-3          later_1.3.2            spatstat.utils_3.0-4  
- [28] irlba_2.3.5.1          parallel_4.3.2         cluster_2.1.6         
- [31] R6_2.5.1               ica_1.0-3              stringi_1.8.3         
- [34] RColorBrewer_1.1-3     spatstat.data_3.0-3    reticulate_1.34.0     
- [37] parallelly_1.36.0      lmtest_0.9-40          scattermore_1.2       
- [40] Rcpp_1.0.11            knitr_1.45             tensor_1.5            
- [43] future.apply_1.11.0    zoo_1.8-12             sctransform_0.4.1     
- [46] httpuv_1.6.13          Matrix_1.6-4           splines_4.3.2         
- [49] igraph_1.6.0           tidyselect_1.2.0       abind_1.4-5           
- [52] rstudioapi_0.15.0      yaml_2.3.8             spatstat.random_3.2-2 
- [55] codetools_0.2-19       miniUI_0.1.1.1         spatstat.explore_3.2-5
- [58] listenv_0.9.0          lattice_0.22-5         tibble_3.2.1          
- [61] plyr_1.8.9             withr_2.5.2            shiny_1.8.0           
- [64] ROCR_1.0-11            evaluate_0.23          Rtsne_0.17            
- [67] future_1.33.0          fastDummies_1.7.3      survival_3.5-7        
- [70] polyclip_1.10-6        fitdistrplus_1.1-11    pillar_1.9.0          
- [73] KernSmooth_2.23-22     plotly_4.10.3          generics_0.1.3        
- [76] RcppHNSW_0.5.0         munsell_0.5.0          scales_1.3.0          
- [79] globals_0.16.2         xtable_1.8-4           glue_1.6.2            
- [82] lazyeval_0.2.2         tools_4.3.2            data.table_1.14.10    
- [85] RSpectra_0.16-1        RANN_2.6.1             leiden_0.4.3.1        
- [88] dotCall64_1.1-1        cowplot_1.1.2          grid_4.3.2            
- [91] tidyr_1.3.0            colorspace_2.1-0       nlme_3.1-164          
- [94] patchwork_1.1.3        cli_3.6.2              spatstat.sparse_3.0-3 
- [97] spam_2.10-0            fansi_1.0.6            viridisLite_0.4.2     
-[100] dplyr_1.1.4            uwot_0.1.16            gtable_0.3.4          
-[103] digest_0.6.33          progressr_0.14.0       ggrepel_0.9.4         
-[106] farver_2.1.1           htmlwidgets_1.6.4      htmltools_0.5.7       
-[109] lifecycle_1.0.4        httr_1.4.7             mime_0.12             
-[112] MASS_7.3-60           </code></pre>
+  [1] RcppAnnoy_0.0.21            splines_4.3.2              
+  [3] later_1.3.2                 bitops_1.0-7               
+  [5] tibble_3.2.1                polyclip_1.10-6            
+  [7] janitor_2.2.0               fastDummies_1.7.3          
+  [9] lifecycle_1.0.4             globals_0.16.2             
+ [11] lattice_0.22-5              MASS_7.3-60.0.1            
+ [13] magrittr_2.0.3              plotly_4.10.4              
+ [15] rmarkdown_2.25              yaml_2.3.8                 
+ [17] httpuv_1.6.13               sctransform_0.4.1          
+ [19] spam_2.10-0                 spatstat.sparse_3.0-3      
+ [21] reticulate_1.34.0           cowplot_1.1.2              
+ [23] pbapply_1.7-2               lubridate_1.9.3            
+ [25] abind_1.4-5                 zlibbioc_1.48.0            
+ [27] Rtsne_0.17                  GenomicRanges_1.54.1       
+ [29] purrr_1.0.2                 BiocGenerics_0.48.1        
+ [31] RCurl_1.98-1.14             pracma_2.4.4               
+ [33] circlize_0.4.15             GenomeInfoDbData_1.2.11    
+ [35] IRanges_2.36.0              S4Vectors_0.40.2           
+ [37] ggrepel_0.9.5               irlba_2.3.5.1              
+ [39] listenv_0.9.0               spatstat.utils_3.0-4       
+ [41] goftest_1.2-3               RSpectra_0.16-1            
+ [43] spatstat.random_3.2-2       fitdistrplus_1.1-11        
+ [45] parallelly_1.36.0           leiden_0.4.3.1             
+ [47] codetools_0.2-19            DelayedArray_0.28.0        
+ [49] tidyselect_1.2.0            shape_1.4.6                
+ [51] farver_2.1.1                matrixStats_1.2.0          
+ [53] stats4_4.3.2                spatstat.explore_3.2-5     
+ [55] jsonlite_1.8.8              ks_1.14.2                  
+ [57] ellipsis_0.3.2              progressr_0.14.0           
+ [59] ggridges_0.5.5              survival_3.5-7             
+ [61] tools_4.3.2                 ica_1.0-3                  
+ [63] Rcpp_1.0.12                 glue_1.7.0                 
+ [65] gridExtra_2.3               SparseArray_1.2.3          
+ [67] xfun_0.41                   MatrixGenerics_1.14.0      
+ [69] GenomeInfoDb_1.38.5         dplyr_1.1.4                
+ [71] withr_2.5.2                 fastmap_1.1.1              
+ [73] fansi_1.0.6                 digest_0.6.34              
+ [75] timechange_0.2.0            R6_2.5.1                   
+ [77] mime_0.12                   ggprism_1.0.4              
+ [79] colorspace_2.1-0            scattermore_1.2            
+ [81] tensor_1.5                  spatstat.data_3.0-4        
+ [83] Nebulosa_1.12.0             utf8_1.2.4                 
+ [85] tidyr_1.3.0                 generics_0.1.3             
+ [87] data.table_1.14.10          httr_1.4.7                 
+ [89] htmlwidgets_1.6.4           S4Arrays_1.2.0             
+ [91] uwot_0.1.16                 pkgconfig_2.0.3            
+ [93] gtable_0.3.4                lmtest_0.9-40              
+ [95] SingleCellExperiment_1.24.0 XVector_0.42.0             
+ [97] htmltools_0.5.7             dotCall64_1.1-1            
+ [99] scales_1.3.0                Biobase_2.62.0             
+[101] png_0.1-8                   snakecase_0.11.1           
+[103] knitr_1.45                  rstudioapi_0.15.0          
+[105] reshape2_1.4.4              nlme_3.1-164               
+[107] zoo_1.8-12                  GlobalOptions_0.1.2        
+[109] stringr_1.5.1               KernSmooth_2.23-22         
+[111] parallel_4.3.2              miniUI_0.1.1.1             
+[113] vipor_0.4.7                 ggrastr_1.0.2              
+[115] pillar_1.9.0                grid_4.3.2                 
+[117] vctrs_0.6.5                 RANN_2.6.1                 
+[119] promises_1.2.1              xtable_1.8-4               
+[121] cluster_2.1.6               beeswarm_0.4.0             
+[123] paletteer_1.5.0             evaluate_0.23              
+[125] mvtnorm_1.2-4               cli_3.6.2                  
+[127] compiler_4.3.2              rlang_1.1.3                
+[129] crayon_1.5.2                future.apply_1.11.1        
+[131] labeling_0.4.3              mclust_6.0.1               
+[133] rematch2_2.1.2              plyr_1.8.9                 
+[135] forcats_1.0.0               ggbeeswarm_0.7.2           
+[137] stringi_1.8.3               viridisLite_0.4.2          
+[139] deldir_2.0-2                munsell_0.5.0              
+[141] lazyeval_0.2.2              spatstat.geom_3.2-7        
+[143] Matrix_1.6-5                RcppHNSW_0.5.0             
+[145] patchwork_1.2.0             future_1.33.1              
+[147] shiny_1.8.0                 SummarizedExperiment_1.32.0
+[149] ROCR_1.0-11                 igraph_1.6.0               </code></pre>
 </div>
 </div>
 </div>
@@ -1260,207 +1335,242 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb27" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Seurat中的数据可视化方法 {#sec-Data_visualization_methods_in_Seurat}</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文：</span><span class="co">[</span><span class="ot">*Data visualization methods in Seurat*</span><span class="co">](https://satijalab.org/seurat/articles/visualization_vignette)</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文发布日期：2023-10-31</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>We'll demonstrate visualization techniques in Seurat using our previously computed Seurat object from the 2,700 PBMC tutorial. You can download this dataset from&nbsp;<span class="co">[</span><span class="ot">SeuratData</span><span class="co">](https://github.com/satijalab/seurat-data)</span>。官方教程是通过<span class="in">`SeuratData`</span>包的<span class="in">`InstallData`</span>函数来下载案例数据，可能需要开启全局代理才能下载：</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">'satijalab/seurat-data'</span>)</span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>SeuratData<span class="sc">::</span><span class="fu">InstallData</span>(<span class="st">"pbmc3k"</span>)</span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SeuratData)</span>
-<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>pbmc3k.final <span class="ot">&lt;-</span> <span class="fu">LoadData</span>(<span class="st">"pbmc3k"</span>, <span class="at">type =</span> <span class="st">"pbmc3k.final"</span>)</span>
-<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>pbmc3k.final<span class="sc">$</span>groups <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"group1"</span>, </span>
-<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"group2"</span>), </span>
-<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>                              <span class="at">size =</span> <span class="fu">ncol</span>(pbmc3k.final), </span>
-<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>                              <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>pbmc3k.final</span>
-<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>这里我将下载下来的数据保存起来：</span>
-<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
-<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(pbmc3k.final, <span class="at">file =</span> <span class="st">"data/seurat_official/pbmc3k.final.rds"</span>)</span>
-<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>后面我们直接从本地读取这个Seurat对象：</span>
-<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a>pbmc3k.final <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seurat_official/pbmc3k.final.rds"</span>)</span>
-<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5种可视化marker gene的方法</span></span>
-<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a>定义要检查的marker gene：</span>
-<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-56"><a href="#cb27-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-57"><a href="#cb27-57" aria-hidden="true" tabindex="-1"></a>features <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"LYZ"</span>, <span class="st">"CCL5"</span>, <span class="st">"IL32"</span>, <span class="st">"PTPRCAP"</span>, <span class="st">"FCGR3A"</span>, <span class="st">"PF4"</span>)</span>
-<span id="cb27-58"><a href="#cb27-58" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-59"><a href="#cb27-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-60"><a href="#cb27-60" aria-hidden="true" tabindex="-1"></a><span class="fu">### Ridge plots</span></span>
-<span id="cb27-61"><a href="#cb27-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-62"><a href="#cb27-62" aria-hidden="true" tabindex="-1"></a>Ridge plots - from ggridges. Visualize single cell expression distributions in each cluster</span>
-<span id="cb27-63"><a href="#cb27-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-66"><a href="#cb27-66" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-67"><a href="#cb27-67" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 10</span></span>
-<span id="cb27-68"><a href="#cb27-68" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
-<span id="cb27-69"><a href="#cb27-69" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb27-70"><a href="#cb27-70" aria-hidden="true" tabindex="-1"></a><span class="fu">RidgePlot</span>(pbmc3k.final, <span class="at">features =</span> features, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb27-71"><a href="#cb27-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-72"><a href="#cb27-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-73"><a href="#cb27-73" aria-hidden="true" tabindex="-1"></a><span class="fu">### Violin plot</span></span>
-<span id="cb27-74"><a href="#cb27-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-77"><a href="#cb27-77" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-78"><a href="#cb27-78" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
-<span id="cb27-79"><a href="#cb27-79" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(pbmc3k.final, <span class="at">features =</span> features)</span>
-<span id="cb27-80"><a href="#cb27-80" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-81"><a href="#cb27-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-82"><a href="#cb27-82" aria-hidden="true" tabindex="-1"></a>Violin plots can be split on some variable. Simply add the splitting variable to object metadata and pass it to the <span class="in">`split.by`</span> argument. 通过添加<span class="in">`split.by`</span>参数，展示marker gene在不同的样本组别中的表达。</span>
-<span id="cb27-83"><a href="#cb27-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-86"><a href="#cb27-86" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-87"><a href="#cb27-87" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(pbmc3k.final, </span>
-<span id="cb27-88"><a href="#cb27-88" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> <span class="st">"percent.mt"</span>, </span>
-<span id="cb27-89"><a href="#cb27-89" aria-hidden="true" tabindex="-1"></a>        <span class="at">split.by =</span> <span class="st">"groups"</span>)</span>
-<span id="cb27-90"><a href="#cb27-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-91"><a href="#cb27-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-92"><a href="#cb27-92" aria-hidden="true" tabindex="-1"></a><span class="fu">### Feature plot</span></span>
-<span id="cb27-93"><a href="#cb27-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-94"><a href="#cb27-94" aria-hidden="true" tabindex="-1"></a>Visualize feature expression in low-dimensional space</span>
-<span id="cb27-95"><a href="#cb27-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-98"><a href="#cb27-98" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-99"><a href="#cb27-99" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 8</span></span>
-<span id="cb27-100"><a href="#cb27-100" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 8</span></span>
-<span id="cb27-101"><a href="#cb27-101" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, <span class="at">features =</span> features)</span>
-<span id="cb27-102"><a href="#cb27-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-103"><a href="#cb27-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-104"><a href="#cb27-104" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 对`FeaturePlot`的进一步修饰</span></span>
-<span id="cb27-105"><a href="#cb27-105" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-106"><a href="#cb27-106" aria-hidden="true" tabindex="-1"></a>原始图像：</span>
-<span id="cb27-107"><a href="#cb27-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-110"><a href="#cb27-110" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-111"><a href="#cb27-111" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, <span class="at">features =</span> <span class="st">"MS4A1"</span>)</span>
-<span id="cb27-112"><a href="#cb27-112" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-113"><a href="#cb27-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-114"><a href="#cb27-114" aria-hidden="true" tabindex="-1"></a>Adjust the contrast in the plot。通过<span class="in">`min.cutoff`</span>和<span class="in">`max.cutoff`</span>调整颜色范围。</span>
-<span id="cb27-115"><a href="#cb27-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-118"><a href="#cb27-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-119"><a href="#cb27-119" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, <span class="at">features =</span> <span class="st">"MS4A1"</span>, </span>
-<span id="cb27-120"><a href="#cb27-120" aria-hidden="true" tabindex="-1"></a>            <span class="at">min.cutoff =</span> <span class="dv">1</span>, <span class="at">max.cutoff =</span> <span class="dv">3</span>)</span>
-<span id="cb27-121"><a href="#cb27-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-122"><a href="#cb27-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-123"><a href="#cb27-123" aria-hidden="true" tabindex="-1"></a>Calculate feature-specific contrast levels based on quantiles of non-zero expression. Particularly useful when plotting multiple markers。</span>
-<span id="cb27-124"><a href="#cb27-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-127"><a href="#cb27-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-128"><a href="#cb27-128" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, </span>
-<span id="cb27-129"><a href="#cb27-129" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"MS4A1"</span>, <span class="st">"PTPRCAP"</span>), </span>
-<span id="cb27-130"><a href="#cb27-130" aria-hidden="true" tabindex="-1"></a>            <span class="at">min.cutoff =</span> <span class="st">"q10"</span>, </span>
-<span id="cb27-131"><a href="#cb27-131" aria-hidden="true" tabindex="-1"></a>            <span class="at">max.cutoff =</span> <span class="st">"q90"</span>)</span>
-<span id="cb27-132"><a href="#cb27-132" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-133"><a href="#cb27-133" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-134"><a href="#cb27-134" aria-hidden="true" tabindex="-1"></a>Visualize co-expression of two features simultaneously。添加<span class="in">`blend = TRUE`</span>。</span>
-<span id="cb27-135"><a href="#cb27-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-138"><a href="#cb27-138" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-139"><a href="#cb27-139" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, </span>
-<span id="cb27-140"><a href="#cb27-140" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"MS4A1"</span>, <span class="st">"CD79A"</span>), </span>
-<span id="cb27-141"><a href="#cb27-141" aria-hidden="true" tabindex="-1"></a>            <span class="at">blend =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb27-142"><a href="#cb27-142" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-143"><a href="#cb27-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-144"><a href="#cb27-144" aria-hidden="true" tabindex="-1"></a>通过添加<span class="in">`split.by`</span>参数，来按照不同的样本组别来分别展示marker gene的表达。</span>
-<span id="cb27-145"><a href="#cb27-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-148"><a href="#cb27-148" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-149"><a href="#cb27-149" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, </span>
-<span id="cb27-150"><a href="#cb27-150" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"MS4A1"</span>, <span class="st">"CD79A"</span>), </span>
-<span id="cb27-151"><a href="#cb27-151" aria-hidden="true" tabindex="-1"></a>            <span class="at">split.by =</span> <span class="st">"groups"</span>)</span>
-<span id="cb27-152"><a href="#cb27-152" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-153"><a href="#cb27-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-154"><a href="#cb27-154" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dot plots</span></span>
-<span id="cb27-155"><a href="#cb27-155" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-156"><a href="#cb27-156" aria-hidden="true" tabindex="-1"></a>The **size** of the dot corresponds to **the percentage of cells expressing the feature in each cluster**. The **color** represents the **average expression level**</span>
-<span id="cb27-157"><a href="#cb27-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-160"><a href="#cb27-160" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-161"><a href="#cb27-161" aria-hidden="true" tabindex="-1"></a><span class="fu">DotPlot</span>(pbmc3k.final, </span>
-<span id="cb27-162"><a href="#cb27-162" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> features) <span class="sc">+</span> </span>
-<span id="cb27-163"><a href="#cb27-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RotatedAxis</span>()</span>
-<span id="cb27-164"><a href="#cb27-164" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-165"><a href="#cb27-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-166"><a href="#cb27-166" aria-hidden="true" tabindex="-1"></a>通过添加<span class="in">`split.by`</span>参数，来按照不同的样本组别来分别展示marker gene的表达。</span>
-<span id="cb27-167"><a href="#cb27-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-170"><a href="#cb27-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-171"><a href="#cb27-171" aria-hidden="true" tabindex="-1"></a><span class="fu">DotPlot</span>(pbmc3k.final, </span>
-<span id="cb27-172"><a href="#cb27-172" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> features, </span>
-<span id="cb27-173"><a href="#cb27-173" aria-hidden="true" tabindex="-1"></a>        <span class="at">split.by =</span> <span class="st">"groups"</span>) <span class="sc">+</span> </span>
-<span id="cb27-174"><a href="#cb27-174" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RotatedAxis</span>()</span>
-<span id="cb27-175"><a href="#cb27-175" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-176"><a href="#cb27-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-177"><a href="#cb27-177" aria-hidden="true" tabindex="-1"></a><span class="fu">### Heatmap</span></span>
-<span id="cb27-178"><a href="#cb27-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-181"><a href="#cb27-181" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-182"><a href="#cb27-182" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(<span class="fu">subset</span>(pbmc3k.final, <span class="at">downsample =</span> <span class="dv">100</span>), </span>
-<span id="cb27-183"><a href="#cb27-183" aria-hidden="true" tabindex="-1"></a>          <span class="at">features =</span> features, </span>
-<span id="cb27-184"><a href="#cb27-184" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">3</span>)</span>
-<span id="cb27-185"><a href="#cb27-185" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-186"><a href="#cb27-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-187"><a href="#cb27-187" aria-hidden="true" tabindex="-1"></a>DoHeatmap now shows a grouping bar, splitting the heatmap into groups or clusters. This can be changed with the <span class="in">`group.by`</span> parameter. 默认的<span class="in">`group.by`</span>为细胞分群信息，即按照细胞的分群作为分组依据来绘制热图：</span>
-<span id="cb27-188"><a href="#cb27-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-191"><a href="#cb27-191" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-192"><a href="#cb27-192" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(pbmc3k.final, </span>
-<span id="cb27-193"><a href="#cb27-193" aria-hidden="true" tabindex="-1"></a>          <span class="at">features =</span> <span class="fu">VariableFeatures</span>(pbmc3k.final)[<span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>], </span>
-<span id="cb27-194"><a href="#cb27-194" aria-hidden="true" tabindex="-1"></a>          <span class="at">cells =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>, </span>
-<span id="cb27-195"><a href="#cb27-195" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">4</span>, <span class="co"># 分组文字的大小</span></span>
-<span id="cb27-196"><a href="#cb27-196" aria-hidden="true" tabindex="-1"></a>          <span class="at">angle =</span> <span class="dv">45</span>) <span class="sc">+</span>  <span class="co"># 分组文字角度</span></span>
-<span id="cb27-197"><a href="#cb27-197" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NoLegend</span>()</span>
-<span id="cb27-198"><a href="#cb27-198" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-199"><a href="#cb27-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-200"><a href="#cb27-200" aria-hidden="true" tabindex="-1"></a>我们用meta.data中的任何列作为分群依据。例如这里的"groups"列：</span>
-<span id="cb27-201"><a href="#cb27-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-204"><a href="#cb27-204" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-205"><a href="#cb27-205" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pbmc3k.final<span class="sc">@</span>meta.data)</span>
-<span id="cb27-206"><a href="#cb27-206" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(pbmc3k.final, </span>
-<span id="cb27-207"><a href="#cb27-207" aria-hidden="true" tabindex="-1"></a>          <span class="at">features =</span> <span class="fu">VariableFeatures</span>(pbmc3k.final)[<span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>], </span>
-<span id="cb27-208"><a href="#cb27-208" aria-hidden="true" tabindex="-1"></a>          <span class="at">group.by =</span> <span class="st">"groups"</span>,</span>
-<span id="cb27-209"><a href="#cb27-209" aria-hidden="true" tabindex="-1"></a>          <span class="at">cells =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>, </span>
-<span id="cb27-210"><a href="#cb27-210" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">4</span>, <span class="co"># 分组文字的大小</span></span>
-<span id="cb27-211"><a href="#cb27-211" aria-hidden="true" tabindex="-1"></a>          <span class="at">angle =</span> <span class="dv">0</span>) <span class="sc">+</span>  <span class="co"># 分组文字角度</span></span>
-<span id="cb27-212"><a href="#cb27-212" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NoLegend</span>()</span>
-<span id="cb27-213"><a href="#cb27-213" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-214"><a href="#cb27-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-215"><a href="#cb27-215" aria-hidden="true" tabindex="-1"></a><span class="fu">## 细胞分群图</span></span>
-<span id="cb27-216"><a href="#cb27-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-219"><a href="#cb27-219" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-220"><a href="#cb27-220" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(pbmc3k.final, <span class="at">reduction =</span> <span class="st">"pca"</span>)</span>
-<span id="cb27-221"><a href="#cb27-221" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(pbmc3k.final, <span class="at">reduction =</span> <span class="st">"umap"</span>)</span>
-<span id="cb27-222"><a href="#cb27-222" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-223"><a href="#cb27-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-224"><a href="#cb27-224" aria-hidden="true" tabindex="-1"></a>进一步修饰</span>
-<span id="cb27-225"><a href="#cb27-225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-228"><a href="#cb27-228" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-229"><a href="#cb27-229" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb27-230"><a href="#cb27-230" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(pbmc3k.final, <span class="at">reduction =</span> <span class="st">"umap"</span>) <span class="sc">+</span> </span>
-<span id="cb27-231"><a href="#cb27-231" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Clustering of 2,700 PBMCs"</span>) <span class="sc">+</span></span>
-<span id="cb27-232"><a href="#cb27-232" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
-<span id="cb27-233"><a href="#cb27-233" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-234"><a href="#cb27-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-235"><a href="#cb27-235" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb27-236"><a href="#cb27-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-237"><a href="#cb27-237" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb27-238"><a href="#cb27-238" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
-<span id="cb27-239"><a href="#cb27-239" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-242"><a href="#cb27-242" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb27-243"><a href="#cb27-243" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb27-244"><a href="#cb27-244" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb27-245"><a href="#cb27-245" aria-hidden="true" tabindex="-1"></a>:::</span>
+<div class="sourceCode" id="cb32" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Seurat中的数据可视化方法 {#sec-Data_visualization_methods_in_Seurat}</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文：</span><span class="co">[</span><span class="ot">*Data visualization methods in Seurat*</span><span class="co">](https://satijalab.org/seurat/articles/visualization_vignette)</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文发布日期：2023-10-31</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>We'll demonstrate visualization techniques in Seurat using our previously computed Seurat object from the 2,700 PBMC tutorial. You can download this dataset from&nbsp;<span class="co">[</span><span class="ot">SeuratData</span><span class="co">](https://github.com/satijalab/seurat-data)</span>。官方教程是通过<span class="in">`SeuratData`</span>包的<span class="in">`InstallData`</span>函数来下载案例数据，可能需要开启全局代理才能下载：</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">'satijalab/seurat-data'</span>)</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>SeuratData<span class="sc">::</span><span class="fu">InstallData</span>(<span class="st">"pbmc3k"</span>)</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SeuratData)</span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>pbmc3k.final <span class="ot">&lt;-</span> <span class="fu">LoadData</span>(<span class="st">"pbmc3k"</span>, <span class="at">type =</span> <span class="st">"pbmc3k.final"</span>)</span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>pbmc3k.final<span class="sc">$</span>groups <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"group1"</span>, </span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"group2"</span>), </span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>                              <span class="at">size =</span> <span class="fu">ncol</span>(pbmc3k.final), </span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>                              <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>pbmc3k.final</span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a>这里我将下载下来的数据保存起来：</span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-36"><a href="#cb32-36" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb32-38"><a href="#cb32-38" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
+<span id="cb32-39"><a href="#cb32-39" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(pbmc3k.final, <span class="at">file =</span> <span class="st">"data/seurat_official/pbmc3k.final.rds"</span>)</span>
+<span id="cb32-40"><a href="#cb32-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-41"><a href="#cb32-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-42"><a href="#cb32-42" aria-hidden="true" tabindex="-1"></a>后面我们直接从本地读取这个Seurat对象：</span>
+<span id="cb32-43"><a href="#cb32-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-46"><a href="#cb32-46" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-47"><a href="#cb32-47" aria-hidden="true" tabindex="-1"></a>pbmc3k.final <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seurat_official/pbmc3k.final.rds"</span>)</span>
+<span id="cb32-48"><a href="#cb32-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-49"><a href="#cb32-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-50"><a href="#cb32-50" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5种可视化marker gene的方法</span></span>
+<span id="cb32-51"><a href="#cb32-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-52"><a href="#cb32-52" aria-hidden="true" tabindex="-1"></a>定义要检查的marker gene：</span>
+<span id="cb32-53"><a href="#cb32-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-56"><a href="#cb32-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-57"><a href="#cb32-57" aria-hidden="true" tabindex="-1"></a>features <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"LYZ"</span>, <span class="st">"CCL5"</span>, <span class="st">"IL32"</span>, <span class="st">"PTPRCAP"</span>, <span class="st">"FCGR3A"</span>, <span class="st">"PF4"</span>)</span>
+<span id="cb32-58"><a href="#cb32-58" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-59"><a href="#cb32-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-60"><a href="#cb32-60" aria-hidden="true" tabindex="-1"></a><span class="fu">### Ridge plots</span></span>
+<span id="cb32-61"><a href="#cb32-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-62"><a href="#cb32-62" aria-hidden="true" tabindex="-1"></a>Ridge plots - from ggridges. Visualize single cell expression distributions in each cluster</span>
+<span id="cb32-63"><a href="#cb32-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-66"><a href="#cb32-66" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-67"><a href="#cb32-67" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 10</span></span>
+<span id="cb32-68"><a href="#cb32-68" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb32-69"><a href="#cb32-69" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb32-70"><a href="#cb32-70" aria-hidden="true" tabindex="-1"></a><span class="fu">RidgePlot</span>(pbmc3k.final, <span class="at">features =</span> features, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb32-71"><a href="#cb32-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-72"><a href="#cb32-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-73"><a href="#cb32-73" aria-hidden="true" tabindex="-1"></a><span class="fu">### Violin plot</span></span>
+<span id="cb32-74"><a href="#cb32-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-77"><a href="#cb32-77" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-78"><a href="#cb32-78" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb32-79"><a href="#cb32-79" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(pbmc3k.final, <span class="at">features =</span> features)</span>
+<span id="cb32-80"><a href="#cb32-80" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-81"><a href="#cb32-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-82"><a href="#cb32-82" aria-hidden="true" tabindex="-1"></a>Violin plots can be split on some variable. Simply add the splitting variable to object metadata and pass it to the <span class="in">`split.by`</span> argument. 通过添加<span class="in">`split.by`</span>参数，展示marker gene在不同的样本组别中的表达。</span>
+<span id="cb32-83"><a href="#cb32-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-86"><a href="#cb32-86" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-87"><a href="#cb32-87" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(pbmc3k.final, </span>
+<span id="cb32-88"><a href="#cb32-88" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> <span class="st">"percent.mt"</span>, </span>
+<span id="cb32-89"><a href="#cb32-89" aria-hidden="true" tabindex="-1"></a>        <span class="at">split.by =</span> <span class="st">"groups"</span>)</span>
+<span id="cb32-90"><a href="#cb32-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-91"><a href="#cb32-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-92"><a href="#cb32-92" aria-hidden="true" tabindex="-1"></a><span class="fu">### Feature plot</span></span>
+<span id="cb32-93"><a href="#cb32-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-94"><a href="#cb32-94" aria-hidden="true" tabindex="-1"></a>Visualize feature expression in low-dimensional space</span>
+<span id="cb32-95"><a href="#cb32-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-98"><a href="#cb32-98" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-99"><a href="#cb32-99" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 8</span></span>
+<span id="cb32-100"><a href="#cb32-100" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 8</span></span>
+<span id="cb32-101"><a href="#cb32-101" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, <span class="at">features =</span> features)</span>
+<span id="cb32-102"><a href="#cb32-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-103"><a href="#cb32-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-104"><a href="#cb32-104" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 对`FeaturePlot`的进一步修饰</span></span>
+<span id="cb32-105"><a href="#cb32-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-106"><a href="#cb32-106" aria-hidden="true" tabindex="-1"></a>原始图像：</span>
+<span id="cb32-107"><a href="#cb32-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-110"><a href="#cb32-110" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-111"><a href="#cb32-111" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, <span class="at">features =</span> <span class="st">"MS4A1"</span>)</span>
+<span id="cb32-112"><a href="#cb32-112" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-113"><a href="#cb32-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-114"><a href="#cb32-114" aria-hidden="true" tabindex="-1"></a>Adjust the contrast in the plot。通过<span class="in">`min.cutoff`</span>和<span class="in">`max.cutoff`</span>调整颜色范围。</span>
+<span id="cb32-115"><a href="#cb32-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-118"><a href="#cb32-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-119"><a href="#cb32-119" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, <span class="at">features =</span> <span class="st">"MS4A1"</span>, </span>
+<span id="cb32-120"><a href="#cb32-120" aria-hidden="true" tabindex="-1"></a>            <span class="at">min.cutoff =</span> <span class="dv">1</span>, <span class="at">max.cutoff =</span> <span class="dv">3</span>)</span>
+<span id="cb32-121"><a href="#cb32-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-122"><a href="#cb32-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-123"><a href="#cb32-123" aria-hidden="true" tabindex="-1"></a>**调整颜色：**</span>
+<span id="cb32-124"><a href="#cb32-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-127"><a href="#cb32-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-128"><a href="#cb32-128" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, <span class="at">features =</span> <span class="st">"MS4A1"</span>, <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"red"</span>))</span>
+<span id="cb32-129"><a href="#cb32-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-130"><a href="#cb32-130" aria-hidden="true" tabindex="-1"></a><span class="co"># 通过RColorBrewer包取色</span></span>
+<span id="cb32-131"><a href="#cb32-131" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer)</span>
+<span id="cb32-132"><a href="#cb32-132" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, <span class="at">features =</span> <span class="st">"MS4A1"</span>, <span class="at">cols =</span> <span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">name =</span> <span class="st">"RdBu"</span>))</span>
+<span id="cb32-133"><a href="#cb32-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-134"><a href="#cb32-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-135"><a href="#cb32-135" aria-hidden="true" tabindex="-1"></a>也可以通过ggplot语法修改颜色：</span>
+<span id="cb32-136"><a href="#cb32-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-139"><a href="#cb32-139" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-140"><a href="#cb32-140" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb32-141"><a href="#cb32-141" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, <span class="at">features =</span> <span class="st">"MS4A1"</span>) <span class="sc">+</span></span>
+<span id="cb32-142"><a href="#cb32-142" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_gradientn</span>(<span class="at">colours =</span> <span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">name =</span> <span class="st">"RdBu"</span>)))</span>
+<span id="cb32-143"><a href="#cb32-143" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-144"><a href="#cb32-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-145"><a href="#cb32-145" aria-hidden="true" tabindex="-1"></a>Calculate feature-specific contrast levels based on quantiles of non-zero expression. Particularly useful when plotting multiple markers。</span>
+<span id="cb32-146"><a href="#cb32-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-149"><a href="#cb32-149" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-150"><a href="#cb32-150" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, </span>
+<span id="cb32-151"><a href="#cb32-151" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"MS4A1"</span>, <span class="st">"PTPRCAP"</span>), </span>
+<span id="cb32-152"><a href="#cb32-152" aria-hidden="true" tabindex="-1"></a>            <span class="at">min.cutoff =</span> <span class="st">"q10"</span>, </span>
+<span id="cb32-153"><a href="#cb32-153" aria-hidden="true" tabindex="-1"></a>            <span class="at">max.cutoff =</span> <span class="st">"q90"</span>)</span>
+<span id="cb32-154"><a href="#cb32-154" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-155"><a href="#cb32-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-156"><a href="#cb32-156" aria-hidden="true" tabindex="-1"></a>**多基因FeaturePlot：**</span>
+<span id="cb32-157"><a href="#cb32-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-158"><a href="#cb32-158" aria-hidden="true" tabindex="-1"></a>通过添加<span class="in">`split.by`</span>参数，来按照不同的样本组别来分别展示marker gene的表达。</span>
+<span id="cb32-159"><a href="#cb32-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-162"><a href="#cb32-162" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-163"><a href="#cb32-163" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, </span>
+<span id="cb32-164"><a href="#cb32-164" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD3D"</span>, <span class="st">"MS4A1"</span>, <span class="st">"CD79A"</span>), </span>
+<span id="cb32-165"><a href="#cb32-165" aria-hidden="true" tabindex="-1"></a>            <span class="at">split.by =</span> <span class="st">"groups"</span>)</span>
+<span id="cb32-166"><a href="#cb32-166" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-167"><a href="#cb32-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-168"><a href="#cb32-168" aria-hidden="true" tabindex="-1"></a><span class="in">`FeaturePlot()`</span>中还提供了<span class="in">`blend`</span> 参数，来可视化两个基因的共表达情况（添加<span class="in">`blend = TRUE`</span>）。注意<span class="in">`blend = TRUE`</span>**只能适用于2个基因**，多个基因会报错 。</span>
+<span id="cb32-169"><a href="#cb32-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-172"><a href="#cb32-172" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-173"><a href="#cb32-173" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(pbmc3k.final, </span>
+<span id="cb32-174"><a href="#cb32-174" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"MS4A1"</span>, <span class="st">"CD79A"</span>), </span>
+<span id="cb32-175"><a href="#cb32-175" aria-hidden="true" tabindex="-1"></a>            <span class="at">blend =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb32-176"><a href="#cb32-176" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-177"><a href="#cb32-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-178"><a href="#cb32-178" aria-hidden="true" tabindex="-1"></a>如果想实现多个基因的话，可以使用<span class="in">`scCustomize`</span>包中的<span class="in">`Plot_Density_Joint_Only()`</span>函数绘制多基因联合密度图。该函数还依赖于Nebulosa包，因此还需要先从BiocManager安装该包：</span>
+<span id="cb32-179"><a href="#cb32-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-182"><a href="#cb32-182" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-183"><a href="#cb32-183" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb32-184"><a href="#cb32-184" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"scCustomize"</span>)</span>
+<span id="cb32-185"><a href="#cb32-185" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">"Nebulosa"</span>)</span>
+<span id="cb32-186"><a href="#cb32-186" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-187"><a href="#cb32-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-190"><a href="#cb32-190" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-191"><a href="#cb32-191" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scCustomize)</span>
+<span id="cb32-192"><a href="#cb32-192" aria-hidden="true" tabindex="-1"></a><span class="fu">Plot_Density_Joint_Only</span>(<span class="at">seurat_object =</span> pbmc3k.final, </span>
+<span id="cb32-193"><a href="#cb32-193" aria-hidden="true" tabindex="-1"></a>                        <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD3D"</span>, <span class="st">"MS4A1"</span>, <span class="st">"CD79A"</span>),</span>
+<span id="cb32-194"><a href="#cb32-194" aria-hidden="true" tabindex="-1"></a>                        <span class="at">custom_palette =</span> <span class="fu">BlueAndRed</span>())</span>
+<span id="cb32-195"><a href="#cb32-195" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-196"><a href="#cb32-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-197"><a href="#cb32-197" aria-hidden="true" tabindex="-1"></a><span class="fu">### Dot plots</span></span>
+<span id="cb32-198"><a href="#cb32-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-199"><a href="#cb32-199" aria-hidden="true" tabindex="-1"></a>The **size** of the dot corresponds to **the percentage of cells expressing the feature in each cluster**. The **color** represents the **average expression level**</span>
+<span id="cb32-200"><a href="#cb32-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-203"><a href="#cb32-203" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-204"><a href="#cb32-204" aria-hidden="true" tabindex="-1"></a><span class="fu">DotPlot</span>(pbmc3k.final, </span>
+<span id="cb32-205"><a href="#cb32-205" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> features) <span class="sc">+</span> </span>
+<span id="cb32-206"><a href="#cb32-206" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RotatedAxis</span>()</span>
+<span id="cb32-207"><a href="#cb32-207" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-208"><a href="#cb32-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-209"><a href="#cb32-209" aria-hidden="true" tabindex="-1"></a>通过添加<span class="in">`split.by`</span>参数，来按照不同的样本组别来分别展示marker gene的表达。</span>
+<span id="cb32-210"><a href="#cb32-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-213"><a href="#cb32-213" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-214"><a href="#cb32-214" aria-hidden="true" tabindex="-1"></a><span class="fu">DotPlot</span>(pbmc3k.final, </span>
+<span id="cb32-215"><a href="#cb32-215" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> features, </span>
+<span id="cb32-216"><a href="#cb32-216" aria-hidden="true" tabindex="-1"></a>        <span class="at">split.by =</span> <span class="st">"groups"</span>) <span class="sc">+</span> </span>
+<span id="cb32-217"><a href="#cb32-217" aria-hidden="true" tabindex="-1"></a>  <span class="fu">RotatedAxis</span>()</span>
+<span id="cb32-218"><a href="#cb32-218" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-219"><a href="#cb32-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-220"><a href="#cb32-220" aria-hidden="true" tabindex="-1"></a><span class="fu">### Heatmap</span></span>
+<span id="cb32-221"><a href="#cb32-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-224"><a href="#cb32-224" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-225"><a href="#cb32-225" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(<span class="fu">subset</span>(pbmc3k.final, <span class="at">downsample =</span> <span class="dv">100</span>), </span>
+<span id="cb32-226"><a href="#cb32-226" aria-hidden="true" tabindex="-1"></a>          <span class="at">features =</span> features, </span>
+<span id="cb32-227"><a href="#cb32-227" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">3</span>)</span>
+<span id="cb32-228"><a href="#cb32-228" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-229"><a href="#cb32-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-230"><a href="#cb32-230" aria-hidden="true" tabindex="-1"></a>DoHeatmap now shows a grouping bar, splitting the heatmap into groups or clusters. This can be changed with the <span class="in">`group.by`</span> parameter. 默认的<span class="in">`group.by`</span>为细胞分群信息，即按照细胞的分群作为分组依据来绘制热图：</span>
+<span id="cb32-231"><a href="#cb32-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-234"><a href="#cb32-234" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-235"><a href="#cb32-235" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(pbmc3k.final, </span>
+<span id="cb32-236"><a href="#cb32-236" aria-hidden="true" tabindex="-1"></a>          <span class="at">features =</span> <span class="fu">VariableFeatures</span>(pbmc3k.final)[<span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>], </span>
+<span id="cb32-237"><a href="#cb32-237" aria-hidden="true" tabindex="-1"></a>          <span class="at">cells =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>, </span>
+<span id="cb32-238"><a href="#cb32-238" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">4</span>, <span class="co"># 分组文字的大小</span></span>
+<span id="cb32-239"><a href="#cb32-239" aria-hidden="true" tabindex="-1"></a>          <span class="at">angle =</span> <span class="dv">45</span>) <span class="sc">+</span>  <span class="co"># 分组文字角度</span></span>
+<span id="cb32-240"><a href="#cb32-240" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NoLegend</span>()</span>
+<span id="cb32-241"><a href="#cb32-241" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-242"><a href="#cb32-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-243"><a href="#cb32-243" aria-hidden="true" tabindex="-1"></a>我们用meta.data中的任何列作为分群依据。例如这里的"groups"列：</span>
+<span id="cb32-244"><a href="#cb32-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-247"><a href="#cb32-247" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-248"><a href="#cb32-248" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pbmc3k.final<span class="sc">@</span>meta.data)</span>
+<span id="cb32-249"><a href="#cb32-249" aria-hidden="true" tabindex="-1"></a><span class="fu">DoHeatmap</span>(pbmc3k.final, </span>
+<span id="cb32-250"><a href="#cb32-250" aria-hidden="true" tabindex="-1"></a>          <span class="at">features =</span> <span class="fu">VariableFeatures</span>(pbmc3k.final)[<span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>], </span>
+<span id="cb32-251"><a href="#cb32-251" aria-hidden="true" tabindex="-1"></a>          <span class="at">group.by =</span> <span class="st">"groups"</span>,</span>
+<span id="cb32-252"><a href="#cb32-252" aria-hidden="true" tabindex="-1"></a>          <span class="at">cells =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>, </span>
+<span id="cb32-253"><a href="#cb32-253" aria-hidden="true" tabindex="-1"></a>          <span class="at">size =</span> <span class="dv">4</span>, <span class="co"># 分组文字的大小</span></span>
+<span id="cb32-254"><a href="#cb32-254" aria-hidden="true" tabindex="-1"></a>          <span class="at">angle =</span> <span class="dv">0</span>) <span class="sc">+</span>  <span class="co"># 分组文字角度</span></span>
+<span id="cb32-255"><a href="#cb32-255" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NoLegend</span>()</span>
+<span id="cb32-256"><a href="#cb32-256" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-257"><a href="#cb32-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-258"><a href="#cb32-258" aria-hidden="true" tabindex="-1"></a><span class="fu">## 细胞分群图</span></span>
+<span id="cb32-259"><a href="#cb32-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-262"><a href="#cb32-262" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-263"><a href="#cb32-263" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(pbmc3k.final, <span class="at">reduction =</span> <span class="st">"pca"</span>)</span>
+<span id="cb32-264"><a href="#cb32-264" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(pbmc3k.final, <span class="at">reduction =</span> <span class="st">"umap"</span>)</span>
+<span id="cb32-265"><a href="#cb32-265" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-266"><a href="#cb32-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-267"><a href="#cb32-267" aria-hidden="true" tabindex="-1"></a>进一步修饰</span>
+<span id="cb32-268"><a href="#cb32-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-271"><a href="#cb32-271" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-272"><a href="#cb32-272" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb32-273"><a href="#cb32-273" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(pbmc3k.final, <span class="at">reduction =</span> <span class="st">"umap"</span>) <span class="sc">+</span> </span>
+<span id="cb32-274"><a href="#cb32-274" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Clustering of 2,700 PBMCs"</span>) <span class="sc">+</span></span>
+<span id="cb32-275"><a href="#cb32-275" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb32-276"><a href="#cb32-276" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-277"><a href="#cb32-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-278"><a href="#cb32-278" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb32-279"><a href="#cb32-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-280"><a href="#cb32-280" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb32-281"><a href="#cb32-281" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb32-282"><a href="#cb32-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-285"><a href="#cb32-285" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb32-286"><a href="#cb32-286" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb32-287"><a href="#cb32-287" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-288"><a href="#cb32-288" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

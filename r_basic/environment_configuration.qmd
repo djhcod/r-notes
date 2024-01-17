@@ -34,6 +34,20 @@ BiocManager::valid() # 查看是否有需要更新的bioconductor包。根据提
 BiocManager::install("biomaRt",update = TRUE,ask = FALSE)
 ```
 
+## 清除当前加载的程序包
+
+```{r}
+detach("package:dplyr", unload=TRUE)
+# 或用pacman包内的p_unload函数
+pacman::p_unload("dplyr")
+```
+
+如果要从环境中移除所有用户包，则可通过`pacman`包的`p_loaded()`+`p_unload()`函数实现：
+
+```{r}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+
 ## 更改当前R脚本运行目录
 
 ```{r}
@@ -48,7 +62,6 @@ rm(mydata)
 rm(list = ls())#移除当前环境中的所有对象
 cat("\014")#清空所有输出结果
 sessionInfo()#收集有关当前R项目的信息
-detach("package:dplyr", unload=TRUE) #清除当前加载的程序包
 ```
 
 ## 自动安装所需的R包
@@ -124,7 +137,7 @@ R_MAX_VSIZE=50Gb
 
 保存这个文件后，重启RStudio，这时候内存上限就被修改好了。
 
-![RStudio调用虚拟内存执行脚本](images/截屏2024-01-14 10.33.37.png){width="290"}
+![RStudio调用虚拟内存执行脚本](images/截屏2024-01-14%2010.33.37.png){width="290"}
 
 【方法二：通过终端配置】
 

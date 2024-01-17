@@ -60,15 +60,30 @@ names(split_seurat@reductions)
 # Run PCA
 split_seurat <- RunPCA(split_seurat)
 # Run UMAP
-split_seurat <- RunUMAP(split_seurat, dims = 1:40, reduction = "pca")
+split_seurat <- RunUMAP(split_seurat, 
+                        dims = 1:40, 
+                        reduction = "pca", 
+                        reduction.name = "umap.unintegrated")
+
+# 分群
+split_seurat <- FindNeighbors(split_seurat, 
+                              dims = 1:40, 
+                              reduction = "pca")
+split_seurat <- FindClusters(split_seurat, 
+                             cluster.name = "unintegrated_clusters")
+
 # Plot UMAP
-p1 <- DimPlot(split_seurat, group.by = "sample")
-p2 <- DimPlot(split_seurat, split.by = "sample")
+p1 <- DimPlot(split_seurat, reduction = "umap.unintegrated", group.by = "sample")
+p2 <- DimPlot(split_seurat, reduction = "umap.unintegrated", split.by = "sample")
 library(cowplot)
 plot_grid(p1, p2, ncol = 2, labels = "AUTO")
 ```
 
-可以看到，如果不进行整合，不同样本（STIM vs. STIM）的细胞类型差异很大。Condition-specific clustering of the cells indicates that we need to integrate the cells across conditions to ensure that cells of the same cell type cluster together.
+可以看到，如果不进行整合，不同样本（ctrl vs. stim）间的细胞类型差异很大。The resulting clusters are defined **both by cell type** **and stimulation condition**, which creates challenges for downstream analysis. Condition-specific clustering of the cells indicates that we need to integrate the cells across conditions to ensure that cells of the same cell type cluster together.
+
+::: callout-tip
+关于`FindNeighbors()`和`FindClusters()`的详细说明见下一节 @sec-clustering_analysis 。
+:::
 
 ::: callout-note
 ###### **Why is it important the cells of the same cell type cluster together?**
@@ -154,16 +169,17 @@ The different steps applied are as follows:
 Now, using our `SCTransform` object as input, let's perform the integration across conditions.
 
 ```{r}
-# 可以看到目前的降维信息包括"pca"和"umap"
+# 可以看到目前的降维信息包括"pca"和"umap.unintegrated"
 names(split_seurat@reductions)
 
 # 整合，比较耗时间（约13min），进度条会一直显示0%直至运算完成
+library(beepr)
 seurat_integrated <- IntegrateLayers(object = split_seurat,
                                      method = CCAIntegration,
                                      normalization.method = "SCT", # 指定使用的标准化方法为SCTransform
                                      orig.reduction = "pca",
                                      new.reduction = "integrated.cca", #  整合后新的降维数据的名称
-                                     verbose = FALSE)
+                                     verbose = FALSE); beep()
 
 # 整合后重新合并RNA layer
 seurat_integrated[["RNA"]] <- JoinLayers(seurat_integrated[["RNA"]])
@@ -192,12 +208,26 @@ set.seed(123456)
 # Run UMAP
 seurat_integrated <- RunUMAP(seurat_integrated, 
                              dims = 1:40,
-                             reduction = "integrated.cca") # 更改降维来源为整合后的"integrated.cca"
+                             reduction = "integrated.cca", # 更改降维来源为整合后的"integrated.cca"
+                             reduction.name = "umap.integrated") 
+
+# 分群
+seurat_integrated <- FindNeighbors(seurat_integrated, 
+                                   dims = 1:40, 
+                                   reduction = "integrated.cca") #更改降维来源为"integrated.cca"
+                                   
+seurat_integrated <- FindClusters(seurat_integrated, 
+                                  cluster.name = "integrated_clusters")
 
 # Plot UMAP                             
-p3 <- DimPlot(seurat_integrated, reduction = "umap", group.by = "sample")
-p4 <- DimPlot(seurat_integrated, reduction = "umap", split.by = "sample")
-plot_grid(p1, p2, p3, p4, ncol = 2, labels = "AUTO")
+p3 <- DimPlot(seurat_integrated, 
+              reduction = "umap.integrated", 
+              group.by = "sample")
+p4 <- DimPlot(seurat_integrated, 
+              reduction = "umap.integrated", 
+              split.by = "sample")
+plot_grid(p1, p2, p3, p4, 
+          ncol = 2, labels = "AUTO")
 ```
 
 > When we compare the similarity between the ctrl and stim clusters in the above plot with what we see using the the unintegrated dataset, **it is clear that this dataset benefitted from the integration!**

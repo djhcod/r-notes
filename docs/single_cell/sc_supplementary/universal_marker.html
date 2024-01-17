@@ -524,7 +524,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
 <li><a href="#%E5%8C%BA%E5%88%86%E5%85%8D%E7%96%AB%E7%BB%86%E8%83%9E%E5%92%8C%E9%9D%9E%E5%85%8D%E7%96%AB%E7%BB%86%E8%83%9E" id="toc-区分免疫细胞和非免疫细胞" class="nav-link active" data-scroll-target="#%E5%8C%BA%E5%88%86%E5%85%8D%E7%96%AB%E7%BB%86%E8%83%9E%E5%92%8C%E9%9D%9E%E5%85%8D%E7%96%AB%E7%BB%86%E8%83%9E"><span class="header-section-number">29.1</span> 区分免疫细胞和非免疫细胞</a></li>
   <li><a href="#%E5%8C%BA%E5%88%86%E5%87%BA%E6%81%B6%E6%80%A7%E7%BB%86%E8%83%9E" id="toc-区分出恶性细胞" class="nav-link" data-scroll-target="#%E5%8C%BA%E5%88%86%E5%87%BA%E6%81%B6%E6%80%A7%E7%BB%86%E8%83%9E"><span class="header-section-number">29.2</span> 区分出恶性细胞</a></li>
-  <li><a href="#%E7%BB%86%E8%83%9E%E5%88%9D%E6%AD%A5%E5%88%86%E7%BE%A4%E9%80%9A%E7%94%A8marker" id="toc-细胞初步分群通用marker" class="nav-link" data-scroll-target="#%E7%BB%86%E8%83%9E%E5%88%9D%E6%AD%A5%E5%88%86%E7%BE%A4%E9%80%9A%E7%94%A8marker"><span class="header-section-number">29.3</span> 细胞初步分群通用marker</a></li>
+  <li><a href="#sec-Universal_Marker_for_initial_Cell_clustering" id="toc-sec-Universal_Marker_for_initial_Cell_clustering" class="nav-link" data-scroll-target="#sec-Universal_Marker_for_initial_Cell_clustering"><span class="header-section-number">29.3</span> 细胞初步分群通用marker</a></li>
   </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/sc_supplementary/universal_marker.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/single_cell/sc_supplementary/universal_marker.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
     </div>
 <!-- main -->
@@ -600,12 +600,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>很多情况下是靠inferCNV算法的结果，比如发表于2017年12月，在CELL杂志：Single-Cell Transcriptomic Analysis of Primary and Metastatic Tumor Ecosystems in Head and Neck Cancer 的文献，就是使用inferCNV算法对来自18名患者的5,902个细胞，分成2215个恶性细胞和3363个非恶性细胞如下所示：</p>
 <p><img src="images/infercnv.png" class="img-fluid"></p>
 <p>可以看到，通过inferCNV算法，能发现非恶性细胞的CNV是几乎没有的，而恶性细胞呢，或多或少有一些染色体片段的拷贝数扩增或者缺失。</p>
-</section><section id="细胞初步分群通用marker" class="level2" data-number="29.3"><h2 data-number="29.3" class="anchored" data-anchor-id="细胞初步分群通用marker">
+</section><section id="sec-Universal_Marker_for_initial_Cell_clustering" class="level2" data-number="29.3"><h2 data-number="29.3" class="anchored" data-anchor-id="sec-Universal_Marker_for_initial_Cell_clustering">
 <span class="header-section-number">29.3</span> 细胞初步分群通用marker</h2>
+<p><img src="images/人免疫细胞标志物指南 | Cell Signaling Technology.png" class="img-fluid"></p>
 <p>一般来说肿瘤样品的单细胞首先是按照如下所示的标记基因进行第一次分群 ：</p>
 <ul>
 <li><p>免疫细胞共同标记：PTPRC</p></li>
-<li><p>髓系细胞（myeloid）：CD16、AIF1</p></li>
+<li><p>髓系细胞（myeloid）：CD163、AIF1</p></li>
 <li><p>T cells：CD3D、CD3E、CD4、CD8A</p></li>
 <li><p>B cells：CD19、CD79A、MS4A1（编码CD20）、SDC1、CD27、CD38</p></li>
 <li><p>Plasma cells：IGHG1、MZB1、SDC1（编码CD138）、JCHAIN</p></li>
@@ -1244,122 +1245,124 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>可以看到，通过inferCNV算法，能发现非恶性细胞的CNV是几乎没有的，而恶性细胞呢，或多或少有一些染色体片段的拷贝数扩增或者缺失。</span>
 <span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a><span class="fu">## 细胞初步分群通用marker</span></span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a><span class="fu">## 细胞初步分群通用marker {#sec-Universal_Marker_for_initial_Cell_clustering}</span></span>
 <span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>一般来说肿瘤样品的单细胞首先是按照如下所示的标记基因进行第一次分群 ：</span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/人免疫细胞标志物指南%20%7C%20Cell%20Signaling%20Technology.png)</span></span>
 <span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>免疫细胞共同标记：PTPRC</span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a>一般来说肿瘤样品的单细胞首先是按照如下所示的标记基因进行第一次分群 ：</span>
 <span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>髓系细胞（myeloid）：CD16、AIF1</span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>免疫细胞共同标记：PTPRC</span>
 <span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>T cells：CD3D、CD3E、CD4、CD8A</span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>髓系细胞（myeloid）：CD163、AIF1</span>
 <span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>B cells：CD19、CD79A、MS4A1（编码CD20）、SDC1、CD27、CD38</span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>T cells：CD3D、CD3E、CD4、CD8A</span>
 <span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Plasma cells：IGHG1、MZB1、SDC1（编码CD138）、JCHAIN</span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>B cells：CD19、CD79A、MS4A1（编码CD20）、SDC1、CD27、CD38</span>
 <span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Monocytes and macrophages：CD68、CD163、CD14</span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Plasma cells：IGHG1、MZB1、SDC1（编码CD138）、JCHAIN</span>
 <span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Monocyte：S100A9、S100A8、MMP19</span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Monocytes and macrophages：CD68、CD163、CD14</span>
 <span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Macrophages：C1QA、C1QB</span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Monocyte：S100A9、S100A8、MMP19</span>
 <span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Mast cells：TPSAB1、TPSB2</span>
+<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Macrophages：C1QA、C1QB</span>
 <span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>NK cells：KLRB1、KLRD1、NCR1、GNLY、NKG7</span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Mast cells：TPSAB1、TPSB2</span>
 <span id="cb7-110"><a href="#cb7-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>【NK Cells：FGFBP2, FCG3RA, CX3CR1】</span>
+<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>NK cells：KLRB1、KLRD1、NCR1、GNLY、NKG7</span>
 <span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Epithelial/cancer：EPCAM、KRT19、PROM1、ALDH1A1、CD24</span>
+<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>【NK Cells：FGFBP2, FCG3RA, CX3CR1】</span>
 <span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Endothelial cells：PECAM1、VWF</span>
+<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Epithelial/cancer：EPCAM、KRT19、PROM1、ALDH1A1、CD24</span>
 <span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Fibroblasts：FGF7、MME、ACTA2、COL3A1</span>
+<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Endothelial cells：PECAM1、VWF</span>
 <span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-122"><a href="#cb7-122" aria-hidden="true" tabindex="-1"></a>genes_to_check <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PTPRC'</span>, </span>
-<span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"CD163"</span>,<span class="st">"AIF1"</span>, </span>
-<span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD3D'</span>, <span class="st">'CD3E'</span>, <span class="st">'CD4'</span>, <span class="st">'CD8A'</span>, </span>
-<span id="cb7-125"><a href="#cb7-125" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD19'</span>, <span class="st">'CD79A'</span>, <span class="st">'MS4A1'</span>, <span class="st">"SDC1"</span>, <span class="st">"CD27"</span>, <span class="st">"CD38"</span>,</span>
-<span id="cb7-126"><a href="#cb7-126" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'IGHG1'</span>, <span class="st">'MZB1'</span>, <span class="st">'SDC1'</span>, <span class="st">"JCHAIN"</span>, </span>
-<span id="cb7-127"><a href="#cb7-127" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD68'</span>, <span class="st">'CD163'</span>, <span class="st">'CD14'</span>, </span>
-<span id="cb7-128"><a href="#cb7-128" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'S100A9'</span>, <span class="st">'S100A8'</span>, <span class="st">'MMP19'</span>,</span>
-<span id="cb7-129"><a href="#cb7-129" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'C1QA'</span>,  <span class="st">'C1QB'</span>, </span>
-<span id="cb7-130"><a href="#cb7-130" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'TPSAB1'</span>, <span class="st">'TPSB2'</span>, </span>
-<span id="cb7-131"><a href="#cb7-131" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'KLRB1'</span>, <span class="st">"KLRD1"</span>, <span class="st">'NCR1'</span>, <span class="st">"GNLY"</span>, <span class="st">"NKG7"</span>, </span>
-<span id="cb7-132"><a href="#cb7-132" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'FGF7'</span>, <span class="st">'MME'</span>, <span class="st">'ACTA2'</span>, <span class="st">"COL3A1"</span>, </span>
-<span id="cb7-133"><a href="#cb7-133" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'PECAM1'</span>, <span class="st">'VWF'</span>, </span>
-<span id="cb7-134"><a href="#cb7-134" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'EPCAM'</span>, <span class="st">'KRT19'</span>, <span class="st">'PROM1'</span>, <span class="st">'ALDH1A1'</span>) </span>
-<span id="cb7-135"><a href="#cb7-135" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb7-136"><a href="#cb7-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-137"><a href="#cb7-137" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
-<span id="cb7-138"><a href="#cb7-138" aria-hidden="true" tabindex="-1"></a><span class="fu">###### 案例</span></span>
-<span id="cb7-139"><a href="#cb7-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a>来源：<span class="co">[</span><span class="ot">巨噬细胞新分类体系（一篇Science文献复现）</span><span class="co">](https://mp.weixin.qq.com/s?__biz=MzUzMTEwODk0Ng==&amp;mid=2247517274&amp;idx=1&amp;sn=e5c523d4a46757e6ea1ad15707333ca5&amp;scene=21#wechat_redirect)</span></span>
+<span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Fibroblasts：FGF7、MME、ACTA2、COL3A1</span>
+<span id="cb7-120"><a href="#cb7-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a>genes_to_check <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PTPRC'</span>, </span>
+<span id="cb7-125"><a href="#cb7-125" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"CD163"</span>,<span class="st">"AIF1"</span>, </span>
+<span id="cb7-126"><a href="#cb7-126" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD3D'</span>, <span class="st">'CD3E'</span>, <span class="st">'CD4'</span>, <span class="st">'CD8A'</span>, </span>
+<span id="cb7-127"><a href="#cb7-127" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD19'</span>, <span class="st">'CD79A'</span>, <span class="st">'MS4A1'</span>, <span class="st">"SDC1"</span>, <span class="st">"CD27"</span>, <span class="st">"CD38"</span>,</span>
+<span id="cb7-128"><a href="#cb7-128" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'IGHG1'</span>, <span class="st">'MZB1'</span>, <span class="st">'SDC1'</span>, <span class="st">"JCHAIN"</span>, </span>
+<span id="cb7-129"><a href="#cb7-129" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD68'</span>, <span class="st">'CD163'</span>, <span class="st">'CD14'</span>, </span>
+<span id="cb7-130"><a href="#cb7-130" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'S100A9'</span>, <span class="st">'S100A8'</span>, <span class="st">'MMP19'</span>,</span>
+<span id="cb7-131"><a href="#cb7-131" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'C1QA'</span>,  <span class="st">'C1QB'</span>, </span>
+<span id="cb7-132"><a href="#cb7-132" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'TPSAB1'</span>, <span class="st">'TPSB2'</span>, </span>
+<span id="cb7-133"><a href="#cb7-133" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'KLRB1'</span>, <span class="st">"KLRD1"</span>, <span class="st">'NCR1'</span>, <span class="st">"GNLY"</span>, <span class="st">"NKG7"</span>, </span>
+<span id="cb7-134"><a href="#cb7-134" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'FGF7'</span>, <span class="st">'MME'</span>, <span class="st">'ACTA2'</span>, <span class="st">"COL3A1"</span>, </span>
+<span id="cb7-135"><a href="#cb7-135" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'PECAM1'</span>, <span class="st">'VWF'</span>, </span>
+<span id="cb7-136"><a href="#cb7-136" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'EPCAM'</span>, <span class="st">'KRT19'</span>, <span class="st">'PROM1'</span>, <span class="st">'ALDH1A1'</span>) </span>
+<span id="cb7-137"><a href="#cb7-137" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-138"><a href="#cb7-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-139"><a href="#cb7-139" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a><span class="fu">###### 案例</span></span>
 <span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-144"><a href="#cb7-144" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>genes_to_check <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PTPRC'</span>, <span class="st">'CD3D'</span>, <span class="st">'CD3E'</span>, <span class="st">'CD4'</span>,<span class="st">'CD8A'</span>,</span>
-<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD19'</span>, <span class="st">'CD79A'</span>, <span class="st">'MS4A1'</span> ,</span>
-<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'IGHG1'</span>, <span class="st">'MZB1'</span>, <span class="st">'SDC1'</span>,</span>
-<span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD68'</span>, <span class="st">'CD163'</span>, <span class="st">'CD14'</span>, </span>
-<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'TPSAB1'</span> , <span class="st">'TPSB2'</span>, </span>
-<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'RCVRN'</span>,<span class="st">'FPR1'</span> , <span class="st">'ITGAM'</span> ,</span>
-<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'C1QA'</span>,  <span class="st">'C1QB'</span>,  </span>
-<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'S100A9'</span>, <span class="st">'S100A8'</span>, <span class="st">'MMP19'</span>,</span>
-<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'FCGR3A'</span>,<span class="st">'LAMP3'</span>, <span class="st">'IDO1'</span>,<span class="st">'IDO2'</span>,<span class="do">## DC3 </span></span>
-<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD1E'</span>,<span class="st">'CD1C'</span>, <span class="co"># DC2</span></span>
-<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'KLRB1'</span>,<span class="st">'NCR1'</span>, </span>
-<span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'FGF7'</span>,<span class="st">'MME'</span>, <span class="st">'ACTA2'</span>, </span>
-<span id="cb7-157"><a href="#cb7-157" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'DCN'</span>, <span class="st">'LUM'</span>,  <span class="st">'GSN'</span> , <span class="co"># mouse PDAC fibo </span></span>
-<span id="cb7-158"><a href="#cb7-158" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'PECAM1'</span>, <span class="st">'VWF'</span>,  </span>
-<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'EPCAM'</span> , <span class="st">'KRT19'</span>,<span class="st">'KRT7'</span>, </span>
-<span id="cb7-160"><a href="#cb7-160" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'FYXD2'</span>, <span class="st">'TM4SF4'</span>, <span class="st">'ANXA4'</span>,<span class="co"># 胆管上皮细胞</span></span>
-<span id="cb7-161"><a href="#cb7-161" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'APOC3'</span>, <span class="st">'FABP1'</span>,  <span class="st">'APOA1'</span>,  <span class="co"># 肝细胞</span></span>
-<span id="cb7-162"><a href="#cb7-162" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'Serpina1c'</span>,<span class="st">'PROM1'</span>, <span class="st">'ALDH1A1'</span> )</span>
-<span id="cb7-163"><a href="#cb7-163" aria-hidden="true" tabindex="-1"></a><span class="fu">DotPlot</span>(sce.all, </span>
-<span id="cb7-164"><a href="#cb7-164" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> genes_to_check,</span>
-<span id="cb7-165"><a href="#cb7-165" aria-hidden="true" tabindex="-1"></a>        <span class="at">assay=</span><span class="st">'RNA'</span>,</span>
-<span id="cb7-166"><a href="#cb7-166" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="st">'celltype'</span> ) <span class="sc">+</span> </span>
-<span id="cb7-167"><a href="#cb7-167" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span>
-<span id="cb7-168"><a href="#cb7-168" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb7-169"><a href="#cb7-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-170"><a href="#cb7-170" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/640.png)</span>{width="499"}</span>
+<span id="cb7-142"><a href="#cb7-142" aria-hidden="true" tabindex="-1"></a>来源：<span class="co">[</span><span class="ot">巨噬细胞新分类体系（一篇Science文献复现）</span><span class="co">](https://mp.weixin.qq.com/s?__biz=MzUzMTEwODk0Ng==&amp;mid=2247517274&amp;idx=1&amp;sn=e5c523d4a46757e6ea1ad15707333ca5&amp;scene=21#wechat_redirect)</span></span>
+<span id="cb7-143"><a href="#cb7-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>genes_to_check <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'PTPRC'</span>, <span class="st">'CD3D'</span>, <span class="st">'CD3E'</span>, <span class="st">'CD4'</span>,<span class="st">'CD8A'</span>,</span>
+<span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD19'</span>, <span class="st">'CD79A'</span>, <span class="st">'MS4A1'</span> ,</span>
+<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'IGHG1'</span>, <span class="st">'MZB1'</span>, <span class="st">'SDC1'</span>,</span>
+<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD68'</span>, <span class="st">'CD163'</span>, <span class="st">'CD14'</span>, </span>
+<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'TPSAB1'</span> , <span class="st">'TPSB2'</span>, </span>
+<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'RCVRN'</span>,<span class="st">'FPR1'</span> , <span class="st">'ITGAM'</span> ,</span>
+<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'C1QA'</span>,  <span class="st">'C1QB'</span>,  </span>
+<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'S100A9'</span>, <span class="st">'S100A8'</span>, <span class="st">'MMP19'</span>,</span>
+<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'FCGR3A'</span>,<span class="st">'LAMP3'</span>, <span class="st">'IDO1'</span>,<span class="st">'IDO2'</span>,<span class="do">## DC3 </span></span>
+<span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'CD1E'</span>,<span class="st">'CD1C'</span>, <span class="co"># DC2</span></span>
+<span id="cb7-157"><a href="#cb7-157" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'KLRB1'</span>,<span class="st">'NCR1'</span>, </span>
+<span id="cb7-158"><a href="#cb7-158" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'FGF7'</span>,<span class="st">'MME'</span>, <span class="st">'ACTA2'</span>, </span>
+<span id="cb7-159"><a href="#cb7-159" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'DCN'</span>, <span class="st">'LUM'</span>,  <span class="st">'GSN'</span> , <span class="co"># mouse PDAC fibo </span></span>
+<span id="cb7-160"><a href="#cb7-160" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'PECAM1'</span>, <span class="st">'VWF'</span>,  </span>
+<span id="cb7-161"><a href="#cb7-161" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'EPCAM'</span> , <span class="st">'KRT19'</span>,<span class="st">'KRT7'</span>, </span>
+<span id="cb7-162"><a href="#cb7-162" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'FYXD2'</span>, <span class="st">'TM4SF4'</span>, <span class="st">'ANXA4'</span>,<span class="co"># 胆管上皮细胞</span></span>
+<span id="cb7-163"><a href="#cb7-163" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'APOC3'</span>, <span class="st">'FABP1'</span>,  <span class="st">'APOA1'</span>,  <span class="co"># 肝细胞</span></span>
+<span id="cb7-164"><a href="#cb7-164" aria-hidden="true" tabindex="-1"></a>                   <span class="st">'Serpina1c'</span>,<span class="st">'PROM1'</span>, <span class="st">'ALDH1A1'</span> )</span>
+<span id="cb7-165"><a href="#cb7-165" aria-hidden="true" tabindex="-1"></a><span class="fu">DotPlot</span>(sce.all, </span>
+<span id="cb7-166"><a href="#cb7-166" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> genes_to_check,</span>
+<span id="cb7-167"><a href="#cb7-167" aria-hidden="true" tabindex="-1"></a>        <span class="at">assay=</span><span class="st">'RNA'</span>,</span>
+<span id="cb7-168"><a href="#cb7-168" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="st">'celltype'</span> ) <span class="sc">+</span> </span>
+<span id="cb7-169"><a href="#cb7-169" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()</span>
+<span id="cb7-170"><a href="#cb7-170" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb7-171"><a href="#cb7-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-172"><a href="#cb7-172" aria-hidden="true" tabindex="-1"></a>根据气泡图所示的marker基因表达情况，确定细胞分群如下</span>
+<span id="cb7-172"><a href="#cb7-172" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/640.png)</span>{width="499"}</span>
 <span id="cb7-173"><a href="#cb7-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-174"><a href="#cb7-174" aria-hidden="true" tabindex="-1"></a>| Cluster ID | 细胞类型                |</span>
-<span id="cb7-175"><a href="#cb7-175" aria-hidden="true" tabindex="-1"></a>|------------|-------------------------|</span>
-<span id="cb7-176"><a href="#cb7-176" aria-hidden="true" tabindex="-1"></a>| 0, 7       | T cells                 |</span>
-<span id="cb7-177"><a href="#cb7-177" aria-hidden="true" tabindex="-1"></a>| 2          | Macrophages             |</span>
-<span id="cb7-178"><a href="#cb7-178" aria-hidden="true" tabindex="-1"></a>| 8          | Mast cells              |</span>
-<span id="cb7-179"><a href="#cb7-179" aria-hidden="true" tabindex="-1"></a>| 1, 9, 10   | Epithelial/cancer cells |</span>
-<span id="cb7-180"><a href="#cb7-180" aria-hidden="true" tabindex="-1"></a>| 6          | Fibroblasts             |</span>
-<span id="cb7-181"><a href="#cb7-181" aria-hidden="true" tabindex="-1"></a>| 5          | Endothelial cells       |</span>
-<span id="cb7-182"><a href="#cb7-182" aria-hidden="true" tabindex="-1"></a>| 4          | Cycling                 |</span>
-<span id="cb7-183"><a href="#cb7-183" aria-hidden="true" tabindex="-1"></a>| 3          | B cells                 |</span>
-<span id="cb7-184"><a href="#cb7-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-185"><a href="#cb7-185" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/640-2.png)</span>{width="296"}</span>
-<span id="cb7-186"><a href="#cb7-186" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb7-187"><a href="#cb7-187" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-188"><a href="#cb7-188" aria-hidden="true" tabindex="-1"></a>髓系免疫细胞亚群:</span>
+<span id="cb7-174"><a href="#cb7-174" aria-hidden="true" tabindex="-1"></a>根据气泡图所示的marker基因表达情况，确定细胞分群如下</span>
+<span id="cb7-175"><a href="#cb7-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-176"><a href="#cb7-176" aria-hidden="true" tabindex="-1"></a>| Cluster ID | 细胞类型                |</span>
+<span id="cb7-177"><a href="#cb7-177" aria-hidden="true" tabindex="-1"></a>|------------|-------------------------|</span>
+<span id="cb7-178"><a href="#cb7-178" aria-hidden="true" tabindex="-1"></a>| 0, 7       | T cells                 |</span>
+<span id="cb7-179"><a href="#cb7-179" aria-hidden="true" tabindex="-1"></a>| 2          | Macrophages             |</span>
+<span id="cb7-180"><a href="#cb7-180" aria-hidden="true" tabindex="-1"></a>| 8          | Mast cells              |</span>
+<span id="cb7-181"><a href="#cb7-181" aria-hidden="true" tabindex="-1"></a>| 1, 9, 10   | Epithelial/cancer cells |</span>
+<span id="cb7-182"><a href="#cb7-182" aria-hidden="true" tabindex="-1"></a>| 6          | Fibroblasts             |</span>
+<span id="cb7-183"><a href="#cb7-183" aria-hidden="true" tabindex="-1"></a>| 5          | Endothelial cells       |</span>
+<span id="cb7-184"><a href="#cb7-184" aria-hidden="true" tabindex="-1"></a>| 4          | Cycling                 |</span>
+<span id="cb7-185"><a href="#cb7-185" aria-hidden="true" tabindex="-1"></a>| 3          | B cells                 |</span>
+<span id="cb7-186"><a href="#cb7-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-187"><a href="#cb7-187" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/640-2.png)</span>{width="296"}</span>
+<span id="cb7-188"><a href="#cb7-188" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb7-189"><a href="#cb7-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-192"><a href="#cb7-192" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-193"><a href="#cb7-193" aria-hidden="true" tabindex="-1"></a>th<span class="ot">=</span><span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>,</span>
-<span id="cb7-194"><a href="#cb7-194" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="fl">0.5</span>))</span>
-<span id="cb7-195"><a href="#cb7-195" aria-hidden="true" tabindex="-1"></a>myeloids <span class="ot">=</span> <span class="fu">list</span>(</span>
-<span id="cb7-196"><a href="#cb7-196" aria-hidden="true" tabindex="-1"></a>  <span class="at">Mac=</span><span class="fu">c</span>(<span class="st">"C1QA"</span>,<span class="st">"C1QB"</span>,<span class="st">"C1QC"</span>,<span class="st">"SELENOP"</span>,<span class="st">"RNASE1"</span>,<span class="st">"DAB2"</span>,<span class="st">"LGMN"</span>,<span class="st">"PLTP"</span>,<span class="st">"MAF"</span>,<span class="st">"SLCO2B1"</span>),</span>
-<span id="cb7-197"><a href="#cb7-197" aria-hidden="true" tabindex="-1"></a>  <span class="at">mono=</span><span class="fu">c</span>(<span class="st">"VCAN"</span>,<span class="st">"FCN1"</span>,<span class="st">"CD300E"</span>,<span class="st">"S100A12"</span>,<span class="st">"EREG"</span>,<span class="st">"APOBEC3A"</span>,<span class="st">"STXBP2"</span>,<span class="st">"ASGR1"</span>,<span class="st">"CCR2"</span>,<span class="st">"NRG1"</span>),</span>
-<span id="cb7-198"><a href="#cb7-198" aria-hidden="true" tabindex="-1"></a>  <span class="at">neutrophils =</span> <span class="fu">c</span>(<span class="st">"FCGR3B"</span>,<span class="st">"CXCR2"</span>,<span class="st">"SLC25A37"</span>,<span class="st">"G0S2"</span>,<span class="st">"CXCR1"</span>,<span class="st">"ADGRG3"</span>,<span class="st">"PROK2"</span>,<span class="st">"STEAP4"</span>,<span class="st">"CMTM2"</span> ),</span>
-<span id="cb7-199"><a href="#cb7-199" aria-hidden="true" tabindex="-1"></a>  <span class="at">pDC =</span> <span class="fu">c</span>(<span class="st">"GZMB"</span>,<span class="st">"SCT"</span>,<span class="st">"CLIC3"</span>,<span class="st">"LRRC26"</span>,<span class="st">"LILRA4"</span>,<span class="st">"PACSIN1"</span>,<span class="st">"CLEC4C"</span>,<span class="st">"MAP1A"</span>,<span class="st">"PTCRA"</span>,<span class="st">"C12orf75"</span>),</span>
-<span id="cb7-200"><a href="#cb7-200" aria-hidden="true" tabindex="-1"></a>  <span class="at">DC1 =</span> <span class="fu">c</span>(<span class="st">"CLEC9A"</span>,<span class="st">"XCR1"</span>,<span class="st">"CLNK"</span>,<span class="st">"CADM1"</span>,<span class="st">"ENPP1"</span>,<span class="st">"SNX22"</span>,<span class="st">"NCALD"</span>,<span class="st">"DBN1"</span>,<span class="st">"HLA-DOB"</span>,<span class="st">"PPY"</span>),</span>
-<span id="cb7-201"><a href="#cb7-201" aria-hidden="true" tabindex="-1"></a>  <span class="at">DC2 =</span> <span class="fu">c</span>( <span class="st">"CD1C"</span>,<span class="st">"FCER1A"</span>,<span class="st">"CD1E"</span>,<span class="st">"AL138899.1"</span>,<span class="st">"CD2"</span>,<span class="st">"GPAT3"</span>,<span class="st">"CCND2"</span>,<span class="st">"ENHO"</span>,<span class="st">"PKIB"</span>,<span class="st">"CD1B"</span>),</span>
-<span id="cb7-202"><a href="#cb7-202" aria-hidden="true" tabindex="-1"></a>  <span class="at">DC3 =</span>  <span class="fu">c</span>(<span class="st">"HMSD"</span>,<span class="st">"ANKRD33B"</span>,<span class="st">"LAD1"</span>,<span class="st">"CCR7"</span>,<span class="st">"LAMP3"</span>,<span class="st">"CCL19"</span>,<span class="st">"CCL22"</span>,<span class="st">"INSM1"</span>,<span class="st">"TNNT2"</span>,<span class="st">"TUBB2B"</span>)</span>
-<span id="cb7-203"><a href="#cb7-203" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-204"><a href="#cb7-204" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">DotPlot</span>(sce.all, <span class="at">features =</span> myeloids,</span>
-<span id="cb7-205"><a href="#cb7-205" aria-hidden="true" tabindex="-1"></a>             <span class="at">assay=</span><span class="st">'RNA'</span> ,<span class="at">group.by =</span> <span class="st">'celltype'</span> )  <span class="sc">+</span>th</span>
-<span id="cb7-206"><a href="#cb7-206" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-207"><a href="#cb7-207" aria-hidden="true" tabindex="-1"></a>p</span>
-<span id="cb7-208"><a href="#cb7-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb7-190"><a href="#cb7-190" aria-hidden="true" tabindex="-1"></a>髓系免疫细胞亚群:</span>
+<span id="cb7-191"><a href="#cb7-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-194"><a href="#cb7-194" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb7-195"><a href="#cb7-195" aria-hidden="true" tabindex="-1"></a>th<span class="ot">=</span><span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>,</span>
+<span id="cb7-196"><a href="#cb7-196" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="fl">0.5</span>))</span>
+<span id="cb7-197"><a href="#cb7-197" aria-hidden="true" tabindex="-1"></a>myeloids <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb7-198"><a href="#cb7-198" aria-hidden="true" tabindex="-1"></a>  <span class="at">Mac=</span><span class="fu">c</span>(<span class="st">"C1QA"</span>,<span class="st">"C1QB"</span>,<span class="st">"C1QC"</span>,<span class="st">"SELENOP"</span>,<span class="st">"RNASE1"</span>,<span class="st">"DAB2"</span>,<span class="st">"LGMN"</span>,<span class="st">"PLTP"</span>,<span class="st">"MAF"</span>,<span class="st">"SLCO2B1"</span>),</span>
+<span id="cb7-199"><a href="#cb7-199" aria-hidden="true" tabindex="-1"></a>  <span class="at">mono=</span><span class="fu">c</span>(<span class="st">"VCAN"</span>,<span class="st">"FCN1"</span>,<span class="st">"CD300E"</span>,<span class="st">"S100A12"</span>,<span class="st">"EREG"</span>,<span class="st">"APOBEC3A"</span>,<span class="st">"STXBP2"</span>,<span class="st">"ASGR1"</span>,<span class="st">"CCR2"</span>,<span class="st">"NRG1"</span>),</span>
+<span id="cb7-200"><a href="#cb7-200" aria-hidden="true" tabindex="-1"></a>  <span class="at">neutrophils =</span> <span class="fu">c</span>(<span class="st">"FCGR3B"</span>,<span class="st">"CXCR2"</span>,<span class="st">"SLC25A37"</span>,<span class="st">"G0S2"</span>,<span class="st">"CXCR1"</span>,<span class="st">"ADGRG3"</span>,<span class="st">"PROK2"</span>,<span class="st">"STEAP4"</span>,<span class="st">"CMTM2"</span> ),</span>
+<span id="cb7-201"><a href="#cb7-201" aria-hidden="true" tabindex="-1"></a>  <span class="at">pDC =</span> <span class="fu">c</span>(<span class="st">"GZMB"</span>,<span class="st">"SCT"</span>,<span class="st">"CLIC3"</span>,<span class="st">"LRRC26"</span>,<span class="st">"LILRA4"</span>,<span class="st">"PACSIN1"</span>,<span class="st">"CLEC4C"</span>,<span class="st">"MAP1A"</span>,<span class="st">"PTCRA"</span>,<span class="st">"C12orf75"</span>),</span>
+<span id="cb7-202"><a href="#cb7-202" aria-hidden="true" tabindex="-1"></a>  <span class="at">DC1 =</span> <span class="fu">c</span>(<span class="st">"CLEC9A"</span>,<span class="st">"XCR1"</span>,<span class="st">"CLNK"</span>,<span class="st">"CADM1"</span>,<span class="st">"ENPP1"</span>,<span class="st">"SNX22"</span>,<span class="st">"NCALD"</span>,<span class="st">"DBN1"</span>,<span class="st">"HLA-DOB"</span>,<span class="st">"PPY"</span>),</span>
+<span id="cb7-203"><a href="#cb7-203" aria-hidden="true" tabindex="-1"></a>  <span class="at">DC2 =</span> <span class="fu">c</span>( <span class="st">"CD1C"</span>,<span class="st">"FCER1A"</span>,<span class="st">"CD1E"</span>,<span class="st">"AL138899.1"</span>,<span class="st">"CD2"</span>,<span class="st">"GPAT3"</span>,<span class="st">"CCND2"</span>,<span class="st">"ENHO"</span>,<span class="st">"PKIB"</span>,<span class="st">"CD1B"</span>),</span>
+<span id="cb7-204"><a href="#cb7-204" aria-hidden="true" tabindex="-1"></a>  <span class="at">DC3 =</span>  <span class="fu">c</span>(<span class="st">"HMSD"</span>,<span class="st">"ANKRD33B"</span>,<span class="st">"LAD1"</span>,<span class="st">"CCR7"</span>,<span class="st">"LAMP3"</span>,<span class="st">"CCL19"</span>,<span class="st">"CCL22"</span>,<span class="st">"INSM1"</span>,<span class="st">"TNNT2"</span>,<span class="st">"TUBB2B"</span>)</span>
+<span id="cb7-205"><a href="#cb7-205" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-206"><a href="#cb7-206" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">DotPlot</span>(sce.all, <span class="at">features =</span> myeloids,</span>
+<span id="cb7-207"><a href="#cb7-207" aria-hidden="true" tabindex="-1"></a>             <span class="at">assay=</span><span class="st">'RNA'</span> ,<span class="at">group.by =</span> <span class="st">'celltype'</span> )  <span class="sc">+</span>th</span>
+<span id="cb7-208"><a href="#cb7-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-209"><a href="#cb7-209" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb7-210"><a href="#cb7-210" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

@@ -605,7 +605,7 @@ Learning Objectives:
 <hr>
 <section id="set-up" class="level2" data-number="25.1"><h2 data-number="25.1" class="anchored" data-anchor-id="set-up">
 <span class="header-section-number">25.1</span> Set up</h2>
-<p>读取上一节（ <a href="#sec-sc_integration"><span class="quarto-unresolved-ref">sec-sc_integration</span></a> ）中完成质控和整合的单细胞数据<code>seurat_integrated</code>。</p>
+<p>读取上一节（ <a href="06_integration.html"><span>Chapter&nbsp;24</span></a> ）中完成质控和整合的单细胞数据<code>seurat_integrated</code>。</p>
 <div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-1_d542247d6429a592dec52ce84cca8086">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
 <span><span class="va">seurat_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/scRNA-seq_online/integrated_seurat.rds"</span><span class="op">)</span></span>
@@ -616,7 +616,7 @@ Learning Objectives:
 Active assay: SCT (14065 features, 3000 variable features)
  3 layers present: counts, data, scale.data
  1 other assay present: RNA
- 3 dimensional reductions calculated: pca, umap, integrated.cca</code></pre>
+ 4 dimensional reductions calculated: pca, umap.unintegrated, integrated.cca, umap.integrated</code></pre>
 </div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">seurat_integrated</span>, <span class="fl">5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -638,12 +638,18 @@ ctrl_AAACATACATTTCC-1       1575          735  0.010251663  0.015119823   G2M
 ctrl_AAACATACCAGAAA-1       1563          671 -0.019803499 -0.015779795    G1
 ctrl_AAACATACCAGCTA-1       1587          775 -0.032093208  0.013380044   G2M
 ctrl_AAACATACCATGCA-1       1086          374  0.008301833 -0.008402066     S
-                           mitoFr
-ctrl_AAACATACAATGCC-1      Medium
-ctrl_AAACATACATTTCC-1      Medium
-ctrl_AAACATACCAGAAA-1      Medium
-ctrl_AAACATACCAGCTA-1         Low
-ctrl_AAACATACCATGCA-1 Medium high</code></pre>
+                           mitoFr unintegrated_clusters seurat_clusters
+ctrl_AAACATACAATGCC-1      Medium                     4               5
+ctrl_AAACATACATTTCC-1      Medium                     0               0
+ctrl_AAACATACCAGAAA-1      Medium                    14              14
+ctrl_AAACATACCAGCTA-1         Low                     1               6
+ctrl_AAACATACCATGCA-1 Medium high                    16              12
+                      integrated_clusters
+ctrl_AAACATACAATGCC-1                   5
+ctrl_AAACATACATTTCC-1                   0
+ctrl_AAACATACCAGAAA-1                  14
+ctrl_AAACATACCAGCTA-1                   6
+ctrl_AAACATACCATGCA-1                  12</code></pre>
 </div>
 </div>
 </section><section id="决定后续分析的主成分" class="level2" data-number="25.2"><h2 data-number="25.2" class="anchored" data-anchor-id="决定后续分析的主成分">
@@ -714,7 +720,7 @@ Negative:  IGLC2, TIMP1, VMO1, PPBP, IGHM </code></pre>
 </div>
 </div>
 <p>Based on this plot, we could roughly determine the majority of the variation by where the elbow occurs around PC8 - PC10, or one could argue that it should be when the data points start to get close to the X-axis, PC30 or so. This gives us a very rough idea of the number of PCs needed to be included, we can extract the information visualized here in a <a href="https://hbctraining.github.io/scRNA-seq_online/lessons/elbow_plot_metric.html"><strong>more quantitative manner</strong></a>, which may be a bit more reliable.</p>
-<p>While the above 2 methods were used a lot more with older methods from Seurat for normalization and identification of variable genes, they are no longer as important as they used to be. This is because the <strong>SCTransform method is more accurate than older methods，基于SCTransform的标准化流程中不再需要判断纳入的主成分数量，可以纳入更多的主成分（</strong> <a href="#sec-clustering"><span class="quarto-unresolved-ref">sec-clustering</span></a> <strong>）</strong>.</p>
+<p>While the above 2 methods were used a lot more with older methods from Seurat for normalization and identification of variable genes, they are no longer as important as they used to be. This is because the <strong>SCTransform method is more accurate than older methods，基于SCTransform的标准化流程中不再需要判断纳入的主成分数量，可以纳入更多的主成分（</strong> <a href="../seurat/sctransform.html#sec-clustering"><span>Section&nbsp;10.5</span></a> <strong>）</strong>.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -731,7 +737,7 @@ Why is selection of PCs more important for older methods?
 </div>
 </section></section><section id="聚类cluster-the-cells" class="level2" data-number="25.3"><h2 data-number="25.3" class="anchored" data-anchor-id="聚类cluster-the-cells">
 <span class="header-section-number">25.3</span> 聚类（Cluster the cells）</h2>
-<p>Seurat uses a graph-based clustering approach using a K-nearest neighbor approach, and then attempts to partition this graph into highly interconnected ‘quasi-cliques’ or ‘communities’ （ <a href="#sec-clustering_seurat"><span class="quarto-unresolved-ref">sec-clustering_seurat</span></a> ）. A nice in-depth description of clustering methods is provided in the <a href="https://biocellgen-public.svi.edu.au/mig_2019_scrnaseq-workshop/clustering-and-cell-annotation.html">SVI Bioinformatics and Cellular Genomics Lab course</a>.</p>
+<p>Seurat uses a graph-based clustering approach using a K-nearest neighbor approach, and then attempts to partition this graph into highly interconnected ‘quasi-cliques’ or ‘communities’ （ <a href="../seurat/seurat_tutorial.html#sec-clustering_seurat"><span>Section&nbsp;8.7</span></a> ）. A nice in-depth description of clustering methods is provided in the <a href="https://biocellgen-public.svi.edu.au/mig_2019_scrnaseq-workshop/clustering-and-cell-annotation.html">SVI Bioinformatics and Cellular Genomics Lab course</a>.</p>
 <section id="find-neighbors" class="level3"><h3 class="anchored" data-anchor-id="find-neighbors">Find neighbors</h3>
 <p>The first step is to <strong>construct a K-nearest neighbor (KNN) graph</strong> based on the euclidean distance in PCA space.</p>
 <p><img src="images/k-means.png" class="img-fluid"></p>
@@ -742,11 +748,12 @@ Why is selection of PCs more important for older methods?
 <li>Edges are drawn between cells with similar features expression patterns.</li>
 <li>Edge weights are refined between any two cells based on shared overlap in their local neighborhoods.</li>
 </ul>
-<p>This is done in Seurat by using the <code><a href="https://satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors()</a></code> function:</p>
-<div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-5_4a54251cf56c89af8b9d749c45b73ac6">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Determine the K-nearest neighbor graph</span></span>
-<span><span class="va">seurat_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">seurat_integrated</span>, </span>
-<span>                                   dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This is done in Seurat by using the <code><a href="https://satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors()</a></code> function（这里不需要运行，因为在上一节中我们已经在整合后运行了<code>FindNeighbors</code>）:</p>
+<div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-5_29922ded07eba3582c436037118a8927">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Determine the K-nearest neighbor graph（不需运行）</span></span>
+<span><span class="va">seurat_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors</a></span><span class="op">(</span><span class="va">seurat_integrated</span>, </span>
+<span>                                   dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>, </span>
+<span>                                   reduction <span class="op">=</span> <span class="st">"integrated.cca"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="find-clusters" class="level3"><h3 class="anchored" data-anchor-id="find-clusters">Find clusters</h3>
 <p>Next, Seurat will <strong>iteratively group cells together with the goal of optimizing the standard modularity function</strong>.</p>
@@ -760,47 +767,47 @@ Why is selection of PCs more important for older methods?
 <pre><code>Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 
 Number of nodes: 29629
-Number of edges: 1104454
+Number of edges: 1128935
 
 Running Louvain algorithm...
-Maximum modularity in 10 random starts: 0.9278
-Number of communities: 16
+Maximum modularity in 10 random starts: 0.9211
+Number of communities: 14
 Elapsed time: 4 seconds
 Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 
 Number of nodes: 29629
-Number of edges: 1104454
+Number of edges: 1128935
 
 Running Louvain algorithm...
-Maximum modularity in 10 random starts: 0.9117
-Number of communities: 20
+Maximum modularity in 10 random starts: 0.9019
+Number of communities: 17
 Elapsed time: 4 seconds
 Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 
 Number of nodes: 29629
-Number of edges: 1104454
+Number of edges: 1128935
 
 Running Louvain algorithm...
-Maximum modularity in 10 random starts: 0.8974
+Maximum modularity in 10 random starts: 0.8864
 Number of communities: 22
-Elapsed time: 5 seconds
-Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
-
-Number of nodes: 29629
-Number of edges: 1104454
-
-Running Louvain algorithm...
-Maximum modularity in 10 random starts: 0.8847
-Number of communities: 24
 Elapsed time: 4 seconds
 Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
 
 Number of nodes: 29629
-Number of edges: 1104454
+Number of edges: 1128935
 
 Running Louvain algorithm...
-Maximum modularity in 10 random starts: 0.8625
-Number of communities: 29
+Maximum modularity in 10 random starts: 0.8727
+Number of communities: 26
+Elapsed time: 4 seconds
+Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 29629
+Number of edges: 1128935
+
+Running Louvain algorithm...
+Maximum modularity in 10 random starts: 0.8511
+Number of communities: 28
 Elapsed time: 4 seconds</code></pre>
 </div>
 </div>
@@ -831,24 +838,24 @@ ctrl_AAACATACATTTCC-1       1575          735  0.010251663  0.015119823   G2M
 ctrl_AAACATACCAGAAA-1       1563          671 -0.019803499 -0.015779795    G1
 ctrl_AAACATACCAGCTA-1       1587          775 -0.032093208  0.013380044   G2M
 ctrl_AAACATACCATGCA-1       1086          374  0.008301833 -0.008402066     S
-                           mitoFr SCT_snn_res.0.4 SCT_snn_res.0.6
-ctrl_AAACATACAATGCC-1      Medium               5               5
-ctrl_AAACATACATTTCC-1      Medium               0               1
-ctrl_AAACATACCAGAAA-1      Medium               1              13
-ctrl_AAACATACCAGCTA-1         Low               1               0
-ctrl_AAACATACCATGCA-1 Medium high               8               9
+                           mitoFr unintegrated_clusters seurat_clusters
+ctrl_AAACATACAATGCC-1      Medium                     4               4
+ctrl_AAACATACATTTCC-1      Medium                     0               9
+ctrl_AAACATACCAGAAA-1      Medium                    14              18
+ctrl_AAACATACCAGCTA-1         Low                     1               6
+ctrl_AAACATACCATGCA-1 Medium high                    16              14
+                      integrated_clusters SCT_snn_res.0.4 SCT_snn_res.0.6
+ctrl_AAACATACAATGCC-1                   5               0               0
+ctrl_AAACATACATTTCC-1                   0               2               1
+ctrl_AAACATACCAGAAA-1                  14               4               5
+ctrl_AAACATACCAGCTA-1                   6               4               5
+ctrl_AAACATACCATGCA-1                  12               5               6
                       SCT_snn_res.0.8 SCT_snn_res.1 SCT_snn_res.1.4
-ctrl_AAACATACAATGCC-1               4             4               3
-ctrl_AAACATACATTTCC-1               0             0               0
-ctrl_AAACATACCAGAAA-1              14            16              19
-ctrl_AAACATACCAGCTA-1               1             1              20
-ctrl_AAACATACCATGCA-1              16            17              21
-                      seurat_clusters
-ctrl_AAACATACAATGCC-1               3
-ctrl_AAACATACATTTCC-1               0
-ctrl_AAACATACCAGAAA-1              19
-ctrl_AAACATACCAGCTA-1              20
-ctrl_AAACATACCATGCA-1              21</code></pre>
+ctrl_AAACATACAATGCC-1               5             2               4
+ctrl_AAACATACATTTCC-1               0             0               9
+ctrl_AAACATACCAGAAA-1              14            17              18
+ctrl_AAACATACCAGCTA-1               6             8               6
+ctrl_AAACATACCATGCA-1              12            14              14</code></pre>
 </div>
 </div>
 <p>To <strong>choose a resolution to start with</strong>, we often pick something in the middle of the range like 0.6 or 0.8. We will start with a resolution of 0.8 by assigning the identity of the clusters using the <code><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html">Idents()</a></code> function.</p>
@@ -857,17 +864,18 @@ ctrl_AAACATACCATGCA-1              21</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html">Idents</a></span><span class="op">(</span><span class="va">seurat_integrated</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"SCT_snn_res.0.8"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now, we can plot the UMAP to look at how cells cluster together at a resolution of 0.8:</p>
-<div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-9_f5f0c233646fa9ace24c6741b268e6c1">
+<div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-9_1ffbc7fdafa03a98f39a4905a443d4fa">
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Calculation of UMAP</span></span>
 <span><span class="co"># DO NOT RUN (calculated in the last lesson)</span></span>
 <span><span class="va">seurat_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html">RunUMAP</a></span><span class="op">(</span><span class="va">seurat_integrated</span>, </span>
-<span>                             reduction <span class="op">=</span> <span class="st">"integrated.cca"</span>, </span>
-<span>                             dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span>                             dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>,</span>
+<span>                             reduction <span class="op">=</span> <span class="st">"integrated.cca"</span>, <span class="co"># 更改降维来源为整合后的"integrated.cca"</span></span>
+<span>                             reduction.name <span class="op">=</span> <span class="st">"umap.integrated"</span><span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-10_04b6149743243ac866c3b8e543f2a916">
+<div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-10_f150ba8cb819b5430d75af37006ef39b">
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Plot the UMAP</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">seurat_integrated</span>,</span>
-<span>        reduction <span class="op">=</span> <span class="st">"umap"</span>,</span>
+<span>        reduction <span class="op">=</span> <span class="st">"umap.integrated"</span>,</span>
 <span>        label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>        label.size <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -875,13 +883,13 @@ ctrl_AAACATACCATGCA-1              21</code></pre>
 </div>
 </div>
 <p>It can be useful to <strong>explore other resolutions as well</strong>. It will give you a quick idea about how the clusters would change based on the resolution parameter. For example, let’s switch to a resolution of 0.4:</p>
-<div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-11_e1e5462b61dfb8e8e392397ad1f75d49">
+<div class="cell" data-hash="07_SC_clustering_cells_SCT_cache/html/unnamed-chunk-11_9898c7615ce27ac5fbb62c68038a2104">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Assign identity of clusters</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html">Idents</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">seurat_integrated</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"SCT_snn_res.0.4"</span></span>
 <span></span>
 <span><span class="co"># Plot the UMAP</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">seurat_integrated</span>,</span>
-<span>        reduction <span class="op">=</span> <span class="st">"umap"</span>,</span>
+<span>        reduction <span class="op">=</span> <span class="st">"umap.integrated"</span>,</span>
 <span>        label <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>        label.size <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -963,7 +971,7 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>由于这里的案例数据是基于Seurat V5之前的版本创建的，所以数据结构和基于Seurat V5的结果有所差异。比较重要的区别是，这里的Seurat对象的没有layer结构；同时有一个“integrated” assay，用于存放整合后的信息，其类型仍属于SCT assay。而一个典型的经过SCTransform和整合的Seurat V5对象如下图所示（来自 <a href="#sec-integration_after_sct"><span class="quarto-unresolved-ref">sec-integration_after_sct</span></a> ）：</p>
+<p>由于这里的案例数据是基于Seurat V5之前的版本创建的，所以数据结构和基于Seurat V5的结果有所差异。比较重要的区别是，这里的Seurat对象的没有layer结构；同时有一个“integrated” assay，用于存放整合后的信息，其类型仍属于SCT assay。而一个典型的经过SCTransform和整合的Seurat V5对象如下图所示（来自 <a href="../seurat/integration.html#sec-integration_after_sct"><span>Section&nbsp;12.4.2</span></a> ）：</p>
 <p><img src="images/截屏2023-12-26 09.59.44.png" class="img-fluid"></p>
 <p>可以看到没有“integrated” assay，因此，为了和最新的Seurat V5流程保持一致，我们后续把本案例中的“integrated” assay看作整合后的Seurat V5的“SCT” assay。</p>
 </div>
@@ -1081,12 +1089,12 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] patchwork_1.1.3    ggplot2_3.4.4      Seurat_5.0.1       SeuratObject_5.0.1
+[1] patchwork_1.2.0    ggplot2_3.4.4      Seurat_5.0.1       SeuratObject_5.0.1
 [5] sp_2.1-2          
 
 loaded via a namespace (and not attached):
   [1] deldir_2.0-2           pbapply_1.7-2          gridExtra_2.3         
-  [4] rlang_1.1.2            magrittr_2.0.3         RcppAnnoy_0.0.21      
+  [4] rlang_1.1.3            magrittr_2.0.3         RcppAnnoy_0.0.21      
   [7] spatstat.geom_3.2-7    matrixStats_1.2.0      ggridges_0.5.5        
  [10] compiler_4.3.2         png_0.1-8              vctrs_0.6.5           
  [13] reshape2_1.4.4         stringr_1.5.1          pkgconfig_2.0.3       
@@ -1096,32 +1104,32 @@ loaded via a namespace (and not attached):
  [25] goftest_1.2-3          later_1.3.2            spatstat.utils_3.0-4  
  [28] irlba_2.3.5.1          parallel_4.3.2         cluster_2.1.6         
  [31] R6_2.5.1               ica_1.0-3              stringi_1.8.3         
- [34] RColorBrewer_1.1-3     spatstat.data_3.0-3    reticulate_1.34.0     
+ [34] RColorBrewer_1.1-3     spatstat.data_3.0-4    reticulate_1.34.0     
  [37] parallelly_1.36.0      lmtest_0.9-40          scattermore_1.2       
- [40] Rcpp_1.0.11            knitr_1.45             tensor_1.5            
- [43] future.apply_1.11.0    zoo_1.8-12             sctransform_0.4.1     
- [46] httpuv_1.6.13          Matrix_1.6-4           splines_4.3.2         
+ [40] Rcpp_1.0.12            knitr_1.45             tensor_1.5            
+ [43] future.apply_1.11.1    zoo_1.8-12             sctransform_0.4.1     
+ [46] httpuv_1.6.13          Matrix_1.6-5           splines_4.3.2         
  [49] igraph_1.6.0           tidyselect_1.2.0       abind_1.4-5           
  [52] rstudioapi_0.15.0      yaml_2.3.8             spatstat.random_3.2-2 
  [55] codetools_0.2-19       miniUI_0.1.1.1         spatstat.explore_3.2-5
  [58] listenv_0.9.0          lattice_0.22-5         tibble_3.2.1          
  [61] plyr_1.8.9             withr_2.5.2            shiny_1.8.0           
  [64] ROCR_1.0-11            evaluate_0.23          Rtsne_0.17            
- [67] future_1.33.0          fastDummies_1.7.3      survival_3.5-7        
+ [67] future_1.33.1          fastDummies_1.7.3      survival_3.5-7        
  [70] polyclip_1.10-6        fitdistrplus_1.1-11    pillar_1.9.0          
- [73] KernSmooth_2.23-22     plotly_4.10.3          generics_0.1.3        
+ [73] KernSmooth_2.23-22     plotly_4.10.4          generics_0.1.3        
  [76] RcppHNSW_0.5.0         munsell_0.5.0          scales_1.3.0          
- [79] globals_0.16.2         xtable_1.8-4           glue_1.6.2            
+ [79] globals_0.16.2         xtable_1.8-4           glue_1.7.0            
  [82] lazyeval_0.2.2         tools_4.3.2            data.table_1.14.10    
  [85] RSpectra_0.16-1        RANN_2.6.1             leiden_0.4.3.1        
  [88] dotCall64_1.1-1        cowplot_1.1.2          grid_4.3.2            
  [91] tidyr_1.3.0            colorspace_2.1-0       nlme_3.1-164          
  [94] cli_3.6.2              spatstat.sparse_3.0-3  spam_2.10-0           
  [97] fansi_1.0.6            viridisLite_0.4.2      dplyr_1.1.4           
-[100] uwot_0.1.16            gtable_0.3.4           digest_0.6.33         
-[103] progressr_0.14.0       ggrepel_0.9.4          farver_2.1.1          
+[100] uwot_0.1.16            gtable_0.3.4           digest_0.6.34         
+[103] progressr_0.14.0       ggrepel_0.9.5          farver_2.1.1          
 [106] htmlwidgets_1.6.4      htmltools_0.5.7        lifecycle_1.0.4       
-[109] httr_1.4.7             mime_0.12              MASS_7.3-60           </code></pre>
+[109] httr_1.4.7             mime_0.12              MASS_7.3-60.0.1       </code></pre>
 </div>
 </div>
 </div>
@@ -1672,173 +1680,176 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb28-123"><a href="#cb28-123" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Edges are drawn between cells with similar features expression patterns.</span>
 <span id="cb28-124"><a href="#cb28-124" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Edge weights are refined between any two cells based on shared overlap in their local neighborhoods.</span>
 <span id="cb28-125"><a href="#cb28-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-126"><a href="#cb28-126" aria-hidden="true" tabindex="-1"></a>This is done in Seurat by using the <span class="in">`FindNeighbors()`</span> function:</span>
+<span id="cb28-126"><a href="#cb28-126" aria-hidden="true" tabindex="-1"></a>This is done in Seurat by using the <span class="in">`FindNeighbors()`</span> function（这里不需要运行，因为在上一节中我们已经在整合后运行了<span class="in">`FindNeighbors`</span>）:</span>
 <span id="cb28-127"><a href="#cb28-127" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-130"><a href="#cb28-130" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-131"><a href="#cb28-131" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine the K-nearest neighbor graph</span></span>
-<span id="cb28-132"><a href="#cb28-132" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(<span class="at">object =</span> seurat_integrated, </span>
-<span id="cb28-133"><a href="#cb28-133" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>)</span>
-<span id="cb28-134"><a href="#cb28-134" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-135"><a href="#cb28-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-136"><a href="#cb28-136" aria-hidden="true" tabindex="-1"></a><span class="fu">### Find clusters</span></span>
+<span id="cb28-131"><a href="#cb28-131" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb28-132"><a href="#cb28-132" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine the K-nearest neighbor graph（不需运行）</span></span>
+<span id="cb28-133"><a href="#cb28-133" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(seurat_integrated, </span>
+<span id="cb28-134"><a href="#cb28-134" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>, </span>
+<span id="cb28-135"><a href="#cb28-135" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>)</span>
+<span id="cb28-136"><a href="#cb28-136" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb28-137"><a href="#cb28-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-138"><a href="#cb28-138" aria-hidden="true" tabindex="-1"></a>Next, Seurat will **iteratively group cells together with the goal of optimizing the standard modularity function**.</span>
+<span id="cb28-138"><a href="#cb28-138" aria-hidden="true" tabindex="-1"></a><span class="fu">### Find clusters</span></span>
 <span id="cb28-139"><a href="#cb28-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-140"><a href="#cb28-140" aria-hidden="true" tabindex="-1"></a>We will use the <span class="in">`FindClusters()`</span> function to perform the graph-based clustering. The <span class="in">`resolution`</span> is an important argument that sets the "granularity" of the downstream clustering and will need to be optimized for every individual experiment. **For datasets of 3,000 - 5,000 cells, the `resolution` set between `0.4`-`1.4` generally yields good clustering**. Increased resolution values lead to a greater number of clusters, which is often required for larger datasets.</span>
+<span id="cb28-140"><a href="#cb28-140" aria-hidden="true" tabindex="-1"></a>Next, Seurat will **iteratively group cells together with the goal of optimizing the standard modularity function**.</span>
 <span id="cb28-141"><a href="#cb28-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-142"><a href="#cb28-142" aria-hidden="true" tabindex="-1"></a>The <span class="in">`FindClusters()`</span> function allows us to enter a series of resolutions and will calculate the "granularity" of the clustering. This is very helpful for testing which resolution works for moving forward without having to run the function for each resolution.</span>
+<span id="cb28-142"><a href="#cb28-142" aria-hidden="true" tabindex="-1"></a>We will use the <span class="in">`FindClusters()`</span> function to perform the graph-based clustering. The <span class="in">`resolution`</span> is an important argument that sets the "granularity" of the downstream clustering and will need to be optimized for every individual experiment. **For datasets of 3,000 - 5,000 cells, the `resolution` set between `0.4`-`1.4` generally yields good clustering**. Increased resolution values lead to a greater number of clusters, which is often required for larger datasets.</span>
 <span id="cb28-143"><a href="#cb28-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-146"><a href="#cb28-146" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-147"><a href="#cb28-147" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine the clusters for various resolutions                                </span></span>
-<span id="cb28-148"><a href="#cb28-148" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(<span class="at">object =</span> seurat_integrated,</span>
-<span id="cb28-149"><a href="#cb28-149" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">resolution =</span> <span class="fu">c</span>(<span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="fl">1.0</span>, <span class="fl">1.4</span>))</span>
-<span id="cb28-150"><a href="#cb28-150" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-151"><a href="#cb28-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-152"><a href="#cb28-152" aria-hidden="true" tabindex="-1"></a><span class="fu">## Visualize clusters of cells</span></span>
+<span id="cb28-144"><a href="#cb28-144" aria-hidden="true" tabindex="-1"></a>The <span class="in">`FindClusters()`</span> function allows us to enter a series of resolutions and will calculate the "granularity" of the clustering. This is very helpful for testing which resolution works for moving forward without having to run the function for each resolution.</span>
+<span id="cb28-145"><a href="#cb28-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-148"><a href="#cb28-148" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-149"><a href="#cb28-149" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine the clusters for various resolutions                                </span></span>
+<span id="cb28-150"><a href="#cb28-150" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(<span class="at">object =</span> seurat_integrated,</span>
+<span id="cb28-151"><a href="#cb28-151" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">resolution =</span> <span class="fu">c</span>(<span class="fl">0.4</span>, <span class="fl">0.6</span>, <span class="fl">0.8</span>, <span class="fl">1.0</span>, <span class="fl">1.4</span>))</span>
+<span id="cb28-152"><a href="#cb28-152" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb28-153"><a href="#cb28-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-154"><a href="#cb28-154" aria-hidden="true" tabindex="-1"></a>To visualize the cell clusters, there are a few different dimensionality reduction techniques that can be helpful. The most popular methods include <span class="co">[</span><span class="ot">t-distributed stochastic neighbor embedding (t-SNE)</span><span class="co">](https://kb.10xgenomics.com/hc/en-us/articles/217265066-What-is-t-Distributed-Stochastic-Neighbor-Embedding-t-SNE-)</span> and <span class="co">[</span><span class="ot">Uniform Manifold Approximation and Projection (UMAP)</span><span class="co">](https://umap-learn.readthedocs.io/en/latest/index.html)</span> techniques.</span>
+<span id="cb28-154"><a href="#cb28-154" aria-hidden="true" tabindex="-1"></a><span class="fu">## Visualize clusters of cells</span></span>
 <span id="cb28-155"><a href="#cb28-155" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-156"><a href="#cb28-156" aria-hidden="true" tabindex="-1"></a>Both methods aim to place cells with similar local neighborhoods in high-dimensional space together in low-dimensional space. These methods will require you to input number of PCA dimentions to use for the visualization, we suggest using the same number of PCs as input to the clustering analysis. Here, we will proceed with the <span class="co">[</span><span class="ot">UMAP method</span><span class="co">](https://umap-learn.readthedocs.io/en/latest/how_umap_works.html)</span> for visualizing the clusters.</span>
+<span id="cb28-156"><a href="#cb28-156" aria-hidden="true" tabindex="-1"></a>To visualize the cell clusters, there are a few different dimensionality reduction techniques that can be helpful. The most popular methods include <span class="co">[</span><span class="ot">t-distributed stochastic neighbor embedding (t-SNE)</span><span class="co">](https://kb.10xgenomics.com/hc/en-us/articles/217265066-What-is-t-Distributed-Stochastic-Neighbor-Embedding-t-SNE-)</span> and <span class="co">[</span><span class="ot">Uniform Manifold Approximation and Projection (UMAP)</span><span class="co">](https://umap-learn.readthedocs.io/en/latest/index.html)</span> techniques.</span>
 <span id="cb28-157"><a href="#cb28-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-158"><a href="#cb28-158" aria-hidden="true" tabindex="-1"></a>We can only visualize the results of one resolution setting at a time. If we look at the metadata of our Seurat object(<span class="in">`seurat_integrated@meta.data`</span>), you should observe a separate column for each of the different resolutions calculated.</span>
+<span id="cb28-158"><a href="#cb28-158" aria-hidden="true" tabindex="-1"></a>Both methods aim to place cells with similar local neighborhoods in high-dimensional space together in low-dimensional space. These methods will require you to input number of PCA dimentions to use for the visualization, we suggest using the same number of PCs as input to the clustering analysis. Here, we will proceed with the <span class="co">[</span><span class="ot">UMAP method</span><span class="co">](https://umap-learn.readthedocs.io/en/latest/how_umap_works.html)</span> for visualizing the clusters.</span>
 <span id="cb28-159"><a href="#cb28-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-162"><a href="#cb28-162" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-163"><a href="#cb28-163" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore resolutions</span></span>
-<span id="cb28-164"><a href="#cb28-164" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(seurat_integrated<span class="sc">@</span>meta.data, <span class="dv">5</span>)</span>
-<span id="cb28-165"><a href="#cb28-165" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-166"><a href="#cb28-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-167"><a href="#cb28-167" aria-hidden="true" tabindex="-1"></a>To **choose a resolution to start with**, we often pick something in the middle of the range like 0.6 or 0.8. We will start with a resolution of 0.8 by assigning the identity of the clusters using the <span class="in">`Idents()`</span> function.</span>
+<span id="cb28-160"><a href="#cb28-160" aria-hidden="true" tabindex="-1"></a>We can only visualize the results of one resolution setting at a time. If we look at the metadata of our Seurat object(<span class="in">`seurat_integrated@meta.data`</span>), you should observe a separate column for each of the different resolutions calculated.</span>
+<span id="cb28-161"><a href="#cb28-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-164"><a href="#cb28-164" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-165"><a href="#cb28-165" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore resolutions</span></span>
+<span id="cb28-166"><a href="#cb28-166" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(seurat_integrated<span class="sc">@</span>meta.data, <span class="dv">5</span>)</span>
+<span id="cb28-167"><a href="#cb28-167" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb28-168"><a href="#cb28-168" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-171"><a href="#cb28-171" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-172"><a href="#cb28-172" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign identity of clusters</span></span>
-<span id="cb28-173"><a href="#cb28-173" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(seurat_integrated) <span class="ot">&lt;-</span> <span class="st">"SCT_snn_res.0.8"</span></span>
-<span id="cb28-174"><a href="#cb28-174" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-175"><a href="#cb28-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-176"><a href="#cb28-176" aria-hidden="true" tabindex="-1"></a>Now, we can plot the UMAP to look at how cells cluster together at a resolution of 0.8:</span>
+<span id="cb28-169"><a href="#cb28-169" aria-hidden="true" tabindex="-1"></a>To **choose a resolution to start with**, we often pick something in the middle of the range like 0.6 or 0.8. We will start with a resolution of 0.8 by assigning the identity of the clusters using the <span class="in">`Idents()`</span> function.</span>
+<span id="cb28-170"><a href="#cb28-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-173"><a href="#cb28-173" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-174"><a href="#cb28-174" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign identity of clusters</span></span>
+<span id="cb28-175"><a href="#cb28-175" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(seurat_integrated) <span class="ot">&lt;-</span> <span class="st">"SCT_snn_res.0.8"</span></span>
+<span id="cb28-176"><a href="#cb28-176" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb28-177"><a href="#cb28-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-180"><a href="#cb28-180" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-181"><a href="#cb28-181" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb28-182"><a href="#cb28-182" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculation of UMAP</span></span>
-<span id="cb28-183"><a href="#cb28-183" aria-hidden="true" tabindex="-1"></a><span class="co"># DO NOT RUN (calculated in the last lesson)</span></span>
-<span id="cb28-184"><a href="#cb28-184" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(seurat_integrated, </span>
-<span id="cb28-185"><a href="#cb28-185" aria-hidden="true" tabindex="-1"></a>                             <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>, </span>
-<span id="cb28-186"><a href="#cb28-186" aria-hidden="true" tabindex="-1"></a>                             <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>)</span>
-<span id="cb28-187"><a href="#cb28-187" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-188"><a href="#cb28-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-191"><a href="#cb28-191" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-192"><a href="#cb28-192" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP</span></span>
-<span id="cb28-193"><a href="#cb28-193" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_integrated,</span>
-<span id="cb28-194"><a href="#cb28-194" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap"</span>,</span>
-<span id="cb28-195"><a href="#cb28-195" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb28-196"><a href="#cb28-196" aria-hidden="true" tabindex="-1"></a>        <span class="at">label.size =</span> <span class="dv">6</span>)</span>
-<span id="cb28-197"><a href="#cb28-197" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-198"><a href="#cb28-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-199"><a href="#cb28-199" aria-hidden="true" tabindex="-1"></a>It can be useful to **explore other resolutions as well**. It will give you a quick idea about how the clusters would change based on the resolution parameter. For example, let's switch to a resolution of 0.4:</span>
-<span id="cb28-200"><a href="#cb28-200" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-203"><a href="#cb28-203" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-204"><a href="#cb28-204" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign identity of clusters</span></span>
-<span id="cb28-205"><a href="#cb28-205" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(<span class="at">object =</span> seurat_integrated) <span class="ot">&lt;-</span> <span class="st">"SCT_snn_res.0.4"</span></span>
-<span id="cb28-206"><a href="#cb28-206" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-207"><a href="#cb28-207" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP</span></span>
-<span id="cb28-208"><a href="#cb28-208" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_integrated,</span>
-<span id="cb28-209"><a href="#cb28-209" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap"</span>,</span>
-<span id="cb28-210"><a href="#cb28-210" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb28-211"><a href="#cb28-211" aria-hidden="true" tabindex="-1"></a>        <span class="at">label.size =</span> <span class="dv">6</span>)</span>
-<span id="cb28-212"><a href="#cb28-212" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-213"><a href="#cb28-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-214"><a href="#cb28-214" aria-hidden="true" tabindex="-1"></a><span class="fu">### 载入案例数据 {#sec-Load_case_data}</span></span>
-<span id="cb28-215"><a href="#cb28-215" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-216"><a href="#cb28-216" aria-hidden="true" tabindex="-1"></a>**How does your UMAP plot compare to the one above?**</span>
-<span id="cb28-217"><a href="#cb28-217" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-218"><a href="#cb28-218" aria-hidden="true" tabindex="-1"></a>It is possible that there is some variability in the way your clusters look compared to the image in this lesson. In particular **you may see a difference in the labeling of clusters**. This is an unfortunate consequence of slight variations in the versions of packages (mostly Seurat dependencies).</span>
-<span id="cb28-219"><a href="#cb28-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-220"><a href="#cb28-220" aria-hidden="true" tabindex="-1"></a>**If your clusters look identical to what's in the lesson, please go ahead to the next section.**</span>
-<span id="cb28-221"><a href="#cb28-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-222"><a href="#cb28-222" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb28-223"><a href="#cb28-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-224"><a href="#cb28-224" aria-hidden="true" tabindex="-1"></a>**If your clusters do look different from what we have in the lesson**, please follow the instructions provided below.</span>
-<span id="cb28-225"><a href="#cb28-225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-226"><a href="#cb28-226" aria-hidden="true" tabindex="-1"></a>Inside your <span class="in">`data`</span> folder you will see a folder called <span class="in">`additional_data`</span>. It contains the seurat_integrated object that we have created for the class. Let's load in the object to your R session and overwrite the existing one:</span>
-<span id="cb28-227"><a href="#cb28-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-230"><a href="#cb28-230" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-231"><a href="#cb28-231" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">bzfile</span>(<span class="st">"data/scRNA-seq_online/additional_data/seurat_integrated.RData.bz2"</span>))</span>
-<span id="cb28-232"><a href="#cb28-232" aria-hidden="true" tabindex="-1"></a>seurat_integrated</span>
-<span id="cb28-233"><a href="#cb28-233" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(seurat_integrated, <span class="dv">5</span>)</span>
-<span id="cb28-234"><a href="#cb28-234" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-235"><a href="#cb28-235" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-236"><a href="#cb28-236" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-12-26%2009.51.32.png)</span></span>
-<span id="cb28-237"><a href="#cb28-237" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-238"><a href="#cb28-238" aria-hidden="true" tabindex="-1"></a>::: callout-warning</span>
-<span id="cb28-239"><a href="#cb28-239" aria-hidden="true" tabindex="-1"></a>由于这里的案例数据是基于Seurat V5之前的版本创建的，所以数据结构和基于Seurat V5的结果有所差异。比较重要的区别是，这里的Seurat对象的没有layer结构；同时有一个“integrated” assay，用于存放整合后的信息，其类型仍属于SCT assay。而一个典型的经过SCTransform和整合的Seurat V5对象如下图所示（来自 @sec-integration_after_sct ）：</span>
+<span id="cb28-178"><a href="#cb28-178" aria-hidden="true" tabindex="-1"></a>Now, we can plot the UMAP to look at how cells cluster together at a resolution of 0.8:</span>
+<span id="cb28-179"><a href="#cb28-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-182"><a href="#cb28-182" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-183"><a href="#cb28-183" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb28-184"><a href="#cb28-184" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculation of UMAP</span></span>
+<span id="cb28-185"><a href="#cb28-185" aria-hidden="true" tabindex="-1"></a><span class="co"># DO NOT RUN (calculated in the last lesson)</span></span>
+<span id="cb28-186"><a href="#cb28-186" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(seurat_integrated, </span>
+<span id="cb28-187"><a href="#cb28-187" aria-hidden="true" tabindex="-1"></a>                             <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>,</span>
+<span id="cb28-188"><a href="#cb28-188" aria-hidden="true" tabindex="-1"></a>                             <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>, <span class="co"># 更改降维来源为整合后的"integrated.cca"</span></span>
+<span id="cb28-189"><a href="#cb28-189" aria-hidden="true" tabindex="-1"></a>                             <span class="at">reduction.name =</span> <span class="st">"umap.integrated"</span>) </span>
+<span id="cb28-190"><a href="#cb28-190" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-191"><a href="#cb28-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-194"><a href="#cb28-194" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-195"><a href="#cb28-195" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP</span></span>
+<span id="cb28-196"><a href="#cb28-196" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_integrated,</span>
+<span id="cb28-197"><a href="#cb28-197" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>,</span>
+<span id="cb28-198"><a href="#cb28-198" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb28-199"><a href="#cb28-199" aria-hidden="true" tabindex="-1"></a>        <span class="at">label.size =</span> <span class="dv">6</span>)</span>
+<span id="cb28-200"><a href="#cb28-200" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-201"><a href="#cb28-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-202"><a href="#cb28-202" aria-hidden="true" tabindex="-1"></a>It can be useful to **explore other resolutions as well**. It will give you a quick idea about how the clusters would change based on the resolution parameter. For example, let's switch to a resolution of 0.4:</span>
+<span id="cb28-203"><a href="#cb28-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-206"><a href="#cb28-206" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-207"><a href="#cb28-207" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign identity of clusters</span></span>
+<span id="cb28-208"><a href="#cb28-208" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(<span class="at">object =</span> seurat_integrated) <span class="ot">&lt;-</span> <span class="st">"SCT_snn_res.0.4"</span></span>
+<span id="cb28-209"><a href="#cb28-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-210"><a href="#cb28-210" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP</span></span>
+<span id="cb28-211"><a href="#cb28-211" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_integrated,</span>
+<span id="cb28-212"><a href="#cb28-212" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>,</span>
+<span id="cb28-213"><a href="#cb28-213" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb28-214"><a href="#cb28-214" aria-hidden="true" tabindex="-1"></a>        <span class="at">label.size =</span> <span class="dv">6</span>)</span>
+<span id="cb28-215"><a href="#cb28-215" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-216"><a href="#cb28-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-217"><a href="#cb28-217" aria-hidden="true" tabindex="-1"></a><span class="fu">### 载入案例数据 {#sec-Load_case_data}</span></span>
+<span id="cb28-218"><a href="#cb28-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-219"><a href="#cb28-219" aria-hidden="true" tabindex="-1"></a>**How does your UMAP plot compare to the one above?**</span>
+<span id="cb28-220"><a href="#cb28-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-221"><a href="#cb28-221" aria-hidden="true" tabindex="-1"></a>It is possible that there is some variability in the way your clusters look compared to the image in this lesson. In particular **you may see a difference in the labeling of clusters**. This is an unfortunate consequence of slight variations in the versions of packages (mostly Seurat dependencies).</span>
+<span id="cb28-222"><a href="#cb28-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-223"><a href="#cb28-223" aria-hidden="true" tabindex="-1"></a>**If your clusters look identical to what's in the lesson, please go ahead to the next section.**</span>
+<span id="cb28-224"><a href="#cb28-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-225"><a href="#cb28-225" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb28-226"><a href="#cb28-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-227"><a href="#cb28-227" aria-hidden="true" tabindex="-1"></a>**If your clusters do look different from what we have in the lesson**, please follow the instructions provided below.</span>
+<span id="cb28-228"><a href="#cb28-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-229"><a href="#cb28-229" aria-hidden="true" tabindex="-1"></a>Inside your <span class="in">`data`</span> folder you will see a folder called <span class="in">`additional_data`</span>. It contains the seurat_integrated object that we have created for the class. Let's load in the object to your R session and overwrite the existing one:</span>
+<span id="cb28-230"><a href="#cb28-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-233"><a href="#cb28-233" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-234"><a href="#cb28-234" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">bzfile</span>(<span class="st">"data/scRNA-seq_online/additional_data/seurat_integrated.RData.bz2"</span>))</span>
+<span id="cb28-235"><a href="#cb28-235" aria-hidden="true" tabindex="-1"></a>seurat_integrated</span>
+<span id="cb28-236"><a href="#cb28-236" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(seurat_integrated, <span class="dv">5</span>)</span>
+<span id="cb28-237"><a href="#cb28-237" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-238"><a href="#cb28-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-239"><a href="#cb28-239" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-12-26%2009.51.32.png)</span></span>
 <span id="cb28-240"><a href="#cb28-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-241"><a href="#cb28-241" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-12-26%2009.59.44.png)</span></span>
-<span id="cb28-242"><a href="#cb28-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-243"><a href="#cb28-243" aria-hidden="true" tabindex="-1"></a>可以看到没有“integrated” assay，因此，为了和最新的Seurat V5流程保持一致，我们后续把本案例中的“integrated” assay看作整合后的Seurat V5的“SCT” assay。</span>
-<span id="cb28-244"><a href="#cb28-244" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb28-241"><a href="#cb28-241" aria-hidden="true" tabindex="-1"></a>::: callout-warning</span>
+<span id="cb28-242"><a href="#cb28-242" aria-hidden="true" tabindex="-1"></a>由于这里的案例数据是基于Seurat V5之前的版本创建的，所以数据结构和基于Seurat V5的结果有所差异。比较重要的区别是，这里的Seurat对象的没有layer结构；同时有一个“integrated” assay，用于存放整合后的信息，其类型仍属于SCT assay。而一个典型的经过SCTransform和整合的Seurat V5对象如下图所示（来自 @sec-integration_after_sct ）：</span>
+<span id="cb28-243"><a href="#cb28-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-244"><a href="#cb28-244" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-12-26%2009.59.44.png)</span></span>
 <span id="cb28-245"><a href="#cb28-245" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-246"><a href="#cb28-246" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb28-247"><a href="#cb28-247" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-248"><a href="#cb28-248" aria-hidden="true" tabindex="-1"></a><span class="fu">### 再次检查不同分辨率下的细胞分群情况</span></span>
-<span id="cb28-249"><a href="#cb28-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-250"><a href="#cb28-250" aria-hidden="true" tabindex="-1"></a>After loading <span class="in">`seurat_integrated.RData.bz2`</span>, we now re-check the object clusters with different resolution (0.4, 0.6, 0.8, 1.0, 1.4).</span>
-<span id="cb28-251"><a href="#cb28-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-254"><a href="#cb28-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-255"><a href="#cb28-255" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看不同分辨率下的细胞分群情况</span></span>
-<span id="cb28-256"><a href="#cb28-256" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(seurat_integrated<span class="sc">@</span>meta.data[ ,<span class="fu">grep</span>(<span class="st">"integrated_snn_res."</span>, </span>
-<span id="cb28-257"><a href="#cb28-257" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">colnames</span>(seurat_integrated<span class="sc">@</span>meta.data))], </span>
-<span id="cb28-258"><a href="#cb28-258" aria-hidden="true" tabindex="-1"></a>      <span class="dv">2</span>, </span>
-<span id="cb28-259"><a href="#cb28-259" aria-hidden="true" tabindex="-1"></a>      table)</span>
-<span id="cb28-260"><a href="#cb28-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-261"><a href="#cb28-261" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-264"><a href="#cb28-264" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-265"><a href="#cb28-265" aria-hidden="true" tabindex="-1"></a><span class="co"># 批量绘制不同分辨率下的UMAP图</span></span>
-<span id="cb28-266"><a href="#cb28-266" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb28-267"><a href="#cb28-267" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb28-268"><a href="#cb28-268" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(<span class="fu">grep</span>(<span class="st">"integrated_snn_res."</span>,</span>
-<span id="cb28-269"><a href="#cb28-269" aria-hidden="true" tabindex="-1"></a>            <span class="fu">colnames</span>(seurat_integrated<span class="sc">@</span>meta.data), </span>
-<span id="cb28-270"><a href="#cb28-270" aria-hidden="true" tabindex="-1"></a>            <span class="at">value =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb28-271"><a href="#cb28-271" aria-hidden="true" tabindex="-1"></a>       <span class="cf">function</span>(res) {</span>
-<span id="cb28-272"><a href="#cb28-272" aria-hidden="true" tabindex="-1"></a>         <span class="fu">Idents</span>(seurat_integrated) <span class="ot">&lt;-</span>  res</span>
-<span id="cb28-273"><a href="#cb28-273" aria-hidden="true" tabindex="-1"></a>         <span class="fu">DimPlot</span>(seurat_integrated,</span>
-<span id="cb28-274"><a href="#cb28-274" aria-hidden="true" tabindex="-1"></a>                 <span class="at">reduction =</span> <span class="st">"umap"</span>,</span>
-<span id="cb28-275"><a href="#cb28-275" aria-hidden="true" tabindex="-1"></a>                 <span class="at">label =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb28-276"><a href="#cb28-276" aria-hidden="true" tabindex="-1"></a>                 <span class="at">label.size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb28-277"><a href="#cb28-277" aria-hidden="true" tabindex="-1"></a>           <span class="fu">ggtitle</span>(res) <span class="sc">+</span></span>
-<span id="cb28-278"><a href="#cb28-278" aria-hidden="true" tabindex="-1"></a>           <span class="fu">theme_bw</span>()</span>
-<span id="cb28-279"><a href="#cb28-279" aria-hidden="true" tabindex="-1"></a>         }) <span class="sc">|&gt;</span></span>
-<span id="cb28-280"><a href="#cb28-280" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wrap_plots</span>(<span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb28-281"><a href="#cb28-281" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-282"><a href="#cb28-282" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-283"><a href="#cb28-283" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb28-284"><a href="#cb28-284" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-285"><a href="#cb28-285" aria-hidden="true" tabindex="-1"></a>We will now continue with the 0.8 resolution to check the quality control metrics and known markers for the anticipated cell types.</span>
-<span id="cb28-286"><a href="#cb28-286" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-289"><a href="#cb28-289" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-290"><a href="#cb28-290" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache-lazy: false</span></span>
-<span id="cb28-291"><a href="#cb28-291" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign identity of clusters</span></span>
-<span id="cb28-292"><a href="#cb28-292" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(seurat_integrated) <span class="ot">&lt;-</span> <span class="st">"integrated_snn_res.0.8"</span></span>
-<span id="cb28-293"><a href="#cb28-293" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-294"><a href="#cb28-294" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP</span></span>
-<span id="cb28-295"><a href="#cb28-295" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_integrated,</span>
-<span id="cb28-296"><a href="#cb28-296" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap"</span>,</span>
-<span id="cb28-297"><a href="#cb28-297" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb28-298"><a href="#cb28-298" aria-hidden="true" tabindex="-1"></a>        <span class="at">label.size =</span> <span class="dv">6</span>)</span>
-<span id="cb28-299"><a href="#cb28-299" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-300"><a href="#cb28-300" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-303"><a href="#cb28-303" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-304"><a href="#cb28-304" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(seurat_integrated, <span class="at">file =</span> <span class="st">"output/scRNA-seq_online/seurat_clustered.rds"</span>)</span>
-<span id="cb28-305"><a href="#cb28-305" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-306"><a href="#cb28-306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-307"><a href="#cb28-307" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb28-308"><a href="#cb28-308" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-309"><a href="#cb28-309" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb28-310"><a href="#cb28-310" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb28-246"><a href="#cb28-246" aria-hidden="true" tabindex="-1"></a>可以看到没有“integrated” assay，因此，为了和最新的Seurat V5流程保持一致，我们后续把本案例中的“integrated” assay看作整合后的Seurat V5的“SCT” assay。</span>
+<span id="cb28-247"><a href="#cb28-247" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb28-248"><a href="#cb28-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-249"><a href="#cb28-249" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb28-250"><a href="#cb28-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-251"><a href="#cb28-251" aria-hidden="true" tabindex="-1"></a><span class="fu">### 再次检查不同分辨率下的细胞分群情况</span></span>
+<span id="cb28-252"><a href="#cb28-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-253"><a href="#cb28-253" aria-hidden="true" tabindex="-1"></a>After loading <span class="in">`seurat_integrated.RData.bz2`</span>, we now re-check the object clusters with different resolution (0.4, 0.6, 0.8, 1.0, 1.4).</span>
+<span id="cb28-254"><a href="#cb28-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-257"><a href="#cb28-257" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-258"><a href="#cb28-258" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看不同分辨率下的细胞分群情况</span></span>
+<span id="cb28-259"><a href="#cb28-259" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(seurat_integrated<span class="sc">@</span>meta.data[ ,<span class="fu">grep</span>(<span class="st">"integrated_snn_res."</span>, </span>
+<span id="cb28-260"><a href="#cb28-260" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">colnames</span>(seurat_integrated<span class="sc">@</span>meta.data))], </span>
+<span id="cb28-261"><a href="#cb28-261" aria-hidden="true" tabindex="-1"></a>      <span class="dv">2</span>, </span>
+<span id="cb28-262"><a href="#cb28-262" aria-hidden="true" tabindex="-1"></a>      table)</span>
+<span id="cb28-263"><a href="#cb28-263" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-264"><a href="#cb28-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-267"><a href="#cb28-267" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-268"><a href="#cb28-268" aria-hidden="true" tabindex="-1"></a><span class="co"># 批量绘制不同分辨率下的UMAP图</span></span>
+<span id="cb28-269"><a href="#cb28-269" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb28-270"><a href="#cb28-270" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb28-271"><a href="#cb28-271" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(<span class="fu">grep</span>(<span class="st">"integrated_snn_res."</span>,</span>
+<span id="cb28-272"><a href="#cb28-272" aria-hidden="true" tabindex="-1"></a>            <span class="fu">colnames</span>(seurat_integrated<span class="sc">@</span>meta.data), </span>
+<span id="cb28-273"><a href="#cb28-273" aria-hidden="true" tabindex="-1"></a>            <span class="at">value =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb28-274"><a href="#cb28-274" aria-hidden="true" tabindex="-1"></a>       <span class="cf">function</span>(res) {</span>
+<span id="cb28-275"><a href="#cb28-275" aria-hidden="true" tabindex="-1"></a>         <span class="fu">Idents</span>(seurat_integrated) <span class="ot">&lt;-</span>  res</span>
+<span id="cb28-276"><a href="#cb28-276" aria-hidden="true" tabindex="-1"></a>         <span class="fu">DimPlot</span>(seurat_integrated,</span>
+<span id="cb28-277"><a href="#cb28-277" aria-hidden="true" tabindex="-1"></a>                 <span class="at">reduction =</span> <span class="st">"umap"</span>,</span>
+<span id="cb28-278"><a href="#cb28-278" aria-hidden="true" tabindex="-1"></a>                 <span class="at">label =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb28-279"><a href="#cb28-279" aria-hidden="true" tabindex="-1"></a>                 <span class="at">label.size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb28-280"><a href="#cb28-280" aria-hidden="true" tabindex="-1"></a>           <span class="fu">ggtitle</span>(res) <span class="sc">+</span></span>
+<span id="cb28-281"><a href="#cb28-281" aria-hidden="true" tabindex="-1"></a>           <span class="fu">theme_bw</span>()</span>
+<span id="cb28-282"><a href="#cb28-282" aria-hidden="true" tabindex="-1"></a>         }) <span class="sc">|&gt;</span></span>
+<span id="cb28-283"><a href="#cb28-283" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wrap_plots</span>(<span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb28-284"><a href="#cb28-284" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-285"><a href="#cb28-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-286"><a href="#cb28-286" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb28-287"><a href="#cb28-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-288"><a href="#cb28-288" aria-hidden="true" tabindex="-1"></a>We will now continue with the 0.8 resolution to check the quality control metrics and known markers for the anticipated cell types.</span>
+<span id="cb28-289"><a href="#cb28-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-292"><a href="#cb28-292" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-293"><a href="#cb28-293" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache-lazy: false</span></span>
+<span id="cb28-294"><a href="#cb28-294" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign identity of clusters</span></span>
+<span id="cb28-295"><a href="#cb28-295" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(seurat_integrated) <span class="ot">&lt;-</span> <span class="st">"integrated_snn_res.0.8"</span></span>
+<span id="cb28-296"><a href="#cb28-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-297"><a href="#cb28-297" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP</span></span>
+<span id="cb28-298"><a href="#cb28-298" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_integrated,</span>
+<span id="cb28-299"><a href="#cb28-299" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap"</span>,</span>
+<span id="cb28-300"><a href="#cb28-300" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb28-301"><a href="#cb28-301" aria-hidden="true" tabindex="-1"></a>        <span class="at">label.size =</span> <span class="dv">6</span>)</span>
+<span id="cb28-302"><a href="#cb28-302" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-303"><a href="#cb28-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-306"><a href="#cb28-306" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-307"><a href="#cb28-307" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(seurat_integrated, <span class="at">file =</span> <span class="st">"output/scRNA-seq_online/seurat_clustered.rds"</span>)</span>
+<span id="cb28-308"><a href="#cb28-308" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-309"><a href="#cb28-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-310"><a href="#cb28-310" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb28-311"><a href="#cb28-311" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-314"><a href="#cb28-314" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb28-315"><a href="#cb28-315" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb28-316"><a href="#cb28-316" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb28-317"><a href="#cb28-317" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb28-318"><a href="#cb28-318" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb28-312"><a href="#cb28-312" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb28-313"><a href="#cb28-313" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb28-314"><a href="#cb28-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-317"><a href="#cb28-317" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb28-318"><a href="#cb28-318" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb28-319"><a href="#cb28-319" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb28-320"><a href="#cb28-320" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb28-321"><a href="#cb28-321" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

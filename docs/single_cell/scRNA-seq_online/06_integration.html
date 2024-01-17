@@ -600,7 +600,7 @@ Learning Objectives:
 <span class="header-section-number">24.1</span> 不进行整合时检验细胞分群情况</h2>
 <p>Generally, we always look at our clustering <strong>without integration</strong> before deciding whether we need to perform any alignment. <strong>Do not just always perform integration because you think there might be differences - explore the data.</strong> If we had performed the normalization on both conditions together in a Seurat object and visualized the similarity between cells, we would have seen condition-specific clustering.</p>
 <section id="数据导入" class="level3"><h3 class="anchored" data-anchor-id="数据导入">数据导入</h3>
-<p>We use the <code>split_seurat</code> object from the previous lesson ( <a href="#sec-normalization-and-regressing-out-unwanted-variation"><span class="quarto-unresolved-ref">sec-normalization-and-regressing-out-unwanted-variation</span></a> ).</p>
+<p>We use the <code>split_seurat</code> object from the previous lesson ( <a href="06_SC_SCT_normalization.html"><span>Chapter&nbsp;23</span></a> ).</p>
 <div class="cell" data-hash="06_integration_cache/html/unnamed-chunk-1_cbaa5da497e5a9910aa358babc831889">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
 <span><span class="va">split_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/scRNA-seq_online/split_seurat.rds"</span><span class="op">)</span></span>
@@ -654,14 +654,35 @@ Top 10 variable features:
 </div>
 <p><img src="images/截屏2023-12-19 10.46.18.png" class="img-fluid"></p>
 </section><section id="降维分群" class="level3"><h3 class="anchored" data-anchor-id="降维分群">降维、分群</h3>
-<div class="cell" data-hash="06_integration_cache/html/fig-整合前的细胞分群情况_612bdfe92990b9c68b2987a7ead081eb">
+<div class="cell" data-hash="06_integration_cache/html/fig-整合前的细胞分群情况_8fbed1c0d4ff5538fc2638b0e877f497">
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Run PCA</span></span>
 <span><span class="va">split_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html">RunPCA</a></span><span class="op">(</span><span class="va">split_seurat</span><span class="op">)</span></span>
 <span><span class="co"># Run UMAP</span></span>
-<span><span class="va">split_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html">RunUMAP</a></span><span class="op">(</span><span class="va">split_seurat</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>, reduction <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span></span>
-<span><span class="co"># Plot UMAP</span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">split_seurat</span>, group.by <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">split_seurat</span>, split.by <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span></span>
+<span><span class="va">split_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html">RunUMAP</a></span><span class="op">(</span><span class="va">split_seurat</span>, </span>
+<span>                        dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>, </span>
+<span>                        reduction <span class="op">=</span> <span class="st">"pca"</span>, </span>
+<span>                        reduction.name <span class="op">=</span> <span class="st">"umap.unintegrated"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 分群</span></span>
+<span><span class="va">split_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors</a></span><span class="op">(</span><span class="va">split_seurat</span>, </span>
+<span>                              dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>, </span>
+<span>                              reduction <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span></span>
+<span><span class="va">split_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html">FindClusters</a></span><span class="op">(</span><span class="va">split_seurat</span>, </span>
+<span>                             cluster.name <span class="op">=</span> <span class="st">"unintegrated_clusters"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 29629
+Number of edges: 1104454
+
+Running Louvain algorithm...
+Maximum modularity in 10 random starts: 0.8974
+Number of communities: 22
+Elapsed time: 5 seconds</code></pre>
+</div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Plot UMAP</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">split_seurat</span>, reduction <span class="op">=</span> <span class="st">"umap.unintegrated"</span>, group.by <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">split_seurat</span>, reduction <span class="op">=</span> <span class="st">"umap.unintegrated"</span>, split.by <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/">cowplot</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">2</span>, labels <span class="op">=</span> <span class="st">"AUTO"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -671,7 +692,20 @@ Top 10 variable features:
 </div>
 </div>
 </div>
-<p>可以看到，如果不进行整合，不同样本（STIM vs.&nbsp;STIM）的细胞类型差异很大。Condition-specific clustering of the cells indicates that we need to integrate the cells across conditions to ensure that cells of the same cell type cluster together.</p>
+<p>可以看到，如果不进行整合，不同样本（ctrl vs.&nbsp;stim）间的细胞类型差异很大。The resulting clusters are defined&nbsp;<strong>both by cell type</strong>&nbsp;<strong>and stimulation condition</strong>, which creates challenges for downstream analysis. Condition-specific clustering of the cells indicates that we need to integrate the cells across conditions to ensure that cells of the same cell type cluster together.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>关于<code><a href="https://satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors()</a></code>和<code><a href="https://satijalab.org/seurat/reference/FindClusters.html">FindClusters()</a></code>的详细说明见下一节 <a href="07_SC_clustering_cells_SCT.html"><span>Chapter&nbsp;25</span></a> 。</p>
+</div>
+</div>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -685,7 +719,7 @@ Top 10 variable features:
 <p>We want to identify <strong>cell types which are present in all samples/conditions/modalities</strong> within our dataset, and therefore would like to observe a representation of cells from both samples/conditions/modalities in every cluster. This will enable more interpretable results downstream (i.e.&nbsp;DE analysis, ligand-receptor analysis, differential abundance analysis…).</p>
 </div>
 </div>
-<p>In this lesson, we will cover the integration of our samples across conditions, which is adapted from <a href="#sec-Single-cell_data_integration"><span class="quarto-unresolved-ref">sec-Single-cell_data_integration</span></a> .</p>
+<p>In this lesson, we will cover the integration of our samples across conditions, which is adapted from <a href="../seurat/integration.html"><span>Chapter&nbsp;12</span></a> .</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -696,7 +730,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>在此前的 <a href="#sec-sctransform"><span class="quarto-unresolved-ref">sec-sctransform</span></a> 中我们学习了how to run through the workflow from normalization to clustering without integration. Other steps in the workflow remain fairly similar, but the <strong>samples would not necessarily be split</strong> in the beginning and integration would not be performed.</p>
+<p>在此前的 <a href="../seurat/sctransform.html"><span>Chapter&nbsp;10</span></a> 中我们学习了how to run through the workflow from normalization to clustering without integration. Other steps in the workflow remain fairly similar, but the <strong>samples would not necessarily be split</strong> in the beginning and integration would not be performed.</p>
 <p>It can help to first run conditions individually if unsure what clusters to expect or expecting some different cell types between conditions (e.g.&nbsp;tumor and control samples), then run them together to see whether there are condition-specific clusters for cell types present in both conditions. Oftentimes, when clustering cells from multiple conditions there are condition-specific clusters and integration can help ensure the same cell types cluster together.</p>
 </div>
 </div>
@@ -783,19 +817,20 @@ Note
 </li>
 </ol>
 <p>Now, using our <code>SCTransform</code> object as input, let’s perform the integration across conditions.</p>
-<div class="cell" data-hash="06_integration_cache/html/unnamed-chunk-3_4c740c3c83033407d25b88bd2014e619">
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 可以看到目前的降维信息包括"pca"和"umap"</span></span>
+<div class="cell" data-hash="06_integration_cache/html/unnamed-chunk-3_3119163a514792607995c8269b506c6b">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 可以看到目前的降维信息包括"pca"和"umap.unintegrated"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">split_seurat</span><span class="op">@</span><span class="va">reductions</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "pca"  "umap"</code></pre>
+<pre><code>[1] "pca"               "umap.unintegrated"</code></pre>
 </div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 整合，比较耗时间（约13min），进度条会一直显示0%直至运算完成</span></span>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 整合，比较耗时间（约13min），进度条会一直显示0%直至运算完成</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">beepr</span><span class="op">)</span></span>
 <span><span class="va">seurat_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/IntegrateLayers.html">IntegrateLayers</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">split_seurat</span>,</span>
 <span>                                     method <span class="op">=</span> <span class="va">CCAIntegration</span>,</span>
 <span>                                     normalization.method <span class="op">=</span> <span class="st">"SCT"</span>, <span class="co"># 指定使用的标准化方法为SCTransform</span></span>
 <span>                                     orig.reduction <span class="op">=</span> <span class="st">"pca"</span>,</span>
 <span>                                     new.reduction <span class="op">=</span> <span class="st">"integrated.cca"</span>, <span class="co">#  整合后新的降维数据的名称</span></span>
-<span>                                     verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>                                     verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>; <span class="fu"><a href="https://rdrr.io/pkg/beepr/man/beep.html">beep</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 整合后重新合并RNA layer</span></span>
 <span><span class="va">seurat_integrated</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/SplitLayers.html">JoinLayers</a></span><span class="op">(</span><span class="va">seurat_integrated</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
@@ -803,7 +838,7 @@ Note
 <span><span class="co"># 查看整合后的降维信息</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">seurat_integrated</span><span class="op">@</span><span class="va">reductions</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "pca"            "umap"           "integrated.cca"</code></pre>
+<pre><code>[1] "pca"               "umap.unintegrated" "integrated.cca"   </code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -816,25 +851,49 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>如何调用Seurat嵌入的其他整合算法进行整合，参考：<a href="#sec-Integrated_analysis_of_seurat-v5"><span class="quarto-unresolved-ref">sec-Integrated_analysis_of_seurat-v5</span></a> 。</p>
+<p>如何调用Seurat嵌入的其他整合算法进行整合，参考：<a href="../seurat/integrative_analysis_in_seurat_v5.html"><span>Chapter&nbsp;13</span></a> 。</p>
 </div>
 </div>
 </section></section><section id="整合后检验细胞分群情况" class="level2" data-number="24.3"><h2 data-number="24.3" class="anchored" data-anchor-id="整合后检验细胞分群情况">
 <span class="header-section-number">24.3</span> 整合后检验细胞分群情况</h2>
 <p>After integration, to visualize the integrated data we can use dimensionality reduction techniques, such as PCA and Uniform Manifold Approximation and Projection (UMAP). While PCA will determine all PCs, we can only plot two at a time. In contrast, UMAP will take the information from any number of top PCs to arrange the cells in this multidimensional space. It will take those distances in multidimensional space and plot them in two dimensions working to preserve local and global structure. In this way, the distances between cells represent similarity in expression. If you wish to explore UMAP in more detail, <a href="https://pair-code.github.io/understanding-umap/">this post</a> is a nice introduction to UMAP theory.</p>
 <p>Here, we <strong>visualize with UMAP</strong>. UMAP is a stochastic algorithm – this means that it makes use of randomness both to speed up approximation steps, and to aid in solving hard optimization problems. Due to the stochastic nature, different runs of UMAP can produce different results. We can <strong>set the seed</strong> to a specific (but random) number, and this avoids the creation of a slightly different UMAP each time re-run our code.</p>
-<div class="cell" data-hash="06_integration_cache/html/fig-整合前后细胞分群情况_0aa30ca70905ab009f81a340f940bf3c">
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Set seed</span></span>
+<div class="cell" data-hash="06_integration_cache/html/fig-整合前后细胞分群情况_ecd9eb6eb1a9e1fe5fa431c821c510ae">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Set seed</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123456</span><span class="op">)</span></span>
 <span><span class="co"># Run UMAP</span></span>
 <span><span class="va">seurat_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html">RunUMAP</a></span><span class="op">(</span><span class="va">seurat_integrated</span>, </span>
 <span>                             dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>,</span>
-<span>                             reduction <span class="op">=</span> <span class="st">"integrated.cca"</span><span class="op">)</span> <span class="co"># 更改降维来源为整合后的"integrated.cca"</span></span>
+<span>                             reduction <span class="op">=</span> <span class="st">"integrated.cca"</span>, <span class="co"># 更改降维来源为整合后的"integrated.cca"</span></span>
+<span>                             reduction.name <span class="op">=</span> <span class="st">"umap.integrated"</span><span class="op">)</span> </span>
 <span></span>
-<span><span class="co"># Plot UMAP                             </span></span>
-<span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">seurat_integrated</span>, reduction <span class="op">=</span> <span class="st">"umap"</span>, group.by <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span></span>
-<span><span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">seurat_integrated</span>, reduction <span class="op">=</span> <span class="st">"umap"</span>, split.by <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, <span class="va">p3</span>, <span class="va">p4</span>, ncol <span class="op">=</span> <span class="fl">2</span>, labels <span class="op">=</span> <span class="st">"AUTO"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span><span class="co"># 分群</span></span>
+<span><span class="va">seurat_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors</a></span><span class="op">(</span><span class="va">seurat_integrated</span>, </span>
+<span>                                   dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>, </span>
+<span>                                   reduction <span class="op">=</span> <span class="st">"integrated.cca"</span><span class="op">)</span> <span class="co">#更改降维来源为"integrated.cca"</span></span>
+<span>                                   </span>
+<span><span class="va">seurat_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html">FindClusters</a></span><span class="op">(</span><span class="va">seurat_integrated</span>, </span>
+<span>                                  cluster.name <span class="op">=</span> <span class="st">"integrated_clusters"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 29629
+Number of edges: 1128935
+
+Running Louvain algorithm...
+Maximum modularity in 10 random starts: 0.8864
+Number of communities: 22
+Elapsed time: 4 seconds</code></pre>
+</div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Plot UMAP                             </span></span>
+<span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">seurat_integrated</span>, </span>
+<span>              reduction <span class="op">=</span> <span class="st">"umap.integrated"</span>, </span>
+<span>              group.by <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span></span>
+<span><span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">seurat_integrated</span>, </span>
+<span>              reduction <span class="op">=</span> <span class="st">"umap.integrated"</span>, </span>
+<span>              split.by <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, <span class="va">p3</span>, <span class="va">p4</span>, </span>
+<span>          ncol <span class="op">=</span> <span class="fl">2</span>, labels <span class="op">=</span> <span class="st">"AUTO"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-整合前后细胞分群情况" class="quarto-figure quarto-figure-left anchored">
 <figure class="figure"><p><img src="06_integration_files/figure-html/fig-整合前后细胞分群情况-1.png" class="img-fluid figure-img" width="1920"></p>
@@ -847,7 +906,7 @@ Tip
 </blockquote>
 <section id="save-the-integrated-object" class="level3"><h3 class="anchored" data-anchor-id="save-the-integrated-object">Save the “integrated” object!</h3>
 <div class="cell" data-hash="06_integration_cache/html/unnamed-chunk-5_af8e3d78a2490eab444726aa8d6d2cf5">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Save integrated seurat object</span></span>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Save integrated seurat object</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">seurat_integrated</span>, <span class="st">"output/scRNA-seq_online/integrated_seurat.rds"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section></section><section id="complex-integration-tasks" class="level2" data-number="24.4"><h2 data-number="24.4" class="anchored" data-anchor-id="complex-integration-tasks">
@@ -869,7 +928,7 @@ Tip
 <p>Not all tools may perform as well on every task, and complex datasets may require testing several data integration approaches. You might want to analyze independently each of the batches you consider to integrate across, in order to define cell identities at this level before integrating and checking that the initially annotated cell types are mixed as expected.</p>
 <section id="harmonizing-as-a-method-of-integration" class="level3"><h3 class="anchored" data-anchor-id="harmonizing-as-a-method-of-integration">Harmonizing as a method of integration</h3>
 <p>Harmony (<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019">Korsunsky et al.&nbsp;2019</a>) was devleoped in 2019, and is an example of <strong>a tool that can work with complex integration tasks</strong>. It is available as an <a href="#0">GitHub</a> and <a href="#0">CRAN</a>, and it has functions for standalone and Seurat pipeline analyses. It has been shown to perform incredibly well from recent benchmarking studies (<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020">Tran et al.&nbsp;2020</a>).</p>
-<p>在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用<code>Harmony</code>包（available on <a href="https://github.com/immunogenomics/harmony">GitHub</a> and <a href="https://cran.r-project.org/web/packages/harmony/index.html">CRAN</a>），详见<a href="https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html">该教程</a>。同时，Seurat V5中的<code>IntegrateLayers</code>函数集成了Harmony整合算法，可以直接调用，详见：<a href="#sec-Integrated_analysis_of_seurat-v5"><span class="quarto-unresolved-ref">sec-Integrated_analysis_of_seurat-v5</span></a> 。Compared to other algorithms,&nbsp;<code>Harmony</code>&nbsp;notably presents the following advantages (<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019">Korsunsky et al.&nbsp;2019</a>,&nbsp;<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020">Tran et al.&nbsp;2020</a>):</p>
+<p>在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用<code>Harmony</code>包（available on <a href="https://github.com/immunogenomics/harmony">GitHub</a> and <a href="https://cran.r-project.org/web/packages/harmony/index.html">CRAN</a>），详见<a href="https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html">该教程</a>。同时，Seurat V5中的<code>IntegrateLayers</code>函数集成了Harmony整合算法，可以直接调用，详见：<a href="../seurat/integrative_analysis_in_seurat_v5.html"><span>Chapter&nbsp;13</span></a> 。Compared to other algorithms,&nbsp;<code>Harmony</code>&nbsp;notably presents the following advantages (<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019">Korsunsky et al.&nbsp;2019</a>,&nbsp;<a href="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020">Tran et al.&nbsp;2020</a>):</p>
 <ol type="1">
 <li><p>Possibility to integrate data across several variables (for example, by experimental batch and by condition)</p></li>
 <li><p>Significant gain in speed and lower memory requirements for integration of large datasets</p></li>
@@ -877,7 +936,7 @@ Tip
 </ol>
 <hr>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -886,7 +945,7 @@ Session Info
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-hash="06_integration_cache/html/unnamed-chunk-6_62dc81563f60dc2ac9390c7f966c2592">
 <div class="cell-output cell-output-stdout">
@@ -908,11 +967,12 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] cowplot_1.1.2      Seurat_5.0.1       SeuratObject_5.0.1 sp_2.1-2          
+[1] beepr_1.3          cowplot_1.1.2      Seurat_5.0.1       SeuratObject_5.0.1
+[5] sp_2.1-2          
 
 loaded via a namespace (and not attached):
   [1] deldir_2.0-2           pbapply_1.7-2          gridExtra_2.3         
-  [4] rlang_1.1.2            magrittr_2.0.3         RcppAnnoy_0.0.21      
+  [4] rlang_1.1.3            magrittr_2.0.3         RcppAnnoy_0.0.21      
   [7] spatstat.geom_3.2-7    matrixStats_1.2.0      ggridges_0.5.5        
  [10] compiler_4.3.2         png_0.1-8              vctrs_0.6.5           
  [13] reshape2_1.4.4         stringr_1.5.1          pkgconfig_2.0.3       
@@ -922,33 +982,33 @@ loaded via a namespace (and not attached):
  [25] goftest_1.2-3          later_1.3.2            spatstat.utils_3.0-4  
  [28] irlba_2.3.5.1          parallel_4.3.2         cluster_2.1.6         
  [31] R6_2.5.1               ica_1.0-3              stringi_1.8.3         
- [34] RColorBrewer_1.1-3     spatstat.data_3.0-3    reticulate_1.34.0     
+ [34] RColorBrewer_1.1-3     spatstat.data_3.0-4    reticulate_1.34.0     
  [37] parallelly_1.36.0      lmtest_0.9-40          scattermore_1.2       
- [40] Rcpp_1.0.11            knitr_1.45             tensor_1.5            
- [43] future.apply_1.11.0    zoo_1.8-12             sctransform_0.4.1     
- [46] httpuv_1.6.13          Matrix_1.6-4           splines_4.3.2         
- [49] igraph_1.6.0           tidyselect_1.2.0       abind_1.4-5           
- [52] rstudioapi_0.15.0      yaml_2.3.8             spatstat.random_3.2-2 
- [55] codetools_0.2-19       miniUI_0.1.1.1         spatstat.explore_3.2-5
- [58] listenv_0.9.0          lattice_0.22-5         tibble_3.2.1          
- [61] plyr_1.8.9             withr_2.5.2            shiny_1.8.0           
- [64] ROCR_1.0-11            evaluate_0.23          Rtsne_0.17            
- [67] future_1.33.0          fastDummies_1.7.3      survival_3.5-7        
- [70] polyclip_1.10-6        fitdistrplus_1.1-11    pillar_1.9.0          
- [73] KernSmooth_2.23-22     plotly_4.10.3          generics_0.1.3        
- [76] RcppHNSW_0.5.0         ggplot2_3.4.4          munsell_0.5.0         
- [79] scales_1.3.0           globals_0.16.2         xtable_1.8-4          
- [82] glue_1.6.2             lazyeval_0.2.2         tools_4.3.2           
- [85] data.table_1.14.10     RSpectra_0.16-1        RANN_2.6.1            
- [88] leiden_0.4.3.1         dotCall64_1.1-1        grid_4.3.2            
- [91] tidyr_1.3.0            colorspace_2.1-0       nlme_3.1-164          
- [94] patchwork_1.1.3        cli_3.6.2              spatstat.sparse_3.0-3 
- [97] spam_2.10-0            fansi_1.0.6            viridisLite_0.4.2     
-[100] dplyr_1.1.4            uwot_0.1.16            gtable_0.3.4          
-[103] digest_0.6.33          progressr_0.14.0       ggrepel_0.9.4         
-[106] farver_2.1.1           htmlwidgets_1.6.4      htmltools_0.5.7       
-[109] lifecycle_1.0.4        httr_1.4.7             mime_0.12             
-[112] MASS_7.3-60           </code></pre>
+ [40] Rcpp_1.0.12            knitr_1.45             tensor_1.5            
+ [43] future.apply_1.11.1    audio_0.1-11           zoo_1.8-12            
+ [46] sctransform_0.4.1      httpuv_1.6.13          Matrix_1.6-5          
+ [49] splines_4.3.2          igraph_1.6.0           tidyselect_1.2.0      
+ [52] abind_1.4-5            rstudioapi_0.15.0      yaml_2.3.8            
+ [55] spatstat.random_3.2-2  codetools_0.2-19       miniUI_0.1.1.1        
+ [58] spatstat.explore_3.2-5 listenv_0.9.0          lattice_0.22-5        
+ [61] tibble_3.2.1           plyr_1.8.9             withr_2.5.2           
+ [64] shiny_1.8.0            ROCR_1.0-11            evaluate_0.23         
+ [67] Rtsne_0.17             future_1.33.1          fastDummies_1.7.3     
+ [70] survival_3.5-7         polyclip_1.10-6        fitdistrplus_1.1-11   
+ [73] pillar_1.9.0           KernSmooth_2.23-22     plotly_4.10.4         
+ [76] generics_0.1.3         RcppHNSW_0.5.0         ggplot2_3.4.4         
+ [79] munsell_0.5.0          scales_1.3.0           globals_0.16.2        
+ [82] xtable_1.8-4           glue_1.7.0             lazyeval_0.2.2        
+ [85] tools_4.3.2            data.table_1.14.10     RSpectra_0.16-1       
+ [88] RANN_2.6.1             leiden_0.4.3.1         dotCall64_1.1-1       
+ [91] grid_4.3.2             tidyr_1.3.0            colorspace_2.1-0      
+ [94] nlme_3.1-164           patchwork_1.2.0        cli_3.6.2             
+ [97] spatstat.sparse_3.0-3  spam_2.10-0            fansi_1.0.6           
+[100] viridisLite_0.4.2      dplyr_1.1.4            uwot_0.1.16           
+[103] gtable_0.3.4           digest_0.6.34          progressr_0.14.0      
+[106] ggrepel_0.9.5          farver_2.1.1           htmlwidgets_1.6.4     
+[109] htmltools_0.5.7        lifecycle_1.0.4        httr_1.4.7            
+[112] mime_0.12              MASS_7.3-60.0.1       </code></pre>
 </div>
 </div>
 </div>
@@ -1382,262 +1442,292 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb21" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 单细胞数据整合（Integration） {#sec-sc_integration}</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">###### Learning Objectives:</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Perform integration of cells across conditions to identify cells that are similar to each other</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Describe complex integration tasks and alternative tools for integration</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_workflow_2022-01.jpg)</span>{width="545"}</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>**Goals:**</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>To **align same cell types** across conditions.</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>**Challenges:**</span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Aligning cells of similar cell types** so that we do not have clustering downstream due to differences between samples, conditions, modalities, or batches</span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>**Recommendations:**</span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Go through the analysis without integration first to determine whether integration is necessary</span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## 不进行整合时检验细胞分群情况</span></span>
-<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>Generally, we always look at our clustering **without integration** before deciding whether we need to perform any alignment. **Do not just always perform integration because you think there might be differences - explore the data.** If we had performed the normalization on both conditions together in a Seurat object and visualized the similarity between cells, we would have seen condition-specific clustering.</span>
-<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a><span class="fu">### 数据导入</span></span>
-<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>We use the <span class="in">`split_seurat`</span> object from the previous lesson ( @sec-normalization-and-regressing-out-unwanted-variation ).</span>
-<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>split_seurat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/scRNA-seq_online/split_seurat.rds"</span>)</span>
-<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>split_seurat</span>
-<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Check which assays are stored in objects</span></span>
-<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>split_seurat<span class="sc">@</span>assays</span>
-<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看目前默认的assay</span></span>
-<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(split_seurat)</span>
-<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看默认assay的layers</span></span>
-<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a><span class="fu">Layers</span>(split_seurat)</span>
-<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看每种样本包含多少细胞</span></span>
-<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(split_seurat<span class="sc">$</span>sample)</span>
-<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看降维信息</span></span>
-<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(split_seurat<span class="sc">@</span>reductions)</span>
-<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-12-19%2010.46.18.png)</span></span>
-<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a><span class="fu">### 降维、分群</span></span>
-<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-60"><a href="#cb21-60" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb21-61"><a href="#cb21-61" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: 整合前的细胞分群情况</span></span>
-<span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-整合前的细胞分群情况</span></span>
-<span id="cb21-63"><a href="#cb21-63" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 20</span></span>
-<span id="cb21-64"><a href="#cb21-64" aria-hidden="true" tabindex="-1"></a><span class="co"># Run PCA</span></span>
-<span id="cb21-65"><a href="#cb21-65" aria-hidden="true" tabindex="-1"></a>split_seurat <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(split_seurat)</span>
-<span id="cb21-66"><a href="#cb21-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Run UMAP</span></span>
-<span id="cb21-67"><a href="#cb21-67" aria-hidden="true" tabindex="-1"></a>split_seurat <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(split_seurat, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>, <span class="at">reduction =</span> <span class="st">"pca"</span>)</span>
-<span id="cb21-68"><a href="#cb21-68" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot UMAP</span></span>
-<span id="cb21-69"><a href="#cb21-69" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(split_seurat, <span class="at">group.by =</span> <span class="st">"sample"</span>)</span>
-<span id="cb21-70"><a href="#cb21-70" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(split_seurat, <span class="at">split.by =</span> <span class="st">"sample"</span>)</span>
-<span id="cb21-71"><a href="#cb21-71" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
-<span id="cb21-72"><a href="#cb21-72" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
-<span id="cb21-73"><a href="#cb21-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb21-74"><a href="#cb21-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-75"><a href="#cb21-75" aria-hidden="true" tabindex="-1"></a>可以看到，如果不进行整合，不同样本（STIM vs.&nbsp;STIM）的细胞类型差异很大。Condition-specific clustering of the cells indicates that we need to integrate the cells across conditions to ensure that cells of the same cell type cluster together.</span>
-<span id="cb21-76"><a href="#cb21-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-77"><a href="#cb21-77" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
-<span id="cb21-78"><a href="#cb21-78" aria-hidden="true" tabindex="-1"></a><span class="fu">###### **Why is it important the cells of the same cell type cluster together?**</span></span>
-<span id="cb21-79"><a href="#cb21-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-80"><a href="#cb21-80" aria-hidden="true" tabindex="-1"></a>We want to identify **cell types which are present in all samples/conditions/modalities** within our dataset, and therefore would like to observe a representation of cells from both samples/conditions/modalities in every cluster. This will enable more interpretable results downstream (i.e. DE analysis, ligand-receptor analysis, differential abundance analysis...).</span>
-<span id="cb21-81"><a href="#cb21-81" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb21-82"><a href="#cb21-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-83"><a href="#cb21-83" aria-hidden="true" tabindex="-1"></a>In this lesson, we will cover the integration of our samples across conditions, which is adapted from @sec-Single-cell_data_integration .</span>
-<span id="cb21-84"><a href="#cb21-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-85"><a href="#cb21-85" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
-<span id="cb21-86"><a href="#cb21-86" aria-hidden="true" tabindex="-1"></a>在此前的 @sec-sctransform 中我们学习了how to run through the workflow from normalization to clustering without integration. Other steps in the workflow remain fairly similar, but the **samples would not necessarily be split** in the beginning and integration would not be performed.</span>
-<span id="cb21-87"><a href="#cb21-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-88"><a href="#cb21-88" aria-hidden="true" tabindex="-1"></a>It can help to first run conditions individually if unsure what clusters to expect or expecting some different cell types between conditions (e.g. tumor and control samples), then run them together to see whether there are condition-specific clusters for cell types present in both conditions. Oftentimes, when clustering cells from multiple conditions there are condition-specific clusters and integration can help ensure the same cell types cluster together.</span>
-<span id="cb21-89"><a href="#cb21-89" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb21-90"><a href="#cb21-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-91"><a href="#cb21-91" aria-hidden="true" tabindex="-1"></a><span class="fu">## **整合**</span></span>
-<span id="cb21-92"><a href="#cb21-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-93"><a href="#cb21-93" aria-hidden="true" tabindex="-1"></a>**If cells cluster by sample, condition, batch, dataset, modality, this integration step can greatly improve the clustering and the downstream analyses**.</span>
-<span id="cb21-94"><a href="#cb21-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-95"><a href="#cb21-95" aria-hidden="true" tabindex="-1"></a>To integrate, we will use the shared highly variable genes (identified using <span class="in">`SCTransform`</span>) from each group, then, we will "integrate" or "harmonize" the groups to overlay cells that are similar or have a "common set of biological features" between groups. For example, we could integrate across:</span>
-<span id="cb21-96"><a href="#cb21-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-97"><a href="#cb21-97" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Different **conditions** (e.g. control and stimulated)</span>
-<span id="cb21-98"><a href="#cb21-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-99"><a href="#cb21-99" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/seurat_condition_integ.png)</span></span>
-<span id="cb21-100"><a href="#cb21-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-101"><a href="#cb21-101" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Different **datasets** (e.g. scRNA-seq from datasets generated using different library preparation methods on the same samples)</span>
-<span id="cb21-102"><a href="#cb21-102" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-103"><a href="#cb21-103" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/seurat_dataset_integ.png)</span></span>
-<span id="cb21-104"><a href="#cb21-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-105"><a href="#cb21-105" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Different **modalities** (e.g. scRNA-seq and scATAC-seq)</span>
-<span id="cb21-106"><a href="#cb21-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-107"><a href="#cb21-107" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/seurat_modality_integ.png)</span></span>
-<span id="cb21-108"><a href="#cb21-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-109"><a href="#cb21-109" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Different **batches** (e.g. when experimental conditions make batch processing of samples necessary)</span>
-<span id="cb21-110"><a href="#cb21-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-111"><a href="#cb21-111" aria-hidden="true" tabindex="-1"></a>The goal of integration is to ensure that the cell types of one condition/dataset align with the same celltypes of the other conditions/datasets (e.g. control macrophages align with stimulated macrophages).</span>
-<span id="cb21-112"><a href="#cb21-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-113"><a href="#cb21-113" aria-hidden="true" tabindex="-1"></a><span class="fu">### Integration using CCA</span></span>
-<span id="cb21-114"><a href="#cb21-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-115"><a href="#cb21-115" aria-hidden="true" tabindex="-1"></a>Seurat v5 enables streamlined integrative analysis using the&nbsp;<span class="in">`IntegrateLayers`</span>&nbsp;function. The method currently supports&nbsp;**five integration methods**. Each of these methods performs integration in low-dimensional space, and&nbsp;**returns a dimensional reduction**&nbsp;(i.e.&nbsp;<span class="in">`integrated.rpca`</span>) that aims to co-embed shared cell types across batches:</span>
-<span id="cb21-116"><a href="#cb21-116" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-117"><a href="#cb21-117" aria-hidden="true" tabindex="-1"></a>The **anchor-based CCA integration**&nbsp;(`method=CCAIntegration`) utilizes the canonical correlation analysis (CCA). This method expects "correspondences" or **shared biological states** among at least a subset of single cells across the groups. The steps in the <span class="in">`Seurat`</span> integration workflow are outlined in the figure below:</span>
-<span id="cb21-118"><a href="#cb21-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-119"><a href="#cb21-119" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/integration.png)</span></span>
-<span id="cb21-120"><a href="#cb21-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-121"><a href="#cb21-121" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Image credit: Stuart T and Butler A, et al. Comprehensive integration of single cell data, bioRxiv 2018 (</span><span class="ot">&lt;https://doi.org/10.1101/460147)_&gt;</span></span>
-<span id="cb21-122"><a href="#cb21-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-123"><a href="#cb21-123" aria-hidden="true" tabindex="-1"></a>The different steps applied are as follows:</span>
-<span id="cb21-124"><a href="#cb21-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-125"><a href="#cb21-125" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Perform **canonical correlation analysis (CCA):**</span>
-<span id="cb21-126"><a href="#cb21-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-127"><a href="#cb21-127" aria-hidden="true" tabindex="-1"></a>    CCA identifies shared sources of variation between the conditions/groups. It is a form of PCA, in that it **identifies the greatest sources of variation** in the data, but only if it is **shared or conserved** across the conditions/groups (using the 3000 most variant genes from each sample).</span>
-<span id="cb21-128"><a href="#cb21-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-129"><a href="#cb21-129" aria-hidden="true" tabindex="-1"></a>    This step roughly aligns the cells using the greatest shared sources of variation.</span>
-<span id="cb21-130"><a href="#cb21-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-131"><a href="#cb21-131" aria-hidden="true" tabindex="-1"></a>    ::: callout-note</span>
-<span id="cb21-132"><a href="#cb21-132" aria-hidden="true" tabindex="-1"></a>    The shared highly variable genes are used because they are the most likely to represent those genes distinguishing the different cell types present.</span>
-<span id="cb21-133"><a href="#cb21-133" aria-hidden="true" tabindex="-1"></a>    :::</span>
-<span id="cb21-134"><a href="#cb21-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-135"><a href="#cb21-135" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>**Identify anchors** or mutual nearest neighbors (MNNs) across datasets (sometimes incorrect anchors are identified):</span>
-<span id="cb21-136"><a href="#cb21-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-137"><a href="#cb21-137" aria-hidden="true" tabindex="-1"></a>    MNNs can be thought of as 'best buddies'. For each cell in one condition:</span>
-<span id="cb21-138"><a href="#cb21-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-139"><a href="#cb21-139" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>The cell's closest neighbor in the other condition is identified based on gene expression values - its 'best buddy'.</span>
-<span id="cb21-140"><a href="#cb21-140" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>The reciprocal analysis is performed, and if the two cells are 'best buddies' in both directions, then those cells will be marked as **anchors** to 'anchor' the two datasets together.</span>
-<span id="cb21-141"><a href="#cb21-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-142"><a href="#cb21-142" aria-hidden="true" tabindex="-1"></a>    <span class="at">&gt; "The difference in expression values between cells in an MNN pair provides an estimate of the batch effect, which is made more precise by averaging across many such pairs. A correction vector is obtained and applied to the expression values to perform batch correction." (</span><span class="co">[</span><span class="ot">Stuart et al. 2019</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-stuart2019a)</span><span class="at">)</span></span>
-<span id="cb21-143"><a href="#cb21-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-144"><a href="#cb21-144" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>**Filter anchors** to remove incorrect anchors:</span>
-<span id="cb21-145"><a href="#cb21-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-146"><a href="#cb21-146" aria-hidden="true" tabindex="-1"></a>    Assess the similarity between anchor pairs by the overlap in their local neighborhoods (incorrect anchors will have low scores) - do the adjacent cells have 'best buddies' that are adjacent to each other?</span>
-<span id="cb21-147"><a href="#cb21-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-148"><a href="#cb21-148" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>**Integrate** the conditions/datasets:</span>
-<span id="cb21-149"><a href="#cb21-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-150"><a href="#cb21-150" aria-hidden="true" tabindex="-1"></a>    Use anchors and corresponding scores to transform the cell expression values, allowing for the integration of the conditions/datasets (different samples, conditions, datasets, modalities)</span>
-<span id="cb21-151"><a href="#cb21-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-152"><a href="#cb21-152" aria-hidden="true" tabindex="-1"></a>    ::: callout-note</span>
-<span id="cb21-153"><a href="#cb21-153" aria-hidden="true" tabindex="-1"></a>    Transformation of each cell uses a weighted average of the two cells of each anchor across anchors of the datasets. Weights determined by cell similarity score (distance between cell and k nearest anchors) and anchor scores, so cells in the same neighborhood should have similar correction values.</span>
-<span id="cb21-154"><a href="#cb21-154" aria-hidden="true" tabindex="-1"></a>    :::</span>
-<span id="cb21-155"><a href="#cb21-155" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-156"><a href="#cb21-156" aria-hidden="true" tabindex="-1"></a>    **If cell types are present in one dataset, but not the other, then the cells will still appear as a separate sample-specific cluster.**</span>
-<span id="cb21-157"><a href="#cb21-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-158"><a href="#cb21-158" aria-hidden="true" tabindex="-1"></a>Now, using our <span class="in">`SCTransform`</span> object as input, let's perform the integration across conditions.</span>
-<span id="cb21-159"><a href="#cb21-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-162"><a href="#cb21-162" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb21-163"><a href="#cb21-163" aria-hidden="true" tabindex="-1"></a><span class="co"># 可以看到目前的降维信息包括"pca"和"umap"</span></span>
-<span id="cb21-164"><a href="#cb21-164" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(split_seurat<span class="sc">@</span>reductions)</span>
-<span id="cb21-165"><a href="#cb21-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-166"><a href="#cb21-166" aria-hidden="true" tabindex="-1"></a><span class="co"># 整合，比较耗时间（约13min），进度条会一直显示0%直至运算完成</span></span>
-<span id="cb21-167"><a href="#cb21-167" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(<span class="at">object =</span> split_seurat,</span>
-<span id="cb21-168"><a href="#cb21-168" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">method =</span> CCAIntegration,</span>
-<span id="cb21-169"><a href="#cb21-169" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">normalization.method =</span> <span class="st">"SCT"</span>, <span class="co"># 指定使用的标准化方法为SCTransform</span></span>
-<span id="cb21-170"><a href="#cb21-170" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">orig.reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb21-171"><a href="#cb21-171" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">new.reduction =</span> <span class="st">"integrated.cca"</span>, <span class="co">#  整合后新的降维数据的名称</span></span>
-<span id="cb21-172"><a href="#cb21-172" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb21-173"><a href="#cb21-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-174"><a href="#cb21-174" aria-hidden="true" tabindex="-1"></a><span class="co"># 整合后重新合并RNA layer</span></span>
-<span id="cb21-175"><a href="#cb21-175" aria-hidden="true" tabindex="-1"></a>seurat_integrated[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(seurat_integrated[[<span class="st">"RNA"</span>]])</span>
-<span id="cb21-176"><a href="#cb21-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-177"><a href="#cb21-177" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看整合后的降维信息</span></span>
-<span id="cb21-178"><a href="#cb21-178" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(seurat_integrated<span class="sc">@</span>reductions)</span>
-<span id="cb21-179"><a href="#cb21-179" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb21-180"><a href="#cb21-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-181"><a href="#cb21-181" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
-<span id="cb21-182"><a href="#cb21-182" aria-hidden="true" tabindex="-1"></a>如何调用Seurat嵌入的其他整合算法进行整合，参考：@sec-Integrated_analysis_of_seurat-v5 。</span>
-<span id="cb21-183"><a href="#cb21-183" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb21-184"><a href="#cb21-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-185"><a href="#cb21-185" aria-hidden="true" tabindex="-1"></a><span class="fu">## 整合后检验细胞分群情况</span></span>
-<span id="cb21-186"><a href="#cb21-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-187"><a href="#cb21-187" aria-hidden="true" tabindex="-1"></a>After integration, to visualize the integrated data we can use dimensionality reduction techniques, such as PCA and Uniform Manifold Approximation and Projection (UMAP). While PCA will determine all PCs, we can only plot two at a time. In contrast, UMAP will take the information from any number of top PCs to arrange the cells in this multidimensional space. It will take those distances in multidimensional space and plot them in two dimensions working to preserve local and global structure. In this way, the distances between cells represent similarity in expression. If you wish to explore UMAP in more detail, <span class="co">[</span><span class="ot">this post</span><span class="co">](https://pair-code.github.io/understanding-umap/)</span> is a nice introduction to UMAP theory.</span>
-<span id="cb21-188"><a href="#cb21-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-189"><a href="#cb21-189" aria-hidden="true" tabindex="-1"></a>Here, we **visualize with UMAP**. UMAP is a stochastic algorithm -- this means that it makes use of randomness both to speed up approximation steps, and to aid in solving hard optimization problems. Due to the stochastic nature, different runs of UMAP can produce different results. We can **set the seed** to a specific (but random) number, and this avoids the creation of a slightly different UMAP each time re-run our code.</span>
-<span id="cb21-190"><a href="#cb21-190" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-193"><a href="#cb21-193" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb21-194"><a href="#cb21-194" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "整合前后细胞分群情况（A, B: 整合前；C, D: 整合后）"</span></span>
-<span id="cb21-195"><a href="#cb21-195" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-整合前后细胞分群情况</span></span>
-<span id="cb21-196"><a href="#cb21-196" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 20</span></span>
-<span id="cb21-197"><a href="#cb21-197" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 15</span></span>
-<span id="cb21-198"><a href="#cb21-198" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed</span></span>
-<span id="cb21-199"><a href="#cb21-199" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123456</span>)</span>
-<span id="cb21-200"><a href="#cb21-200" aria-hidden="true" tabindex="-1"></a><span class="co"># Run UMAP</span></span>
-<span id="cb21-201"><a href="#cb21-201" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(seurat_integrated, </span>
-<span id="cb21-202"><a href="#cb21-202" aria-hidden="true" tabindex="-1"></a>                             <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>,</span>
-<span id="cb21-203"><a href="#cb21-203" aria-hidden="true" tabindex="-1"></a>                             <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>) <span class="co"># 更改降维来源为整合后的"integrated.cca"</span></span>
-<span id="cb21-204"><a href="#cb21-204" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-205"><a href="#cb21-205" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot UMAP                             </span></span>
-<span id="cb21-206"><a href="#cb21-206" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_integrated, <span class="at">reduction =</span> <span class="st">"umap"</span>, <span class="at">group.by =</span> <span class="st">"sample"</span>)</span>
-<span id="cb21-207"><a href="#cb21-207" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_integrated, <span class="at">reduction =</span> <span class="st">"umap"</span>, <span class="at">split.by =</span> <span class="st">"sample"</span>)</span>
-<span id="cb21-208"><a href="#cb21-208" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p2, p3, p4, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
-<span id="cb21-209"><a href="#cb21-209" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb21-210"><a href="#cb21-210" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-211"><a href="#cb21-211" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; When we compare the similarity between the ctrl and stim clusters in the above plot with what we see using the the unintegrated dataset, **it is clear that this dataset benefitted from the integration!**</span></span>
-<span id="cb21-212"><a href="#cb21-212" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-213"><a href="#cb21-213" aria-hidden="true" tabindex="-1"></a><span class="fu">### Save the "integrated" object!</span></span>
-<span id="cb21-214"><a href="#cb21-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-217"><a href="#cb21-217" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb21-218"><a href="#cb21-218" aria-hidden="true" tabindex="-1"></a><span class="co"># Save integrated seurat object</span></span>
-<span id="cb21-219"><a href="#cb21-219" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(seurat_integrated, <span class="st">"output/scRNA-seq_online/integrated_seurat.rds"</span>)</span>
-<span id="cb21-220"><a href="#cb21-220" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb21-221"><a href="#cb21-221" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-222"><a href="#cb21-222" aria-hidden="true" tabindex="-1"></a><span class="fu">## Complex Integration Tasks</span></span>
-<span id="cb21-223"><a href="#cb21-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-224"><a href="#cb21-224" aria-hidden="true" tabindex="-1"></a>In the section above, we've presented the <span class="in">`Seurat`</span> integration workflow, which uses canonical correlation analysis (CCA) and multiple nearest neighbors (MNN) to find "anchors" and integrate across samples, conditions, modalities, etc. While the <span class="in">`Seurat`</span> integration approach is widely used and several benchmarking studies support its great performance in many cases, it is important to recognize that **alternative integration algorithms exist and may work better for more complex integration tasks** (see <span class="co">[</span><span class="ot">Luecken et al. 2021</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-luecken2021)</span> for a comprehensive review).</span>
-<span id="cb21-225"><a href="#cb21-225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-226"><a href="#cb21-226" aria-hidden="true" tabindex="-1"></a>Not all integration algorithms rely on the same methodology, and they do not always provide the same type of corrected output (embeddings, count matrix...). Their performance is also affected by preliminary data processing steps, including which normalization method was used and how highly variable genes (HVGs) were determined. All those considerations are important to keep in mind when selecting a data integration approach for your study.</span>
-<span id="cb21-227"><a href="#cb21-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-228"><a href="#cb21-228" aria-hidden="true" tabindex="-1"></a>**What do we mean by a "complex" integration task?**</span>
-<span id="cb21-229"><a href="#cb21-229" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-230"><a href="#cb21-230" aria-hidden="true" tabindex="-1"></a>In their benchmarking study (<span class="co">[</span><span class="ot">Luecken et al. 2021</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-luecken2021)</span>) compared the performance of different scRNA-seq integration tools when confronted to different "complex" tasks. The "complexity" of integrating a dataset may relate to the number of samples (perhaps generated using different protocols) but also to the biological question the study seeks to address (e.g. comparing cell types across tissues, species...). In these contexts, you may **need to integrate across multiple confounding factors before you can start exploring the biology of your system.**</span>
-<span id="cb21-231"><a href="#cb21-231" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-232"><a href="#cb21-232" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/complex_integration.png)</span>{width="597"}</span>
-<span id="cb21-233"><a href="#cb21-233" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-234"><a href="#cb21-234" aria-hidden="true" tabindex="-1"></a>In these more complex scenarios, you want to select a data integration approach that successfully balances out the following challenges:</span>
-<span id="cb21-235"><a href="#cb21-235" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-236"><a href="#cb21-236" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Correcting for **inter-sample variability** due to source samples from different donors</span>
-<span id="cb21-237"><a href="#cb21-237" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Correcting for variability across **protocols/technologies** (10X, SMART-Seq2, inDrop...; single-cell vs. single nucleus; variable number of input cells and sequencing depth; different sample preparation steps...)</span>
-<span id="cb21-238"><a href="#cb21-238" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Identifying consistent cell types across **different tissues** (peripheral blood, bone marrow, lung...) and/or different locations (e.g. areas of the brain)</span>
-<span id="cb21-239"><a href="#cb21-239" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Keeping apart cell subtypes (or even cell states) that show similar transcriptomes (CD4 naive vs. memory, NK vs NKT)</span>
-<span id="cb21-240"><a href="#cb21-240" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Keeping apart cell subtypes that are unique to a tissue/condition</span>
-<span id="cb21-241"><a href="#cb21-241" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Conserving the developmental trajectory, if applicable</span>
-<span id="cb21-242"><a href="#cb21-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-243"><a href="#cb21-243" aria-hidden="true" tabindex="-1"></a>Not all tools may perform as well on every task, and complex datasets may require testing several data integration approaches. You might want to analyze independently each of the batches you consider to integrate across, in order to define cell identities at this level before integrating and checking that the initially annotated cell types are mixed as expected.</span>
-<span id="cb21-244"><a href="#cb21-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-245"><a href="#cb21-245" aria-hidden="true" tabindex="-1"></a><span class="fu">### Harmonizing as a method of integration</span></span>
-<span id="cb21-246"><a href="#cb21-246" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-247"><a href="#cb21-247" aria-hidden="true" tabindex="-1"></a>Harmony (<span class="co">[</span><span class="ot">Korsunsky et al. 2019</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019)</span>) was devleoped in 2019, and is an example of **a tool that can work with complex integration tasks**. It is available as an <span class="co">[</span><span class="ot">GitHub</span><span class="co">](#0)</span> and <span class="co">[</span><span class="ot">CRAN</span><span class="co">](#0)</span>, and it has functions for standalone and Seurat pipeline analyses. It has been shown to perform incredibly well from recent benchmarking studies (<span class="co">[</span><span class="ot">Tran et al. 2020</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020)</span>).</span>
-<span id="cb21-248"><a href="#cb21-248" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-249"><a href="#cb21-249" aria-hidden="true" tabindex="-1"></a>在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用<span class="in">`Harmony`</span>包（available on <span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/immunogenomics/harmony)</span> and <span class="co">[</span><span class="ot">CRAN</span><span class="co">](https://cran.r-project.org/web/packages/harmony/index.html)</span>），详见<span class="co">[</span><span class="ot">该教程</span><span class="co">](https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html)</span>。同时，Seurat V5中的<span class="in">`IntegrateLayers`</span>函数集成了Harmony整合算法，可以直接调用，详见：@sec-Integrated_analysis_of_seurat-v5 。Compared to other algorithms,&nbsp;<span class="in">`Harmony`</span>&nbsp;notably presents the following advantages (<span class="co">[</span><span class="ot">Korsunsky et al. 2019</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019)</span>,&nbsp;<span class="co">[</span><span class="ot">Tran et al. 2020</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020)</span>):</span>
-<span id="cb21-250"><a href="#cb21-250" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-251"><a href="#cb21-251" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Possibility to integrate data across several variables (for example, by experimental batch and by condition)</span>
-<span id="cb21-252"><a href="#cb21-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-253"><a href="#cb21-253" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Significant gain in speed and lower memory requirements for integration of large datasets</span>
-<span id="cb21-254"><a href="#cb21-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-255"><a href="#cb21-255" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Interoperability with the&nbsp;<span class="in">`Seurat`</span>&nbsp;workflow</span>
-<span id="cb21-256"><a href="#cb21-256" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-257"><a href="#cb21-257" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb21-258"><a href="#cb21-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-259"><a href="#cb21-259" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb21-260"><a href="#cb21-260" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
-<span id="cb21-261"><a href="#cb21-261" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-264"><a href="#cb21-264" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb21-265"><a href="#cb21-265" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb21-266"><a href="#cb21-266" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb21-267"><a href="#cb21-267" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb21-268"><a href="#cb21-268" aria-hidden="true" tabindex="-1"></a>:::</span>
+<div class="sourceCode" id="cb25" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 单细胞数据整合（Integration） {#sec-sc_integration}</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">###### Learning Objectives:</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Perform integration of cells across conditions to identify cells that are similar to each other</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Describe complex integration tasks and alternative tools for integration</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_workflow_2022-01.jpg)</span>{width="545"}</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>**Goals:**</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>To **align same cell types** across conditions.</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>**Challenges:**</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Aligning cells of similar cell types** so that we do not have clustering downstream due to differences between samples, conditions, modalities, or batches</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>**Recommendations:**</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Go through the analysis without integration first to determine whether integration is necessary</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## 不进行整合时检验细胞分群情况</span></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>Generally, we always look at our clustering **without integration** before deciding whether we need to perform any alignment. **Do not just always perform integration because you think there might be differences - explore the data.** If we had performed the normalization on both conditions together in a Seurat object and visualized the similarity between cells, we would have seen condition-specific clustering.</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a><span class="fu">### 数据导入</span></span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>We use the <span class="in">`split_seurat`</span> object from the previous lesson ( @sec-normalization-and-regressing-out-unwanted-variation ).</span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>split_seurat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/scRNA-seq_online/split_seurat.rds"</span>)</span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>split_seurat</span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Check which assays are stored in objects</span></span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>split_seurat<span class="sc">@</span>assays</span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看目前默认的assay</span></span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(split_seurat)</span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看默认assay的layers</span></span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a><span class="fu">Layers</span>(split_seurat)</span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看每种样本包含多少细胞</span></span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(split_seurat<span class="sc">$</span>sample)</span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看降维信息</span></span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(split_seurat<span class="sc">@</span>reductions)</span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-12-19%2010.46.18.png)</span></span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a><span class="fu">### 降维、分群</span></span>
+<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: 整合前的细胞分群情况</span></span>
+<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-整合前的细胞分群情况</span></span>
+<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 20</span></span>
+<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a><span class="co"># Run PCA</span></span>
+<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a>split_seurat <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(split_seurat)</span>
+<span id="cb25-66"><a href="#cb25-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Run UMAP</span></span>
+<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a>split_seurat <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(split_seurat, </span>
+<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a>                        <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>, </span>
+<span id="cb25-69"><a href="#cb25-69" aria-hidden="true" tabindex="-1"></a>                        <span class="at">reduction =</span> <span class="st">"pca"</span>, </span>
+<span id="cb25-70"><a href="#cb25-70" aria-hidden="true" tabindex="-1"></a>                        <span class="at">reduction.name =</span> <span class="st">"umap.unintegrated"</span>)</span>
+<span id="cb25-71"><a href="#cb25-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-72"><a href="#cb25-72" aria-hidden="true" tabindex="-1"></a><span class="co"># 分群</span></span>
+<span id="cb25-73"><a href="#cb25-73" aria-hidden="true" tabindex="-1"></a>split_seurat <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(split_seurat, </span>
+<span id="cb25-74"><a href="#cb25-74" aria-hidden="true" tabindex="-1"></a>                              <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>, </span>
+<span id="cb25-75"><a href="#cb25-75" aria-hidden="true" tabindex="-1"></a>                              <span class="at">reduction =</span> <span class="st">"pca"</span>)</span>
+<span id="cb25-76"><a href="#cb25-76" aria-hidden="true" tabindex="-1"></a>split_seurat <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(split_seurat, </span>
+<span id="cb25-77"><a href="#cb25-77" aria-hidden="true" tabindex="-1"></a>                             <span class="at">cluster.name =</span> <span class="st">"unintegrated_clusters"</span>)</span>
+<span id="cb25-78"><a href="#cb25-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-79"><a href="#cb25-79" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot UMAP</span></span>
+<span id="cb25-80"><a href="#cb25-80" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(split_seurat, <span class="at">reduction =</span> <span class="st">"umap.unintegrated"</span>, <span class="at">group.by =</span> <span class="st">"sample"</span>)</span>
+<span id="cb25-81"><a href="#cb25-81" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(split_seurat, <span class="at">reduction =</span> <span class="st">"umap.unintegrated"</span>, <span class="at">split.by =</span> <span class="st">"sample"</span>)</span>
+<span id="cb25-82"><a href="#cb25-82" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb25-83"><a href="#cb25-83" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
+<span id="cb25-84"><a href="#cb25-84" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-85"><a href="#cb25-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-86"><a href="#cb25-86" aria-hidden="true" tabindex="-1"></a>可以看到，如果不进行整合，不同样本（ctrl vs.&nbsp;stim）间的细胞类型差异很大。The resulting clusters are defined&nbsp;**both by cell type**&nbsp;**and stimulation condition**, which creates challenges for downstream analysis. Condition-specific clustering of the cells indicates that we need to integrate the cells across conditions to ensure that cells of the same cell type cluster together.</span>
+<span id="cb25-87"><a href="#cb25-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-88"><a href="#cb25-88" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
+<span id="cb25-89"><a href="#cb25-89" aria-hidden="true" tabindex="-1"></a>关于<span class="in">`FindNeighbors()`</span>和<span class="in">`FindClusters()`</span>的详细说明见下一节 @sec-clustering_analysis 。</span>
+<span id="cb25-90"><a href="#cb25-90" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb25-91"><a href="#cb25-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-92"><a href="#cb25-92" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
+<span id="cb25-93"><a href="#cb25-93" aria-hidden="true" tabindex="-1"></a><span class="fu">###### **Why is it important the cells of the same cell type cluster together?**</span></span>
+<span id="cb25-94"><a href="#cb25-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-95"><a href="#cb25-95" aria-hidden="true" tabindex="-1"></a>We want to identify **cell types which are present in all samples/conditions/modalities** within our dataset, and therefore would like to observe a representation of cells from both samples/conditions/modalities in every cluster. This will enable more interpretable results downstream (i.e. DE analysis, ligand-receptor analysis, differential abundance analysis...).</span>
+<span id="cb25-96"><a href="#cb25-96" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb25-97"><a href="#cb25-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-98"><a href="#cb25-98" aria-hidden="true" tabindex="-1"></a>In this lesson, we will cover the integration of our samples across conditions, which is adapted from @sec-Single-cell_data_integration .</span>
+<span id="cb25-99"><a href="#cb25-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-100"><a href="#cb25-100" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
+<span id="cb25-101"><a href="#cb25-101" aria-hidden="true" tabindex="-1"></a>在此前的 @sec-sctransform 中我们学习了how to run through the workflow from normalization to clustering without integration. Other steps in the workflow remain fairly similar, but the **samples would not necessarily be split** in the beginning and integration would not be performed.</span>
+<span id="cb25-102"><a href="#cb25-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-103"><a href="#cb25-103" aria-hidden="true" tabindex="-1"></a>It can help to first run conditions individually if unsure what clusters to expect or expecting some different cell types between conditions (e.g. tumor and control samples), then run them together to see whether there are condition-specific clusters for cell types present in both conditions. Oftentimes, when clustering cells from multiple conditions there are condition-specific clusters and integration can help ensure the same cell types cluster together.</span>
+<span id="cb25-104"><a href="#cb25-104" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb25-105"><a href="#cb25-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-106"><a href="#cb25-106" aria-hidden="true" tabindex="-1"></a><span class="fu">## **整合**</span></span>
+<span id="cb25-107"><a href="#cb25-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-108"><a href="#cb25-108" aria-hidden="true" tabindex="-1"></a>**If cells cluster by sample, condition, batch, dataset, modality, this integration step can greatly improve the clustering and the downstream analyses**.</span>
+<span id="cb25-109"><a href="#cb25-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-110"><a href="#cb25-110" aria-hidden="true" tabindex="-1"></a>To integrate, we will use the shared highly variable genes (identified using <span class="in">`SCTransform`</span>) from each group, then, we will "integrate" or "harmonize" the groups to overlay cells that are similar or have a "common set of biological features" between groups. For example, we could integrate across:</span>
+<span id="cb25-111"><a href="#cb25-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-112"><a href="#cb25-112" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Different **conditions** (e.g. control and stimulated)</span>
+<span id="cb25-113"><a href="#cb25-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-114"><a href="#cb25-114" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/seurat_condition_integ.png)</span></span>
+<span id="cb25-115"><a href="#cb25-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-116"><a href="#cb25-116" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Different **datasets** (e.g. scRNA-seq from datasets generated using different library preparation methods on the same samples)</span>
+<span id="cb25-117"><a href="#cb25-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-118"><a href="#cb25-118" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/seurat_dataset_integ.png)</span></span>
+<span id="cb25-119"><a href="#cb25-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-120"><a href="#cb25-120" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Different **modalities** (e.g. scRNA-seq and scATAC-seq)</span>
+<span id="cb25-121"><a href="#cb25-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-122"><a href="#cb25-122" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/seurat_modality_integ.png)</span></span>
+<span id="cb25-123"><a href="#cb25-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-124"><a href="#cb25-124" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Different **batches** (e.g. when experimental conditions make batch processing of samples necessary)</span>
+<span id="cb25-125"><a href="#cb25-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-126"><a href="#cb25-126" aria-hidden="true" tabindex="-1"></a>The goal of integration is to ensure that the cell types of one condition/dataset align with the same celltypes of the other conditions/datasets (e.g. control macrophages align with stimulated macrophages).</span>
+<span id="cb25-127"><a href="#cb25-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-128"><a href="#cb25-128" aria-hidden="true" tabindex="-1"></a><span class="fu">### Integration using CCA</span></span>
+<span id="cb25-129"><a href="#cb25-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-130"><a href="#cb25-130" aria-hidden="true" tabindex="-1"></a>Seurat v5 enables streamlined integrative analysis using the&nbsp;<span class="in">`IntegrateLayers`</span>&nbsp;function. The method currently supports&nbsp;**five integration methods**. Each of these methods performs integration in low-dimensional space, and&nbsp;**returns a dimensional reduction**&nbsp;(i.e.&nbsp;<span class="in">`integrated.rpca`</span>) that aims to co-embed shared cell types across batches:</span>
+<span id="cb25-131"><a href="#cb25-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-132"><a href="#cb25-132" aria-hidden="true" tabindex="-1"></a>The **anchor-based CCA integration**&nbsp;(`method=CCAIntegration`) utilizes the canonical correlation analysis (CCA). This method expects "correspondences" or **shared biological states** among at least a subset of single cells across the groups. The steps in the <span class="in">`Seurat`</span> integration workflow are outlined in the figure below:</span>
+<span id="cb25-133"><a href="#cb25-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-134"><a href="#cb25-134" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/integration.png)</span></span>
+<span id="cb25-135"><a href="#cb25-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-136"><a href="#cb25-136" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Image credit: Stuart T and Butler A, et al. Comprehensive integration of single cell data, bioRxiv 2018 (</span><span class="ot">&lt;https://doi.org/10.1101/460147)_&gt;</span></span>
+<span id="cb25-137"><a href="#cb25-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-138"><a href="#cb25-138" aria-hidden="true" tabindex="-1"></a>The different steps applied are as follows:</span>
+<span id="cb25-139"><a href="#cb25-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-140"><a href="#cb25-140" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Perform **canonical correlation analysis (CCA):**</span>
+<span id="cb25-141"><a href="#cb25-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-142"><a href="#cb25-142" aria-hidden="true" tabindex="-1"></a>    CCA identifies shared sources of variation between the conditions/groups. It is a form of PCA, in that it **identifies the greatest sources of variation** in the data, but only if it is **shared or conserved** across the conditions/groups (using the 3000 most variant genes from each sample).</span>
+<span id="cb25-143"><a href="#cb25-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-144"><a href="#cb25-144" aria-hidden="true" tabindex="-1"></a>    This step roughly aligns the cells using the greatest shared sources of variation.</span>
+<span id="cb25-145"><a href="#cb25-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-146"><a href="#cb25-146" aria-hidden="true" tabindex="-1"></a>    ::: callout-note</span>
+<span id="cb25-147"><a href="#cb25-147" aria-hidden="true" tabindex="-1"></a>    The shared highly variable genes are used because they are the most likely to represent those genes distinguishing the different cell types present.</span>
+<span id="cb25-148"><a href="#cb25-148" aria-hidden="true" tabindex="-1"></a>    :::</span>
+<span id="cb25-149"><a href="#cb25-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-150"><a href="#cb25-150" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>**Identify anchors** or mutual nearest neighbors (MNNs) across datasets (sometimes incorrect anchors are identified):</span>
+<span id="cb25-151"><a href="#cb25-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-152"><a href="#cb25-152" aria-hidden="true" tabindex="-1"></a>    MNNs can be thought of as 'best buddies'. For each cell in one condition:</span>
+<span id="cb25-153"><a href="#cb25-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-154"><a href="#cb25-154" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>The cell's closest neighbor in the other condition is identified based on gene expression values - its 'best buddy'.</span>
+<span id="cb25-155"><a href="#cb25-155" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>The reciprocal analysis is performed, and if the two cells are 'best buddies' in both directions, then those cells will be marked as **anchors** to 'anchor' the two datasets together.</span>
+<span id="cb25-156"><a href="#cb25-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-157"><a href="#cb25-157" aria-hidden="true" tabindex="-1"></a>    <span class="at">&gt; "The difference in expression values between cells in an MNN pair provides an estimate of the batch effect, which is made more precise by averaging across many such pairs. A correction vector is obtained and applied to the expression values to perform batch correction." (</span><span class="co">[</span><span class="ot">Stuart et al. 2019</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-stuart2019a)</span><span class="at">)</span></span>
+<span id="cb25-158"><a href="#cb25-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-159"><a href="#cb25-159" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>**Filter anchors** to remove incorrect anchors:</span>
+<span id="cb25-160"><a href="#cb25-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-161"><a href="#cb25-161" aria-hidden="true" tabindex="-1"></a>    Assess the similarity between anchor pairs by the overlap in their local neighborhoods (incorrect anchors will have low scores) - do the adjacent cells have 'best buddies' that are adjacent to each other?</span>
+<span id="cb25-162"><a href="#cb25-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-163"><a href="#cb25-163" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>**Integrate** the conditions/datasets:</span>
+<span id="cb25-164"><a href="#cb25-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-165"><a href="#cb25-165" aria-hidden="true" tabindex="-1"></a>    Use anchors and corresponding scores to transform the cell expression values, allowing for the integration of the conditions/datasets (different samples, conditions, datasets, modalities)</span>
+<span id="cb25-166"><a href="#cb25-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-167"><a href="#cb25-167" aria-hidden="true" tabindex="-1"></a>    ::: callout-note</span>
+<span id="cb25-168"><a href="#cb25-168" aria-hidden="true" tabindex="-1"></a>    Transformation of each cell uses a weighted average of the two cells of each anchor across anchors of the datasets. Weights determined by cell similarity score (distance between cell and k nearest anchors) and anchor scores, so cells in the same neighborhood should have similar correction values.</span>
+<span id="cb25-169"><a href="#cb25-169" aria-hidden="true" tabindex="-1"></a>    :::</span>
+<span id="cb25-170"><a href="#cb25-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-171"><a href="#cb25-171" aria-hidden="true" tabindex="-1"></a>    **If cell types are present in one dataset, but not the other, then the cells will still appear as a separate sample-specific cluster.**</span>
+<span id="cb25-172"><a href="#cb25-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-173"><a href="#cb25-173" aria-hidden="true" tabindex="-1"></a>Now, using our <span class="in">`SCTransform`</span> object as input, let's perform the integration across conditions.</span>
+<span id="cb25-174"><a href="#cb25-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-177"><a href="#cb25-177" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-178"><a href="#cb25-178" aria-hidden="true" tabindex="-1"></a><span class="co"># 可以看到目前的降维信息包括"pca"和"umap.unintegrated"</span></span>
+<span id="cb25-179"><a href="#cb25-179" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(split_seurat<span class="sc">@</span>reductions)</span>
+<span id="cb25-180"><a href="#cb25-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-181"><a href="#cb25-181" aria-hidden="true" tabindex="-1"></a><span class="co"># 整合，比较耗时间（约13min），进度条会一直显示0%直至运算完成</span></span>
+<span id="cb25-182"><a href="#cb25-182" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(beepr)</span>
+<span id="cb25-183"><a href="#cb25-183" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(<span class="at">object =</span> split_seurat,</span>
+<span id="cb25-184"><a href="#cb25-184" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">method =</span> CCAIntegration,</span>
+<span id="cb25-185"><a href="#cb25-185" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">normalization.method =</span> <span class="st">"SCT"</span>, <span class="co"># 指定使用的标准化方法为SCTransform</span></span>
+<span id="cb25-186"><a href="#cb25-186" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">orig.reduction =</span> <span class="st">"pca"</span>,</span>
+<span id="cb25-187"><a href="#cb25-187" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">new.reduction =</span> <span class="st">"integrated.cca"</span>, <span class="co">#  整合后新的降维数据的名称</span></span>
+<span id="cb25-188"><a href="#cb25-188" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">verbose =</span> <span class="cn">FALSE</span>); <span class="fu">beep</span>()</span>
+<span id="cb25-189"><a href="#cb25-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-190"><a href="#cb25-190" aria-hidden="true" tabindex="-1"></a><span class="co"># 整合后重新合并RNA layer</span></span>
+<span id="cb25-191"><a href="#cb25-191" aria-hidden="true" tabindex="-1"></a>seurat_integrated[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(seurat_integrated[[<span class="st">"RNA"</span>]])</span>
+<span id="cb25-192"><a href="#cb25-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-193"><a href="#cb25-193" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看整合后的降维信息</span></span>
+<span id="cb25-194"><a href="#cb25-194" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(seurat_integrated<span class="sc">@</span>reductions)</span>
+<span id="cb25-195"><a href="#cb25-195" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-196"><a href="#cb25-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-197"><a href="#cb25-197" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
+<span id="cb25-198"><a href="#cb25-198" aria-hidden="true" tabindex="-1"></a>如何调用Seurat嵌入的其他整合算法进行整合，参考：@sec-Integrated_analysis_of_seurat-v5 。</span>
+<span id="cb25-199"><a href="#cb25-199" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb25-200"><a href="#cb25-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-201"><a href="#cb25-201" aria-hidden="true" tabindex="-1"></a><span class="fu">## 整合后检验细胞分群情况</span></span>
+<span id="cb25-202"><a href="#cb25-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-203"><a href="#cb25-203" aria-hidden="true" tabindex="-1"></a>After integration, to visualize the integrated data we can use dimensionality reduction techniques, such as PCA and Uniform Manifold Approximation and Projection (UMAP). While PCA will determine all PCs, we can only plot two at a time. In contrast, UMAP will take the information from any number of top PCs to arrange the cells in this multidimensional space. It will take those distances in multidimensional space and plot them in two dimensions working to preserve local and global structure. In this way, the distances between cells represent similarity in expression. If you wish to explore UMAP in more detail, <span class="co">[</span><span class="ot">this post</span><span class="co">](https://pair-code.github.io/understanding-umap/)</span> is a nice introduction to UMAP theory.</span>
+<span id="cb25-204"><a href="#cb25-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-205"><a href="#cb25-205" aria-hidden="true" tabindex="-1"></a>Here, we **visualize with UMAP**. UMAP is a stochastic algorithm -- this means that it makes use of randomness both to speed up approximation steps, and to aid in solving hard optimization problems. Due to the stochastic nature, different runs of UMAP can produce different results. We can **set the seed** to a specific (but random) number, and this avoids the creation of a slightly different UMAP each time re-run our code.</span>
+<span id="cb25-206"><a href="#cb25-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-209"><a href="#cb25-209" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-210"><a href="#cb25-210" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "整合前后细胞分群情况（A, B: 整合前；C, D: 整合后）"</span></span>
+<span id="cb25-211"><a href="#cb25-211" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-整合前后细胞分群情况</span></span>
+<span id="cb25-212"><a href="#cb25-212" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 20</span></span>
+<span id="cb25-213"><a href="#cb25-213" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 15</span></span>
+<span id="cb25-214"><a href="#cb25-214" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed</span></span>
+<span id="cb25-215"><a href="#cb25-215" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123456</span>)</span>
+<span id="cb25-216"><a href="#cb25-216" aria-hidden="true" tabindex="-1"></a><span class="co"># Run UMAP</span></span>
+<span id="cb25-217"><a href="#cb25-217" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(seurat_integrated, </span>
+<span id="cb25-218"><a href="#cb25-218" aria-hidden="true" tabindex="-1"></a>                             <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>,</span>
+<span id="cb25-219"><a href="#cb25-219" aria-hidden="true" tabindex="-1"></a>                             <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>, <span class="co"># 更改降维来源为整合后的"integrated.cca"</span></span>
+<span id="cb25-220"><a href="#cb25-220" aria-hidden="true" tabindex="-1"></a>                             <span class="at">reduction.name =</span> <span class="st">"umap.integrated"</span>) </span>
+<span id="cb25-221"><a href="#cb25-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-222"><a href="#cb25-222" aria-hidden="true" tabindex="-1"></a><span class="co"># 分群</span></span>
+<span id="cb25-223"><a href="#cb25-223" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(seurat_integrated, </span>
+<span id="cb25-224"><a href="#cb25-224" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>, </span>
+<span id="cb25-225"><a href="#cb25-225" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>) <span class="co">#更改降维来源为"integrated.cca"</span></span>
+<span id="cb25-226"><a href="#cb25-226" aria-hidden="true" tabindex="-1"></a>                                   </span>
+<span id="cb25-227"><a href="#cb25-227" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(seurat_integrated, </span>
+<span id="cb25-228"><a href="#cb25-228" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">cluster.name =</span> <span class="st">"integrated_clusters"</span>)</span>
+<span id="cb25-229"><a href="#cb25-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-230"><a href="#cb25-230" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot UMAP                             </span></span>
+<span id="cb25-231"><a href="#cb25-231" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_integrated, </span>
+<span id="cb25-232"><a href="#cb25-232" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>, </span>
+<span id="cb25-233"><a href="#cb25-233" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by =</span> <span class="st">"sample"</span>)</span>
+<span id="cb25-234"><a href="#cb25-234" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_integrated, </span>
+<span id="cb25-235"><a href="#cb25-235" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>, </span>
+<span id="cb25-236"><a href="#cb25-236" aria-hidden="true" tabindex="-1"></a>              <span class="at">split.by =</span> <span class="st">"sample"</span>)</span>
+<span id="cb25-237"><a href="#cb25-237" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p2, p3, p4, </span>
+<span id="cb25-238"><a href="#cb25-238" aria-hidden="true" tabindex="-1"></a>          <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
+<span id="cb25-239"><a href="#cb25-239" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-240"><a href="#cb25-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-241"><a href="#cb25-241" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; When we compare the similarity between the ctrl and stim clusters in the above plot with what we see using the the unintegrated dataset, **it is clear that this dataset benefitted from the integration!**</span></span>
+<span id="cb25-242"><a href="#cb25-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-243"><a href="#cb25-243" aria-hidden="true" tabindex="-1"></a><span class="fu">### Save the "integrated" object!</span></span>
+<span id="cb25-244"><a href="#cb25-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-247"><a href="#cb25-247" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-248"><a href="#cb25-248" aria-hidden="true" tabindex="-1"></a><span class="co"># Save integrated seurat object</span></span>
+<span id="cb25-249"><a href="#cb25-249" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(seurat_integrated, <span class="st">"output/scRNA-seq_online/integrated_seurat.rds"</span>)</span>
+<span id="cb25-250"><a href="#cb25-250" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-251"><a href="#cb25-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-252"><a href="#cb25-252" aria-hidden="true" tabindex="-1"></a><span class="fu">## Complex Integration Tasks</span></span>
+<span id="cb25-253"><a href="#cb25-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-254"><a href="#cb25-254" aria-hidden="true" tabindex="-1"></a>In the section above, we've presented the <span class="in">`Seurat`</span> integration workflow, which uses canonical correlation analysis (CCA) and multiple nearest neighbors (MNN) to find "anchors" and integrate across samples, conditions, modalities, etc. While the <span class="in">`Seurat`</span> integration approach is widely used and several benchmarking studies support its great performance in many cases, it is important to recognize that **alternative integration algorithms exist and may work better for more complex integration tasks** (see <span class="co">[</span><span class="ot">Luecken et al. 2021</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-luecken2021)</span> for a comprehensive review).</span>
+<span id="cb25-255"><a href="#cb25-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-256"><a href="#cb25-256" aria-hidden="true" tabindex="-1"></a>Not all integration algorithms rely on the same methodology, and they do not always provide the same type of corrected output (embeddings, count matrix...). Their performance is also affected by preliminary data processing steps, including which normalization method was used and how highly variable genes (HVGs) were determined. All those considerations are important to keep in mind when selecting a data integration approach for your study.</span>
+<span id="cb25-257"><a href="#cb25-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-258"><a href="#cb25-258" aria-hidden="true" tabindex="-1"></a>**What do we mean by a "complex" integration task?**</span>
+<span id="cb25-259"><a href="#cb25-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-260"><a href="#cb25-260" aria-hidden="true" tabindex="-1"></a>In their benchmarking study (<span class="co">[</span><span class="ot">Luecken et al. 2021</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-luecken2021)</span>) compared the performance of different scRNA-seq integration tools when confronted to different "complex" tasks. The "complexity" of integrating a dataset may relate to the number of samples (perhaps generated using different protocols) but also to the biological question the study seeks to address (e.g. comparing cell types across tissues, species...). In these contexts, you may **need to integrate across multiple confounding factors before you can start exploring the biology of your system.**</span>
+<span id="cb25-261"><a href="#cb25-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-262"><a href="#cb25-262" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/complex_integration.png)</span>{width="597"}</span>
+<span id="cb25-263"><a href="#cb25-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-264"><a href="#cb25-264" aria-hidden="true" tabindex="-1"></a>In these more complex scenarios, you want to select a data integration approach that successfully balances out the following challenges:</span>
+<span id="cb25-265"><a href="#cb25-265" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-266"><a href="#cb25-266" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Correcting for **inter-sample variability** due to source samples from different donors</span>
+<span id="cb25-267"><a href="#cb25-267" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Correcting for variability across **protocols/technologies** (10X, SMART-Seq2, inDrop...; single-cell vs. single nucleus; variable number of input cells and sequencing depth; different sample preparation steps...)</span>
+<span id="cb25-268"><a href="#cb25-268" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Identifying consistent cell types across **different tissues** (peripheral blood, bone marrow, lung...) and/or different locations (e.g. areas of the brain)</span>
+<span id="cb25-269"><a href="#cb25-269" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Keeping apart cell subtypes (or even cell states) that show similar transcriptomes (CD4 naive vs. memory, NK vs NKT)</span>
+<span id="cb25-270"><a href="#cb25-270" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Keeping apart cell subtypes that are unique to a tissue/condition</span>
+<span id="cb25-271"><a href="#cb25-271" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Conserving the developmental trajectory, if applicable</span>
+<span id="cb25-272"><a href="#cb25-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-273"><a href="#cb25-273" aria-hidden="true" tabindex="-1"></a>Not all tools may perform as well on every task, and complex datasets may require testing several data integration approaches. You might want to analyze independently each of the batches you consider to integrate across, in order to define cell identities at this level before integrating and checking that the initially annotated cell types are mixed as expected.</span>
+<span id="cb25-274"><a href="#cb25-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-275"><a href="#cb25-275" aria-hidden="true" tabindex="-1"></a><span class="fu">### Harmonizing as a method of integration</span></span>
+<span id="cb25-276"><a href="#cb25-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-277"><a href="#cb25-277" aria-hidden="true" tabindex="-1"></a>Harmony (<span class="co">[</span><span class="ot">Korsunsky et al. 2019</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019)</span>) was devleoped in 2019, and is an example of **a tool that can work with complex integration tasks**. It is available as an <span class="co">[</span><span class="ot">GitHub</span><span class="co">](#0)</span> and <span class="co">[</span><span class="ot">CRAN</span><span class="co">](#0)</span>, and it has functions for standalone and Seurat pipeline analyses. It has been shown to perform incredibly well from recent benchmarking studies (<span class="co">[</span><span class="ot">Tran et al. 2020</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020)</span>).</span>
+<span id="cb25-278"><a href="#cb25-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-279"><a href="#cb25-279" aria-hidden="true" tabindex="-1"></a>在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用<span class="in">`Harmony`</span>包（available on <span class="co">[</span><span class="ot">GitHub</span><span class="co">](https://github.com/immunogenomics/harmony)</span> and <span class="co">[</span><span class="ot">CRAN</span><span class="co">](https://cran.r-project.org/web/packages/harmony/index.html)</span>），详见<span class="co">[</span><span class="ot">该教程</span><span class="co">](https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html)</span>。同时，Seurat V5中的<span class="in">`IntegrateLayers`</span>函数集成了Harmony整合算法，可以直接调用，详见：@sec-Integrated_analysis_of_seurat-v5 。Compared to other algorithms,&nbsp;<span class="in">`Harmony`</span>&nbsp;notably presents the following advantages (<span class="co">[</span><span class="ot">Korsunsky et al. 2019</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019)</span>,&nbsp;<span class="co">[</span><span class="ot">Tran et al. 2020</span><span class="co">](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020)</span>):</span>
+<span id="cb25-280"><a href="#cb25-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-281"><a href="#cb25-281" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Possibility to integrate data across several variables (for example, by experimental batch and by condition)</span>
+<span id="cb25-282"><a href="#cb25-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-283"><a href="#cb25-283" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Significant gain in speed and lower memory requirements for integration of large datasets</span>
+<span id="cb25-284"><a href="#cb25-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-285"><a href="#cb25-285" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Interoperability with the&nbsp;<span class="in">`Seurat`</span>&nbsp;workflow</span>
+<span id="cb25-286"><a href="#cb25-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-287"><a href="#cb25-287" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb25-288"><a href="#cb25-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-289"><a href="#cb25-289" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb25-290"><a href="#cb25-290" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb25-291"><a href="#cb25-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-294"><a href="#cb25-294" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-295"><a href="#cb25-295" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb25-296"><a href="#cb25-296" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb25-297"><a href="#cb25-297" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-298"><a href="#cb25-298" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

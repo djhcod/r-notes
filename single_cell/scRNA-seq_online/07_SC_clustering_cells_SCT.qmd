@@ -115,12 +115,14 @@ The first step is to **construct a K-nearest neighbor (KNN) graph** based on the
 -   Edges are drawn between cells with similar features expression patterns.
 -   Edge weights are refined between any two cells based on shared overlap in their local neighborhoods.
 
-This is done in Seurat by using the `FindNeighbors()` function:
+This is done in Seurat by using the `FindNeighbors()` function（这里不需要运行，因为在上一节中我们已经在整合后运行了`FindNeighbors`）:
 
 ```{r}
-# Determine the K-nearest neighbor graph
-seurat_integrated <- FindNeighbors(object = seurat_integrated, 
-                                   dims = 1:40)
+#| eval: false
+# Determine the K-nearest neighbor graph（不需运行）
+seurat_integrated <- FindNeighbors(seurat_integrated, 
+                                   dims = 1:40, 
+                                   reduction = "integrated.cca")
 ```
 
 ### Find clusters
@@ -164,14 +166,15 @@ Now, we can plot the UMAP to look at how cells cluster together at a resolution 
 # Calculation of UMAP
 # DO NOT RUN (calculated in the last lesson)
 seurat_integrated <- RunUMAP(seurat_integrated, 
-                             reduction = "integrated.cca", 
-                             dims = 1:40)
+                             dims = 1:40,
+                             reduction = "integrated.cca", # 更改降维来源为整合后的"integrated.cca"
+                             reduction.name = "umap.integrated") 
 ```
 
 ```{r}
 # Plot the UMAP
 DimPlot(seurat_integrated,
-        reduction = "umap",
+        reduction = "umap.integrated",
         label = FALSE,
         label.size = 6)
 ```
@@ -184,7 +187,7 @@ Idents(object = seurat_integrated) <- "SCT_snn_res.0.4"
 
 # Plot the UMAP
 DimPlot(seurat_integrated,
-        reduction = "umap",
+        reduction = "umap.integrated",
         label = FALSE,
         label.size = 6)
 ```

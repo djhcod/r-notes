@@ -98,6 +98,24 @@ FeaturePlot(pbmc3k.final, features = "MS4A1",
             min.cutoff = 1, max.cutoff = 3)
 ```
 
+**调整颜色：**
+
+```{r}
+FeaturePlot(pbmc3k.final, features = "MS4A1", cols = c("lightblue", "red"))
+
+# 通过RColorBrewer包取色
+library(RColorBrewer)
+FeaturePlot(pbmc3k.final, features = "MS4A1", cols = brewer.pal(n = 10, name = "RdBu"))
+```
+
+也可以通过ggplot语法修改颜色：
+
+```{r}
+library(ggplot2)
+FeaturePlot(pbmc3k.final, features = "MS4A1") +
+  scale_colour_gradientn(colours = rev(brewer.pal(n = 10, name = "RdBu")))
+```
+
 Calculate feature-specific contrast levels based on quantiles of non-zero expression. Particularly useful when plotting multiple markers。
 
 ```{r}
@@ -107,7 +125,17 @@ FeaturePlot(pbmc3k.final,
             max.cutoff = "q90")
 ```
 
-Visualize co-expression of two features simultaneously。添加`blend = TRUE`。
+**多基因FeaturePlot：**
+
+通过添加`split.by`参数，来按照不同的样本组别来分别展示marker gene的表达。
+
+```{r}
+FeaturePlot(pbmc3k.final, 
+            features = c("CD3D", "MS4A1", "CD79A"), 
+            split.by = "groups")
+```
+
+`FeaturePlot()`中还提供了`blend` 参数，来可视化两个基因的共表达情况（添加`blend = TRUE`）。注意`blend = TRUE`**只能适用于2个基因**，多个基因会报错 。
 
 ```{r}
 FeaturePlot(pbmc3k.final, 
@@ -115,12 +143,19 @@ FeaturePlot(pbmc3k.final,
             blend = TRUE)
 ```
 
-通过添加`split.by`参数，来按照不同的样本组别来分别展示marker gene的表达。
+如果想实现多个基因的话，可以使用`scCustomize`包中的`Plot_Density_Joint_Only()`函数绘制多基因联合密度图。该函数还依赖于Nebulosa包，因此还需要先从BiocManager安装该包：
 
 ```{r}
-FeaturePlot(pbmc3k.final, 
-            features = c("MS4A1", "CD79A"), 
-            split.by = "groups")
+#| eval: false
+install.packages("scCustomize")
+BiocManager::install("Nebulosa")
+```
+
+```{r}
+library(scCustomize)
+Plot_Density_Joint_Only(seurat_object = pbmc3k.final, 
+                        features = c("CD3D", "MS4A1", "CD79A"),
+                        custom_palette = BlueAndRed())
 ```
 
 ### Dot plots
