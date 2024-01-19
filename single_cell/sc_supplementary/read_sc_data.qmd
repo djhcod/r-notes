@@ -1,4 +1,4 @@
-# **读取非标准格式的单细胞数据**
+# 读取非标准格式的单细胞数据
 
 ## 读取非标准10X格式文件 {#sec-Read_non-standard_10x_files}
 
@@ -490,6 +490,72 @@ merged_seurat$samples <- merged_seurat$orig.ident
 # 保存
 saveRDS(merged_seurat, file = "output/sc_supplementary/GSE150430_merged_seurat.rds")
 ```
+
+------------------------------------------------------------------------
+
+## 读取SMART-seq测序数据
+
+数据链接：[**GSE140228**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE140228)**。**
+
+![](images/截屏2024-01-18%2014.41.29.png)
+
+这个数据集用了两种测序技术，即Drop-seq和SMART-seq，分别属于测**3′ 或5′ 端（3′或5′-end sequencing）**的技术和测**全长转录本（full-length transcript sequencing）**的技术。这里我们下载SMART-seq测序数据。
+
+读取barcodes、features和matrix数据:
+
+```{r}
+#| cache-lazy: false
+rm(list = ls())
+library(Seurat)
+library(data.table)
+
+list.files("data/sc_supplementary/GSE140228")
+barcodes <- fread(
+  "data/sc_supplementary/GSE140228/GSE140228_cell_info_Smartseq2.tsv.gz",
+  data.table = F # 返回data.frame型数据
+  )
+head(barcodes, 5)
+features <- fread(
+  "data/sc_supplementary/GSE140228/GSE140228_gene_info_Smartseq2.tsv.gz",
+  data.table = F
+  )
+head(features, 5)
+matrix <- fread(
+  "data/sc_supplementary/GSE140228/GSE140228_read_counts_Smartseq2.csv.gz",
+  data.table = F,
+  )
+matrix[1:5, 1:5]
+```
+
+这个`matrix`第一列为基因名，列名为barcodes。`features`和`barcodes`是对每个基因和细胞的补充信息。所以，接下来我们可以直接用这个`matrix`文件构建counts矩阵。后续如有需要可以将`features`和`barcodes`中的信息补充上去。
+
+```{r}
+#| cache-lazy: false
+# 构建counts矩阵
+counts <- matrix
+row.names(counts) <- counts$gene
+counts$gene <- NULL
+
+# 创建Seurat对象
+merged_seurat <- CreateSeuratObject(
+  counts = counts,
+  project = "HCC",
+  min.cells = 3,
+  min.features = 200
+)
+merged_seurat
+head(merged_seurat, 5)
+```
+
+------------------------------------------------------------------------
+
+## 单独提供每个细胞测序结果的数据的读取
+
+数据链接：[**GSE84465**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84465)**。**
+
+![](images/截屏2024-01-18%2015.47.01.png){width="418"}![](images/截屏2024-01-18%2015.47.10.png){width="591"}
+
+可以看到，该数据集提供每一个细胞的测序结果。对于这样的数据，可以参考[*单细胞数据下载和Seurat对象的构建（上）*](https://mp.weixin.qq.com/s?__biz=Mzg2MTExNTkwNA==&mid=2247510395&idx=1&sn=f2a2c0e3d2d75656f1dcfceaf708beb8&chksm=ce1eea14f969630295e8988209df55b61e2062178d43b22d9eb41a93badf23772a312830ab49&mpshare=1&scene=1&srcid=1117TnC4m9nO1EleC5e8JIOl&sharer_sharetime=1668645592942&sharer_shareid=568f49cb24905bf546294e6985a632bf#rd)中的方法来读取。
 
 ------------------------------------------------------------------------
 

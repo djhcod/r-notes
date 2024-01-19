@@ -1,0 +1,1975 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>R语言学习笔记 - 31&nbsp; 多个单细胞数据集整合分析（下）</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../single_cell/sc_supplementary/DecontX.html" rel="next">
+<link href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_1.html" rel="prev">
+<link href="../../images/logo.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script type="application/json" class="js-hypothesis-config">
+{
+  "theme": "classic",
+  "openSidebar": false,
+  "showHighlights": "always",
+  "enableExperimentalNewNoteButton": true
+}
+</script><script async="" src="https://hypothes.is/embed.js"></script>
+<meta name="twitter:title" content="R语言学习笔记 - 31&nbsp; 多个单细胞数据集整合分析（下）">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2_files/figure-html/unnamed-chunk-3-1.png">
+<meta name="twitter:image-height" content="2880">
+<meta name="twitter:image-width" content="1920">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../images/logo.jpg" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">R语言学习笔记</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+<li class="nav-item">
+    <a class="nav-link active" href="../../index.html" rel="" target="" aria-current="page">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../intro.html" rel="" target="">
+ <span class="menu-text">Introduction</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parts" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Parts</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-parts">
+<li>
+    <a class="dropdown-item" href="../../r_basic/r_basics.html" rel="" target="">
+ <span class="dropdown-text"><strong>R语言基础</strong></span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../single_cell/seurat/seurat.html" rel="" target="">
+ <span class="dropdown-text"><strong>Seurat v5官方文档</strong></span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../single_cell/scRNA-seq_online/00_intro.html" rel="" target="">
+ <span class="dropdown-text"><strong>scRNA-seq_online学习材料</strong></span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
+ <span class="dropdown-text"><strong>单细胞补充内容</strong></span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
+ <span class="dropdown-text"><strong>Quarto基础</strong></span></a>
+  </li>  
+    </ul>
+</li>
+  <li class="nav-item">
+    <a class="nav-link" href="../../references.html" rel="" target="">
+ <span class="menu-text">References</span></a>
+  </li>  
+</ul>
+<ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="https://bookdown.org" rel="" target=""><i class="bi bi-book-fill" role="img">
+</i> 
+ <span class="menu-text">Bookdown</span></a>
+  </li>  
+</ul>
+<div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/djhcod/r-notes" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+<li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=%7Curl%7C">
+              <i class="bi bi-bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=%7Curl%7C">
+              <i class="bi bi-bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+</div>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/sc_supplementary/sc_supplementary_intro.html"><strong>单细胞补充内容</strong></a></li><li class="breadcrumb-item"><a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.html"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（下）</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">主页</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">前言</span></a>
+  </div>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">**R语言基础**</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rstudio环境配置</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/data_input_output.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">数据的读取与输出</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/basic_data_function.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据处理基本函数</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/character.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">字符的处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/loop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">循环</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../single_cell/seurat/seurat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">**Seurat v5官方文档**</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/seurat_command_list.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/sctransform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/marker_gene_identification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../single_cell/scRNA-seq_online/00_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">**scRNA-seq_online学习材料**</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">质控</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">**单细胞补充内容**</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/sc_supplementary/read_sc_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">读取非标准格式的单细胞数据</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/sc_supplementary/universal_marker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">细胞分群通用marker</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（上）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（下）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/sc_supplementary/DecontX.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">预测和去除单细胞转录组的环境游离RNA污染</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">**Quarto基础**</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">在Quarto中嵌入Shiny应用程序</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="px-0"><hr class="sidebar-divider hi "></li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
+ <span class="menu-text">参考文献</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#%E5%8A%A0%E8%BD%BD%E5%8C%85" id="toc-加载包" class="nav-link active" data-scroll-target="#%E5%8A%A0%E8%BD%BD%E5%8C%85"><span class="header-section-number">31.1</span> 加载包</a></li>
+  <li>
+<a href="#%E9%AB%93%E7%B3%BB%E7%BB%86%E8%83%9E%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%BD%92%E4%B8%80%E5%8C%96%E6%95%B4%E5%90%88%E9%99%8D%E7%BB%B4%E5%88%86%E7%BE%A4" id="toc-髓系细胞进一步归一化整合降维分群" class="nav-link" data-scroll-target="#%E9%AB%93%E7%B3%BB%E7%BB%86%E8%83%9E%E8%BF%9B%E4%B8%80%E6%AD%A5%E5%BD%92%E4%B8%80%E5%8C%96%E6%95%B4%E5%90%88%E9%99%8D%E7%BB%B4%E5%88%86%E7%BE%A4"><span class="header-section-number">31.2</span> 髓系细胞进一步归一化、整合、降维、分群</a>
+  <ul class="collapse">
+<li><a href="#sctransformpca" id="toc-sctransformpca" class="nav-link" data-scroll-target="#sctransformpca">SCTransform、PCA</a></li>
+  <li><a href="#%E4%B8%8D%E8%BF%9B%E8%A1%8C%E6%95%B4%E5%90%88%E6%97%B6%E6%A3%80%E6%9F%A5%E7%BB%86%E8%83%9E%E5%88%86%E7%BE%A4%E6%83%85%E5%86%B5" id="toc-不进行整合时检查细胞分群情况" class="nav-link" data-scroll-target="#%E4%B8%8D%E8%BF%9B%E8%A1%8C%E6%95%B4%E5%90%88%E6%97%B6%E6%A3%80%E6%9F%A5%E7%BB%86%E8%83%9E%E5%88%86%E7%BE%A4%E6%83%85%E5%86%B5">不进行整合时检查细胞分群情况：</a></li>
+  <li><a href="#%E6%95%B4%E5%90%88" id="toc-整合" class="nav-link" data-scroll-target="#%E6%95%B4%E5%90%88">整合</a></li>
+  <li><a href="#%E6%95%B4%E5%90%88%E5%90%8E%E6%A3%80%E9%AA%8C%E7%BB%86%E8%83%9E%E5%88%86%E7%BE%A4%E6%83%85%E5%86%B5" id="toc-整合后检验细胞分群情况" class="nav-link" data-scroll-target="#%E6%95%B4%E5%90%88%E5%90%8E%E6%A3%80%E9%AA%8C%E7%BB%86%E8%83%9E%E5%88%86%E7%BE%A4%E6%83%85%E5%86%B5"><strong>整合后检验细胞分群情况</strong></a></li>
+  <li><a href="#%E8%81%9A%E7%B1%BB" id="toc-聚类" class="nav-link" data-scroll-target="#%E8%81%9A%E7%B1%BB">聚类</a></li>
+  <li><a href="#%E7%BB%86%E8%83%9E%E5%88%86%E7%BE%A4%E8%B4%A8%E9%87%8F%E8%AF%84%E4%BC%B0" id="toc-细胞分群质量评估" class="nav-link" data-scroll-target="#%E7%BB%86%E8%83%9E%E5%88%86%E7%BE%A4%E8%B4%A8%E9%87%8F%E8%AF%84%E4%BC%B0"><strong>细胞分群质量评估</strong></a></li>
+  <li><a href="#%E4%BA%9A%E7%BE%A4%E7%BB%86%E8%83%9E%E6%B3%A8%E9%87%8A" id="toc-亚群细胞注释" class="nav-link" data-scroll-target="#%E4%BA%9A%E7%BE%A4%E7%BB%86%E8%83%9E%E6%B3%A8%E9%87%8A">亚群细胞注释</a></li>
+  </ul>
+</li>
+  <li><a href="#%E6%95%B4%E5%90%88%E4%B8%89%E4%B8%AA%E6%95%B0%E6%8D%AE%E9%9B%86%E7%9A%84%E9%AB%93%E7%B3%BB%E7%BB%86%E8%83%9E" id="toc-整合三个数据集的髓系细胞" class="nav-link" data-scroll-target="#%E6%95%B4%E5%90%88%E4%B8%89%E4%B8%AA%E6%95%B0%E6%8D%AE%E9%9B%86%E7%9A%84%E9%AB%93%E7%B3%BB%E7%BB%86%E8%83%9E"><span class="header-section-number">31.3</span> 整合三个数据集的髓系细胞</a></li>
+  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-multiple_single_cell_datasets_2" class="quarto-section-identifier"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（下）</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header><blockquote class="blockquote">
+<p>参考：<a href="https://mp.weixin.qq.com/s/51PtUi7ZKp1nbrFGElU74A">单细胞多数据集整合示例</a></p>
+</blockquote>
+<p>上一节（ <a href="integrated_analysis_multiple_single_cell_datasets_1.html"><span>Chapter&nbsp;30</span></a> ）中我们完成了对GSE150430的分群注释，并提取了髓系细胞亚群，本节对髓系细胞进一步分群。</p>
+<section id="加载包" class="level2" data-number="31.1"><h2 data-number="31.1" class="anchored" data-anchor-id="加载包">
+<span class="header-section-number">31.1</span> 加载包</h2>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-1_4581e84b8b325f59266a2255291ace62">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/">cowplot</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lazappi/clustree">clustree</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/samuel-marsh/scCustomize">scCustomize</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="髓系细胞进一步归一化整合降维分群" class="level2" data-number="31.2"><h2 data-number="31.2" class="anchored" data-anchor-id="髓系细胞进一步归一化整合降维分群">
+<span class="header-section-number">31.2</span> 髓系细胞进一步归一化、整合、降维、分群</h2>
+<section id="sctransformpca" class="level3"><h3 class="anchored" data-anchor-id="sctransformpca">SCTransform、PCA</h3>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-2_b1d7ae7375b0b952517fc1a170bc3b42">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">myeloid_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/sc_supplementary/GSE150430_myeloid_seurat.RDS"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># SCTranform</span></span>
+<span><span class="va">myeloid_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/SCTransform.html">SCTransform</a></span><span class="op">(</span><span class="va">myeloid_seurat</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="va">myeloid_seurat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>An object of class Seurat 
+39690 features across 3997 samples within 2 assays 
+Active assay: SCT (14970 features, 3000 variable features)
+ 3 layers present: counts, data, scale.data
+ 1 other assay present: RNA</code></pre>
+</div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Check which assays are stored in objects</span></span>
+<span><span class="va">myeloid_seurat</span><span class="op">@</span><span class="va">assays</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$RNA
+Assay (v5) data with 24720 features for 3997 cells
+First 10 features:
+ RP11-34P13.7, RP11-34P13.8, AL627309.1, AP006222.2, RP4-669L17.10,
+RP4-669L17.2, RP5-857K21.4, RP11-206L10.3, RP11-206L10.5, RP11-206L10.2 
+Layers:
+ counts.N01, counts.P01, counts.P02, counts.P03, counts.P04, counts.P05,
+counts.P06, counts.P07, counts.P08, counts.P09, counts.P10, counts.P11,
+counts.P12, counts.P13, counts.P14, counts.P15 
+
+$SCT
+SCTAssay data with 14970 features for 3997 cells, and 16 SCTModel(s) 
+Top 10 variable features:
+ IL1RN, CLEC10A, PKIB, HBEGF, MSR1, IER3, LGMN, CA2, CFD, GLUL </code></pre>
+</div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 查看目前默认的assay</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/DefaultAssay.html">DefaultAssay</a></span><span class="op">(</span><span class="va">myeloid_seurat</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "SCT"</code></pre>
+</div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 查看默认assay的layers</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Layers.html">Layers</a></span><span class="op">(</span><span class="va">myeloid_seurat</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "counts"     "data"       "scale.data"</code></pre>
+</div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 执行PCA</span></span>
+<span><span class="va">myeloid_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html">RunPCA</a></span><span class="op">(</span><span class="va">myeloid_seurat</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="不进行整合时检查细胞分群情况" class="level3"><h3 class="anchored" data-anchor-id="不进行整合时检查细胞分群情况">不进行整合时检查细胞分群情况：</h3>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-3_dccaa33aa45622477ccf818b3325c4cf">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 查看降维信息</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">myeloid_seurat</span><span class="op">@</span><span class="va">reductions</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "pca"</code></pre>
+</div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Run UMAP</span></span>
+<span><span class="va">myeloid_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html">RunUMAP</a></span><span class="op">(</span><span class="va">myeloid_seurat</span>, </span>
+<span>                          dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>, </span>
+<span>                          reduction <span class="op">=</span> <span class="st">"pca"</span>,</span>
+<span>                          reduction.name <span class="op">=</span> <span class="st">"umap.unintegrated"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 分群</span></span>
+<span><span class="co"># Determine the K-nearest neighbor graph</span></span>
+<span><span class="va">myeloid_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors</a></span><span class="op">(</span><span class="va">myeloid_seurat</span>, </span>
+<span>                                dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>, </span>
+<span>                                reduction <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span></span>
+<span><span class="va">myeloid_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html">FindClusters</a></span><span class="op">(</span><span class="va">myeloid_seurat</span>, </span>
+<span>                               cluster.name <span class="op">=</span> <span class="st">"unintegrated_clusters"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 3997
+Number of edges: 211202
+
+Running Louvain algorithm...
+Maximum modularity in 10 random starts: 0.7202
+Number of communities: 8
+Elapsed time: 0 seconds</code></pre>
+</div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Plot UMAP</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">myeloid_seurat</span>, </span>
+<span>              reduction <span class="op">=</span> <span class="st">"umap.unintegrated"</span>,</span>
+<span>              group.by <span class="op">=</span> <span class="st">"samples"</span><span class="op">)</span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">myeloid_seurat</span>, </span>
+<span>              reduction <span class="op">=</span> <span class="st">"umap.unintegrated"</span>,</span>
+<span>              split.by <span class="op">=</span> <span class="st">"samples"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, </span>
+<span>          ncol <span class="op">=</span> <span class="fl">1</span>, labels <span class="op">=</span> <span class="st">"AUTO"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="integrated_analysis_multiple_single_cell_datasets_2_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+</section><section id="整合" class="level3"><h3 class="anchored" data-anchor-id="整合">整合</h3>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-4_806cd80dd73779e1359589a4163bdd7c">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 整合</span></span>
+<span><span class="va">myeloid_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/IntegrateLayers.html">IntegrateLayers</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">myeloid_seurat</span>,</span>
+<span>                                      method <span class="op">=</span> <span class="va">HarmonyIntegration</span>,</span>
+<span>                                      verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># 整合后合并RNA layer</span></span>
+<span><span class="va">myeloid_integrated</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/SplitLayers.html">JoinLayers</a></span><span class="op">(</span><span class="va">myeloid_integrated</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 查看整合后的降维信息</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">myeloid_integrated</span><span class="op">@</span><span class="va">reductions</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "pca"               "umap.unintegrated" "harmony"          </code></pre>
+</div>
+</div>
+</section><section id="整合后检验细胞分群情况" class="level3"><h3 class="anchored" data-anchor-id="整合后检验细胞分群情况"><strong>整合后检验细胞分群情况</strong></h3>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-5_7ce40d54c7272ca4eba430b2c46a92cc">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123456</span><span class="op">)</span></span>
+<span><span class="co"># Run UMAP</span></span>
+<span><span class="va">myeloid_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html">RunUMAP</a></span><span class="op">(</span><span class="va">myeloid_integrated</span>, </span>
+<span>                              dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>,</span>
+<span>                              reduction <span class="op">=</span> <span class="st">"harmony"</span>, <span class="co"># 更改降维来源为整合后的"harmony"</span></span>
+<span>                              reduction.name <span class="op">=</span> <span class="st">"umap.integrated"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">myeloid_integrated</span><span class="op">@</span><span class="va">reductions</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "pca"               "umap.unintegrated" "harmony"          
+[4] "umap.integrated"  </code></pre>
+</div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 分群</span></span>
+<span><span class="va">myeloid_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors</a></span><span class="op">(</span><span class="va">myeloid_integrated</span>, </span>
+<span>                                    dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">40</span>, </span>
+<span>                                    reduction <span class="op">=</span> <span class="st">"harmony"</span><span class="op">)</span> <span class="co">#更改降维来源为"harmony"</span></span>
+<span><span class="va">myeloid_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html">FindClusters</a></span><span class="op">(</span><span class="va">myeloid_integrated</span>, </span>
+<span>                                   cluster.name <span class="op">=</span> <span class="st">"integrated_clusters"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck
+
+Number of nodes: 3997
+Number of edges: 290917
+
+Running Louvain algorithm...
+Maximum modularity in 10 random starts: 0.7795
+Number of communities: 10
+Elapsed time: 0 seconds</code></pre>
+</div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">myeloid_integrated</span><span class="op">@</span><span class="va">meta.data</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "orig.ident"            "nCount_RNA"            "nFeature_RNA"         
+ [4] "samples"               "log10GenesPerUMI"      "mitoRatio"            
+ [7] "cells"                 "S.Score"               "G2M.Score"            
+[10] "Phase"                 "mitoFr"                "groups"               
+[13] "old_clusters"          "nCount_SCT"            "nFeature_SCT"         
+[16] "unintegrated_clusters" "seurat_clusters"       "integrated_clusters"  </code></pre>
+</div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Plot UMAP                             </span></span>
+<span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">myeloid_integrated</span>, </span>
+<span>              reduction <span class="op">=</span> <span class="st">"umap.integrated"</span>, </span>
+<span>              group.by <span class="op">=</span> <span class="st">"samples"</span><span class="op">)</span></span>
+<span><span class="va">p4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">myeloid_integrated</span>, </span>
+<span>              reduction <span class="op">=</span> <span class="st">"umap.integrated"</span>, </span>
+<span>              split.by <span class="op">=</span> <span class="st">"samples"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p3</span>, <span class="va">p2</span>, <span class="va">p4</span>, </span>
+<span>          ncol <span class="op">=</span> <span class="fl">1</span>, </span>
+<span>          labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Before Harmony"</span>, <span class="st">"After Harmony"</span>, </span>
+<span>                     <span class="st">"Before Harmony"</span>, <span class="st">"After Harmony"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="integrated_analysis_multiple_single_cell_datasets_2_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+</section><section id="聚类" class="level3"><h3 class="anchored" data-anchor-id="聚类">聚类</h3>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-6_32fcc4232aee3163940122418ae5137f">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Determine the clusters for various resolutions                                </span></span>
+<span><span class="va">myeloid_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html">FindClusters</a></span><span class="op">(</span><span class="va">myeloid_integrated</span>,</span>
+<span>                                   resolution <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, </span>
+<span>                                                  <span class="fl">0.4</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                                   verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
+<span><span class="co"># Explore resolutions</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">myeloid_integrated</span><span class="op">@</span><span class="va">meta.data</span>, <span class="fl">5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                       orig.ident nCount_RNA nFeature_RNA samples
+N01_AGCGTCGAGTGAAGAG.1        N01   2691.228         2086     N01
+N01_GCAATCATCAGCCTAA.1        N01   2139.759         1566     N01
+N01_CGTGTAATCCCACTTG.1        N01   2251.166         1803     N01
+N01_AAACGGGCATTTCAGG.1        N01   1909.545         1226     N01
+N01_AAAGATGCAATGTAAG.1        N01   1796.109         1360     N01
+                       log10GenesPerUMI   mitoRatio                  cells
+N01_AGCGTCGAGTGAAGAG.1        0.9677441 0.010726702 N01_AGCGTCGAGTGAAGAG.1
+N01_GCAATCATCAGCCTAA.1        0.9592918 0.018235699 N01_GCAATCATCAGCCTAA.1
+N01_CGTGTAATCCCACTTG.1        0.9712410 0.017482940 N01_CGTGTAATCCCACTTG.1
+N01_AAACGGGCATTTCAGG.1        0.9413461 0.011039803 N01_AAACGGGCATTTCAGG.1
+N01_AAAGATGCAATGTAAG.1        0.9628822 0.006095955 N01_AAAGATGCAATGTAAG.1
+                            S.Score   G2M.Score Phase mitoFr groups
+N01_AGCGTCGAGTGAAGAG.1 -0.093324147 -0.04497299    G1 Medium Normal
+N01_GCAATCATCAGCCTAA.1  0.008569604 -0.03484456     S   High Normal
+N01_CGTGTAATCCCACTTG.1 -0.013729028 -0.05064395    G1   High Normal
+N01_AAACGGGCATTTCAGG.1 -0.005136538 -0.03723796    G1 Medium Normal
+N01_AAAGATGCAATGTAAG.1 -0.039476505 -0.04625311    G1    Low Normal
+                               old_clusters nCount_SCT nFeature_SCT
+N01_AGCGTCGAGTGAAGAG.1          Macrophages       2455         1929
+N01_GCAATCATCAGCCTAA.1          Macrophages       2252         1505
+N01_CGTGTAATCCCACTTG.1          Macrophages       2359         1712
+N01_AAACGGGCATTTCAGG.1          Macrophages       2044         1197
+N01_AAAGATGCAATGTAAG.1 Myeloid (unspecific)       2271         1322
+                       unintegrated_clusters seurat_clusters
+N01_AGCGTCGAGTGAAGAG.1                     0               5
+N01_GCAATCATCAGCCTAA.1                     0               6
+N01_CGTGTAATCCCACTTG.1                     0               5
+N01_AAACGGGCATTTCAGG.1                     6               7
+N01_AAAGATGCAATGTAAG.1                     5              10
+                       integrated_clusters SCT_snn_res.0.01 SCT_snn_res.0.05
+N01_AGCGTCGAGTGAAGAG.1                   3                0                0
+N01_GCAATCATCAGCCTAA.1                   3                0                0
+N01_CGTGTAATCCCACTTG.1                   3                0                0
+N01_AAACGGGCATTTCAGG.1                   1                0                0
+N01_AAAGATGCAATGTAAG.1                   7                0                1
+                       SCT_snn_res.0.1 SCT_snn_res.0.2 SCT_snn_res.0.3
+N01_AGCGTCGAGTGAAGAG.1               0               0               3
+N01_GCAATCATCAGCCTAA.1               0               0               3
+N01_CGTGTAATCCCACTTG.1               0               0               3
+N01_AAACGGGCATTTCAGG.1               1               1               1
+N01_AAAGATGCAATGTAAG.1               3               4               5
+                       SCT_snn_res.0.4 SCT_snn_res.0.5 SCT_snn_res.0.8
+N01_AGCGTCGAGTGAAGAG.1               3               3               3
+N01_GCAATCATCAGCCTAA.1               3               3               3
+N01_CGTGTAATCCCACTTG.1               3               3               3
+N01_AAACGGGCATTTCAGG.1               1               1               1
+N01_AAAGATGCAATGTAAG.1               6               7               7
+                       SCT_snn_res.1
+N01_AGCGTCGAGTGAAGAG.1             5
+N01_GCAATCATCAGCCTAA.1             6
+N01_CGTGTAATCCCACTTG.1             5
+N01_AAACGGGCATTTCAGG.1             7
+N01_AAAGATGCAATGTAAG.1            10</code></pre>
+</div>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 查看各个分辨率下的细胞分群情况</span></span>
+<span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">myeloid_integrated</span><span class="op">@</span><span class="va">meta.data</span>, </span>
+<span>       <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span>match <span class="op">=</span> <span class="st">"SCT_snn_res."</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">levels</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$SCT_snn_res.0.01
+[1] "0"
+
+$SCT_snn_res.0.05
+[1] "0" "1"
+
+$SCT_snn_res.0.1
+[1] "0" "1" "2" "3"
+
+$SCT_snn_res.0.2
+[1] "0" "1" "2" "3" "4"
+
+$SCT_snn_res.0.3
+[1] "0" "1" "2" "3" "4" "5"
+
+$SCT_snn_res.0.4
+[1] "0" "1" "2" "3" "4" "5" "6" "7"
+
+$SCT_snn_res.0.5
+[1] "0" "1" "2" "3" "4" "5" "6" "7" "8"
+
+$SCT_snn_res.0.8
+ [1] "0" "1" "2" "3" "4" "5" "6" "7" "8" "9"
+
+$SCT_snn_res.1
+ [1] "0"  "1"  "2"  "3"  "4"  "5"  "6"  "7"  "8"  "9"  "10" "11" "12"</code></pre>
+</div>
+</div>
+<p>绘制聚类树展示不同分辨率下的细胞分群情况及相互关系</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-7_c1d731cddcbda95d5dadc3cb50447288">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://lazappi.github.io/clustree/reference/clustree.html">clustree</a></span><span class="op">(</span><span class="va">myeloid_integrated</span><span class="op">@</span><span class="va">meta.data</span>, </span>
+<span>                 prefix <span class="op">=</span> <span class="st">"SCT_snn_res."</span><span class="op">)</span> <span class="co"># 指定包含聚类信息的列</span></span>
+<span><span class="va">tree</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="integrated_analysis_multiple_single_cell_datasets_2_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>这里，选取分辨为0.8</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-8_6c799349b9c9a56e842974525fef5606">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html">Idents</a></span><span class="op">(</span><span class="va">myeloid_integrated</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"SCT_snn_res.0.8"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>聚类可视化</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-9_cfb3a1169e649f84bef18165c2ea06dd">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Plot the UMAP</span></span>
+<span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">myeloid_integrated</span>,</span>
+<span>        reduction <span class="op">=</span> <span class="st">"umap.integrated"</span>,</span>
+<span>        label <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="integrated_analysis_multiple_single_cell_datasets_2_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="480"></p>
+</div>
+</div>
+</section><section id="细胞分群质量评估" class="level3"><h3 class="anchored" data-anchor-id="细胞分群质量评估"><strong>细胞分群质量评估</strong></h3>
+<p>分析样本类型是否影响细胞分群</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-10_4fbc7dc56b04a7506d232e7167601447">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 先简单查看不同cluster的细胞数</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">myeloid_integrated</span><span class="op">@</span><span class="va">active.ident</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  0   1   2   3   4   5   6   7   8   9 
+891 737 642 419 406 280 229 191 127  75 </code></pre>
+</div>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 查看不同样本类型中的细胞分群情况</span></span>
+<span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">myeloid_integrated</span>, </span>
+<span>        reduction <span class="op">=</span> <span class="st">"umap.integrated"</span>,</span>
+<span>        label <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>        split.by <span class="op">=</span> <span class="st">"groups"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">NoLegend</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="integrated_analysis_multiple_single_cell_datasets_2_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>分析细胞周期是否影响细胞分群</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-11_c134eb17875f826bff3f62bb07222e26">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Explore whether clusters segregate by cell cycle phase</span></span>
+<span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">myeloid_integrated</span>,</span>
+<span>        reduction <span class="op">=</span> <span class="st">"umap.integrated"</span>,</span>
+<span>        label <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>        split.by <span class="op">=</span> <span class="st">"Phase"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">NoLegend</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="integrated_analysis_multiple_single_cell_datasets_2_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>分析其他非期望变异来源是否会影响细胞分群</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-12_7d8b662dd6d8c588309e404bc7a0a207">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Determine metrics to plot present in seurat_clustered@meta.data</span></span>
+<span><span class="va">metrics</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"nCount_RNA"</span>, <span class="st">"nFeature_RNA"</span>, <span class="st">"S.Score"</span>, <span class="st">"G2M.Score"</span>, <span class="st">"mitoRatio"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">myeloid_integrated</span>, </span>
+<span>            reduction <span class="op">=</span> <span class="st">"umap.integrated"</span>, </span>
+<span>            features <span class="op">=</span> <span class="va">metrics</span>,</span>
+<span>            pt.size <span class="op">=</span> <span class="fl">0.4</span>, </span>
+<span>            order <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
+<span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="integrated_analysis_multiple_single_cell_datasets_2_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<p>保存</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-13_e60ed15a584ef82bccbfa6bce545f604">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">myeloid_integrated</span>, </span>
+<span>        file <span class="op">=</span> <span class="st">"output/sc_supplementary/GSE150430_myeloid_clustered.RDS"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="亚群细胞注释" class="level3"><h3 class="anchored" data-anchor-id="亚群细胞注释">亚群细胞注释</h3>
+<p>髓系亚群进一步细分的marker如下：</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-14_1cb96abf8aa8adff9ac964576d42f0e5">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">genes_to_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span></span>
+<span>  Mac <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CD14"</span>, <span class="st">"CD163"</span>, <span class="st">"APOE"</span>, <span class="st">"C1QA"</span>, <span class="st">"C1QB"</span>, <span class="st">"C1QC"</span><span class="op">)</span>,</span>
+<span>  pDC <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"LILRA4"</span>, <span class="st">"IL3RA"</span>, <span class="st">"TCF4"</span>, <span class="st">"TCL1A"</span>, <span class="st">"CLEC4C"</span><span class="op">)</span>,</span>
+<span>  DC1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CLEC9A"</span>, <span class="st">"XCR1"</span>, <span class="st">"BATF3"</span><span class="op">)</span>,</span>
+<span>  DC2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CD1A"</span>, <span class="st">"FCER1A"</span>, <span class="st">"CD1C"</span>, <span class="st">"CD1E"</span>, <span class="st">"CLEC10A"</span><span class="op">)</span>,</span>
+<span>  DC3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CCR7"</span>, <span class="st">"LAMP3"</span>, <span class="st">"FSCN1"</span>, <span class="st">"CCL22"</span>, <span class="st">"BIRC3"</span><span class="op">)</span>,</span>
+<span>  Mono <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"VCVN"</span>, <span class="st">"FCN1"</span>, <span class="st">"S100A12"</span>, <span class="st">"S100A8"</span>, <span class="st">"S100A9"</span>, <span class="st">"FCGR3A"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>查看marker基因的表达：</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-15_34ed47817995e379859c03a42fe76a56">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DotPlot.html">DotPlot</a></span><span class="op">(</span><span class="va">myeloid_integrated</span>,</span>
+<span>        features <span class="op">=</span> <span class="va">genes_to_check</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="integrated_analysis_multiple_single_cell_datasets_2_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<p>手动注释：</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-16_0d70840d5034a0e2948ee0b05cfb7632">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">myeloid_clustered</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html">RenameIdents</a></span><span class="op">(</span></span>
+<span>  <span class="va">myeloid_integrated</span>,</span>
+<span>  <span class="st">"0"</span> <span class="op">=</span> <span class="st">"Macrophages"</span>,</span>
+<span>  <span class="st">"1"</span> <span class="op">=</span> <span class="st">"DC2"</span>,</span>
+<span>  <span class="st">"2"</span> <span class="op">=</span> <span class="st">"Unknown"</span>,</span>
+<span>  <span class="st">"3"</span> <span class="op">=</span> <span class="st">"Macrophages"</span>,</span>
+<span>  <span class="st">"4"</span> <span class="op">=</span> <span class="st">"Monocyte"</span>,</span>
+<span>  <span class="st">"5"</span> <span class="op">=</span> <span class="st">"Macrophages"</span>,</span>
+<span>  <span class="st">"6"</span> <span class="op">=</span> <span class="st">"Unknown"</span>,</span>
+<span>  <span class="st">"7"</span> <span class="op">=</span> <span class="st">"DC1"</span>,</span>
+<span>  <span class="st">"8"</span> <span class="op">=</span> <span class="st">"DC2"</span>,</span>
+<span>  <span class="st">"9"</span> <span class="op">=</span> <span class="st">"Macrophages"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html">Idents</a></span><span class="op">(</span><span class="va">myeloid_clustered</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Macrophages         DC2     Unknown    Monocyte         DC1 
+       1665         864         871         406         191 </code></pre>
+</div>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Plot the UMAP</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span></span>
+<span>  <span class="va">myeloid_clustered</span>,</span>
+<span>  reduction <span class="op">=</span> <span class="st">"umap.integrated"</span>,</span>
+<span>  label <span class="op">=</span> <span class="cn">T</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">p1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="integrated_analysis_multiple_single_cell_datasets_2_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="480"></p>
+</div>
+</div>
+<p>在注释好的数据中再次检查marker基因的表达情况：</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-17_47ae1ce3e75050be30f28d9f377f9ec4">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DotPlot.html">DotPlot</a></span><span class="op">(</span><span class="va">myeloid_clustered</span>, </span>
+<span>        features <span class="op">=</span> <span class="va">genes_to_check</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="integrated_analysis_multiple_single_cell_datasets_2_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="960"></p>
+</div>
+</div>
+<p>这里我们参考 <a href="../seurat/data_visualization_methods_in_seurat.html#sec-Further_modifications_to_featureplot"><span>Section&nbsp;9.1.3.1</span></a> 中的方法，可视化巨噬细胞marker基因的共表达情况：</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-18_99b240e2206ffe10648df78923d14b46">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://samuel-marsh.github.io/scCustomize/reference/Plot_Density_Joint_Only.html">Plot_Density_Joint_Only</a></span><span class="op">(</span></span>
+<span>  <span class="va">myeloid_clustered</span>,</span>
+<span>  features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"CD14"</span>, <span class="st">"CD163"</span>, <span class="st">"APOE"</span>,</span>
+<span>    <span class="st">"C1QA"</span>, <span class="st">"C1QB"</span>, <span class="st">"C1QC"</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  reduction <span class="op">=</span> <span class="st">"umap.integrated"</span>,</span>
+<span>  custom_palette <span class="op">=</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/CustomPalette.html">BlueAndRed</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">p2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure"><p><img src="integrated_analysis_multiple_single_cell_datasets_2_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">髓系细胞进一步分群及巨噬细胞marker基因共表达情况</figcaption></figure>
+</div>
+</div>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span></span>
+<span>  <span class="va">p1</span>, <span class="va">p2</span>,</span>
+<span>  labels <span class="op">=</span> <span class="st">"AUTO"</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure"><p><img src="integrated_analysis_multiple_single_cell_datasets_2_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="960"></p>
+<figcaption class="figure-caption">髓系细胞进一步分群及巨噬细胞marker基因共表达情况</figcaption></figure>
+</div>
+</div>
+</div>
+<p>保存</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-19_3c94e0a063aae6fe3ef8c5208cb661c4">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">myeloid_clustered</span>, </span>
+<span>        file <span class="op">=</span> <span class="st">"output/sc_supplementary/GSE150430_myeloid_clustered.RDS"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr></section></section><section id="整合三个数据集的髓系细胞" class="level2" data-number="31.3"><h2 data-number="31.3" class="anchored" data-anchor-id="整合三个数据集的髓系细胞">
+<span class="header-section-number">31.3</span> 整合三个数据集的髓系细胞</h2>
+<p>后面分别对<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?&amp;acc=GSE150825"><strong>GSE150825</strong></a><strong>, <a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?&amp;acc=GSE162025">GSE162025</a></strong>两个数据集进行同样的处理，即先大致分群，然后提取髓系细胞进一步分群，保存文件名为“GSE***_myeloid_clustered.RDS”的文件。最后读取三个数据集，整合重新降维分群，再继续分析。这里不再实际分析。</p>
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-20_ec7b6c34a7ecf714532597aad4aae3ed">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">### 不运行 ###</span></span>
+<span><span class="co"># 读取三个数据集的髓系细胞</span></span>
+<span><span class="va">myeloid_clustered_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/sc_supplementary/GSE150430_myeloid_clustered.RDS"</span><span class="op">)</span></span>
+<span><span class="va">myeloid_clustered_2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/sc_supplementary/GSE150825_myeloid_clustered.RDS"</span><span class="op">)</span></span>
+<span><span class="va">myeloid_clustered_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/sc_supplementary/GSE162025_myeloid_clustered.RDS"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 添加数据集标识便于识别</span></span>
+<span><span class="va">myeloid_clustered_1</span><span class="op">$</span><span class="va">GSE_num</span> <span class="op">=</span> <span class="st">"GSE150430"</span></span>
+<span><span class="va">myeloid_clustered_2</span><span class="op">$</span><span class="va">GSE_num</span> <span class="op">=</span> <span class="st">"GSE150825"</span></span>
+<span><span class="va">myeloid_clustered_3</span><span class="op">$</span><span class="va">GSE_num</span> <span class="op">=</span> <span class="st">"GSE162025"</span></span>
+<span></span>
+<span><span class="co"># 合并三个数据集</span></span>
+<span><span class="va">myeloid_merged</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span></span>
+<span>  <span class="va">GSE150430</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">GSE150825</span>, <span class="va">GSE162025</span><span class="op">)</span>,</span>
+<span>  add.cell.ids <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'GSE150430'</span>,<span class="st">'GSE150825'</span>,<span class="st">'GSE162025'</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">myeloid_merged</span><span class="op">$</span><span class="va">GSE_num</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">myeloid_merged</span><span class="op">@</span><span class="va">meta.data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># 重新构建Seurat对象以便重新归一化、整合、降维等</span></span>
+<span><span class="va">sce</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/CreateSeuratObject.html">CreateSeuratObject</a></span><span class="op">(</span></span>
+<span>  <span class="va">myeloid_merged</span><span class="op">@</span><span class="va">assays</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  meta.data <span class="op">=</span> <span class="va">sce</span><span class="op">@</span><span class="va">meta.data</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="va">sce</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">sce</span><span class="op">$</span><span class="va">groups</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Session Info
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="integrated_analysis_multiple_single_cell_datasets_2_cache/html/unnamed-chunk-21_5536021d7c90e4e6b45765ab4833daf7">
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.3.2 (2023-10-31)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.2.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Asia/Shanghai
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] scCustomize_2.0.1  clustree_0.5.1     ggraph_2.1.0       dplyr_1.1.4       
+[5] cowplot_1.1.2      ggplot2_3.4.4      Seurat_5.0.1       SeuratObject_5.0.1
+[9] sp_2.1-2          
+
+loaded via a namespace (and not attached):
+  [1] RcppAnnoy_0.0.21            splines_4.3.2              
+  [3] later_1.3.2                 bitops_1.0-7               
+  [5] tibble_3.2.1                polyclip_1.10-6            
+  [7] janitor_2.2.0               fastDummies_1.7.3          
+  [9] lifecycle_1.0.4             globals_0.16.2             
+ [11] lattice_0.22-5              MASS_7.3-60.0.1            
+ [13] backports_1.4.1             magrittr_2.0.3             
+ [15] plotly_4.10.4               rmarkdown_2.25             
+ [17] yaml_2.3.8                  httpuv_1.6.13              
+ [19] glmGamPoi_1.14.0            sctransform_0.4.1          
+ [21] spam_2.10-0                 spatstat.sparse_3.0-3      
+ [23] reticulate_1.34.0           pbapply_1.7-2              
+ [25] RColorBrewer_1.1-3          lubridate_1.9.3            
+ [27] abind_1.4-5                 zlibbioc_1.48.0            
+ [29] Rtsne_0.17                  GenomicRanges_1.54.1       
+ [31] purrr_1.0.2                 BiocGenerics_0.48.1        
+ [33] RCurl_1.98-1.14             pracma_2.4.4               
+ [35] tweenr_2.0.2                circlize_0.4.16            
+ [37] GenomeInfoDbData_1.2.11     IRanges_2.36.0             
+ [39] S4Vectors_0.40.2            ggrepel_0.9.5              
+ [41] irlba_2.3.5.1               listenv_0.9.0              
+ [43] spatstat.utils_3.0-4        goftest_1.2-3              
+ [45] RSpectra_0.16-1             spatstat.random_3.2-2      
+ [47] fitdistrplus_1.1-11         parallelly_1.36.0          
+ [49] DelayedMatrixStats_1.24.0   DelayedArray_0.28.0        
+ [51] leiden_0.4.3.1              codetools_0.2-19           
+ [53] ggforce_0.4.1               tidyselect_1.2.0           
+ [55] shape_1.4.6                 farver_2.1.1               
+ [57] viridis_0.6.4               matrixStats_1.2.0          
+ [59] stats4_4.3.2                spatstat.explore_3.2-5     
+ [61] jsonlite_1.8.8              ks_1.14.2                  
+ [63] ellipsis_0.3.2              tidygraph_1.3.0            
+ [65] progressr_0.14.0            ggridges_0.5.5             
+ [67] survival_3.5-7              tools_4.3.2                
+ [69] ica_1.0-3                   Rcpp_1.0.12                
+ [71] glue_1.7.0                  SparseArray_1.2.3          
+ [73] gridExtra_2.3               xfun_0.41                  
+ [75] MatrixGenerics_1.14.0       GenomeInfoDb_1.38.5        
+ [77] withr_3.0.0                 fastmap_1.1.1              
+ [79] fansi_1.0.6                 digest_0.6.34              
+ [81] timechange_0.2.0            R6_2.5.1                   
+ [83] mime_0.12                   ggprism_1.0.4              
+ [85] colorspace_2.1-0            scattermore_1.2            
+ [87] tensor_1.5                  spatstat.data_3.0-4        
+ [89] RhpcBLASctl_0.23-42         Nebulosa_1.12.0            
+ [91] utf8_1.2.4                  tidyr_1.3.0                
+ [93] generics_0.1.3              data.table_1.14.10         
+ [95] S4Arrays_1.2.0              graphlayouts_1.0.2         
+ [97] httr_1.4.7                  htmlwidgets_1.6.4          
+ [99] uwot_0.1.16                 pkgconfig_2.0.3            
+[101] gtable_0.3.4                lmtest_0.9-40              
+[103] SingleCellExperiment_1.24.0 XVector_0.42.0             
+[105] htmltools_0.5.7             dotCall64_1.1-1            
+[107] scales_1.3.0                Biobase_2.62.0             
+[109] png_0.1-8                   harmony_1.2.0              
+[111] snakecase_0.11.1            knitr_1.45                 
+[113] rstudioapi_0.15.0           reshape2_1.4.4             
+[115] checkmate_2.3.1             nlme_3.1-164               
+[117] zoo_1.8-12                  GlobalOptions_0.1.2        
+[119] stringr_1.5.1               KernSmooth_2.23-22         
+[121] parallel_4.3.2              miniUI_0.1.1.1             
+[123] vipor_0.4.7                 ggrastr_1.0.2              
+[125] pillar_1.9.0                grid_4.3.2                 
+[127] vctrs_0.6.5                 RANN_2.6.1                 
+[129] promises_1.2.1              xtable_1.8-4               
+[131] cluster_2.1.6               beeswarm_0.4.0             
+[133] paletteer_1.5.0             evaluate_0.23              
+[135] mvtnorm_1.2-4               cli_3.6.2                  
+[137] compiler_4.3.2              crayon_1.5.2               
+[139] rlang_1.1.3                 future.apply_1.11.1        
+[141] labeling_0.4.3              mclust_6.0.1               
+[143] rematch2_2.1.2              plyr_1.8.9                 
+[145] forcats_1.0.0               ggbeeswarm_0.7.2           
+[147] stringi_1.8.3               viridisLite_0.4.2          
+[149] deldir_2.0-2                munsell_0.5.0              
+[151] lazyeval_0.2.2              spatstat.geom_3.2-7        
+[153] Matrix_1.6-5                RcppHNSW_0.5.0             
+[155] patchwork_1.2.0             sparseMatrixStats_1.14.0   
+[157] future_1.33.1               shiny_1.8.0                
+[159] SummarizedExperiment_1.32.0 ROCR_1.0-11                
+[161] igraph_1.6.0               </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- -->
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  let localAlternateSentinel = 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+      }
+    }
+});
+</script><script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_1.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（上）</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../single_cell/sc_supplementary/DecontX.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">预测和去除单细胞转录组的环境游离RNA污染</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb49" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 多个单细胞数据集整合分析（下） {#sec-multiple_single_cell_datasets_2}</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 参考：</span><span class="co">[</span><span class="ot">单细胞多数据集整合示例</span><span class="co">](https://mp.weixin.qq.com/s/51PtUi7ZKp1nbrFGElU74A)</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>上一节（ @sec-multiple_single_cell_datasets_1 ）中我们完成了对GSE150430的分群注释，并提取了髓系细胞亚群，本节对髓系细胞进一步分群。</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="fu">## 加载包</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clustree)</span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scCustomize)</span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a><span class="fu">## 髓系细胞进一步归一化、整合、降维、分群</span></span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a><span class="fu">### SCTransform、PCA</span></span>
+<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-26"><a href="#cb49-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-27"><a href="#cb49-27" aria-hidden="true" tabindex="-1"></a>myeloid_seurat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/sc_supplementary/GSE150430_myeloid_seurat.RDS"</span>)</span>
+<span id="cb49-28"><a href="#cb49-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-29"><a href="#cb49-29" aria-hidden="true" tabindex="-1"></a><span class="co"># SCTranform</span></span>
+<span id="cb49-30"><a href="#cb49-30" aria-hidden="true" tabindex="-1"></a>myeloid_seurat <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(myeloid_seurat, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb49-31"><a href="#cb49-31" aria-hidden="true" tabindex="-1"></a>myeloid_seurat</span>
+<span id="cb49-32"><a href="#cb49-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-33"><a href="#cb49-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Check which assays are stored in objects</span></span>
+<span id="cb49-34"><a href="#cb49-34" aria-hidden="true" tabindex="-1"></a>myeloid_seurat<span class="sc">@</span>assays</span>
+<span id="cb49-35"><a href="#cb49-35" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看目前默认的assay</span></span>
+<span id="cb49-36"><a href="#cb49-36" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(myeloid_seurat)</span>
+<span id="cb49-37"><a href="#cb49-37" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看默认assay的layers</span></span>
+<span id="cb49-38"><a href="#cb49-38" aria-hidden="true" tabindex="-1"></a><span class="fu">Layers</span>(myeloid_seurat)</span>
+<span id="cb49-39"><a href="#cb49-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-40"><a href="#cb49-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 执行PCA</span></span>
+<span id="cb49-41"><a href="#cb49-41" aria-hidden="true" tabindex="-1"></a>myeloid_seurat <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(myeloid_seurat)</span>
+<span id="cb49-42"><a href="#cb49-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-43"><a href="#cb49-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-44"><a href="#cb49-44" aria-hidden="true" tabindex="-1"></a><span class="fu">### 不进行整合时检查细胞分群情况：</span></span>
+<span id="cb49-45"><a href="#cb49-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-48"><a href="#cb49-48" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-49"><a href="#cb49-49" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 15</span></span>
+<span id="cb49-50"><a href="#cb49-50" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb49-51"><a href="#cb49-51" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看降维信息</span></span>
+<span id="cb49-52"><a href="#cb49-52" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(myeloid_seurat<span class="sc">@</span>reductions)</span>
+<span id="cb49-53"><a href="#cb49-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-54"><a href="#cb49-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Run UMAP</span></span>
+<span id="cb49-55"><a href="#cb49-55" aria-hidden="true" tabindex="-1"></a>myeloid_seurat <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(myeloid_seurat, </span>
+<span id="cb49-56"><a href="#cb49-56" aria-hidden="true" tabindex="-1"></a>                          <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>, </span>
+<span id="cb49-57"><a href="#cb49-57" aria-hidden="true" tabindex="-1"></a>                          <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
+<span id="cb49-58"><a href="#cb49-58" aria-hidden="true" tabindex="-1"></a>                          <span class="at">reduction.name =</span> <span class="st">"umap.unintegrated"</span>)</span>
+<span id="cb49-59"><a href="#cb49-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-60"><a href="#cb49-60" aria-hidden="true" tabindex="-1"></a><span class="co"># 分群</span></span>
+<span id="cb49-61"><a href="#cb49-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine the K-nearest neighbor graph</span></span>
+<span id="cb49-62"><a href="#cb49-62" aria-hidden="true" tabindex="-1"></a>myeloid_seurat <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(myeloid_seurat, </span>
+<span id="cb49-63"><a href="#cb49-63" aria-hidden="true" tabindex="-1"></a>                                <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>, </span>
+<span id="cb49-64"><a href="#cb49-64" aria-hidden="true" tabindex="-1"></a>                                <span class="at">reduction =</span> <span class="st">"pca"</span>)</span>
+<span id="cb49-65"><a href="#cb49-65" aria-hidden="true" tabindex="-1"></a>myeloid_seurat <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(myeloid_seurat, </span>
+<span id="cb49-66"><a href="#cb49-66" aria-hidden="true" tabindex="-1"></a>                               <span class="at">cluster.name =</span> <span class="st">"unintegrated_clusters"</span>)</span>
+<span id="cb49-67"><a href="#cb49-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-68"><a href="#cb49-68" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot UMAP</span></span>
+<span id="cb49-69"><a href="#cb49-69" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(myeloid_seurat, </span>
+<span id="cb49-70"><a href="#cb49-70" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"umap.unintegrated"</span>,</span>
+<span id="cb49-71"><a href="#cb49-71" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by =</span> <span class="st">"samples"</span>)</span>
+<span id="cb49-72"><a href="#cb49-72" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(myeloid_seurat, </span>
+<span id="cb49-73"><a href="#cb49-73" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"umap.unintegrated"</span>,</span>
+<span id="cb49-74"><a href="#cb49-74" aria-hidden="true" tabindex="-1"></a>              <span class="at">split.by =</span> <span class="st">"samples"</span>)</span>
+<span id="cb49-75"><a href="#cb49-75" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p2, </span>
+<span id="cb49-76"><a href="#cb49-76" aria-hidden="true" tabindex="-1"></a>          <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
+<span id="cb49-77"><a href="#cb49-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-78"><a href="#cb49-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-79"><a href="#cb49-79" aria-hidden="true" tabindex="-1"></a><span class="fu">### 整合</span></span>
+<span id="cb49-80"><a href="#cb49-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-83"><a href="#cb49-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-84"><a href="#cb49-84" aria-hidden="true" tabindex="-1"></a><span class="co"># 整合</span></span>
+<span id="cb49-85"><a href="#cb49-85" aria-hidden="true" tabindex="-1"></a>myeloid_integrated <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(<span class="at">object =</span> myeloid_seurat,</span>
+<span id="cb49-86"><a href="#cb49-86" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">method =</span> HarmonyIntegration,</span>
+<span id="cb49-87"><a href="#cb49-87" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb49-88"><a href="#cb49-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-89"><a href="#cb49-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-90"><a href="#cb49-90" aria-hidden="true" tabindex="-1"></a><span class="co"># 整合后合并RNA layer</span></span>
+<span id="cb49-91"><a href="#cb49-91" aria-hidden="true" tabindex="-1"></a>myeloid_integrated[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(myeloid_integrated[[<span class="st">"RNA"</span>]])</span>
+<span id="cb49-92"><a href="#cb49-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-93"><a href="#cb49-93" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看整合后的降维信息</span></span>
+<span id="cb49-94"><a href="#cb49-94" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(myeloid_integrated<span class="sc">@</span>reductions)</span>
+<span id="cb49-95"><a href="#cb49-95" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-96"><a href="#cb49-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-97"><a href="#cb49-97" aria-hidden="true" tabindex="-1"></a><span class="fu">### **整合后检验细胞分群情况**</span></span>
+<span id="cb49-98"><a href="#cb49-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-101"><a href="#cb49-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-102"><a href="#cb49-102" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb49-103"><a href="#cb49-103" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 15</span></span>
+<span id="cb49-104"><a href="#cb49-104" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123456</span>)</span>
+<span id="cb49-105"><a href="#cb49-105" aria-hidden="true" tabindex="-1"></a><span class="co"># Run UMAP</span></span>
+<span id="cb49-106"><a href="#cb49-106" aria-hidden="true" tabindex="-1"></a>myeloid_integrated <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(myeloid_integrated, </span>
+<span id="cb49-107"><a href="#cb49-107" aria-hidden="true" tabindex="-1"></a>                              <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>,</span>
+<span id="cb49-108"><a href="#cb49-108" aria-hidden="true" tabindex="-1"></a>                              <span class="at">reduction =</span> <span class="st">"harmony"</span>, <span class="co"># 更改降维来源为整合后的"harmony"</span></span>
+<span id="cb49-109"><a href="#cb49-109" aria-hidden="true" tabindex="-1"></a>                              <span class="at">reduction.name =</span> <span class="st">"umap.integrated"</span>)</span>
+<span id="cb49-110"><a href="#cb49-110" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(myeloid_integrated<span class="sc">@</span>reductions)</span>
+<span id="cb49-111"><a href="#cb49-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-112"><a href="#cb49-112" aria-hidden="true" tabindex="-1"></a><span class="co"># 分群</span></span>
+<span id="cb49-113"><a href="#cb49-113" aria-hidden="true" tabindex="-1"></a>myeloid_integrated <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(myeloid_integrated, </span>
+<span id="cb49-114"><a href="#cb49-114" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>, </span>
+<span id="cb49-115"><a href="#cb49-115" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">reduction =</span> <span class="st">"harmony"</span>) <span class="co">#更改降维来源为"harmony"</span></span>
+<span id="cb49-116"><a href="#cb49-116" aria-hidden="true" tabindex="-1"></a>myeloid_integrated <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(myeloid_integrated, </span>
+<span id="cb49-117"><a href="#cb49-117" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">cluster.name =</span> <span class="st">"integrated_clusters"</span>)</span>
+<span id="cb49-118"><a href="#cb49-118" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(myeloid_integrated<span class="sc">@</span>meta.data)</span>
+<span id="cb49-119"><a href="#cb49-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-120"><a href="#cb49-120" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot UMAP                             </span></span>
+<span id="cb49-121"><a href="#cb49-121" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(myeloid_integrated, </span>
+<span id="cb49-122"><a href="#cb49-122" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>, </span>
+<span id="cb49-123"><a href="#cb49-123" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by =</span> <span class="st">"samples"</span>)</span>
+<span id="cb49-124"><a href="#cb49-124" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(myeloid_integrated, </span>
+<span id="cb49-125"><a href="#cb49-125" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>, </span>
+<span id="cb49-126"><a href="#cb49-126" aria-hidden="true" tabindex="-1"></a>              <span class="at">split.by =</span> <span class="st">"samples"</span>)</span>
+<span id="cb49-127"><a href="#cb49-127" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p3, p2, p4, </span>
+<span id="cb49-128"><a href="#cb49-128" aria-hidden="true" tabindex="-1"></a>          <span class="at">ncol =</span> <span class="dv">1</span>, </span>
+<span id="cb49-129"><a href="#cb49-129" aria-hidden="true" tabindex="-1"></a>          <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Before Harmony"</span>, <span class="st">"After Harmony"</span>, </span>
+<span id="cb49-130"><a href="#cb49-130" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Before Harmony"</span>, <span class="st">"After Harmony"</span>))</span>
+<span id="cb49-131"><a href="#cb49-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-132"><a href="#cb49-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-133"><a href="#cb49-133" aria-hidden="true" tabindex="-1"></a><span class="fu">### 聚类</span></span>
+<span id="cb49-134"><a href="#cb49-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-137"><a href="#cb49-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-138"><a href="#cb49-138" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine the clusters for various resolutions                                </span></span>
+<span id="cb49-139"><a href="#cb49-139" aria-hidden="true" tabindex="-1"></a>myeloid_integrated <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(myeloid_integrated,</span>
+<span id="cb49-140"><a href="#cb49-140" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">resolution =</span> <span class="fu">c</span>(<span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, </span>
+<span id="cb49-141"><a href="#cb49-141" aria-hidden="true" tabindex="-1"></a>                                                  <span class="fl">0.4</span>, <span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="dv">1</span>),</span>
+<span id="cb49-142"><a href="#cb49-142" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">verbose =</span> F)</span>
+<span id="cb49-143"><a href="#cb49-143" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore resolutions</span></span>
+<span id="cb49-144"><a href="#cb49-144" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(myeloid_integrated<span class="sc">@</span>meta.data, <span class="dv">5</span>)</span>
+<span id="cb49-145"><a href="#cb49-145" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看各个分辨率下的细胞分群情况</span></span>
+<span id="cb49-146"><a href="#cb49-146" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(myeloid_integrated<span class="sc">@</span>meta.data, </span>
+<span id="cb49-147"><a href="#cb49-147" aria-hidden="true" tabindex="-1"></a>       <span class="fu">starts_with</span>(<span class="at">match =</span> <span class="st">"SCT_snn_res."</span>)) <span class="sc">%&gt;%</span>  </span>
+<span id="cb49-148"><a href="#cb49-148" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(levels)</span>
+<span id="cb49-149"><a href="#cb49-149" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-150"><a href="#cb49-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-151"><a href="#cb49-151" aria-hidden="true" tabindex="-1"></a>绘制聚类树展示不同分辨率下的细胞分群情况及相互关系</span>
+<span id="cb49-152"><a href="#cb49-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-155"><a href="#cb49-155" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-156"><a href="#cb49-156" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">clustree</span>(myeloid_integrated<span class="sc">@</span>meta.data, </span>
+<span id="cb49-157"><a href="#cb49-157" aria-hidden="true" tabindex="-1"></a>                 <span class="at">prefix =</span> <span class="st">"SCT_snn_res."</span>) <span class="co"># 指定包含聚类信息的列</span></span>
+<span id="cb49-158"><a href="#cb49-158" aria-hidden="true" tabindex="-1"></a>tree</span>
+<span id="cb49-159"><a href="#cb49-159" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-160"><a href="#cb49-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-161"><a href="#cb49-161" aria-hidden="true" tabindex="-1"></a>这里，选取分辨为0.8</span>
+<span id="cb49-162"><a href="#cb49-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-165"><a href="#cb49-165" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-166"><a href="#cb49-166" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(myeloid_integrated) <span class="ot">&lt;-</span> <span class="st">"SCT_snn_res.0.8"</span></span>
+<span id="cb49-167"><a href="#cb49-167" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-168"><a href="#cb49-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-169"><a href="#cb49-169" aria-hidden="true" tabindex="-1"></a>聚类可视化</span>
+<span id="cb49-170"><a href="#cb49-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-173"><a href="#cb49-173" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-174"><a href="#cb49-174" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 5</span></span>
+<span id="cb49-175"><a href="#cb49-175" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP</span></span>
+<span id="cb49-176"><a href="#cb49-176" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(myeloid_integrated,</span>
+<span id="cb49-177"><a href="#cb49-177" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>,</span>
+<span id="cb49-178"><a href="#cb49-178" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> T)</span>
+<span id="cb49-179"><a href="#cb49-179" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-180"><a href="#cb49-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-181"><a href="#cb49-181" aria-hidden="true" tabindex="-1"></a><span class="fu">### **细胞分群质量评估**</span></span>
+<span id="cb49-182"><a href="#cb49-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-183"><a href="#cb49-183" aria-hidden="true" tabindex="-1"></a>分析样本类型是否影响细胞分群</span>
+<span id="cb49-184"><a href="#cb49-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-187"><a href="#cb49-187" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-188"><a href="#cb49-188" aria-hidden="true" tabindex="-1"></a><span class="co"># 先简单查看不同cluster的细胞数</span></span>
+<span id="cb49-189"><a href="#cb49-189" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(myeloid_integrated<span class="sc">@</span>active.ident)</span>
+<span id="cb49-190"><a href="#cb49-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-191"><a href="#cb49-191" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看不同样本类型中的细胞分群情况</span></span>
+<span id="cb49-192"><a href="#cb49-192" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(myeloid_integrated, </span>
+<span id="cb49-193"><a href="#cb49-193" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>,</span>
+<span id="cb49-194"><a href="#cb49-194" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb49-195"><a href="#cb49-195" aria-hidden="true" tabindex="-1"></a>        <span class="at">split.by =</span> <span class="st">"groups"</span>) <span class="sc">+</span> </span>
+<span id="cb49-196"><a href="#cb49-196" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NoLegend</span>()</span>
+<span id="cb49-197"><a href="#cb49-197" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-198"><a href="#cb49-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-199"><a href="#cb49-199" aria-hidden="true" tabindex="-1"></a>分析细胞周期是否影响细胞分群</span>
+<span id="cb49-200"><a href="#cb49-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-203"><a href="#cb49-203" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-204"><a href="#cb49-204" aria-hidden="true" tabindex="-1"></a><span class="co"># Explore whether clusters segregate by cell cycle phase</span></span>
+<span id="cb49-205"><a href="#cb49-205" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(myeloid_integrated,</span>
+<span id="cb49-206"><a href="#cb49-206" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>,</span>
+<span id="cb49-207"><a href="#cb49-207" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb49-208"><a href="#cb49-208" aria-hidden="true" tabindex="-1"></a>        <span class="at">split.by =</span> <span class="st">"Phase"</span>) <span class="sc">+</span> </span>
+<span id="cb49-209"><a href="#cb49-209" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NoLegend</span>()</span>
+<span id="cb49-210"><a href="#cb49-210" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-211"><a href="#cb49-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-212"><a href="#cb49-212" aria-hidden="true" tabindex="-1"></a>分析其他非期望变异来源是否会影响细胞分群</span>
+<span id="cb49-213"><a href="#cb49-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-216"><a href="#cb49-216" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-217"><a href="#cb49-217" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb49-218"><a href="#cb49-218" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 10</span></span>
+<span id="cb49-219"><a href="#cb49-219" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine metrics to plot present in seurat_clustered@meta.data</span></span>
+<span id="cb49-220"><a href="#cb49-220" aria-hidden="true" tabindex="-1"></a>metrics <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="st">"nCount_RNA"</span>, <span class="st">"nFeature_RNA"</span>, <span class="st">"S.Score"</span>, <span class="st">"G2M.Score"</span>, <span class="st">"mitoRatio"</span>)</span>
+<span id="cb49-221"><a href="#cb49-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-222"><a href="#cb49-222" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(myeloid_integrated, </span>
+<span id="cb49-223"><a href="#cb49-223" aria-hidden="true" tabindex="-1"></a>            <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>, </span>
+<span id="cb49-224"><a href="#cb49-224" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> metrics,</span>
+<span id="cb49-225"><a href="#cb49-225" aria-hidden="true" tabindex="-1"></a>            <span class="at">pt.size =</span> <span class="fl">0.4</span>, </span>
+<span id="cb49-226"><a href="#cb49-226" aria-hidden="true" tabindex="-1"></a>            <span class="at">order =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb49-227"><a href="#cb49-227" aria-hidden="true" tabindex="-1"></a>            <span class="at">min.cutoff =</span> <span class="st">'q10'</span>, </span>
+<span id="cb49-228"><a href="#cb49-228" aria-hidden="true" tabindex="-1"></a>            <span class="at">label =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb49-229"><a href="#cb49-229" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-230"><a href="#cb49-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-231"><a href="#cb49-231" aria-hidden="true" tabindex="-1"></a>保存</span>
+<span id="cb49-232"><a href="#cb49-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-235"><a href="#cb49-235" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-236"><a href="#cb49-236" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(myeloid_integrated, </span>
+<span id="cb49-237"><a href="#cb49-237" aria-hidden="true" tabindex="-1"></a>        <span class="at">file =</span> <span class="st">"output/sc_supplementary/GSE150430_myeloid_clustered.RDS"</span>)</span>
+<span id="cb49-238"><a href="#cb49-238" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-239"><a href="#cb49-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-240"><a href="#cb49-240" aria-hidden="true" tabindex="-1"></a><span class="fu">### 亚群细胞注释</span></span>
+<span id="cb49-241"><a href="#cb49-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-242"><a href="#cb49-242" aria-hidden="true" tabindex="-1"></a>髓系亚群进一步细分的marker如下：</span>
+<span id="cb49-243"><a href="#cb49-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-246"><a href="#cb49-246" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-247"><a href="#cb49-247" aria-hidden="true" tabindex="-1"></a>genes_to_check <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb49-248"><a href="#cb49-248" aria-hidden="true" tabindex="-1"></a>  <span class="at">Mac =</span> <span class="fu">c</span>(<span class="st">"CD14"</span>, <span class="st">"CD163"</span>, <span class="st">"APOE"</span>, <span class="st">"C1QA"</span>, <span class="st">"C1QB"</span>, <span class="st">"C1QC"</span>),</span>
+<span id="cb49-249"><a href="#cb49-249" aria-hidden="true" tabindex="-1"></a>  <span class="at">pDC =</span> <span class="fu">c</span>(<span class="st">"LILRA4"</span>, <span class="st">"IL3RA"</span>, <span class="st">"TCF4"</span>, <span class="st">"TCL1A"</span>, <span class="st">"CLEC4C"</span>),</span>
+<span id="cb49-250"><a href="#cb49-250" aria-hidden="true" tabindex="-1"></a>  <span class="at">DC1 =</span> <span class="fu">c</span>(<span class="st">"CLEC9A"</span>, <span class="st">"XCR1"</span>, <span class="st">"BATF3"</span>),</span>
+<span id="cb49-251"><a href="#cb49-251" aria-hidden="true" tabindex="-1"></a>  <span class="at">DC2 =</span> <span class="fu">c</span>(<span class="st">"CD1A"</span>, <span class="st">"FCER1A"</span>, <span class="st">"CD1C"</span>, <span class="st">"CD1E"</span>, <span class="st">"CLEC10A"</span>),</span>
+<span id="cb49-252"><a href="#cb49-252" aria-hidden="true" tabindex="-1"></a>  <span class="at">DC3 =</span> <span class="fu">c</span>(<span class="st">"CCR7"</span>, <span class="st">"LAMP3"</span>, <span class="st">"FSCN1"</span>, <span class="st">"CCL22"</span>, <span class="st">"BIRC3"</span>),</span>
+<span id="cb49-253"><a href="#cb49-253" aria-hidden="true" tabindex="-1"></a>  <span class="at">Mono =</span> <span class="fu">c</span>(<span class="st">"VCVN"</span>, <span class="st">"FCN1"</span>, <span class="st">"S100A12"</span>, <span class="st">"S100A8"</span>, <span class="st">"S100A9"</span>, <span class="st">"FCGR3A"</span>)</span>
+<span id="cb49-254"><a href="#cb49-254" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-255"><a href="#cb49-255" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-256"><a href="#cb49-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-257"><a href="#cb49-257" aria-hidden="true" tabindex="-1"></a>查看marker基因的表达：</span>
+<span id="cb49-258"><a href="#cb49-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-261"><a href="#cb49-261" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-262"><a href="#cb49-262" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb49-263"><a href="#cb49-263" aria-hidden="true" tabindex="-1"></a><span class="fu">DotPlot</span>(myeloid_integrated,</span>
+<span id="cb49-264"><a href="#cb49-264" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> genes_to_check) <span class="sc">+</span></span>
+<span id="cb49-265"><a href="#cb49-265" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span>
+<span id="cb49-266"><a href="#cb49-266" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-267"><a href="#cb49-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-268"><a href="#cb49-268" aria-hidden="true" tabindex="-1"></a>手动注释：</span>
+<span id="cb49-269"><a href="#cb49-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-272"><a href="#cb49-272" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-273"><a href="#cb49-273" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 5</span></span>
+<span id="cb49-274"><a href="#cb49-274" aria-hidden="true" tabindex="-1"></a>myeloid_clustered <span class="ot">&lt;-</span> <span class="fu">RenameIdents</span>(</span>
+<span id="cb49-275"><a href="#cb49-275" aria-hidden="true" tabindex="-1"></a>  myeloid_integrated,</span>
+<span id="cb49-276"><a href="#cb49-276" aria-hidden="true" tabindex="-1"></a>  <span class="st">"0"</span> <span class="ot">=</span> <span class="st">"Macrophages"</span>,</span>
+<span id="cb49-277"><a href="#cb49-277" aria-hidden="true" tabindex="-1"></a>  <span class="st">"1"</span> <span class="ot">=</span> <span class="st">"DC2"</span>,</span>
+<span id="cb49-278"><a href="#cb49-278" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2"</span> <span class="ot">=</span> <span class="st">"Unknown"</span>,</span>
+<span id="cb49-279"><a href="#cb49-279" aria-hidden="true" tabindex="-1"></a>  <span class="st">"3"</span> <span class="ot">=</span> <span class="st">"Macrophages"</span>,</span>
+<span id="cb49-280"><a href="#cb49-280" aria-hidden="true" tabindex="-1"></a>  <span class="st">"4"</span> <span class="ot">=</span> <span class="st">"Monocyte"</span>,</span>
+<span id="cb49-281"><a href="#cb49-281" aria-hidden="true" tabindex="-1"></a>  <span class="st">"5"</span> <span class="ot">=</span> <span class="st">"Macrophages"</span>,</span>
+<span id="cb49-282"><a href="#cb49-282" aria-hidden="true" tabindex="-1"></a>  <span class="st">"6"</span> <span class="ot">=</span> <span class="st">"Unknown"</span>,</span>
+<span id="cb49-283"><a href="#cb49-283" aria-hidden="true" tabindex="-1"></a>  <span class="st">"7"</span> <span class="ot">=</span> <span class="st">"DC1"</span>,</span>
+<span id="cb49-284"><a href="#cb49-284" aria-hidden="true" tabindex="-1"></a>  <span class="st">"8"</span> <span class="ot">=</span> <span class="st">"DC2"</span>,</span>
+<span id="cb49-285"><a href="#cb49-285" aria-hidden="true" tabindex="-1"></a>  <span class="st">"9"</span> <span class="ot">=</span> <span class="st">"Macrophages"</span></span>
+<span id="cb49-286"><a href="#cb49-286" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-287"><a href="#cb49-287" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">Idents</span>(myeloid_clustered))</span>
+<span id="cb49-288"><a href="#cb49-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-289"><a href="#cb49-289" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP</span></span>
+<span id="cb49-290"><a href="#cb49-290" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(</span>
+<span id="cb49-291"><a href="#cb49-291" aria-hidden="true" tabindex="-1"></a>  myeloid_clustered,</span>
+<span id="cb49-292"><a href="#cb49-292" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>,</span>
+<span id="cb49-293"><a href="#cb49-293" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> T</span>
+<span id="cb49-294"><a href="#cb49-294" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-295"><a href="#cb49-295" aria-hidden="true" tabindex="-1"></a>p1</span>
+<span id="cb49-296"><a href="#cb49-296" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-297"><a href="#cb49-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-298"><a href="#cb49-298" aria-hidden="true" tabindex="-1"></a>在注释好的数据中再次检查marker基因的表达情况：</span>
+<span id="cb49-299"><a href="#cb49-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-302"><a href="#cb49-302" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-303"><a href="#cb49-303" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb49-304"><a href="#cb49-304" aria-hidden="true" tabindex="-1"></a><span class="fu">DotPlot</span>(myeloid_clustered, </span>
+<span id="cb49-305"><a href="#cb49-305" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> genes_to_check) <span class="sc">+</span> </span>
+<span id="cb49-306"><a href="#cb49-306" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) </span>
+<span id="cb49-307"><a href="#cb49-307" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-308"><a href="#cb49-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-309"><a href="#cb49-309" aria-hidden="true" tabindex="-1"></a>这里我们参考 @sec-Further_modifications_to_featureplot 中的方法，可视化巨噬细胞marker基因的共表达情况：</span>
+<span id="cb49-310"><a href="#cb49-310" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-313"><a href="#cb49-313" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-314"><a href="#cb49-314" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb49-315"><a href="#cb49-315" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: 髓系细胞进一步分群及巨噬细胞marker基因共表达情况</span></span>
+<span id="cb49-316"><a href="#cb49-316" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">Plot_Density_Joint_Only</span>(</span>
+<span id="cb49-317"><a href="#cb49-317" aria-hidden="true" tabindex="-1"></a>  myeloid_clustered,</span>
+<span id="cb49-318"><a href="#cb49-318" aria-hidden="true" tabindex="-1"></a>  <span class="at">features =</span> <span class="fu">c</span>(</span>
+<span id="cb49-319"><a href="#cb49-319" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CD14"</span>, <span class="st">"CD163"</span>, <span class="st">"APOE"</span>,</span>
+<span id="cb49-320"><a href="#cb49-320" aria-hidden="true" tabindex="-1"></a>    <span class="st">"C1QA"</span>, <span class="st">"C1QB"</span>, <span class="st">"C1QC"</span></span>
+<span id="cb49-321"><a href="#cb49-321" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb49-322"><a href="#cb49-322" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>,</span>
+<span id="cb49-323"><a href="#cb49-323" aria-hidden="true" tabindex="-1"></a>  <span class="at">custom_palette =</span> <span class="fu">BlueAndRed</span>()</span>
+<span id="cb49-324"><a href="#cb49-324" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-325"><a href="#cb49-325" aria-hidden="true" tabindex="-1"></a>p2</span>
+<span id="cb49-326"><a href="#cb49-326" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(</span>
+<span id="cb49-327"><a href="#cb49-327" aria-hidden="true" tabindex="-1"></a>  p1, p2,</span>
+<span id="cb49-328"><a href="#cb49-328" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="st">"AUTO"</span></span>
+<span id="cb49-329"><a href="#cb49-329" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb49-330"><a href="#cb49-330" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-331"><a href="#cb49-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-332"><a href="#cb49-332" aria-hidden="true" tabindex="-1"></a>保存</span>
+<span id="cb49-333"><a href="#cb49-333" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-336"><a href="#cb49-336" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-337"><a href="#cb49-337" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(myeloid_clustered, </span>
+<span id="cb49-338"><a href="#cb49-338" aria-hidden="true" tabindex="-1"></a>        <span class="at">file =</span> <span class="st">"output/sc_supplementary/GSE150430_myeloid_clustered.RDS"</span>)</span>
+<span id="cb49-339"><a href="#cb49-339" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-340"><a href="#cb49-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-341"><a href="#cb49-341" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb49-342"><a href="#cb49-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-343"><a href="#cb49-343" aria-hidden="true" tabindex="-1"></a><span class="fu">## 整合三个数据集的髓系细胞</span></span>
+<span id="cb49-344"><a href="#cb49-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-345"><a href="#cb49-345" aria-hidden="true" tabindex="-1"></a>后面分别对<span class="co">[</span><span class="ot">**GSE150825**</span><span class="co">](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?&amp;acc=GSE150825)</span>**, [GSE162025](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?&amp;acc=GSE162025)**两个数据集进行同样的处理，即先大致分群，然后提取髓系细胞进一步分群，保存文件名为“GSE<span class="sc">\*\*\*\_</span>myeloid_clustered.RDS”的文件。最后读取三个数据集，整合重新降维分群，再继续分析。这里不再实际分析。</span>
+<span id="cb49-346"><a href="#cb49-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-349"><a href="#cb49-349" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-350"><a href="#cb49-350" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb49-351"><a href="#cb49-351" aria-hidden="true" tabindex="-1"></a><span class="do">### 不运行 </span><span class="al">###</span></span>
+<span id="cb49-352"><a href="#cb49-352" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取三个数据集的髓系细胞</span></span>
+<span id="cb49-353"><a href="#cb49-353" aria-hidden="true" tabindex="-1"></a>myeloid_clustered_1 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/sc_supplementary/GSE150430_myeloid_clustered.RDS"</span>)</span>
+<span id="cb49-354"><a href="#cb49-354" aria-hidden="true" tabindex="-1"></a>myeloid_clustered_2 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/sc_supplementary/GSE150825_myeloid_clustered.RDS"</span>)</span>
+<span id="cb49-355"><a href="#cb49-355" aria-hidden="true" tabindex="-1"></a>myeloid_clustered_3 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/sc_supplementary/GSE162025_myeloid_clustered.RDS"</span>)</span>
+<span id="cb49-356"><a href="#cb49-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-357"><a href="#cb49-357" aria-hidden="true" tabindex="-1"></a><span class="co"># 添加数据集标识便于识别</span></span>
+<span id="cb49-358"><a href="#cb49-358" aria-hidden="true" tabindex="-1"></a>myeloid_clustered_1<span class="sc">$</span>GSE_num <span class="ot">=</span> <span class="st">"GSE150430"</span></span>
+<span id="cb49-359"><a href="#cb49-359" aria-hidden="true" tabindex="-1"></a>myeloid_clustered_2<span class="sc">$</span>GSE_num <span class="ot">=</span> <span class="st">"GSE150825"</span></span>
+<span id="cb49-360"><a href="#cb49-360" aria-hidden="true" tabindex="-1"></a>myeloid_clustered_3<span class="sc">$</span>GSE_num <span class="ot">=</span> <span class="st">"GSE162025"</span></span>
+<span id="cb49-361"><a href="#cb49-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-362"><a href="#cb49-362" aria-hidden="true" tabindex="-1"></a><span class="co"># 合并三个数据集</span></span>
+<span id="cb49-363"><a href="#cb49-363" aria-hidden="true" tabindex="-1"></a>myeloid_merged <span class="ot">&lt;-</span>  <span class="fu">merge</span>(</span>
+<span id="cb49-364"><a href="#cb49-364" aria-hidden="true" tabindex="-1"></a>  GSE150430,</span>
+<span id="cb49-365"><a href="#cb49-365" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(GSE150825, GSE162025),</span>
+<span id="cb49-366"><a href="#cb49-366" aria-hidden="true" tabindex="-1"></a>  <span class="at">add.cell.ids =</span> <span class="fu">c</span>(<span class="st">'GSE150430'</span>,<span class="st">'GSE150825'</span>,<span class="st">'GSE162025'</span>)</span>
+<span id="cb49-367"><a href="#cb49-367" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb49-368"><a href="#cb49-368" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(myeloid_merged<span class="sc">$</span>GSE_num)</span>
+<span id="cb49-369"><a href="#cb49-369" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(myeloid_merged<span class="sc">@</span>meta.data)</span>
+<span id="cb49-370"><a href="#cb49-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-371"><a href="#cb49-371" aria-hidden="true" tabindex="-1"></a><span class="co"># 重新构建Seurat对象以便重新归一化、整合、降维等</span></span>
+<span id="cb49-372"><a href="#cb49-372" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(</span>
+<span id="cb49-373"><a href="#cb49-373" aria-hidden="true" tabindex="-1"></a>  myeloid_merged<span class="sc">@</span>assays[[<span class="st">"RNA"</span>]],</span>
+<span id="cb49-374"><a href="#cb49-374" aria-hidden="true" tabindex="-1"></a>  <span class="at">meta.data =</span> sce<span class="sc">@</span>meta.data</span>
+<span id="cb49-375"><a href="#cb49-375" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb49-376"><a href="#cb49-376" aria-hidden="true" tabindex="-1"></a>sce</span>
+<span id="cb49-377"><a href="#cb49-377" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(sce<span class="sc">$</span>groups)</span>
+<span id="cb49-378"><a href="#cb49-378" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-379"><a href="#cb49-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-380"><a href="#cb49-380" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb49-381"><a href="#cb49-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-382"><a href="#cb49-382" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb49-383"><a href="#cb49-383" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb49-384"><a href="#cb49-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-387"><a href="#cb49-387" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb49-388"><a href="#cb49-388" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb49-389"><a href="#cb49-389" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb49-390"><a href="#cb49-390" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb49-391"><a href="#cb49-391" aria-hidden="true" tabindex="-1"></a>:::</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+      <ul class="footer-items list-unstyled">
+<li class="nav-item">
+ This book was built with Quarto
+  </li>  
+</ul>
+</div>   
+    <div class="nav-footer-center">Copyright 2023, Du Junhong</div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+<li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/djhcod">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+</div>
+  </div>
+</footer>
+
+
+</body></html>

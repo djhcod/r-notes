@@ -74,6 +74,24 @@ boxplot(merged_seurat$mitoRatio)
 The pattern provided ("\^MT-") works for human gene names. You may need to adjust the pattern argument depending on your organism of interest. Additionally, if you weren't using gene names as the gene ID then this function wouldn't work as we have used it above as the pattern will not suffice. Since there are caveats to using this function, it is advisable to manually compute this metric. If you are interested, we have [code available to compute this metric on your own](https://github.com/hbctraining/scRNA-seq/blob/master/lessons/mitoRatio.md).
 :::
 
+::: callout-caution
+###### 识别核糖体基因
+
+这里我们没有对核糖体基因进行评估和过滤。在实际操作中应该根据细胞类型和条件决定是否过滤核糖体基因及过滤的阈值。
+
+如下表所示，人类核糖体基因的基因名以“RPS”或“RPL”开头，因此可以通过"\^RP\[SL\]"正则表达式来识别这些核糖体基因。
+
+![人类核糖体基因（来自gencode.v32.annotation.gtf文件）](images/640.jpeg){width="438"}
+
+```{r}
+#| eval: false
+merged_seurat$riboRatio <- PercentageFeatureSet(
+  object = merged_seurat, 
+  pattern = "^RP[SL]"
+  )
+```
+:::
+
 ### Additional metadata columns
 
 We are a now all set with quality metrics required for assessing our data. However, we would like to include some additional information that would be useful to have in our metadata including **cell IDs and condition information**.

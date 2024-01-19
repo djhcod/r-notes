@@ -1,0 +1,349 @@
+# 多个单细胞数据集整合分析（下） {#sec-multiple_single_cell_datasets_2}
+
+> 参考：[单细胞多数据集整合示例](https://mp.weixin.qq.com/s/51PtUi7ZKp1nbrFGElU74A)
+
+上一节（ @sec-multiple_single_cell_datasets_1 ）中我们完成了对GSE150430的分群注释，并提取了髓系细胞亚群，本节对髓系细胞进一步分群。
+
+## 加载包
+
+```{r}
+library(Seurat)
+library(ggplot2)
+library(cowplot)
+library(dplyr)
+library(clustree)
+library(scCustomize)
+```
+
+## 髓系细胞进一步归一化、整合、降维、分群
+
+### SCTransform、PCA
+
+```{r}
+myeloid_seurat <- readRDS("output/sc_supplementary/GSE150430_myeloid_seurat.RDS")
+
+# SCTranform
+myeloid_seurat <- SCTransform(myeloid_seurat, verbose = FALSE)
+myeloid_seurat
+
+# Check which assays are stored in objects
+myeloid_seurat@assays
+# 查看目前默认的assay
+DefaultAssay(myeloid_seurat)
+# 查看默认assay的layers
+Layers(myeloid_seurat)
+
+# 执行PCA
+myeloid_seurat <- RunPCA(myeloid_seurat)
+```
+
+### 不进行整合时检查细胞分群情况：
+
+```{r}
+#| fig-height: 15
+#| fig-width: 10
+# 查看降维信息
+names(myeloid_seurat@reductions)
+
+# Run UMAP
+myeloid_seurat <- RunUMAP(myeloid_seurat, 
+                          dims = 1:40, 
+                          reduction = "pca",
+                          reduction.name = "umap.unintegrated")
+
+# 分群
+# Determine the K-nearest neighbor graph
+myeloid_seurat <- FindNeighbors(myeloid_seurat, 
+                                dims = 1:40, 
+                                reduction = "pca")
+myeloid_seurat <- FindClusters(myeloid_seurat, 
+                               cluster.name = "unintegrated_clusters")
+
+# Plot UMAP
+p1 <- DimPlot(myeloid_seurat, 
+              reduction = "umap.unintegrated",
+              group.by = "samples")
+p2 <- DimPlot(myeloid_seurat, 
+              reduction = "umap.unintegrated",
+              split.by = "samples")
+plot_grid(p1, p2, 
+          ncol = 1, labels = "AUTO")
+```
+
+### 整合
+
+```{r}
+# 整合
+myeloid_integrated <- IntegrateLayers(object = myeloid_seurat,
+                                      method = HarmonyIntegration,
+                                      verbose = FALSE)
+
+
+# 整合后合并RNA layer
+myeloid_integrated[["RNA"]] <- JoinLayers(myeloid_integrated[["RNA"]])
+
+# 查看整合后的降维信息
+names(myeloid_integrated@reductions)
+```
+
+### **整合后检验细胞分群情况**
+
+```{r}
+#| fig-width: 10
+#| fig-height: 15
+set.seed(123456)
+# Run UMAP
+myeloid_integrated <- RunUMAP(myeloid_integrated, 
+                              dims = 1:40,
+                              reduction = "harmony", # 更改降维来源为整合后的"harmony"
+                              reduction.name = "umap.integrated")
+names(myeloid_integrated@reductions)
+
+# 分群
+myeloid_integrated <- FindNeighbors(myeloid_integrated, 
+                                    dims = 1:40, 
+                                    reduction = "harmony") #更改降维来源为"harmony"
+myeloid_integrated <- FindClusters(myeloid_integrated, 
+                                   cluster.name = "integrated_clusters")
+colnames(myeloid_integrated@meta.data)
+
+# Plot UMAP                             
+p3 <- DimPlot(myeloid_integrated, 
+              reduction = "umap.integrated", 
+              group.by = "samples")
+p4 <- DimPlot(myeloid_integrated, 
+              reduction = "umap.integrated", 
+              split.by = "samples")
+plot_grid(p1, p3, p2, p4, 
+          ncol = 1, 
+          labels = c("Before Harmony", "After Harmony", 
+                     "Before Harmony", "After Harmony"))
+```
+
+### 聚类
+
+```{r}
+# Determine the clusters for various resolutions                                
+myeloid_integrated <- FindClusters(myeloid_integrated,
+                                   resolution = c(0.01, 0.05, 0.1, 0.2, 0.3, 
+                                                  0.4, 0.5, 0.8, 1),
+                                   verbose = F)
+# Explore resolutions
+head(myeloid_integrated@meta.data, 5)
+# 查看各个分辨率下的细胞分群情况
+select(myeloid_integrated@meta.data, 
+       starts_with(match = "SCT_snn_res.")) %>%  
+  lapply(levels)
+```
+
+绘制聚类树展示不同分辨率下的细胞分群情况及相互关系
+
+```{r}
+tree <- clustree(myeloid_integrated@meta.data, 
+                 prefix = "SCT_snn_res.") # 指定包含聚类信息的列
+tree
+```
+
+这里，选取分辨为0.8
+
+```{r}
+Idents(myeloid_integrated) <- "SCT_snn_res.0.8"
+```
+
+聚类可视化
+
+```{r}
+#| fig-width: 5
+# Plot the UMAP
+DimPlot(myeloid_integrated,
+        reduction = "umap.integrated",
+        label = T)
+```
+
+### **细胞分群质量评估**
+
+分析样本类型是否影响细胞分群
+
+```{r}
+# 先简单查看不同cluster的细胞数
+table(myeloid_integrated@active.ident)
+
+# 查看不同样本类型中的细胞分群情况
+DimPlot(myeloid_integrated, 
+        reduction = "umap.integrated",
+        label = TRUE, 
+        split.by = "groups") + 
+  NoLegend()
+```
+
+分析细胞周期是否影响细胞分群
+
+```{r}
+# Explore whether clusters segregate by cell cycle phase
+DimPlot(myeloid_integrated,
+        reduction = "umap.integrated",
+        label = TRUE, 
+        split.by = "Phase") + 
+  NoLegend()
+```
+
+分析其他非期望变异来源是否会影响细胞分群
+
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+# Determine metrics to plot present in seurat_clustered@meta.data
+metrics <-  c("nCount_RNA", "nFeature_RNA", "S.Score", "G2M.Score", "mitoRatio")
+
+FeaturePlot(myeloid_integrated, 
+            reduction = "umap.integrated", 
+            features = metrics,
+            pt.size = 0.4, 
+            order = TRUE,
+            min.cutoff = 'q10', 
+            label = TRUE)
+```
+
+保存
+
+```{r}
+saveRDS(myeloid_integrated, 
+        file = "output/sc_supplementary/GSE150430_myeloid_clustered.RDS")
+```
+
+### 亚群细胞注释
+
+髓系亚群进一步细分的marker如下：
+
+```{r}
+genes_to_check <- list(
+  Mac = c("CD14", "CD163", "APOE", "C1QA", "C1QB", "C1QC"),
+  pDC = c("LILRA4", "IL3RA", "TCF4", "TCL1A", "CLEC4C"),
+  DC1 = c("CLEC9A", "XCR1", "BATF3"),
+  DC2 = c("CD1A", "FCER1A", "CD1C", "CD1E", "CLEC10A"),
+  DC3 = c("CCR7", "LAMP3", "FSCN1", "CCL22", "BIRC3"),
+  Mono = c("VCVN", "FCN1", "S100A12", "S100A8", "S100A9", "FCGR3A")
+)
+```
+
+查看marker基因的表达：
+
+```{r}
+#| fig-width: 10
+DotPlot(myeloid_integrated,
+        features = genes_to_check) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+手动注释：
+
+```{r}
+#| fig-width: 5
+myeloid_clustered <- RenameIdents(
+  myeloid_integrated,
+  "0" = "Macrophages",
+  "1" = "DC2",
+  "2" = "Unknown",
+  "3" = "Macrophages",
+  "4" = "Monocyte",
+  "5" = "Macrophages",
+  "6" = "Unknown",
+  "7" = "DC1",
+  "8" = "DC2",
+  "9" = "Macrophages"
+)
+table(Idents(myeloid_clustered))
+
+# Plot the UMAP
+p1 <- DimPlot(
+  myeloid_clustered,
+  reduction = "umap.integrated",
+  label = T
+)
+p1
+```
+
+在注释好的数据中再次检查marker基因的表达情况：
+
+```{r}
+#| fig-width: 10
+DotPlot(myeloid_clustered, 
+        features = genes_to_check) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+```
+
+这里我们参考 @sec-Further_modifications_to_featureplot 中的方法，可视化巨噬细胞marker基因的共表达情况：
+
+```{r}
+#| fig-width: 10
+#| fig-cap: 髓系细胞进一步分群及巨噬细胞marker基因共表达情况
+p2 <- Plot_Density_Joint_Only(
+  myeloid_clustered,
+  features = c(
+    "CD14", "CD163", "APOE",
+    "C1QA", "C1QB", "C1QC"
+  ),
+  reduction = "umap.integrated",
+  custom_palette = BlueAndRed()
+)
+p2
+plot_grid(
+  p1, p2,
+  labels = "AUTO"
+)
+```
+
+保存
+
+```{r}
+saveRDS(myeloid_clustered, 
+        file = "output/sc_supplementary/GSE150430_myeloid_clustered.RDS")
+```
+
+------------------------------------------------------------------------
+
+## 整合三个数据集的髓系细胞
+
+后面分别对[**GSE150825**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?&acc=GSE150825)**, [GSE162025](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?&acc=GSE162025)**两个数据集进行同样的处理，即先大致分群，然后提取髓系细胞进一步分群，保存文件名为“GSE\*\*\*\_myeloid_clustered.RDS”的文件。最后读取三个数据集，整合重新降维分群，再继续分析。这里不再实际分析。
+
+```{r}
+#| eval: false
+### 不运行 ###
+# 读取三个数据集的髓系细胞
+myeloid_clustered_1 <- readRDS("output/sc_supplementary/GSE150430_myeloid_clustered.RDS")
+myeloid_clustered_2 <- readRDS("output/sc_supplementary/GSE150825_myeloid_clustered.RDS")
+myeloid_clustered_3 <- readRDS("output/sc_supplementary/GSE162025_myeloid_clustered.RDS")
+
+# 添加数据集标识便于识别
+myeloid_clustered_1$GSE_num = "GSE150430"
+myeloid_clustered_2$GSE_num = "GSE150825"
+myeloid_clustered_3$GSE_num = "GSE162025"
+
+# 合并三个数据集
+myeloid_merged <-  merge(
+  GSE150430,
+  list(GSE150825, GSE162025),
+  add.cell.ids = c('GSE150430','GSE150825','GSE162025')
+  )
+table(myeloid_merged$GSE_num)
+colnames(myeloid_merged@meta.data)
+
+# 重新构建Seurat对象以便重新归一化、整合、降维等
+sce <- CreateSeuratObject(
+  myeloid_merged@assays[["RNA"]],
+  meta.data = sce@meta.data
+  )
+sce
+table(sce$groups)
+```
+
+------------------------------------------------------------------------
+
+::: {.callout-note collapse="true" icon="false"}
+## Session Info
+
+```{r}
+#| echo: false
+sessionInfo()
+```
+:::
