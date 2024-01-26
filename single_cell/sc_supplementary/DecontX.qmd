@@ -1,8 +1,6 @@
 ---
-bibliography: references.bib
+title: "预测和去除单细胞转录组的环境游离RNA污染"
 ---
-
-# 预测和去除单细胞转录组的环境游离RNA污染
 
 > 参考：
 >
@@ -22,7 +20,7 @@ In droplet based, single cell RNA-seq experiments, there is always a certain amo
 
 > 在单细胞测序中，由于在处理细胞样品的时候需要用到机械解离或者酶解的步骤，所以免不了会造成细胞的破裂同时产生环境游离RNA。细胞悬液中的环境 RNA 可能会与细胞的原生 mRNA 一起被异常计数，从而导致不同细胞群之间转录本的交叉污染。环境游离RNA污染对细胞测序质量的影响较大，因此，有效地计算和预测游离RNA污染，去除污染严重的低质量细胞对单细胞测序分析具有重要意义。
 
-目前，R包[`SoupX`](https://github.com/constantAmateur/SoupX)就可以实现这样的目的，[*详见：SoupX——去除RNA污染*](https://mp.weixin.qq.com/s/7g9Zo6IPqTafSjKCeAFNIQ)。这篇笔记我们介绍另一个R包[`decontX`](https://bioconductor.org/packages/release/bioc/html/decontX.html)[@yang2020]。这个包的主要优点是使用方便，步骤简便，且结果容易使用。`DecontX` 是一种新的贝叶斯方法，用于估计和去除单细胞数据中的环境污染，可以整合到 scRNA-seq 工作流中，以改进下游分析**。**`DecontX`既可以用于去除单细胞转录组数据中的环境游离RNA污染（[`decontX`](https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontX.html)），也可以用于单细胞蛋白表达谱中的污染（[`deconPro`](https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontPro.html)）。
+目前，R包[`SoupX`](https://github.com/constantAmateur/SoupX)就可以实现这样的目的，[*详见：SoupX——去除RNA污染*](https://mp.weixin.qq.com/s/7g9Zo6IPqTafSjKCeAFNIQ)。这篇笔记我们介绍另一个R包[`decontX`](https://bioconductor.org/packages/release/bioc/html/decontX.html) [@Yang2020]。这个包的主要优点是使用方便，步骤简便，且结果容易使用。`DecontX` 是一种新的贝叶斯方法，用于估计和去除单细胞数据中的环境污染，可以整合到 scRNA-seq 工作流中，以改进下游分析**。**`DecontX`既可以用于去除单细胞转录组数据中的环境游离RNA污染（[`decontX`](https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontX.html)），也可以用于单细胞蛋白表达谱中的污染（[`deconPro`](https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontPro.html)）。
 
 安装`SoupX`：
 
@@ -31,7 +29,7 @@ In droplet based, single cell RNA-seq experiments, there is always a certain amo
 BiocManager::install("decontX")
 ```
 
-## 加载包
+# 加载包
 
 ```{r}
 library(Seurat)
@@ -41,9 +39,9 @@ library(cowplot)
 library(beepr)
 ```
 
-## 数据导入/质控
+# 数据导入/质控
 
-`DecontX` can take either a [SingleCellExperiment](https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html) object or a counts matrix as input. `decontX` will attempt to convert any input matrix to class `dgCMatrix` from package [`Matrix`](https://cran.r-project.org/web/packages/Matrix/index.html) before starting the analysis. 在Seurat工作流中，评估并去除环境游离RNA的污染一般在质控之后进行。这里我们用 @sec-qc 中已经完成质控的Seurat对象作为演示。最后和 @sec-clustering_analysis 中没有进行环境游离RNA去除的细胞分群结果进行比较。
+`DecontX` can take either a [SingleCellExperiment](https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html) object or a counts matrix as input. `decontX` will attempt to convert any input matrix to class `dgCMatrix` from package [`Matrix`](https://cran.r-project.org/web/packages/Matrix/index.html) before starting the analysis. 在Seurat工作流中，评估并去除环境游离RNA的污染一般在质控之后进行。这里我们用[scRNA-seq_online-质控](/single_cell/scRNA-seq_online/04_SC_quality_control.qmd)中已经完成质控的Seurat对象作为演示。最后和[scRNA-seq_online-细胞聚类](/single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.qmd#sec-visualize-clusters-of-cells)中没有进行环境游离RNA去除的细胞分群结果进行比较。
 
 ```{r}
 filtered_seurat <- readRDS("output/scRNA-seq_online/seurat_filtered.rds")
@@ -51,7 +49,7 @@ filtered_seurat
 head(filtered_seurat, 5)
 ```
 
-## 执行`decontX`
+# 执行`decontX`
 
 In this scenario, `decontX` will estimate the contamination distribution for each cell cluster based on the profiles of the other cell clusters in the filtered dataset. The estimated contamination results can be found in the `colData(sce)$decontX_contamination` and the decontaminated counts can be accessed with `decontXcounts(sce)`.
 
@@ -93,7 +91,7 @@ p2 <- filtered_seurat@meta.data |>
     theme_bw()
 ```
 
-## 过滤高环境RNA污染的细胞
+# 过滤高环境RNA污染的细胞
 
 对于污染率的过滤标准，DecontX官方并没有给予明确的建议，这里参考的了`SoupX`的官方文档，选择`Contamination < 0.2`。
 
@@ -126,7 +124,7 @@ plot_grid(p1, p2, p3, p4,
           labels = "AUTO")
 ```
 
-## SCTranform、整合
+# SCTranform、整合
 
 这里省略细胞周期、线粒体基因等非期望变异来源的评估，省略整合前细胞分群情况的评估。
 
@@ -164,7 +162,7 @@ seurat_integrated[["RNA"]] <- JoinLayers(seurat_integrated[["RNA"]])
 names(seurat_integrated@reductions)
 ```
 
-## 非线性降维、分群
+# 非线性降维、分群
 
 ```{r}
 #| cache-lazy: false
@@ -204,7 +202,7 @@ DimPlot(seurat_integrated,
         label.size = 6)
 ```
 
-可以看到和来自 @sec-clustering_analysis （下图）的分群情况相比，去除了高环境RNA污染的细胞后，细胞群边缘的毛刺有所减少，细胞界线更加清晰。
+可以看到和来自[scRNA-seq_online-细胞聚类](/single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.qmd#sec-visualize-clusters-of-cells) （下图）的分群情况相比，去除了高环境RNA污染的细胞后，细胞群边缘的毛刺有所减少，细胞界线更加清晰。
 
 ![未去除高环境游离RNA污染细胞的分群情况](images/unnamed-chunk-10-1.png){width="512"}
 
@@ -271,4 +269,9 @@ plot_grid(
 #| echo: false
 sessionInfo()
 ```
+:::
+
+# References {.unnumbered}
+
+::: {#refs}
 :::

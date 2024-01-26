@@ -1,8 +1,6 @@
 ---
-bibliography: references.bib
+title: "Normalization and regressing out unwanted variation"
 ---
-
-# Normalization and regressing out unwanted variation {#sec-normalization-and-regressing-out-unwanted-variation}
 
 ::: callout-note
 ###### **Learning Objectives:**
@@ -34,7 +32,7 @@ Now that we have our high quality cells, we can explore our data and see if we a
 
 ------------------------------------------------------------------------
 
-## 标准化（Normalization）的原理和类型
+# 标准化（Normalization）的原理和类型
 
 An essential first step in the majority of mRNA expression analyses is normalization, whereby systematic variations are adjusted for to **make expression counts comparable across genes and/or samples**. The counts of mapped reads for each gene is proportional to the expression of RNA ("interesting") in addition to many other factors ("uninteresting"). Normalization is the process of adjusting raw count values to account for the "uninteresting" factors.
 
@@ -54,7 +52,7 @@ The main factors often considered during normalization are:
 If using a **3' or 5' droplet-based method (10X Genomics, CEL-seq2, Drop-seq, inDrops)**, the length of the gene will **not** affect the analysis because only the 5' or 3' end of the transcript is sequenced. However, if using **full-length sequencing (Smart-seq)**, the transcript length should be accounted for.
 :::
 
-### Methods for scRNA-seq normalization
+## Methods for scRNA-seq normalization
 
 Various methods have been developed specifically for scRNA-seq normalization. Some simpler methods resemble what we have seen with bulk RNA-seq; the application of **global scale factors** adjusting for a count-depth relationship that is assumed common across all genes. However, if those assumptions are not true then this basic normalization can lead to over-correction for lowly and moderately expressed genes and, in some cases, under-normalization of highly expressed genes [@bacher2017]. More complex methods will apply correction on a per-gene basis**.** In this lesson we will explore both approaches.
 
@@ -70,11 +68,11 @@ The next step is a transformation, and it is at this step where we can distingui
 
 **Simple transformations** are those which apply the same function to each individual measurement. Common examples include a **log transform** (which is applied in the original Seurat workflow), or a square root transform (less commonly used).
 
-In the [Hafemeister and Satija, 2019 paper](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1) the authors explored the issues with simple transformations. Specifically they evaluated the standard log normalization approach and found that genes with different abundances are affected differently and that effective normalization (using the log transform) is only observed with low/medium abundance genes (Figure 1D, below). Additionally, substantial imbalances in variance were observed with the log-normalized data (Figure 1E, below). In particular, cells with low total UMI counts exhibited disproportionately higher variance for high-abundance genes, dampening the variance contribution from other gene abundances. 
+In the [@hafemeister2019] the authors explored the issues with simple transformations. Specifically they evaluated the standard log normalization approach and found that genes with different abundances are affected differently and that effective normalization (using the log transform) is only observed with low/medium abundance genes (Figure 1D, below). Additionally, substantial imbalances in variance were observed with the log-normalized data (Figure 1E, below). In particular, cells with low total UMI counts exhibited disproportionately higher variance for high-abundance genes, dampening the variance contribution from other gene abundances. 
 
 ![](images/SCT_Fig1.png)
 
-> Image credit: Hafemeister C and Satija R. Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression, Genom Biology 2019 (<https://doi.org/10.1186/s13059-019-1874-1>)
+> Image credit: [@hafemeister2019]
 
 The conclusion is, **we cannot treat all genes the same.**
 
@@ -90,15 +88,15 @@ The proposed solution was the use of **Pearson residuals for transformation**, a
 
 In this workshop we will demonstrate the use of both transformations at different steps in the workflow.
 
-## 基于传统标准化流程对非期望变异来源进行评估
+# 基于传统标准化流程对非期望变异来源进行评估
 
 The most common biological data correction (or source of "uninteresting" variation) in single cell RNA-seq is the effects of the **cell cycle** on the transcriptome. We need to explore the data and see if we observe any effects in our data.
 
-### Set-up
+## Set-up
 
 Before we make any comparisons across cells, we will apply a **simple normalization.** **This is solely for the purpose of exploring the sources of variation in our data.**
 
-The input for this analysis is a `seurat` object. We will use the one that we created in @sec-qc called `filtered_seurat`.
+The input for this analysis is a `seurat` object. We will use the one that we created in [质控](/single_cell/scRNA-seq_online/04_SC_quality_control.qmd) called `filtered_seurat`.
 
 ```{r}
 library(Seurat)
@@ -113,12 +111,12 @@ seurat_phase
 
 可以发现，运行`NormalizeDataNext`后的数据多出了新的layer：data, 里面即储存了标准化后的数据。Next, we take this normalized data and check to see if data correction methods are necessary.
 
-### 评估细胞周期的影响（Evaluating effects of cell cycle） {#sec-evaluating_effects_of_cell_cycle}
+## 评估细胞周期的影响（Evaluating effects of cell cycle） {#sec-evaluating_effects_of_cell_cycle}
 
-#### 计算细胞周期评分
+### 计算细胞周期评分
 
 ::: callout-tip
-关于细胞周期的详细说明，见 @sec-Calculating_cell_cycle_scores 。
+关于细胞周期的详细说明，见[Seurat-消除细胞周期的影响](/single_cell/seurat/cell_cycle_regression.qmd#消除细胞周期的影响)。
 :::
 
 To assign each cell a score based on its expression of G2/M and S phase markers, we can use the Seuart function `CellCycleScoring()`. This function calculates cell cycle phase scores based on canonical markers that required as input.
@@ -141,9 +139,9 @@ head(seurat_phase@meta.data)
 table(seurat_phase$Phase)
 ```
 
-#### 使用PCA确定细胞周期是否是我们数据集中的主要变异来源
+### 使用PCA确定细胞周期是否是我们数据集中的主要变异来源
 
-After scoring the cells for cell cycle, we would like to determine **whether cell cycle is a major source of variation in our dataset using PCA（PCA的原理详见：** @sec-pca_theory **）**.
+After scoring the cells for cell cycle, we would like to determine **whether cell cycle is a major source of variation in our dataset using PCA（见**[PCA原理](/single_cell/scRNA-seq_online/05_theory_of_PCA.qmd)**）**.
 
 To perform PCA, we need to **first choose the most variable features, then scale the data**. Since highly expressed genes exhibit the highest amount of variation and we don't want our 'highly variable genes' only to reflect high expression, we need to scale the data to scale variation with expression level. The Seurat `ScaleData()` function will scale the data by:
 
@@ -185,7 +183,7 @@ plot_grid(p1, p2, ncol = 2, labels = "AUTO")
 ::: {.callout-tip collapse="true"}
 ###### When should cell cycle phase be regressed out?
 
-Below are two PCA plots taken from @sec-Elimination_of_cell_cycle_effects 。This first plot is similar to what we plotted above, it is a PCA prior to regression to evaluate if the cell cycle is playing a big role in driving PC1 and PC2. Clearly, the cells are separating by cell type in this case, so it suggests regressing out these effects.
+Below are two PCA plots taken from [Seurat-消除细胞周期的影响](/single_cell/seurat/cell_cycle_regression.qmd)。This first plot is similar to what we plotted above, it is a PCA prior to regression to evaluate if the cell cycle is playing a big role in driving PC1 and PC2. Clearly, the cells are separating by cell type in this case, so it suggests regressing out these effects.
 
 ![](images/unnamed-chunk-6-1.png){width="427"}
 
@@ -195,12 +193,12 @@ This second PCA plot is post-regression, and displays how effective the regressi
 :::
 
 ::: callout-tip
-在需要消除细胞周期的影响时，如何通过`ScaleData`回归掉（regress out）细胞周期的影响，以及如何在消除细胞周期的影响同时保留增殖细胞与静止细胞的区分，参考 @sec-Elimination_of_cell_cycle_effects 。
+在需要消除细胞周期的影响时，如何通过`ScaleData`回归掉（regress out）细胞周期的影响，以及如何在消除细胞周期的影响同时保留增殖细胞与静止细胞的区分，参考 [Seurat-消除细胞周期的影响](/single_cell/seurat/cell_cycle_regression.qmd#sec-regress-out)。
 :::
 
 ------------------------------------------------------------------------
 
-### 评估线粒体基因表达的影响
+## 评估线粒体基因表达的影响
 
 Mitochondrial expression is another factor which can greatly influence clustering. Oftentimes, it is useful to regress out variation due to mitochondrial expression. However, **if the differences in mitochondrial gene expression represent a biological phenomenon that may help to distinguish cell clusters, then we advise not regressing this out**. In this exercise, we can perform a quick check similar to looking at cell cycle and decide whether or not we want to regress it out.
 
@@ -238,7 +236,7 @@ Mitochondrial expression is another factor which can greatly influence clusterin
 
 ------------------------------------------------------------------------
 
-## `SCTransform`-based Normalization and regressing out sources of unwanted variation
+# `SCTransform`-based Normalization and regressing out sources of unwanted variation
 
 Now that we have established which effects are observed in our data, we can use the `SCTransform` method to regress out these effects. The `SCTransform` method was proposed as a better alternative to the log transform normalization method that we used for exploring sources of unwanted variation. The method not only **normalizes data, but it also performs a variance stabilization and allows for additional covariates to be regressed out**.
 
@@ -246,13 +244,13 @@ As described earlier, all genes cannot be treated the same. As such, the `SCTran
 
 ![](images/SCT_UMAP.png){width="532"}
 
-> Image credit: Hafemeister C and Satija R. Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression, Genom Biology 2019 (<https://doi.org/10.1101/576827)_>
+> Image credit: [@hafemeister2019]
 
 ::: callout-note
 Since the UMI counts are part of the GLM, the effects are automatically regressed out. The user can include any additional covariates (`vars.to.regress`) that may have an effect on expression and will be included in the model.
 :::
 
-### 数据导入
+## 数据导入
 
 前面的流程和此前一样
 
@@ -265,7 +263,7 @@ filtered_seurat
 head(filtered_seurat@meta.data)
 ```
 
-### 执行`SCTransform`
+## 执行`SCTransform`
 
 -   这里先运行一次`SCTransform`以便后面评估细胞周期、线粒体基因等非期望变异来源（**This is solely for the purpose of exploring the sources of variation in our data**）
 
@@ -291,7 +289,7 @@ Layers(seurat_phase)
 
 Note, the last line of output specifies **"Set default assay to SCT"**. 表明运行`SCTransform`之后，会将默认的assay指定为`SCTransform`之后的数据。This specifies that moving forward we would like to use the data after SCT was implemented. We can view the different assays that we have stored in our seurat object.
 
-### 评估细胞周期的影响
+## 评估细胞周期的影响
 
 ```{r}
 #| fig-width: 10
@@ -325,7 +323,7 @@ library(cowplot)
 plot_grid(p1, p2, ncol = 2, labels = "AUTO")
 ```
 
-### 评估线粒体基因的影响
+## 评估线粒体基因的影响
 
 ```{r}
 #| fig-width: 20
@@ -350,7 +348,7 @@ p2 <- DimPlot(seurat_phase,
 plot_grid(p1, p2, ncol = 2, labels = "AUTO")
 ```
 
-### 分割layer，再次执行`SCTranform`
+## 分割layer，再次执行SCTranform {#re_sctransform}
 
 Since we have two samples in our dataset (from two conditions), we want to keep them as separate layers and transform them as that is **what is required for integration**.
 
@@ -382,10 +380,10 @@ options(future.globals.maxSize = 4000 * 1024^2)
 Error: vector memory exhausted (limit reached?)
 ```
 
-说明所处理的数据量超出了R内存分配上限，请参阅 @sec-Raising_memory_limit 进行处理。
+说明所处理的数据量超出了R内存分配上限，请参阅[提高R内存分配上限（macOS）](/r_basic/environment_configuration.qmd#sec-Raising_memory_limit)进行处理。
 :::
 
-#### 执行`SCTranform` {#sec-perform_sctranform}
+### 执行SCTranform
 
 ```{r}
 # SCTranform
@@ -400,7 +398,7 @@ Now we can see that in addition to the raw RNA counts, we now have a SCT compone
 
 ------------------------------------------------------------------------
 
-### Save the object!
+## Save the object!
 
 ```{r}
 saveRDS(seurat_phase, "output/scRNA-seq_online/split_seurat.rds")
@@ -415,4 +413,9 @@ saveRDS(seurat_phase, "output/scRNA-seq_online/split_seurat.rds")
 #| echo: false
 sessionInfo()
 ```
+:::
+
+# References {.unnumbered}
+
+::: {#refs}
 :::

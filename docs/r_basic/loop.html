@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.3.450">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>R语言学习笔记 - 6&nbsp; 循环</title>
+<title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 循环</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,7 +60,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../single_cell/seurat/seurat.html" rel="next">
+<link href="../single_cell/single_cell_intro.html" rel="next">
 <link href="../r_basic/character.html" rel="prev">
 <link href="../images/logo.jpg" rel="icon" type="image/jpeg">
 <script src="../site_libs/quarto-html/quarto.js"></script>
@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "end",
-  "type": "overlay",
+  "type": "textbox",
   "limit": 20,
   "language": {
     "search-no-results-text": "No results",
@@ -92,7 +92,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script type="application/json" class="js-hypothesis-config">
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G2HZEXHNCE"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
+</script><script type="application/json" class="js-hypothesis-config">
 {
   "theme": "classic",
   "openSidebar": false,
@@ -100,9 +106,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "enableExperimentalNewNoteButton": true
 }
 </script><script async="" src="https://hypothes.is/embed.js"></script>
-<meta name="twitter:title" content="R语言学习笔记 - 6&nbsp; 循环">
+<meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 循环">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://djhcod.github.io/r-notes/r_basic/images/截屏2024-01-23 17.18.19.png">
+<meta property="og:site-name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
+<meta property="og:image:height" content="492">
+<meta property="og:image:width" content="2344">
+<meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 循环">
 <meta name="twitter:description" content="">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://djhcod.github.io/r-notes/r_basic/images/截屏2024-01-23 17.18.19.png">
+<meta name="twitter:image-height" content="492">
+<meta name="twitter:image-width" content="2344">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="nav-sidebar docked nav-fixed">
 
@@ -126,20 +141,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../intro.html" rel="" target="">
- <span class="menu-text">Introduction</span></a>
+    <a class="nav-link" href="../r_basic/r_basics.html" rel="" target="">
+ <span class="menu-text">R语言基础</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parts" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
- <span class="menu-text">Parts</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">单细胞数据分析</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-parts">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">
 <li>
-    <a class="dropdown-item" href="../r_basic/r_basics.html" rel="" target="">
- <span class="dropdown-text">R语言基础</span></a>
+    <a class="dropdown-item" href="../single_cell/single_cell_intro.html" rel="" target="">
+ <span class="dropdown-text">单细胞数据分析介绍</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../single_cell/seurat/seurat.html" rel="" target="">
+    <a class="dropdown-item" href="../single_cell/seurat/seurat_intro.html" rel="" target="">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
@@ -150,15 +165,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
  <span class="dropdown-text">单细胞补充内容</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../quarto_foundation/quarto_foundation.html" rel="" target="">
- <span class="dropdown-text">Quarto基础</span></a>
-  </li>  
     </ul>
 </li>
   <li class="nav-item">
-    <a class="nav-link" href="../references.html" rel="" target="">
- <span class="menu-text">References</span></a>
+    <a class="nav-link" href="../quarto_foundation/quarto_foundation.html" rel="" target="">
+ <span class="menu-text">Quarto基础</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -169,25 +180,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
 <div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/djhcod/r-notes" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <div class="dropdown">
-      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
-<li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=%7Curl%7C">
-              <i class="bi bi-bi-twitter pe-1"></i>
-            Twitter
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=%7Curl%7C">
-              <i class="bi bi-bi-facebook pe-1"></i>
-            Facebook
-            </a>
-          </li>
-      </ul>
-</div>
+    <a href="https://github.com/djhcod/r-notes" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -195,35 +194,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../r_basic/r_basics.html">R语言基础</a></li><li class="breadcrumb-item"><a href="../r_basic/loop.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">循环</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../r_basic/r_basics.html">R语言基础</a></li><li class="breadcrumb-item"><a href="../r_basic/loop.html">循环</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">主页</span></span></a>
+ <span class="menu-text">主页</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">前言</span></a>
-  </div>
-</li>
-        <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
@@ -236,39 +220,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rstudio环境配置</span></span></a>
+ <span class="menu-text">Rstudio环境配置</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../r_basic/data_input_output.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">数据的读取与输出</span></span></a>
+ <span class="menu-text">数据的读取与输出</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../r_basic/basic_data_function.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据处理基本函数</span></span></a>
+ <span class="menu-text">数据处理基本函数</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../r_basic/character.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">字符的处理</span></span></a>
+ <span class="menu-text">字符的处理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../r_basic/loop.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">循环</span></span></a>
+ <span class="menu-text">循环</span></a>
   </div>
 </li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../single_cell/seurat/seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Seurat v5官方文档</span></a>
+            <a href="../single_cell/single_cell_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞数据分析</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -276,181 +260,192 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../single_cell/scRNA-seq_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞测序技术介绍</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞RNA测序—从raw data到count matrix</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../single_cell/seurat/seurat_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat v5官方文档</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../single_cell/seurat/seurat_command_list.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
+ <span class="menu-text">Seurat常用函数清单</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/seurat/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
+ <span class="menu-text">Seurat细胞分群官方教程</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/seurat/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
+ <span class="menu-text">Seurat中的数据可视化方法</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/seurat/sctransform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
+ <span class="menu-text">基于SCTransform的单细胞数据标准化</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+ <span class="menu-text">消除细胞周期的影响</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
+ <span class="menu-text">整合（integration）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+ <span class="menu-text">Seurat v5单细胞数据整合分析</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/seurat/marker_gene_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
+ <span class="menu-text">寻找marker gene</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
+ <span class="menu-text">寻找不同样本类型间同一细胞类型内的差异基因</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
+ <span class="menu-text">基于参考集的细胞注释</span></a>
   </div>
 </li>
       </ul>
 </li>
-        <li class="sidebar-item sidebar-item-section">
+          <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../single_cell/scRNA-seq_online/00_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">scRNA-seq_online学习材料</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
+ <span class="menu-text">数据导入与Seurat对象构建</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">质控</span></span></a>
+ <span class="menu-text">质控</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
+ <span class="menu-text">Single-cell RNA-seq Clustering Workflow</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+ <span class="menu-text">PCA原理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+ <span class="menu-text">Normalization and regressing out unwanted variation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+ <span class="menu-text">单细胞数据整合（Integration）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+ <span class="menu-text">细胞聚类（clustering analysis）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
+ <span class="menu-text">细胞分群质量评估</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
+ <span class="menu-text">寻找marker基因+细胞注释</span></a>
   </div>
 </li>
       </ul>
 </li>
-        <li class="sidebar-item sidebar-item-section">
+          <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../single_cell/sc_supplementary/sc_supplementary_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">单细胞补充内容</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/sc_supplementary/read_sc_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">读取非标准格式的单细胞数据</span></span></a>
+ <span class="menu-text">读取非标准格式的单细胞数据</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/sc_supplementary/universal_marker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">细胞分群通用marker</span></span></a>
+ <span class="menu-text">细胞分群通用marker</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（上）</span></span></a>
+ <span class="menu-text">多个单细胞数据集整合分析（上）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（下）</span></span></a>
+ <span class="menu-text">多个单细胞数据集整合分析（下）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../single_cell/sc_supplementary/DecontX.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">预测和去除单细胞转录组的环境游离RNA污染</span></span></a>
+ <span class="menu-text">预测和去除单细胞转录组的环境游离RNA污染</span></a>
   </div>
+</li>
+      </ul>
 </li>
       </ul>
 </li>
@@ -458,60 +453,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="sidebar-item-container"> 
             <a href="../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quarto基础</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">在Quarto中嵌入Shiny应用程序</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
-  </div>
-</li>
-      </ul>
-</li>
-        <li class="px-0"><hr class="sidebar-divider hi "></li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
- <span class="menu-text">参考文献</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -519,8 +460,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">YAML设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">图片设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">交叉引用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">插入其他内容</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">在Quarto中嵌入Shiny应用程序</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto Books</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">发布到GitHub Pages</span></a>
   </div>
 </li>
       </ul>
@@ -530,24 +507,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">Table of contents</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">On this page</h2>
    
   <ul>
-<li><a href="#apply%E5%87%BD%E6%95%B0%E5%AE%B6%E6%97%8F" id="toc-apply函数家族" class="nav-link active" data-scroll-target="#apply%E5%87%BD%E6%95%B0%E5%AE%B6%E6%97%8F"><span class="header-section-number">6.1</span> <code>apply</code>函数家族</a></li>
+<li><a href="#apply%E5%87%BD%E6%95%B0%E5%AE%B6%E6%97%8F" id="toc-apply函数家族" class="nav-link active" data-scroll-target="#apply%E5%87%BD%E6%95%B0%E5%AE%B6%E6%97%8F"><span class="header-section-number">1</span> <code>apply</code>函数家族</a></li>
   <li>
-<a href="#%E5%9C%A8%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5%E4%B8%AD%E7%9A%84%E5%85%B6%E4%BB%96%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0" id="toc-在循环语句中的其他常用函数" class="nav-link" data-scroll-target="#%E5%9C%A8%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5%E4%B8%AD%E7%9A%84%E5%85%B6%E4%BB%96%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="header-section-number">6.2</span> 在循环语句中的其他常用函数</a>
+<a href="#purrr%E5%8C%85map%E5%87%BD%E6%95%B0%E5%AE%B6%E6%97%8F" id="toc-purrr包map函数家族" class="nav-link" data-scroll-target="#purrr%E5%8C%85map%E5%87%BD%E6%95%B0%E5%AE%B6%E6%97%8F"><span class="header-section-number">2</span> <code>purrr</code>包<code>map()</code>函数家族</a>
+  <ul class="collapse">
+<li><a href="#sec-map_function" id="toc-sec-map_function" class="nav-link" data-scroll-target="#sec-map_function"><code>map()</code></a></li>
+  <li><a href="#map2" id="toc-map2" class="nav-link" data-scroll-target="#map2"><code>map2()</code></a></li>
+  <li><a href="#pmap" id="toc-pmap" class="nav-link" data-scroll-target="#pmap"><code>pmap()</code></a></li>
+  <li><a href="#%E7%BB%99map%E5%87%BD%E6%95%B0%E6%B7%BB%E5%8A%A0%E5%90%8E%E7%BC%80" id="toc-给map函数添加后缀" class="nav-link" data-scroll-target="#%E7%BB%99map%E5%87%BD%E6%95%B0%E6%B7%BB%E5%8A%A0%E5%90%8E%E7%BC%80">给<code>map</code>函数添加后缀</a></li>
+  <li><a href="#walk%E7%B3%BB%E5%88%97" id="toc-walk系列" class="nav-link" data-scroll-target="#walk%E7%B3%BB%E5%88%97"><strong><code>walk()</code>系列</strong></a></li>
+  </ul>
+</li>
+  <li>
+<a href="#%E5%9C%A8%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5%E4%B8%AD%E7%9A%84%E5%85%B6%E4%BB%96%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0" id="toc-在循环语句中的其他常用函数" class="nav-link" data-scroll-target="#%E5%9C%A8%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5%E4%B8%AD%E7%9A%84%E5%85%B6%E4%BB%96%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="header-section-number">3</span> 在循环语句中的其他常用函数</a>
   <ul class="collapse">
 <li><a href="#assign%E5%87%BD%E6%95%B0" id="toc-assign函数" class="nav-link" data-scroll-target="#assign%E5%87%BD%E6%95%B0"><code>assign()</code>函数</a></li>
   <li><a href="#append%E5%87%BD%E6%95%B0" id="toc-append函数" class="nav-link" data-scroll-target="#append%E5%87%BD%E6%95%B0"><code>append</code>函数</a></li>
   </ul>
 </li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/r_basic/loop.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/r_basic/loop.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
+  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/r_basic/loop.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">
-<span class="chapter-number">6</span>&nbsp; <span class="chapter-title">循环</span>
-</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">循环</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -560,9 +545,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
-</header><section id="apply函数家族" class="level2" data-number="6.1"><h2 data-number="6.1" class="anchored" data-anchor-id="apply函数家族">
-<span class="header-section-number">6.1</span> <code>apply</code>函数家族</h2>
-<p>主要应用apply()函数。apply()以数据帧或矩阵作为输入，并以向量、列表或数组的形式给出输出。apply()函数主要用于避免显式使用循环结构。与之类似的lapply()函数返回与输入列表对象长度相似的列表对象，其中的每个元素都是应用指定函数到列表中相应元素的结果，其作用相当于避免了for循环的使用，更适合转换数据类型等操作。</p>
+</header><blockquote class="blockquote">
+<p>参考：</p>
+<p><a href="https://zhuanlan.zhihu.com/p/168772624"><em>【R语言】优雅的循环迭代：purrr包</em></a></p>
+<p><a href="https://purrr.tidyverse.org" class="uri">https://purrr.tidyverse.org</a></p>
+</blockquote>
+<p><strong>循环迭代，</strong>就是将一个函数依次应用（映射）到序列的每一个元素上。用R写<strong>循环</strong>从低到高有三种境界：基础的显式<code>for</code>循环，到<code><a href="https://rdrr.io/r/base/apply.html">apply()</a></code>函数家族，最后到<code>purrr</code>包<code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code>函数家族泛函式编程。在R语言中应该尽量避免显式循环的应用。而<code><a href="https://rdrr.io/r/base/apply.html">apply()</a></code>函数家族和<code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code>函数家族都能够用于避免显式使用循环结构。<code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code>系列函数提供了更多的一致性、规范性和便利性，更容易记住和使用。速度来说，<code><a href="https://rdrr.io/r/base/apply.html">apply()</a></code>家族稍快，但可以忽略不计。</p>
+<section id="apply函数家族" class="level2" data-number="1"><h2 data-number="1" class="anchored" data-anchor-id="apply函数家族">
+<span class="header-section-number">1</span> <code>apply</code>函数家族</h2>
+<p><code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code>包含在R的基础包内，返回一个长度与 X（输入）相同的<strong>列表</strong>，其中的每个元素都是将目标函数（FUN）应用于X的相应元素的结果。其基本语法和map()一致，所以参考下面的map()函数的介绍。与之类似的<code><a href="https://rdrr.io/r/base/apply.html">apply()</a></code>函数适合对数据框的操作，能够将目标函数应用于输入数据的行或列，然后输出一个向量或列表。</p>
 <p>生成案例数据</p>
 <div class="cell" data-hash="loop_cache/html/unnamed-chunk-1_21f5009c3737f42d86c4a01851704c3b">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mydata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span>, ncol <span class="op">=</span> <span class="fl">3</span>,nrow <span class="op">=</span> <span class="fl">6</span><span class="op">)</span> <span class="co">#生成一个3列、6行的矩阵数据</span></span>
@@ -580,11 +571,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>计算mydata数据集中每一行的均值并添加到每一行后面</p>
-<div class="cell" data-hash="loop_cache/html/unnamed-chunk-2_6930bc4dc5b433064a04c7312f96cc31">
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mydata</span><span class="op">$</span><span class="va">Row_Means</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">mydata</span>,</span>
-<span>                          MARGIN <span class="op">=</span> <span class="fl">1</span>, <span class="co">#1:对每行进行运算；2:对列进行运算；MARGIN=c(1,2)对行、列运算</span></span>
-<span>                        <span class="va">mean</span>, <span class="co">#要应用的函数</span></span>
-<span>                        na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="co">#是否忽略缺失值</span></span>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-2_74c4539864b44382508cea1675fe1a77">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mydata</span><span class="op">$</span><span class="va">Row_Means</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span></span>
+<span>  <span class="va">mydata</span>,</span>
+<span>  MARGIN <span class="op">=</span> <span class="fl">1</span>, <span class="co"># 1:对每行进行运算；2:对列进行运算；MARGIN=c(1,2)对行、列运算</span></span>
+<span>  <span class="va">mean</span>, <span class="co"># 要应用的函数</span></span>
+<span>  na.rm <span class="op">=</span> <span class="cn">T</span> <span class="co"># 是否忽略缺失值</span></span>
+<span><span class="op">)</span> </span>
 <span><span class="va">mydata</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  V1 V2 V3 Row_Means
@@ -596,7 +589,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 6  6  3  9         6</code></pre>
 </div>
 </div>
-<p>对mydata的第一列和第二列数据求均值</p>
+<p>求mydata数据集每一行第一列和第二列的均值</p>
 <div class="cell" data-hash="loop_cache/html/unnamed-chunk-3_73b13cb0e7bc797b2105cde902cae012">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mydata</span><span class="op">$</span><span class="va">Row_Means12</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">mydata</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">]</span>, MARGIN <span class="op">=</span> <span class="fl">1</span>, <span class="va">mean</span>,na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span><span class="va">mydata</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -611,8 +604,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>对mydata的每一列进行求和运算</p>
-<div class="cell" data-hash="loop_cache/html/unnamed-chunk-4_88bc09a4b0e140ee4efd3d0647178516">
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Col_Sums</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">mydata</span>, MARGIN <span class="op">=</span> <span class="fl">2</span>, <span class="va">sum</span>,na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-4_9dc0018e9639a6273a4cad4e17c2c841">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">Col_Sums</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">mydata</span>, MARGIN <span class="op">=</span> <span class="fl">2</span>, <span class="va">sum</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span><span class="va">mydata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="va">mydata</span>, <span class="va">Col_Sums</span><span class="op">)</span></span>
 <span><span class="va">mydata</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -626,8 +619,617 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 7 21 30 33        30        25.5</code></pre>
 </div>
 </div>
-</section><section id="在循环语句中的其他常用函数" class="level2" data-number="6.2"><h2 data-number="6.2" class="anchored" data-anchor-id="在循环语句中的其他常用函数">
-<span class="header-section-number">6.2</span> 在循环语句中的其他常用函数</h2>
+<hr></section><section id="purrr包map函数家族" class="level2" data-number="2"><h2 data-number="2" class="anchored" data-anchor-id="purrr包map函数家族">
+<span class="header-section-number">2</span> <code>purrr</code>包<code>map()</code>函数家族</h2>
+<section id="sec-map_function" class="level3"><h3 class="anchored" data-anchor-id="sec-map_function"><code>map()</code></h3>
+<p>依次应用<strong>一元函数</strong>到<strong>一个序列</strong>的每个元素上，<strong>基本等同 <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code></strong>：</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>序列包括以下的类型：</p>
+<ul>
+<li><p><strong>原子向量</strong>（各个元素都是同类型的），包括 6 种类型：logical、integer、double、character、complex、raw，其中 integer 和 double 也统称为numeric</p></li>
+<li><p><strong>列表</strong>（包含的元素可以是不同类型的）</p></li>
+</ul>
+</div>
+</div>
+<p><img src="images/截屏2024-01-23 17.18.19.png" class="img-fluid"></p>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-5_8893146350f7924b971a935883167e03">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/">purrr</a></span><span class="op">)</span></span>
+<span><span class="va">chr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="st">"d"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">chr</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$x
+[1] "a" "b"
+
+$y
+[1] "c" "d"</code></pre>
+</div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 让chr中的字符降序排列</span></span>
+<span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">chr</span>, <span class="va">sort</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$x
+[1] "b" "a"
+
+$y
+[1] "d" "c"</code></pre>
+</div>
+</div>
+<p>如过<code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code>应用对象是数据框，那么会将函数应用于数据框的<strong>每一列</strong>（<strong>可以把数据框的每一列看作一个元素</strong>）:</p>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-6_1f0c72da9704c7551b9a2a8dbcaa1f90">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, b <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">20</span>, c <span class="op">=</span> <span class="fl">21</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span></span>
+<span><span class="va">x_df</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    a  b  c
+1   1 11 21
+2   2 12 22
+3   3 13 23
+4   4 14 24
+5   5 15 25
+6   6 16 26
+7   7 17 27
+8   8 18 28
+9   9 19 29
+10 10 20 30</code></pre>
+</div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 计算x_tab每一列的均值</span></span>
+<span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">x_df</span>, <span class="va">mean</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$a
+[1] 5.5
+
+$b
+[1] 15.5
+
+$c
+[1] 25.5</code></pre>
+</div>
+</div>
+<p><code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code>函数还有其它参数，如 <code>na.rm</code>，这些需要特别指定的目标函数参数可以放到函数的后面：</p>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-7_57444492423d4e14419dc0a3fb7a64b7">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="va">x_df</span>, <span class="va">mean</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># 因为数据不含NA, 故结果同上</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$a
+[1] 5.5
+
+$b
+[1] 15.5
+
+$c
+[1] 25.5</code></pre>
+</div>
+</div>
+</section><section id="map2" class="level3"><h3 class="anchored" data-anchor-id="map2"><code>map2()</code></h3>
+<p>依次应用<strong>二元函数</strong>到<strong>两个序列</strong>的<strong>每对</strong>元素上（要求两个序列有相同的长度）：</p>
+<p><img src="images/截屏2024-01-23 17.21.54.png" class="img-fluid"></p>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-8_53418b17179c9fe6913a24831a37ee4a">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, b <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">20</span>, c <span class="op">=</span> <span class="fl">21</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span></span>
+<span><span class="va">x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$a
+ [1]  1  2  3  4  5  6  7  8  9 10
+
+$b
+ [1] 11 12 13 14 15 16 17 18 19 20
+
+$c
+ [1] 21 22 23 24 25 26 27 28 29 30</code></pre>
+</div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">y</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 1
+
+[[2]]
+[1] 2
+
+[[3]]
+[1] 3</code></pre>
+</div>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map2.html">map2</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>,\<span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="va">x</span><span class="op">*</span><span class="va">y</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$a
+ [1]  1  2  3  4  5  6  7  8  9 10
+
+$b
+ [1] 22 24 26 28 30 32 34 36 38 40
+
+$c
+ [1] 63 66 69 72 75 78 81 84 87 90</code></pre>
+</div>
+</div>
+<p><code><a href="https://purrr.tidyverse.org/reference/map2.html">map2()</a></code>应用对象也可以是数据框和向量：</p>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-9_b936755d46e3cbb3d8b6875f8b5420c5">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">y_vec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="va">y_vec</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1 2 3</code></pre>
+</div>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 将y_vec中的每一个元素逐一与x_df中对应的列中的每个值相乘</span></span>
+<span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map2.html">map2</a></span><span class="op">(</span><span class="va">x_df</span>, <span class="va">y_vec</span>, \<span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="va">x</span><span class="op">*</span><span class="va">y</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$a
+ [1]  1  2  3  4  5  6  7  8  9 10
+
+$b
+ [1] 22 24 26 28 30 32 34 36 38 40
+
+$c
+ [1] 63 66 69 72 75 78 81 84 87 90</code></pre>
+</div>
+</div>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-10_20b6525567b894f045c48a3e8fbf869c">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">y_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>d <span class="op">=</span> <span class="fl">21</span><span class="op">:</span><span class="fl">30</span>, e <span class="op">=</span> <span class="fl">11</span><span class="op">:</span><span class="fl">20</span>, f <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">y_df</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    d  e  f
+1  21 11  1
+2  22 12  2
+3  23 13  3
+4  24 14  4
+5  25 15  5
+6  26 16  6
+7  27 17  7
+8  28 18  8
+9  29 19  9
+10 30 20 10</code></pre>
+</div>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 将y_df中的每列逐一与x_df中对应的列中的每个值相乘</span></span>
+<span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map2.html">map2</a></span><span class="op">(</span><span class="va">x_df</span>, <span class="va">y_df</span>, \<span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="va">x</span><span class="op">*</span><span class="va">y</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$a
+ [1]  21  44  69  96 125 156 189 224 261 300
+
+$b
+ [1] 121 144 169 196 225 256 289 324 361 400
+
+$c
+ [1]  21  44  69  96 125 156 189 224 261 300</code></pre>
+</div>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 输出数据框</span></span>
+<span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html">map2_df</a></span><span class="op">(</span><span class="va">x_df</span>, <span class="va">y_df</span>, \<span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span> <span class="va">x</span><span class="op">*</span><span class="va">y</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 3
+       a     b     c
+   &lt;int&gt; &lt;int&gt; &lt;int&gt;
+ 1    21   121    21
+ 2    44   144    44
+ 3    69   169    69
+ 4    96   196    96
+ 5   125   225   125
+ 6   156   256   156
+ 7   189   289   189
+ 8   224   324   224
+ 9   261   361   261
+10   300   400   300</code></pre>
+</div>
+</div>
+</section><section id="pmap" class="level3"><h3 class="anchored" data-anchor-id="pmap"><code>pmap()</code></h3>
+<p>应用<strong>多元函数</strong>到<strong>多个序列</strong>的每组元素上，可以实现对数据框逐行迭代</p>
+<p><img src="images/截屏2024-01-23 17.23.05.png" class="img-fluid"></p>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-11_af255fed3b6f66b69872c0fa925e87b8">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">5</span>, <span class="fl">6</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pmap.html">pmap</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">z</span><span class="op">)</span>,</span>
+<span>  <span class="kw">function</span><span class="op">(</span><span class="va">first</span>, <span class="va">second</span>, <span class="va">third</span><span class="op">)</span> <span class="va">first</span> <span class="op">*</span> <span class="op">(</span><span class="va">second</span> <span class="op">+</span> <span class="va">third</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$a
+ [1]  5 10 15 20 25 30 35 40 45 50
+
+$b
+ [1]  77  84  91  98 105 112 119 126 133 140
+
+$c
+ [1] 189 198 207 216 225 234 243 252 261 270</code></pre>
+</div>
+</div>
+<p>也可以应用于数据框，实现对数据框逐行迭代：</p>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-12_8c67ac58e16bf1bc6de5008e2725243a">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">x_df</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    a  b  c
+1   1 11 21
+2   2 12 22
+3   3 13 23
+4   4 14 24
+5   5 15 25
+6   6 16 26
+7   7 17 27
+8   8 18 28
+9   9 19 29
+10 10 20 30</code></pre>
+</div>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pmap.html">pmap_dbl</a></span><span class="op">(</span></span>
+<span>  <span class="va">x_df</span>,</span>
+<span>  <span class="op">~</span> <span class="va">..1</span> <span class="op">*</span> <span class="op">(</span><span class="va">..2</span> <span class="op">+</span> <span class="va">..3</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="co"># 这里用带后缀的形式（pmap_dbl）返回数值型向量（见下文）</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1]  32  68 108 152 200 252 308 368 432 500</code></pre>
+</div>
+</div>
+</section><section id="给map函数添加后缀" class="level3"><h3 class="anchored" data-anchor-id="给map函数添加后缀">给<code>map</code>函数添加后缀</h3>
+<p><code>map</code>系列函数的运算结果默认是<strong>列表型</strong>的，但是<code>map</code>系列函数都有后缀形式，以决定循环迭代之后返回的数据类型，这是 <code>purrr</code> 比 <code>apply</code>函数族更先进和便利的一大优势。常用后缀如下（这里以<code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code>为例，<code><a href="https://purrr.tidyverse.org/reference/map2.html">map2()</a></code>和<code><a href="https://purrr.tidyverse.org/reference/pmap.html">pmap()</a></code>也有与之对应的后缀）：</p>
+<ul>
+<li>
+<p><code>map_dbl(.x, .f)</code>: 返回数值型向量</p>
+<p><img src="images/截屏2024-01-23 17.24.24.png" class="img-fluid" width="161"></p>
+<p>【案例】在<a href="#sec-map_function">上面的map()案例</a>中，求均值返回的结果是数值型，所以更好的做法是将返回结果指定为数值型向量，只需在<code>map</code>后加上<code>_dbl</code>的后缀：</p>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-13_c4b11e4d825766a0c376301becbea299">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map_dbl</a></span><span class="op">(</span><span class="va">x_df</span>, <span class="va">mean</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   a    b    c 
+ 5.5 15.5 25.5 </code></pre>
+</div>
+</div>
+</li>
+<li>
+<p><code>map_int(.x, .f)</code>: 返回整数型向量</p>
+<p><img src="images/截屏2024-01-23 17.25.29.png" class="img-fluid" width="151"></p>
+</li>
+<li>
+<p><code>map_lgl(.x, .f)</code>: 返回逻辑型向量</p>
+<p><img src="images/截屏2024-01-23 17.25.57.png" class="img-fluid" width="155"></p>
+</li>
+<li>
+<p><code>map_chr(.x, .f)</code>: 返回字符型向量</p>
+<p><img src="images/截屏2024-01-23 17.23.56.png" class="img-fluid" width="155"></p>
+</li>
+<li>
+<p><code>map_dfr(.x, .f)</code>: 返回数据框列表，再 <code>bind_rows</code> 按行合并为一个数据框</p>
+<p>【案例】批量读取具有相同列名的数据文件并合并成一个数据框</p>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-14_04c74d04ff91cf62055794fa55e791aa">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">files</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span><span class="st">"datas/"</span>, pattern <span class="op">=</span> <span class="st">"xlsx"</span>, full.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map_dfr.html">map_dfr</a></span><span class="op">(</span><span class="va">files</span>, <span class="va">read_xlsx</span><span class="op">)</span>    <span class="co"># 批量读取+按行堆叠合并</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>map_dfr(files, read_xlsx)</code> 依次将 <code>read_xlsx()</code> 函数应用到各个文件路径上，即依次读取数据，返回结果是数据框，同时“dfr”表示再做按行合并，一步到位。若需要设置 <code>read_xlsx()</code> 的其它参数，只需在后面设置即可。</p>
+</li>
+<li><p><code>map_dfc(.x, .f)</code>: 返回数据框列表，再 <code>bind_cols</code> 按列合并为一个数据框</p></li>
+</ul></section><section id="walk系列" class="level3"><h3 class="anchored" data-anchor-id="walk系列"><strong><code>walk()</code>系列</strong></h3>
+<p><strong>将函数依次作用到序列上，不返回结果。</strong>有些批量操作是没有或不关心返回结果的，例如批量保存到文件：<code><a href="https://rdrr.io/r/base/save.html">save()</a></code>, <code>write_csv()</code> 、<code><a href="https://rdrr.io/r/base/readRDS.html">saveRDS()</a></code>等。<strong><code><a href="https://purrr.tidyverse.org/reference/map.html">walk()</a></code>系列</strong>同样包括了<code><a href="https://purrr.tidyverse.org/reference/map.html">walk()</a></code>、<code>walk2</code>和<code><a href="https://purrr.tidyverse.org/reference/pmap.html">pwalk()</a></code>。</p>
+<p><img src="images/截屏2024-01-24 09.48.23.png" class="img-fluid" width="131"></p>
+<p>【例一】将mpg数据按“manufacturer”分组，每个“manufacturer”的数据分别保存为单独数据文件。</p>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-15_26cfaeed1b4354334e109c68671a5062">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 读取ggplot2包自带mpg数据集（该数据为tibble型）</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mpg.html">mpg</a></span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 11
+  manufacturer model displ  year   cyl trans      drv     cty   hwy fl    class 
+  &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;      &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; 
+1 audi         a4      1.8  1999     4 auto(l5)   f        18    29 p     compa…
+2 audi         a4      1.8  1999     4 manual(m5) f        21    29 p     compa…
+3 audi         a4      2    2008     4 manual(m6) f        20    31 p     compa…
+4 audi         a4      2    2008     4 auto(av)   f        21    30 p     compa…
+5 audi         a4      2.8  1999     6 auto(l5)   f        16    26 p     compa…
+6 audi         a4      2.8  1999     6 manual(m5) f        18    26 p     compa…</code></pre>
+</div>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 通过group_nest将mpg数据按“manufacturer”分组，每个“manufacturer”的数据分别保存为单独数据</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_nest.html">group_nest</a></span><span class="op">(</span><span class="va">df</span>, <span class="va">manufacturer</span><span class="op">)</span> </span>
+<span><span class="va">df</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 15 × 2
+   manufacturer                data
+   &lt;chr&gt;        &lt;list&lt;tibble[,10]&gt;&gt;
+ 1 audi                   [18 × 10]
+ 2 chevrolet              [19 × 10]
+ 3 dodge                  [37 × 10]
+ 4 ford                   [25 × 10]
+ 5 honda                   [9 × 10]
+ 6 hyundai                [14 × 10]
+ 7 jeep                    [8 × 10]
+ 8 land rover              [4 × 10]
+ 9 lincoln                 [3 × 10]
+10 mercury                 [4 × 10]
+11 nissan                 [13 × 10]
+12 pontiac                 [5 × 10]
+13 subaru                 [14 × 10]
+14 toyota                 [34 × 10]
+15 volkswagen             [27 × 10]</code></pre>
+</div>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 批量输出这些数据</span></span>
+<span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pmap.html">pwalk</a></span><span class="op">(</span><span class="va">df</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.csv</a></span><span class="op">(</span><span class="va">..2</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"output/r_basic/"</span>, <span class="va">..1</span>, <span class="st">".csv"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/截屏2024-01-24 10.01.53.png" class="img-fluid" width="179"></p>
+<p>【例二】这个例子来自<a href="../single_cell/sc_supplementary/read_sc_data.html">读取非标准10X格式文件</a>，要实现在”output/r_basic/GSE184880_RAW”中批量建立文件夹的目的。</p>
+<p>首先是构建文件夹的目录和名字，这一部分的目的参照<a href="../single_cell/sc_supplementary/read_sc_data.html#Read_non-standard_10x_files">读取非标准10X格式文件</a>。</p>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-16_ce7d392c3da6bde9935b64b292647217">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 列出</span></span>
+<span><span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span><span class="op">(</span><span class="st">"data/sc_supplementary/GSE184880_RAW"</span><span class="op">)</span></span>
+<span><span class="va">files</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "GSM5599220_Norm1"                 "GSM5599220_Norm1.barcodes.tsv.gz"
+ [3] "GSM5599220_Norm1.genes.tsv.gz"    "GSM5599220_Norm1.matrix.mtx.gz"  
+ [5] "GSM5599221_Norm2"                 "GSM5599221_Norm2.barcodes.tsv.gz"
+ [7] "GSM5599221_Norm2.genes.tsv.gz"    "GSM5599221_Norm2.matrix.mtx.gz"  
+ [9] "GSM5599222_Norm3"                 "GSM5599222_Norm3.barcodes.tsv.gz"</code></pre>
+</div>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">dirnames</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">".barcodes.tsv.gz|.genes.tsv.gz|.matrix.mtx.gz"</span>, </span>
+<span>                 replacement <span class="op">=</span> <span class="st">""</span>, </span>
+<span>                 x <span class="op">=</span> <span class="va">files</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>  </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"output/r_basic/GSE184880_RAW/"</span>, <span class="va">.</span><span class="op">)</span> </span>
+<span><span class="va">dirnames</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "output/r_basic/GSE184880_RAW/GSM5599220_Norm1"  
+ [2] "output/r_basic/GSE184880_RAW/GSM5599221_Norm2"  
+ [3] "output/r_basic/GSE184880_RAW/GSM5599222_Norm3"  
+ [4] "output/r_basic/GSE184880_RAW/GSM5599223_Norm4"  
+ [5] "output/r_basic/GSE184880_RAW/GSM5599224_Norm5"  
+ [6] "output/r_basic/GSE184880_RAW/GSM5599225_Cancer1"
+ [7] "output/r_basic/GSE184880_RAW/GSM5599226_Cancer2"
+ [8] "output/r_basic/GSE184880_RAW/GSM5599227_Cancer3"
+ [9] "output/r_basic/GSE184880_RAW/GSM5599228_Cancer4"
+[10] "output/r_basic/GSE184880_RAW/GSM5599229_Cancer5"
+[11] "output/r_basic/GSE184880_RAW/GSM5599230_Cancer6"
+[12] "output/r_basic/GSE184880_RAW/GSM5599231_Cancer7"</code></pre>
+</div>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 在“output/r_basic”目标位置先建立一个“GSE184880_RAW”用于存放一会儿构建的文件夹</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html">dir.create</a></span><span class="op">(</span><span class="st">"output/r_basic/GSE184880_RAW"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>通过<code><a href="https://purrr.tidyverse.org/reference/pmap.html">pwalk()</a></code>根据文件夹的名称“dirnames”建立文件夹。⚠️注意<code><a href="https://purrr.tidyverse.org/reference/pmap.html">pwalk()</a></code>只能应用于列表对象，所以这里通过<code><a href="https://rdrr.io/r/base/list.html">list()</a></code>进行了转化：</p>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-17_54c3ad0d73d865f5d8d635dc4321f22f">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://purrr.tidyverse.org/reference/pmap.html">pwalk</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">dirnames</span><span class="op">)</span>, <span class="va">dir.create</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure"><p><img src="images/截屏2024-01-24 10.40.53.png" class="img-fluid figure-img" width="423"></p>
+<figcaption class="figure-caption">建立好的文件夹</figcaption></figure>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>更多关于<code>purr</code>包的应用，参考：<a href="https://zhuanlan.zhihu.com/p/168772624"><em>【R语言】优雅的循环迭代：purrr包</em></a><em>、</em><a href="https://purrr.tidyverse.org" class="uri">https://purrr.tidyverse.org</a>。</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<code>apply</code>家族 vs.&nbsp;<code>map</code>家族函数
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>There are two primary differences between the base <code>apply</code> family and the purrr <code>map</code> family: <code>purrr</code> functions are <strong>named more consistently</strong>, and more fully explore the space of input and output variants.</p>
+<ul>
+<li><p><code>purrr</code> functions consistently use&nbsp;<code>.</code>&nbsp;as prefix to avoid&nbsp;<a href="https://adv-r.hadley.nz/functionals.html#argument-names">inadvertently matching arguments</a>&nbsp;of the <code>purrr</code> function, instead of the function that you’re trying to call. Base functions use a variety of techniques including upper case (e.g.&nbsp;<code>lapply(X, FUN, ...)</code>) or require anonymous functions (e.g.&nbsp;<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code>).</p></li>
+<li><p>All <code>map</code> functions are type stable: you can predict the type of the output using little information about the inputs. In contrast, the base functions&nbsp;<code><a href="https://rdrr.io/r/base/lapply.html">sapply()</a></code>&nbsp;and&nbsp;<code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>&nbsp;automatically simplify making the return value hard to predict.</p></li>
+<li><p><strong>The map functions all start with the data, followed by the function</strong>, <strong>then any additional constant argument</strong>. Most base apply functions also follow this pattern, but&nbsp;<code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>&nbsp;starts with the function, and&nbsp;<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code>&nbsp;has no way to supply additional constant arguments.</p></li>
+<li><p>purrr functions provide all combinations of input and output variants, and include variants specifically for the common two argument case.</p></li>
+</ul>
+<p><strong><code>apply</code>家族和<code>map</code>家族函数对照表：</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 15%">
+<col style="width: 30%">
+<col style="width: 39%">
+</colgroup>
+<thead><tr class="header">
+<th>Output</th>
+<th>Input</th>
+<th>Base R</th>
+<th>purrr</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>List</td>
+<td>1 vector</td>
+<td><code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code></td>
+<td><code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code></td>
+</tr>
+<tr class="even">
+<td>List</td>
+<td>2 vectors</td>
+<td>
+<code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>,&nbsp;<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code>
+</td>
+<td><code><a href="https://purrr.tidyverse.org/reference/map2.html">map2()</a></code></td>
+</tr>
+<tr class="odd">
+<td>List</td>
+<td>&gt;2 vectors</td>
+<td>
+<code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>,&nbsp;<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code>
+</td>
+<td><code><a href="https://purrr.tidyverse.org/reference/pmap.html">pmap()</a></code></td>
+</tr>
+<tr class="even">
+<td>Atomic vector of desired type</td>
+<td>1 vector</td>
+<td><code><a href="https://rdrr.io/r/base/lapply.html">vapply()</a></code></td>
+<td>
+<p><code><a href="https://purrr.tidyverse.org/reference/map.html">map_lgl()</a></code>&nbsp;(logical)</p>
+<p><code><a href="https://purrr.tidyverse.org/reference/map.html">map_int()</a></code>&nbsp;(integer)</p>
+<p><code><a href="https://purrr.tidyverse.org/reference/map.html">map_dbl()</a></code>&nbsp;(double)</p>
+<p><code><a href="https://purrr.tidyverse.org/reference/map.html">map_chr()</a></code>&nbsp;(character)</p>
+<p><code><a href="https://purrr.tidyverse.org/reference/map_raw.html">map_raw()</a></code>&nbsp;(raw)</p>
+</td>
+</tr>
+<tr class="odd">
+<td>Atomic vector of desired type</td>
+<td>2 vectors</td>
+<td>
+<code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>,&nbsp;<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code>, then&nbsp;<code>is.*()</code>&nbsp;to check type</td>
+<td>
+<p><code><a href="https://purrr.tidyverse.org/reference/map2.html">map2_lgl()</a></code>&nbsp;(logical)</p>
+<p><code><a href="https://purrr.tidyverse.org/reference/map2.html">map2_int()</a></code>&nbsp;(integer)</p>
+<p><code><a href="https://purrr.tidyverse.org/reference/map2.html">map2_dbl()</a></code>&nbsp;(double)</p>
+<p><code><a href="https://purrr.tidyverse.org/reference/map2.html">map2_chr()</a></code>&nbsp;(character)</p>
+<p><code><a href="https://purrr.tidyverse.org/reference/map_raw.html">map2_raw()</a></code>&nbsp;(raw)</p>
+</td>
+</tr>
+<tr class="even">
+<td>Atomic vector of desired type</td>
+<td>&gt;2 vectors</td>
+<td>
+<code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>,&nbsp;<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code>, then&nbsp;<code>is.*()</code>&nbsp;to check type</td>
+<td>
+<p><code><a href="https://purrr.tidyverse.org/reference/map2.html">map2_lgl()</a></code>&nbsp;(logical)</p>
+<p><code><a href="https://purrr.tidyverse.org/reference/map2.html">map2_int()</a></code>&nbsp;(integer)</p>
+<p><code><a href="https://purrr.tidyverse.org/reference/map2.html">map2_dbl()</a></code>&nbsp;(double)</p>
+<p><code><a href="https://purrr.tidyverse.org/reference/map2.html">map2_chr()</a></code>&nbsp;(character)</p>
+<p><code><a href="https://purrr.tidyverse.org/reference/map_raw.html">map2_raw()</a></code>&nbsp;(raw)</p>
+</td>
+</tr>
+<tr class="odd">
+<td>Side effect only</td>
+<td>1 vector</td>
+<td>loops</td>
+<td><code><a href="https://purrr.tidyverse.org/reference/map.html">walk()</a></code></td>
+</tr>
+<tr class="even">
+<td>Side effect only</td>
+<td>2 vectors</td>
+<td>loops</td>
+<td><code><a href="https://purrr.tidyverse.org/reference/map2.html">walk2()</a></code></td>
+</tr>
+<tr class="odd">
+<td>Side effect only</td>
+<td>&gt;2 vectors</td>
+<td>loops</td>
+<td><code><a href="https://purrr.tidyverse.org/reference/pmap.html">pwalk()</a></code></td>
+</tr>
+<tr class="even">
+<td>Data frame (<code>rbind</code>outputs)</td>
+<td>1 vector</td>
+<td>
+<code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code>&nbsp;then&nbsp;<code><a href="https://rdrr.io/r/base/cbind.html">rbind()</a></code>
+</td>
+<td><code><a href="https://purrr.tidyverse.org/reference/map_dfr.html">map_dfr()</a></code></td>
+</tr>
+<tr class="odd">
+<td>Data frame (<code>rbind</code>outputs)</td>
+<td>2 vectors</td>
+<td>
+<code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>/<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code>&nbsp;then<code><a href="https://rdrr.io/r/base/cbind.html">rbind()</a></code>
+</td>
+<td><code><a href="https://purrr.tidyverse.org/reference/map_dfr.html">map2_dfr()</a></code></td>
+</tr>
+<tr class="even">
+<td>Data frame (<code>rbind</code>outputs)</td>
+<td>&gt;2 vectors</td>
+<td>
+<code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>/<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code>&nbsp;then<code><a href="https://rdrr.io/r/base/cbind.html">rbind()</a></code>
+</td>
+<td><code><a href="https://purrr.tidyverse.org/reference/map_dfr.html">pmap_dfr()</a></code></td>
+</tr>
+<tr class="odd">
+<td>Data frame (<code>cbind</code>outputs)</td>
+<td>1 vector</td>
+<td>
+<code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code>&nbsp;then&nbsp;<code><a href="https://rdrr.io/r/base/cbind.html">cbind()</a></code>
+</td>
+<td><code><a href="https://purrr.tidyverse.org/reference/map_dfr.html">map_dfc()</a></code></td>
+</tr>
+<tr class="even">
+<td>Data frame (<code>cbind</code>outputs)</td>
+<td>2 vectors</td>
+<td>
+<code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>/<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code>&nbsp;then<code><a href="https://rdrr.io/r/base/cbind.html">cbind()</a></code>
+</td>
+<td><code><a href="https://purrr.tidyverse.org/reference/map_dfr.html">map2_dfc()</a></code></td>
+</tr>
+<tr class="odd">
+<td>Data frame (<code>cbind</code>outputs)</td>
+<td>&gt;2 vectors</td>
+<td>
+<code><a href="https://rdrr.io/r/base/mapply.html">mapply()</a></code>/<code><a href="https://rdrr.io/r/base/funprog.html">Map()</a></code>&nbsp;then<code><a href="https://rdrr.io/r/base/cbind.html">cbind()</a></code>
+</td>
+<td><code><a href="https://purrr.tidyverse.org/reference/map_dfr.html">pmap_dfc()</a></code></td>
+</tr>
+<tr class="even">
+<td>Any</td>
+<td>Vector and its names</td>
+<td>
+<code>l/s/vapply(X, function(x) f(x, names(x)))</code>&nbsp;or<code>mapply/Map(f, x, names(x))</code>
+</td>
+<td>
+<code><a href="https://purrr.tidyverse.org/reference/imap.html">imap()</a></code>,&nbsp;<code>imap_*()</code>&nbsp;(<code>lgl</code>,&nbsp;<code>dbl</code>,&nbsp;<code>dfr</code>, and etc. just like for<code><a href="https://purrr.tidyverse.org/reference/map.html">map()</a></code>,&nbsp;<code><a href="https://purrr.tidyverse.org/reference/map2.html">map2()</a></code>, and&nbsp;<code><a href="https://purrr.tidyverse.org/reference/pmap.html">pmap()</a></code>)</td>
+</tr>
+<tr class="odd">
+<td>Any</td>
+<td>Selected elements of the vector</td>
+<td><code>l/s/vapply(X[index], FUN, ...)</code></td>
+<td>
+<code><a href="https://purrr.tidyverse.org/reference/map_if.html">map_if()</a></code>,&nbsp;<code><a href="https://purrr.tidyverse.org/reference/map_if.html">map_at()</a></code>
+</td>
+</tr>
+<tr class="even">
+<td>List</td>
+<td>Recursively apply to list within list</td>
+<td><code><a href="https://rdrr.io/r/base/rapply.html">rapply()</a></code></td>
+<td><code><a href="https://purrr.tidyverse.org/reference/map_depth.html">map_depth()</a></code></td>
+</tr>
+<tr class="odd">
+<td>List</td>
+<td>List only</td>
+<td><code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code></td>
+<td>
+<code><a href="https://purrr.tidyverse.org/reference/lmap.html">lmap()</a></code>,&nbsp;<code><a href="https://purrr.tidyverse.org/reference/lmap.html">lmap_at()</a></code>,<code><a href="https://purrr.tidyverse.org/reference/lmap.html">lmap_if()</a></code>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Since a common use case for map functions is list extracting components, purrr provides a handful of shortcut functions for various uses of&nbsp;<code>[[</code>.</p>
+<table class="table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 53%">
+<col style="width: 22%">
+</colgroup>
+<thead><tr class="header">
+<th>Input</th>
+<th>base R</th>
+<th>purrr</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Extract by name</td>
+<td><code>lapply(x, `[[`, "a")</code></td>
+<td><code>map(x, "a")</code></td>
+</tr>
+<tr class="even">
+<td>Extract by position</td>
+<td><code>lapply(x, `[[`, 3)</code></td>
+<td><code>map(x, 3)</code></td>
+</tr>
+<tr class="odd">
+<td>Extract deeply</td>
+<td><code>lapply(x, \(y) y[[1]][["x"]][[3]])</code></td>
+<td><code>map(x, list(1, "x", 3))</code></td>
+</tr>
+<tr class="even">
+<td>Extract with default value</td>
+<td><code>lapply(x, function(y) tryCatch(y[[3]], error = function(e) NA))</code></td>
+<td><code>map(x, 3, .default = NA)</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<hr></section></section><section id="在循环语句中的其他常用函数" class="level2" data-number="3"><h2 data-number="3" class="anchored" data-anchor-id="在循环语句中的其他常用函数">
+<span class="header-section-number">3</span> 在循环语句中的其他常用函数</h2>
 <section id="assign函数" class="level3"><h3 class="anchored" data-anchor-id="assign函数">
 <code>assign()</code>函数</h3>
 <p><code>assign</code>函数能够将某个值赋值给指定名称，从而实现循环中将每次运行的结果保存到一个对象中，而不覆盖上一次运行的结果。</p>
@@ -636,8 +1238,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><code>value</code>：需要赋给<code>x</code>的值</p></li>
 </ul>
 <p>下面的案例实现输出”A”, “B”, “C”, “D”四个变量，每个变量就是一次循环的结果：</p>
-<div class="cell" data-hash="loop_cache/html/unnamed-chunk-5_3ddea81ec296b1de3a59b73ea198bee0">
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">x</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-18_eb8d3590f35185d99e9d51a0588eb351">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">x</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span><span class="op">)</span><span class="op">)</span><span class="op">{</span></span>
 <span>        <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">x</span><span class="op">)</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/r/base/assign.html">assign</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, value <span class="op">=</span> <span class="va">y</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -648,8 +1250,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>将新向量添加到已有向量中：</li>
 </ul>
-<div class="cell" data-hash="loop_cache/html/unnamed-chunk-6_64f9d811c5605e3d68753360b0e567ad">
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">v1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span></span>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-19_0dda0b58f500ac4b4b2689d659076769">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">v1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">3</span>, <span class="fl">4</span>, <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="va">v2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fl">7</span>, <span class="fl">8</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">v3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/append.html">append</a></span><span class="op">(</span><span class="va">v1</span>, <span class="va">v2</span><span class="op">)</span></span>
@@ -657,14 +1259,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1 2 3 4 5 6 7 8</code></pre>
 </div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#等价于</span></span>
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#等价于</span></span>
 <span><span class="va">v3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">v1</span>, <span class="va">v2</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>将新列表添加到已有列表中：</li>
 </ul>
-<div class="cell" data-hash="loop_cache/html/unnamed-chunk-7_373adc87371a5289fc2f841b3c10209b">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">list1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span>, b <span class="op">=</span> <span class="fl">2</span>, c <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-20_d56b85de6c7c452818f972eb03f45a51">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">list1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fl">1</span>, b <span class="op">=</span> <span class="fl">2</span>, c <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">list2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>d <span class="op">=</span> <span class="fl">4</span>, e <span class="op">=</span> <span class="fl">5</span>, f <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
 <span><span class="va">list3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/append.html">append</a></span><span class="op">(</span><span class="va">list1</span>, <span class="va">list2</span><span class="op">)</span></span>
 <span><span class="va">list3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -689,8 +1291,8 @@ $f
 </div>
 </div>
 <p>实际应用场景：在批量读取构建Seurat对象时，通过append()函数将每次的Seurat对象添加到列表中，最终得到一个包含了所有样本的单细胞数据的列表：</p>
-<div class="cell" data-hash="loop_cache/html/unnamed-chunk-8_54558f3a7cf98a3460b839a7b6b90cd5">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">file</span> <span class="kw">in</span> <span class="va">file_list</span><span class="op">)</span> <span class="op">{</span></span>
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-21_20fbce753fd7204359af5b5fe89a4bb9">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">for</span> <span class="op">(</span><span class="va">file</span> <span class="kw">in</span> <span class="va">file_list</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># 拼接文件路径</span></span>
 <span>  <span class="va">data.path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"data/other_single_cell_content/GSE234933_MGH_HNSCC_gex_raw_counts/"</span>, <span class="va">file</span><span class="op">)</span></span>
 <span>  <span class="co"># 读取RDS文件数据</span></span>
@@ -704,6 +1306,56 @@ $f
 <span>  <span class="co"># 将Seurat对象添加到列表中</span></span>
 <span>  <span class="va">seurat_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/append.html">append</a></span><span class="op">(</span><span class="va">seurat_list</span>, <span class="va">seurat_obj</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Session Info
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell" data-hash="loop_cache/html/unnamed-chunk-22_70498f1d66691255bb6229c935437c4d">
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.3.2 (2023-10-31)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.3
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Asia/Shanghai
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] dplyr_1.1.4 purrr_1.0.2
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.6.5       cli_3.6.2         knitr_1.45        rlang_1.1.3      
+ [5] xfun_0.41         generics_0.1.3    jsonlite_1.8.8    glue_1.7.0       
+ [9] colorspace_2.1-0  htmltools_0.5.7   scales_1.3.0      fansi_1.0.6      
+[13] rmarkdown_2.25    grid_4.3.2        munsell_0.5.0     evaluate_0.23    
+[17] tibble_3.2.1      fastmap_1.1.1     yaml_2.3.8        lifecycle_1.0.4  
+[21] compiler_4.3.2    codetools_0.2-19  htmlwidgets_1.6.4 pkgconfig_2.0.3  
+[25] rstudioapi_0.15.0 digest_0.6.34     R6_2.5.1          tidyselect_1.2.0 
+[29] utf8_1.2.4        pillar_1.9.0      magrittr_2.0.3    gtable_0.3.4     
+[33] tools_4.3.2       ggplot2_3.4.4    </code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -1121,122 +1773,439 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
 });
-</script><script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script><script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../r_basic/character.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">字符的处理</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">字符的处理</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../single_cell/seurat/seurat.html" class="pagination-link">
-        <span class="nav-page-text">Seurat v5官方文档</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../single_cell/single_cell_intro.html" class="pagination-link">
+        <span class="nav-page-text">单细胞数据分析</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb16" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 循环</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## `apply`函数家族</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>主要应用apply()函数。apply()以数据帧或矩阵作为输入，并以向量、列表或数组的形式给出输出。apply()函数主要用于避免显式使用循环结构。与之类似的lapply()函数返回与输入列表对象长度相似的列表对象，其中的每个元素都是应用指定函数到列表中相应元素的结果，其作用相当于避免了for循环的使用，更适合转换数据类型等操作。</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>生成案例数据</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">ncol =</span> <span class="dv">3</span>,<span class="at">nrow =</span> <span class="dv">6</span>) <span class="co">#生成一个3列、6行的矩阵数据</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>mydata[<span class="dv">3</span>,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span> <span class="co">#生成一个缺失值</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(mydata) <span class="co">#如果要生成新的一列需要转换为数据框形式</span></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>mydata</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>计算mydata数据集中每一行的均值并添加到每一行后面</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>Row_Means <span class="ot">&lt;-</span> <span class="fu">apply</span>(mydata,</span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>                          <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="co">#1:对每行进行运算；2:对列进行运算；MARGIN=c(1,2)对行、列运算</span></span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>                        mean, <span class="co">#要应用的函数</span></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>                        <span class="at">na.rm =</span> T) <span class="co">#是否忽略缺失值</span></span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>mydata</span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>对mydata的第一列和第二列数据求均值</span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>Row_Means12 <span class="ot">&lt;-</span> <span class="fu">apply</span>(mydata[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)], <span class="at">MARGIN =</span> <span class="dv">1</span>, mean,<span class="at">na.rm =</span> T)</span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>mydata</span>
-<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>对mydata的每一列进行求和运算</span>
-<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>Col_Sums <span class="ot">&lt;-</span> <span class="fu">apply</span>(mydata, <span class="at">MARGIN =</span> <span class="dv">2</span>, sum,<span class="at">na.rm =</span> T)</span>
-<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">rbind</span>(mydata, Col_Sums)</span>
-<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>mydata</span>
-<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## 在循环语句中的其他常用函数</span></span>
-<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a><span class="fu">### `assign()`函数</span></span>
-<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a><span class="in">`assign`</span>函数能够将某个值赋值给指定名称，从而实现循环中将每次运行的结果保存到一个对象中，而不覆盖上一次运行的结果。</span>
-<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`x`</span>：变量名称/赋值对象/最后的新变量的名称</span>
-<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`value`</span>：需要赋给<span class="in">`x`</span>的值</span>
-<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a>下面的案例实现输出"A", "B", "C", "D"四个变量，每个变量就是一次循环的结果：</span>
-<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>)){</span>
-<span id="cb16-65"><a href="#cb16-65" aria-hidden="true" tabindex="-1"></a>        y <span class="ot">&lt;-</span> <span class="fu">paste0</span>(x, x)</span>
-<span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a>        <span class="fu">assign</span>(<span class="at">x =</span> x, <span class="at">value =</span> y)</span>
-<span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb16-68"><a href="#cb16-68" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-70"><a href="#cb16-70" aria-hidden="true" tabindex="-1"></a><span class="fu">### `append`函数</span></span>
-<span id="cb16-71"><a href="#cb16-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-72"><a href="#cb16-72" aria-hidden="true" tabindex="-1"></a><span class="in">`append()`</span>函数被广泛应用于将新的向量添加到现有的向量、列表或数据框中。</span>
-<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-74"><a href="#cb16-74" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>将新向量添加到已有向量中：</span>
-<span id="cb16-75"><a href="#cb16-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-79"><a href="#cb16-79" aria-hidden="true" tabindex="-1"></a>v1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
-<span id="cb16-80"><a href="#cb16-80" aria-hidden="true" tabindex="-1"></a>v2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>)</span>
-<span id="cb16-81"><a href="#cb16-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-82"><a href="#cb16-82" aria-hidden="true" tabindex="-1"></a>v3 <span class="ot">&lt;-</span> <span class="fu">append</span>(v1, v2)</span>
-<span id="cb16-83"><a href="#cb16-83" aria-hidden="true" tabindex="-1"></a>v3</span>
-<span id="cb16-84"><a href="#cb16-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-85"><a href="#cb16-85" aria-hidden="true" tabindex="-1"></a><span class="co">#等价于</span></span>
-<span id="cb16-86"><a href="#cb16-86" aria-hidden="true" tabindex="-1"></a>v3 <span class="ot">&lt;-</span> <span class="fu">c</span>(v1, v2)</span>
-<span id="cb16-87"><a href="#cb16-87" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-88"><a href="#cb16-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-89"><a href="#cb16-89" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>将新列表添加到已有列表中：</span>
-<span id="cb16-90"><a href="#cb16-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-93"><a href="#cb16-93" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-94"><a href="#cb16-94" aria-hidden="true" tabindex="-1"></a>list1 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">c =</span> <span class="dv">3</span>)</span>
-<span id="cb16-95"><a href="#cb16-95" aria-hidden="true" tabindex="-1"></a>list2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">d =</span> <span class="dv">4</span>, <span class="at">e =</span> <span class="dv">5</span>, <span class="at">f =</span> <span class="dv">6</span>)</span>
-<span id="cb16-96"><a href="#cb16-96" aria-hidden="true" tabindex="-1"></a>list3 <span class="ot">&lt;-</span> <span class="fu">append</span>(list1, list2)</span>
-<span id="cb16-97"><a href="#cb16-97" aria-hidden="true" tabindex="-1"></a>list3</span>
-<span id="cb16-98"><a href="#cb16-98" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-99"><a href="#cb16-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-100"><a href="#cb16-100" aria-hidden="true" tabindex="-1"></a>实际应用场景：在批量读取构建Seurat对象时，通过append()函数将每次的Seurat对象添加到列表中，最终得到一个包含了所有样本的单细胞数据的列表：</span>
-<span id="cb16-101"><a href="#cb16-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-104"><a href="#cb16-104" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-105"><a href="#cb16-105" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb16-106"><a href="#cb16-106" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (file <span class="cf">in</span> file_list) {</span>
-<span id="cb16-107"><a href="#cb16-107" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 拼接文件路径</span></span>
-<span id="cb16-108"><a href="#cb16-108" aria-hidden="true" tabindex="-1"></a>  data.path <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"data/other_single_cell_content/GSE234933_MGH_HNSCC_gex_raw_counts/"</span>, file)</span>
-<span id="cb16-109"><a href="#cb16-109" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 读取RDS文件数据</span></span>
-<span id="cb16-110"><a href="#cb16-110" aria-hidden="true" tabindex="-1"></a>  seurat_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(data.path)</span>
-<span id="cb16-111"><a href="#cb16-111" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 创建Seurat对象，并指定项目名称为文件名（去除后缀）</span></span>
-<span id="cb16-112"><a href="#cb16-112" aria-hidden="true" tabindex="-1"></a>  sample_name <span class="ot">&lt;-</span> <span class="fu">file_path_sans_ext</span>(file)</span>
-<span id="cb16-113"><a href="#cb16-113" aria-hidden="true" tabindex="-1"></a>  seurat_obj <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> seurat_data,</span>
-<span id="cb16-114"><a href="#cb16-114" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">project =</span> sample_name,</span>
-<span id="cb16-115"><a href="#cb16-115" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">min.features =</span> <span class="dv">200</span>,</span>
-<span id="cb16-116"><a href="#cb16-116" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">min.cells =</span> <span class="dv">3</span>)</span>
-<span id="cb16-117"><a href="#cb16-117" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 将Seurat对象添加到列表中</span></span>
-<span id="cb16-118"><a href="#cb16-118" aria-hidden="true" tabindex="-1"></a>  seurat_list <span class="ot">&lt;-</span> <span class="fu">append</span>(seurat_list, seurat_obj)</span>
-<span id="cb16-119"><a href="#cb16-119" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb16-120"><a href="#cb16-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="sourceCode" id="cb63" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "循环"</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 参考：</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; </span><span class="co">[</span><span class="ot">*【R语言】优雅的循环迭代：purrr包*</span><span class="co">](https://zhuanlan.zhihu.com/p/168772624)</span></span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; </span><span class="ot">&lt;https://purrr.tidyverse.org&gt;</span></span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>**循环迭代，**就是将一个函数依次应用（映射）到序列的每一个元素上。用R写**循环**从低到高有三种境界：基础的显式<span class="in">`for`</span>循环，到<span class="in">`apply()`</span>函数家族，最后到<span class="in">`purrr`</span>包<span class="in">`map()`</span>函数家族泛函式编程。在R语言中应该尽量避免显式循环的应用。而<span class="in">`apply()`</span>函数家族和<span class="in">`map()`</span>函数家族都能够用于避免显式使用循环结构。<span class="in">`map()`</span>系列函数提供了更多的一致性、规范性和便利性，更容易记住和使用。速度来说，<span class="in">`apply()`</span>家族稍快，但可以忽略不计。</span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## `apply`函数家族</span></span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a><span class="in">`lapply()`</span>包含在R的基础包内，返回一个长度与 X（输入）相同的**列表**，其中的每个元素都是将目标函数（FUN）应用于X的相应元素的结果。其基本语法和map()一致，所以参考下面的map()函数的介绍。与之类似的<span class="in">`apply()`</span>函数适合对数据框的操作，能够将目标函数应用于输入数据的行或列，然后输出一个向量或列表。</span>
+<span id="cb63-16"><a href="#cb63-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-17"><a href="#cb63-17" aria-hidden="true" tabindex="-1"></a>生成案例数据</span>
+<span id="cb63-18"><a href="#cb63-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-21"><a href="#cb63-21" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-22"><a href="#cb63-22" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>, <span class="at">ncol =</span> <span class="dv">3</span>,<span class="at">nrow =</span> <span class="dv">6</span>) <span class="co">#生成一个3列、6行的矩阵数据</span></span>
+<span id="cb63-23"><a href="#cb63-23" aria-hidden="true" tabindex="-1"></a>mydata[<span class="dv">3</span>,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span> <span class="co">#生成一个缺失值</span></span>
+<span id="cb63-24"><a href="#cb63-24" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(mydata) <span class="co">#如果要生成新的一列需要转换为数据框形式</span></span>
+<span id="cb63-25"><a href="#cb63-25" aria-hidden="true" tabindex="-1"></a>mydata</span>
+<span id="cb63-26"><a href="#cb63-26" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-27"><a href="#cb63-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-28"><a href="#cb63-28" aria-hidden="true" tabindex="-1"></a>计算mydata数据集中每一行的均值并添加到每一行后面</span>
+<span id="cb63-29"><a href="#cb63-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-32"><a href="#cb63-32" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-33"><a href="#cb63-33" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>Row_Means <span class="ot">&lt;-</span> <span class="fu">apply</span>(</span>
+<span id="cb63-34"><a href="#cb63-34" aria-hidden="true" tabindex="-1"></a>  mydata,</span>
+<span id="cb63-35"><a href="#cb63-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="co"># 1:对每行进行运算；2:对列进行运算；MARGIN=c(1,2)对行、列运算</span></span>
+<span id="cb63-36"><a href="#cb63-36" aria-hidden="true" tabindex="-1"></a>  mean, <span class="co"># 要应用的函数</span></span>
+<span id="cb63-37"><a href="#cb63-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">na.rm =</span> T <span class="co"># 是否忽略缺失值</span></span>
+<span id="cb63-38"><a href="#cb63-38" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb63-39"><a href="#cb63-39" aria-hidden="true" tabindex="-1"></a>mydata</span>
+<span id="cb63-40"><a href="#cb63-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-41"><a href="#cb63-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-42"><a href="#cb63-42" aria-hidden="true" tabindex="-1"></a>求mydata数据集每一行第一列和第二列的均值</span>
+<span id="cb63-43"><a href="#cb63-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-46"><a href="#cb63-46" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-47"><a href="#cb63-47" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>Row_Means12 <span class="ot">&lt;-</span> <span class="fu">apply</span>(mydata[, <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)], <span class="at">MARGIN =</span> <span class="dv">1</span>, mean,<span class="at">na.rm =</span> T)</span>
+<span id="cb63-48"><a href="#cb63-48" aria-hidden="true" tabindex="-1"></a>mydata</span>
+<span id="cb63-49"><a href="#cb63-49" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-50"><a href="#cb63-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-51"><a href="#cb63-51" aria-hidden="true" tabindex="-1"></a>对mydata的每一列进行求和运算</span>
+<span id="cb63-52"><a href="#cb63-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-55"><a href="#cb63-55" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-56"><a href="#cb63-56" aria-hidden="true" tabindex="-1"></a>Col_Sums <span class="ot">&lt;-</span> <span class="fu">apply</span>(mydata, <span class="at">MARGIN =</span> <span class="dv">2</span>, sum, <span class="at">na.rm =</span> T)</span>
+<span id="cb63-57"><a href="#cb63-57" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">rbind</span>(mydata, Col_Sums)</span>
+<span id="cb63-58"><a href="#cb63-58" aria-hidden="true" tabindex="-1"></a>mydata</span>
+<span id="cb63-59"><a href="#cb63-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-60"><a href="#cb63-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-61"><a href="#cb63-61" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb63-62"><a href="#cb63-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-63"><a href="#cb63-63" aria-hidden="true" tabindex="-1"></a><span class="fu">## `purrr`包`map()`函数家族</span></span>
+<span id="cb63-64"><a href="#cb63-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-65"><a href="#cb63-65" aria-hidden="true" tabindex="-1"></a><span class="fu">### `map()` {#sec-map_function}</span></span>
+<span id="cb63-66"><a href="#cb63-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-67"><a href="#cb63-67" aria-hidden="true" tabindex="-1"></a>依次应用**一元函数**到**一个序列**的每个元素上，**基本等同 `lapply()`**：</span>
+<span id="cb63-68"><a href="#cb63-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-69"><a href="#cb63-69" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
+<span id="cb63-70"><a href="#cb63-70" aria-hidden="true" tabindex="-1"></a>序列包括以下的类型：</span>
+<span id="cb63-71"><a href="#cb63-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-72"><a href="#cb63-72" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**原子向量**（各个元素都是同类型的），包括 6 种类型：logical、integer、double、character、complex、raw，其中 integer 和 double 也统称为numeric</span>
+<span id="cb63-73"><a href="#cb63-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-74"><a href="#cb63-74" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**列表**（包含的元素可以是不同类型的）</span>
+<span id="cb63-75"><a href="#cb63-75" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb63-76"><a href="#cb63-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-77"><a href="#cb63-77" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-23%2017.18.19.png)</span></span>
+<span id="cb63-78"><a href="#cb63-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-81"><a href="#cb63-81" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-82"><a href="#cb63-82" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb63-83"><a href="#cb63-83" aria-hidden="true" tabindex="-1"></a>chr <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"b"</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"c"</span>, <span class="st">"d"</span>))</span>
+<span id="cb63-84"><a href="#cb63-84" aria-hidden="true" tabindex="-1"></a>chr</span>
+<span id="cb63-85"><a href="#cb63-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-86"><a href="#cb63-86" aria-hidden="true" tabindex="-1"></a><span class="co"># 让chr中的字符降序排列</span></span>
+<span id="cb63-87"><a href="#cb63-87" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(chr, sort, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb63-88"><a href="#cb63-88" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-89"><a href="#cb63-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-90"><a href="#cb63-90" aria-hidden="true" tabindex="-1"></a>如过<span class="in">`map()`</span>应用对象是数据框，那么会将函数应用于数据框的**每一列**（**可以把数据框的每一列看作一个元素**）:</span>
+<span id="cb63-91"><a href="#cb63-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-94"><a href="#cb63-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-95"><a href="#cb63-95" aria-hidden="true" tabindex="-1"></a>x_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">a =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">b =</span> <span class="dv">11</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">c =</span> <span class="dv">21</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb63-96"><a href="#cb63-96" aria-hidden="true" tabindex="-1"></a>x_df</span>
+<span id="cb63-97"><a href="#cb63-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-98"><a href="#cb63-98" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算x_tab每一列的均值</span></span>
+<span id="cb63-99"><a href="#cb63-99" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(x_df, mean)</span>
+<span id="cb63-100"><a href="#cb63-100" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-101"><a href="#cb63-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-102"><a href="#cb63-102" aria-hidden="true" tabindex="-1"></a><span class="in">`mean()`</span>函数还有其它参数，如 <span class="in">`na.rm`</span>，这些需要特别指定的目标函数参数可以放到函数的后面：</span>
+<span id="cb63-103"><a href="#cb63-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-106"><a href="#cb63-106" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-107"><a href="#cb63-107" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(x_df, mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)  <span class="co"># 因为数据不含NA, 故结果同上</span></span>
+<span id="cb63-108"><a href="#cb63-108" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-109"><a href="#cb63-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-110"><a href="#cb63-110" aria-hidden="true" tabindex="-1"></a><span class="fu">### `map2()`</span></span>
+<span id="cb63-111"><a href="#cb63-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-112"><a href="#cb63-112" aria-hidden="true" tabindex="-1"></a>依次应用**二元函数**到**两个序列**的**每对**元素上（要求两个序列有相同的长度）：</span>
+<span id="cb63-113"><a href="#cb63-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-114"><a href="#cb63-114" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-23%2017.21.54.png)</span></span>
+<span id="cb63-115"><a href="#cb63-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-118"><a href="#cb63-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-119"><a href="#cb63-119" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">b =</span> <span class="dv">11</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">c =</span> <span class="dv">21</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb63-120"><a href="#cb63-120" aria-hidden="true" tabindex="-1"></a>x</span>
+<span id="cb63-121"><a href="#cb63-121" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb63-122"><a href="#cb63-122" aria-hidden="true" tabindex="-1"></a>y</span>
+<span id="cb63-123"><a href="#cb63-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-124"><a href="#cb63-124" aria-hidden="true" tabindex="-1"></a><span class="fu">map2</span>(x, y,\(x, y) x<span class="sc">*</span>y)</span>
+<span id="cb63-125"><a href="#cb63-125" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-126"><a href="#cb63-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-127"><a href="#cb63-127" aria-hidden="true" tabindex="-1"></a><span class="in">`map2()`</span>应用对象也可以是数据框和向量：</span>
+<span id="cb63-128"><a href="#cb63-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-131"><a href="#cb63-131" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-132"><a href="#cb63-132" aria-hidden="true" tabindex="-1"></a>y_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span>
+<span id="cb63-133"><a href="#cb63-133" aria-hidden="true" tabindex="-1"></a>y_vec</span>
+<span id="cb63-134"><a href="#cb63-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-135"><a href="#cb63-135" aria-hidden="true" tabindex="-1"></a><span class="co"># 将y_vec中的每一个元素逐一与x_df中对应的列中的每个值相乘</span></span>
+<span id="cb63-136"><a href="#cb63-136" aria-hidden="true" tabindex="-1"></a><span class="fu">map2</span>(x_df, y_vec, \(x, y) x<span class="sc">*</span>y)</span>
+<span id="cb63-137"><a href="#cb63-137" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-138"><a href="#cb63-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-141"><a href="#cb63-141" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-142"><a href="#cb63-142" aria-hidden="true" tabindex="-1"></a>y_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">d =</span> <span class="dv">21</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">e =</span> <span class="dv">11</span><span class="sc">:</span><span class="dv">20</span>, <span class="at">f =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span>
+<span id="cb63-143"><a href="#cb63-143" aria-hidden="true" tabindex="-1"></a>y_df</span>
+<span id="cb63-144"><a href="#cb63-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-145"><a href="#cb63-145" aria-hidden="true" tabindex="-1"></a><span class="co"># 将y_df中的每列逐一与x_df中对应的列中的每个值相乘</span></span>
+<span id="cb63-146"><a href="#cb63-146" aria-hidden="true" tabindex="-1"></a><span class="fu">map2</span>(x_df, y_df, \(x, y) x<span class="sc">*</span>y)</span>
+<span id="cb63-147"><a href="#cb63-147" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出数据框</span></span>
+<span id="cb63-148"><a href="#cb63-148" aria-hidden="true" tabindex="-1"></a><span class="fu">map2_df</span>(x_df, y_df, \(x, y) x<span class="sc">*</span>y)</span>
+<span id="cb63-149"><a href="#cb63-149" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-150"><a href="#cb63-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-151"><a href="#cb63-151" aria-hidden="true" tabindex="-1"></a><span class="fu">### `pmap()`</span></span>
+<span id="cb63-152"><a href="#cb63-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-153"><a href="#cb63-153" aria-hidden="true" tabindex="-1"></a>应用**多元函数**到**多个序列**的每组元素上，可以实现对数据框逐行迭代</span>
+<span id="cb63-154"><a href="#cb63-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-155"><a href="#cb63-155" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-23%2017.23.05.png)</span></span>
+<span id="cb63-156"><a href="#cb63-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-159"><a href="#cb63-159" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-160"><a href="#cb63-160" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>)</span>
+<span id="cb63-161"><a href="#cb63-161" aria-hidden="true" tabindex="-1"></a><span class="fu">pmap</span>(</span>
+<span id="cb63-162"><a href="#cb63-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(x, y, z),</span>
+<span id="cb63-163"><a href="#cb63-163" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(first, second, third) first <span class="sc">*</span> (second <span class="sc">+</span> third)</span>
+<span id="cb63-164"><a href="#cb63-164" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb63-165"><a href="#cb63-165" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-166"><a href="#cb63-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-167"><a href="#cb63-167" aria-hidden="true" tabindex="-1"></a>也可以应用于数据框，实现对数据框逐行迭代：</span>
+<span id="cb63-168"><a href="#cb63-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-171"><a href="#cb63-171" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-172"><a href="#cb63-172" aria-hidden="true" tabindex="-1"></a>x_df</span>
+<span id="cb63-173"><a href="#cb63-173" aria-hidden="true" tabindex="-1"></a><span class="fu">pmap_dbl</span>(</span>
+<span id="cb63-174"><a href="#cb63-174" aria-hidden="true" tabindex="-1"></a>  x_df,</span>
+<span id="cb63-175"><a href="#cb63-175" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> ..<span class="dv">1</span> <span class="sc">*</span> (..<span class="dv">2</span> <span class="sc">+</span> ..<span class="dv">3</span>)</span>
+<span id="cb63-176"><a href="#cb63-176" aria-hidden="true" tabindex="-1"></a>) <span class="co"># 这里用带后缀的形式（pmap_dbl）返回数值型向量（见下文）</span></span>
+<span id="cb63-177"><a href="#cb63-177" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-178"><a href="#cb63-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-179"><a href="#cb63-179" aria-hidden="true" tabindex="-1"></a><span class="fu">### 给`map`函数添加后缀</span></span>
+<span id="cb63-180"><a href="#cb63-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-181"><a href="#cb63-181" aria-hidden="true" tabindex="-1"></a><span class="in">`map`</span>系列函数的运算结果默认是**列表型**的，但是<span class="in">`map`</span>系列函数都有后缀形式，以决定循环迭代之后返回的数据类型，这是 <span class="in">`purrr`</span> 比 <span class="in">`apply`</span>函数族更先进和便利的一大优势。常用后缀如下（这里以<span class="in">`map()`</span>为例，<span class="in">`map2()`</span>和<span class="in">`pmap()`</span>也有与之对应的后缀）：</span>
+<span id="cb63-182"><a href="#cb63-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-183"><a href="#cb63-183" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`map_dbl(.x, .f)`</span>: 返回数值型向量</span>
+<span id="cb63-184"><a href="#cb63-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-185"><a href="#cb63-185" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/截屏2024-01-23%2017.24.24.png)</span>{width="161"}</span>
+<span id="cb63-186"><a href="#cb63-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-187"><a href="#cb63-187" aria-hidden="true" tabindex="-1"></a>    【案例】在<span class="co">[</span><span class="ot">上面的map()案例</span><span class="co">](#sec-map_function)</span>中，求均值返回的结果是数值型，所以更好的做法是将返回结果指定为数值型向量，只需在<span class="in">`map`</span>后加上<span class="in">`_dbl`</span>的后缀：</span>
+<span id="cb63-188"><a href="#cb63-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-189"><a href="#cb63-189" aria-hidden="true" tabindex="-1"></a>    <span class="in">```{r}</span></span>
+<span id="cb63-190"><a href="#cb63-190" aria-hidden="true" tabindex="-1"></a>    <span class="fu">map_dbl</span>(x_df, mean)</span>
+<span id="cb63-191"><a href="#cb63-191" aria-hidden="true" tabindex="-1"></a>    <span class="in">```</span></span>
+<span id="cb63-192"><a href="#cb63-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-193"><a href="#cb63-193" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`map_int(.x, .f)`</span>: 返回整数型向量</span>
+<span id="cb63-194"><a href="#cb63-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-195"><a href="#cb63-195" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/截屏2024-01-23%2017.25.29.png)</span>{width="151"}</span>
+<span id="cb63-196"><a href="#cb63-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-197"><a href="#cb63-197" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`map_lgl(.x, .f)`</span>: 返回逻辑型向量</span>
+<span id="cb63-198"><a href="#cb63-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-199"><a href="#cb63-199" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/截屏2024-01-23%2017.25.57.png)</span>{width="155"}</span>
+<span id="cb63-200"><a href="#cb63-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-201"><a href="#cb63-201" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`map_chr(.x, .f)`</span>: 返回字符型向量</span>
+<span id="cb63-202"><a href="#cb63-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-203"><a href="#cb63-203" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/截屏2024-01-23%2017.23.56.png)</span>{width="155"}</span>
+<span id="cb63-204"><a href="#cb63-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-205"><a href="#cb63-205" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`map_dfr(.x, .f)`</span>: 返回数据框列表，再 <span class="in">`bind_rows`</span> 按行合并为一个数据框</span>
+<span id="cb63-206"><a href="#cb63-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-207"><a href="#cb63-207" aria-hidden="true" tabindex="-1"></a>    【案例】批量读取具有相同列名的数据文件并合并成一个数据框</span>
+<span id="cb63-208"><a href="#cb63-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-209"><a href="#cb63-209" aria-hidden="true" tabindex="-1"></a>    <span class="in">```{r}</span></span>
+<span id="cb63-210"><a href="#cb63-210" aria-hidden="true" tabindex="-1"></a>    <span class="co">#| eval: false</span></span>
+<span id="cb63-211"><a href="#cb63-211" aria-hidden="true" tabindex="-1"></a>    files <span class="ot">=</span> <span class="fu">list.files</span>(<span class="st">"datas/"</span>, <span class="at">pattern =</span> <span class="st">"xlsx"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb63-212"><a href="#cb63-212" aria-hidden="true" tabindex="-1"></a>    df <span class="ot">=</span> <span class="fu">map_dfr</span>(files, read_xlsx)    <span class="co"># 批量读取+按行堆叠合并</span></span>
+<span id="cb63-213"><a href="#cb63-213" aria-hidden="true" tabindex="-1"></a>    <span class="in">```</span></span>
+<span id="cb63-214"><a href="#cb63-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-215"><a href="#cb63-215" aria-hidden="true" tabindex="-1"></a>    <span class="in">`map_dfr(files, read_xlsx)`</span> 依次将 <span class="in">`read_xlsx()`</span> 函数应用到各个文件路径上，即依次读取数据，返回结果是数据框，同时“dfr”表示再做按行合并，一步到位。若需要设置 <span class="in">`read_xlsx()`</span> 的其它参数，只需在后面设置即可。</span>
+<span id="cb63-216"><a href="#cb63-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-217"><a href="#cb63-217" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`map_dfc(.x, .f)`</span>: 返回数据框列表，再 <span class="in">`bind_cols`</span> 按列合并为一个数据框</span>
+<span id="cb63-218"><a href="#cb63-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-219"><a href="#cb63-219" aria-hidden="true" tabindex="-1"></a><span class="fu">### **`walk()`系列**</span></span>
+<span id="cb63-220"><a href="#cb63-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-221"><a href="#cb63-221" aria-hidden="true" tabindex="-1"></a>**将函数依次作用到序列上，不返回结果。**有些批量操作是没有或不关心返回结果的，例如批量保存到文件：`save()`, `write_csv()` 、`saveRDS()`等。**`walk()`系列**同样包括了<span class="in">`walk()`</span>、<span class="in">`walk2`</span>和<span class="in">`pwalk()`</span>。</span>
+<span id="cb63-222"><a href="#cb63-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-223"><a href="#cb63-223" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-24%2009.48.23.png)</span>{width="131"}</span>
+<span id="cb63-224"><a href="#cb63-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-225"><a href="#cb63-225" aria-hidden="true" tabindex="-1"></a>【例一】将mpg数据按“manufacturer”分组，每个“manufacturer”的数据分别保存为单独数据文件。</span>
+<span id="cb63-226"><a href="#cb63-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-229"><a href="#cb63-229" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-230"><a href="#cb63-230" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取ggplot2包自带mpg数据集（该数据为tibble型）</span></span>
+<span id="cb63-231"><a href="#cb63-231" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> ggplot2<span class="sc">::</span>mpg</span>
+<span id="cb63-232"><a href="#cb63-232" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span>
+<span id="cb63-233"><a href="#cb63-233" aria-hidden="true" tabindex="-1"></a><span class="co"># 通过group_nest将mpg数据按“manufacturer”分组，每个“manufacturer”的数据分别保存为单独数据</span></span>
+<span id="cb63-234"><a href="#cb63-234" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb63-235"><a href="#cb63-235" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">group_nest</span>(df, manufacturer) </span>
+<span id="cb63-236"><a href="#cb63-236" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb63-237"><a href="#cb63-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-238"><a href="#cb63-238" aria-hidden="true" tabindex="-1"></a><span class="co"># 批量输出这些数据</span></span>
+<span id="cb63-239"><a href="#cb63-239" aria-hidden="true" tabindex="-1"></a><span class="fu">pwalk</span>(df, <span class="sc">~</span> <span class="fu">write.csv</span>(..<span class="dv">2</span>, <span class="fu">paste0</span>(<span class="st">"output/r_basic/"</span>, ..<span class="dv">1</span>, <span class="st">".csv"</span>)))</span>
+<span id="cb63-240"><a href="#cb63-240" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-241"><a href="#cb63-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-242"><a href="#cb63-242" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-24%2010.01.53.png)</span>{width="179"}</span>
+<span id="cb63-243"><a href="#cb63-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-244"><a href="#cb63-244" aria-hidden="true" tabindex="-1"></a>【例二】这个例子来自<span class="co">[</span><span class="ot">读取非标准10X格式文件</span><span class="co">](/single_cell/sc_supplementary/read_sc_data.qmd)</span>，要实现在"output/r_basic/GSE184880_RAW"中批量建立文件夹的目的。</span>
+<span id="cb63-245"><a href="#cb63-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-246"><a href="#cb63-246" aria-hidden="true" tabindex="-1"></a>首先是构建文件夹的目录和名字，这一部分的目的参照<span class="co">[</span><span class="ot">读取非标准10X格式文件</span><span class="co">](/single_cell/sc_supplementary/read_sc_data.qmd#Read_non-standard_10x_files)</span>。</span>
+<span id="cb63-247"><a href="#cb63-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-250"><a href="#cb63-250" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-251"><a href="#cb63-251" aria-hidden="true" tabindex="-1"></a><span class="co"># 列出</span></span>
+<span id="cb63-252"><a href="#cb63-252" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data/sc_supplementary/GSE184880_RAW"</span>)</span>
+<span id="cb63-253"><a href="#cb63-253" aria-hidden="true" tabindex="-1"></a>files[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb63-254"><a href="#cb63-254" aria-hidden="true" tabindex="-1"></a>dirnames <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="at">pattern =</span> <span class="st">".barcodes.tsv.gz|.genes.tsv.gz|.matrix.mtx.gz"</span>, </span>
+<span id="cb63-255"><a href="#cb63-255" aria-hidden="true" tabindex="-1"></a>                 <span class="at">replacement =</span> <span class="st">""</span>, </span>
+<span id="cb63-256"><a href="#cb63-256" aria-hidden="true" tabindex="-1"></a>                 <span class="at">x =</span> files) <span class="sc">%&gt;%</span>  </span>
+<span id="cb63-257"><a href="#cb63-257" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb63-258"><a href="#cb63-258" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">"output/r_basic/GSE184880_RAW/"</span>, .) </span>
+<span id="cb63-259"><a href="#cb63-259" aria-hidden="true" tabindex="-1"></a>dirnames</span>
+<span id="cb63-260"><a href="#cb63-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-261"><a href="#cb63-261" aria-hidden="true" tabindex="-1"></a><span class="co"># 在“output/r_basic”目标位置先建立一个“GSE184880_RAW”用于存放一会儿构建的文件夹</span></span>
+<span id="cb63-262"><a href="#cb63-262" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"output/r_basic/GSE184880_RAW"</span>)</span>
+<span id="cb63-263"><a href="#cb63-263" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-264"><a href="#cb63-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-265"><a href="#cb63-265" aria-hidden="true" tabindex="-1"></a>通过<span class="in">`pwalk()`</span>根据文件夹的名称“dirnames”建立文件夹。⚠️注意<span class="in">`pwalk()`</span>只能应用于列表对象，所以这里通过<span class="in">`list()`</span>进行了转化：</span>
+<span id="cb63-266"><a href="#cb63-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-269"><a href="#cb63-269" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-270"><a href="#cb63-270" aria-hidden="true" tabindex="-1"></a><span class="fu">pwalk</span>(<span class="fu">list</span>(dirnames), dir.create)</span>
+<span id="cb63-271"><a href="#cb63-271" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-272"><a href="#cb63-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-273"><a href="#cb63-273" aria-hidden="true" tabindex="-1"></a><span class="al">![建立好的文件夹](images/截屏2024-01-24%2010.40.53.png)</span>{width="423"}</span>
+<span id="cb63-274"><a href="#cb63-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-275"><a href="#cb63-275" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
+<span id="cb63-276"><a href="#cb63-276" aria-hidden="true" tabindex="-1"></a>更多关于<span class="in">`purr`</span>包的应用，参考：<span class="co">[</span><span class="ot">*【R语言】优雅的循环迭代：purrr包*</span><span class="co">](https://zhuanlan.zhihu.com/p/168772624)</span>*、*<span class="ot">&lt;https://purrr.tidyverse.org&gt;</span>。</span>
+<span id="cb63-277"><a href="#cb63-277" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb63-278"><a href="#cb63-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-279"><a href="#cb63-279" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb63-280"><a href="#cb63-280" aria-hidden="true" tabindex="-1"></a><span class="fu">###### `apply`家族 vs. `map`家族函数</span></span>
+<span id="cb63-281"><a href="#cb63-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-282"><a href="#cb63-282" aria-hidden="true" tabindex="-1"></a>There are two primary differences between the base <span class="in">`apply`</span> family and the purrr <span class="in">`map`</span> family: <span class="in">`purrr`</span> functions are **named more consistently**, and more fully explore the space of input and output variants.</span>
+<span id="cb63-283"><a href="#cb63-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-284"><a href="#cb63-284" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`purrr`</span> functions consistently use&nbsp;<span class="in">`.`</span>&nbsp;as prefix to avoid&nbsp;<span class="co">[</span><span class="ot">inadvertently matching arguments</span><span class="co">](https://adv-r.hadley.nz/functionals.html#argument-names)</span>&nbsp;of the <span class="in">`purrr`</span> function, instead of the function that you’re trying to call. Base functions use a variety of techniques including upper case (e.g.&nbsp;<span class="in">`lapply(X, FUN, ...)`</span>) or require anonymous functions (e.g.&nbsp;<span class="in">`Map()`</span>).</span>
+<span id="cb63-285"><a href="#cb63-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-286"><a href="#cb63-286" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>All <span class="in">`map`</span> functions are type stable: you can predict the type of the output using little information about the inputs. In contrast, the base functions&nbsp;<span class="in">`sapply()`</span>&nbsp;and&nbsp;<span class="in">`mapply()`</span>&nbsp;automatically simplify making the return value hard to predict.</span>
+<span id="cb63-287"><a href="#cb63-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-288"><a href="#cb63-288" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**The map functions all start with the data, followed by the function**, **then any additional constant argument**. Most base apply functions also follow this pattern, but&nbsp;<span class="in">`mapply()`</span>&nbsp;starts with the function, and&nbsp;<span class="in">`Map()`</span>&nbsp;has no way to supply additional constant arguments.</span>
+<span id="cb63-289"><a href="#cb63-289" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-290"><a href="#cb63-290" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>purrr functions provide all combinations of input and output variants, and include variants specifically for the common two argument case.</span>
+<span id="cb63-291"><a href="#cb63-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-292"><a href="#cb63-292" aria-hidden="true" tabindex="-1"></a>**`apply`家族和`map`家族函数对照表：**</span>
+<span id="cb63-293"><a href="#cb63-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-294"><a href="#cb63-294" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-295"><a href="#cb63-295" aria-hidden="true" tabindex="-1"></a>| Output                        | Input                                 | Base R                                                                     | purrr                                                                                             |</span>
+<span id="cb63-296"><a href="#cb63-296" aria-hidden="true" tabindex="-1"></a>+===============================+=======================================+============================================================================+===================================================================================================+</span>
+<span id="cb63-297"><a href="#cb63-297" aria-hidden="true" tabindex="-1"></a>| List                          | 1 vector                              | <span class="in">`lapply()`</span>                                                                 | <span class="in">`map()`</span>                                                                                           |</span>
+<span id="cb63-298"><a href="#cb63-298" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-299"><a href="#cb63-299" aria-hidden="true" tabindex="-1"></a>| List                          | 2 vectors                             | <span class="in">`mapply()`</span>,&nbsp;<span class="in">`Map()`</span>                                                        | <span class="in">`map2()`</span>                                                                                          |</span>
+<span id="cb63-300"><a href="#cb63-300" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-301"><a href="#cb63-301" aria-hidden="true" tabindex="-1"></a>| List                          | <span class="sc">\&gt;</span>2 vectors                           | <span class="in">`mapply()`</span>,&nbsp;<span class="in">`Map()`</span>                                                        | <span class="in">`pmap()`</span>                                                                                          |</span>
+<span id="cb63-302"><a href="#cb63-302" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-303"><a href="#cb63-303" aria-hidden="true" tabindex="-1"></a>| Atomic vector of desired type | 1 vector                              | <span class="in">`vapply()`</span>                                                                 | <span class="in">`map_lgl()`</span>&nbsp;(logical)                                                                             |</span>
+<span id="cb63-304"><a href="#cb63-304" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            |                                                                                                   |</span>
+<span id="cb63-305"><a href="#cb63-305" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            | <span class="in">`map_int()`</span>&nbsp;(integer)                                                                             |</span>
+<span id="cb63-306"><a href="#cb63-306" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            |                                                                                                   |</span>
+<span id="cb63-307"><a href="#cb63-307" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            | <span class="in">`map_dbl()`</span>&nbsp;(double)                                                                              |</span>
+<span id="cb63-308"><a href="#cb63-308" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            |                                                                                                   |</span>
+<span id="cb63-309"><a href="#cb63-309" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            | <span class="in">`map_chr()`</span>&nbsp;(character)                                                                           |</span>
+<span id="cb63-310"><a href="#cb63-310" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            |                                                                                                   |</span>
+<span id="cb63-311"><a href="#cb63-311" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            | <span class="in">`map_raw()`</span>&nbsp;(raw)                                                                                 |</span>
+<span id="cb63-312"><a href="#cb63-312" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-313"><a href="#cb63-313" aria-hidden="true" tabindex="-1"></a>| Atomic vector of desired type | 2 vectors                             | <span class="in">`mapply()`</span>,&nbsp;<span class="in">`Map()`</span>, then&nbsp;<span class="in">`is.*()`</span>&nbsp;to check type                           | <span class="in">`map2_lgl()`</span>&nbsp;(logical)                                                                            |</span>
+<span id="cb63-314"><a href="#cb63-314" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            |                                                                                                   |</span>
+<span id="cb63-315"><a href="#cb63-315" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            | <span class="in">`map2_int()`</span>&nbsp;(integer)                                                                            |</span>
+<span id="cb63-316"><a href="#cb63-316" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            |                                                                                                   |</span>
+<span id="cb63-317"><a href="#cb63-317" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            | <span class="in">`map2_dbl()`</span>&nbsp;(double)                                                                             |</span>
+<span id="cb63-318"><a href="#cb63-318" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            |                                                                                                   |</span>
+<span id="cb63-319"><a href="#cb63-319" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            | <span class="in">`map2_chr()`</span>&nbsp;(character)                                                                          |</span>
+<span id="cb63-320"><a href="#cb63-320" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            |                                                                                                   |</span>
+<span id="cb63-321"><a href="#cb63-321" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            | <span class="in">`map2_raw()`</span>&nbsp;(raw)                                                                                |</span>
+<span id="cb63-322"><a href="#cb63-322" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-323"><a href="#cb63-323" aria-hidden="true" tabindex="-1"></a>| Atomic vector of desired type | <span class="sc">\&gt;</span>2 vectors                           | <span class="in">`mapply()`</span>,&nbsp;<span class="in">`Map()`</span>, then&nbsp;<span class="in">`is.*()`</span>&nbsp;to check type                           | <span class="in">`map2_lgl()`</span>&nbsp;(logical)                                                                            |</span>
+<span id="cb63-324"><a href="#cb63-324" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            |                                                                                                   |</span>
+<span id="cb63-325"><a href="#cb63-325" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            | <span class="in">`map2_int()`</span>&nbsp;(integer)                                                                            |</span>
+<span id="cb63-326"><a href="#cb63-326" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            |                                                                                                   |</span>
+<span id="cb63-327"><a href="#cb63-327" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            | <span class="in">`map2_dbl()`</span>&nbsp;(double)                                                                             |</span>
+<span id="cb63-328"><a href="#cb63-328" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            |                                                                                                   |</span>
+<span id="cb63-329"><a href="#cb63-329" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            | <span class="in">`map2_chr()`</span>&nbsp;(character)                                                                          |</span>
+<span id="cb63-330"><a href="#cb63-330" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            |                                                                                                   |</span>
+<span id="cb63-331"><a href="#cb63-331" aria-hidden="true" tabindex="-1"></a>|                               |                                       |                                                                            | <span class="in">`map2_raw()`</span>&nbsp;(raw)                                                                                |</span>
+<span id="cb63-332"><a href="#cb63-332" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-333"><a href="#cb63-333" aria-hidden="true" tabindex="-1"></a>| Side effect only              | 1 vector                              | loops                                                                      | <span class="in">`walk()`</span>                                                                                          |</span>
+<span id="cb63-334"><a href="#cb63-334" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-335"><a href="#cb63-335" aria-hidden="true" tabindex="-1"></a>| Side effect only              | 2 vectors                             | loops                                                                      | <span class="in">`walk2()`</span>                                                                                         |</span>
+<span id="cb63-336"><a href="#cb63-336" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-337"><a href="#cb63-337" aria-hidden="true" tabindex="-1"></a>| Side effect only              | <span class="sc">\&gt;</span>2 vectors                           | loops                                                                      | <span class="in">`pwalk()`</span>                                                                                         |</span>
+<span id="cb63-338"><a href="#cb63-338" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-339"><a href="#cb63-339" aria-hidden="true" tabindex="-1"></a>| Data frame (<span class="in">`rbind`</span>outputs)   | 1 vector                              | <span class="in">`lapply()`</span>&nbsp;then&nbsp;<span class="in">`rbind()`</span>                                                  | <span class="in">`map_dfr()`</span>                                                                                       |</span>
+<span id="cb63-340"><a href="#cb63-340" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-341"><a href="#cb63-341" aria-hidden="true" tabindex="-1"></a>| Data frame (<span class="in">`rbind`</span>outputs)   | 2 vectors                             | <span class="in">`mapply()`</span>/<span class="in">`Map()`</span>&nbsp;then<span class="in">`rbind()`</span>                                           | <span class="in">`map2_dfr()`</span>                                                                                      |</span>
+<span id="cb63-342"><a href="#cb63-342" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-343"><a href="#cb63-343" aria-hidden="true" tabindex="-1"></a>| Data frame (<span class="in">`rbind`</span>outputs)   | <span class="sc">\&gt;</span>2 vectors                           | <span class="in">`mapply()`</span>/<span class="in">`Map()`</span>&nbsp;then<span class="in">`rbind()`</span>                                           | <span class="in">`pmap_dfr()`</span>                                                                                      |</span>
+<span id="cb63-344"><a href="#cb63-344" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-345"><a href="#cb63-345" aria-hidden="true" tabindex="-1"></a>| Data frame (<span class="in">`cbind`</span>outputs)   | 1 vector                              | <span class="in">`lapply()`</span>&nbsp;then&nbsp;<span class="in">`cbind()`</span>                                                  | <span class="in">`map_dfc()`</span>                                                                                       |</span>
+<span id="cb63-346"><a href="#cb63-346" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-347"><a href="#cb63-347" aria-hidden="true" tabindex="-1"></a>| Data frame (<span class="in">`cbind`</span>outputs)   | 2 vectors                             | <span class="in">`mapply()`</span>/<span class="in">`Map()`</span>&nbsp;then<span class="in">`cbind()`</span>                                           | <span class="in">`map2_dfc()`</span>                                                                                      |</span>
+<span id="cb63-348"><a href="#cb63-348" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-349"><a href="#cb63-349" aria-hidden="true" tabindex="-1"></a>| Data frame (<span class="in">`cbind`</span>outputs)   | <span class="sc">\&gt;</span>2 vectors                           | <span class="in">`mapply()`</span>/<span class="in">`Map()`</span>&nbsp;then<span class="in">`cbind()`</span>                                           | <span class="in">`pmap_dfc()`</span>                                                                                      |</span>
+<span id="cb63-350"><a href="#cb63-350" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-351"><a href="#cb63-351" aria-hidden="true" tabindex="-1"></a>| Any                           | Vector and its names                  | <span class="in">`l/s/vapply(X, function(x) f(x, names(x)))`</span>&nbsp;or<span class="in">`mapply/Map(f, x, names(x))`</span> | <span class="in">`imap()`</span>,&nbsp;<span class="in">`imap_*()`</span>&nbsp;(<span class="in">`lgl`</span>,&nbsp;<span class="in">`dbl`</span>,&nbsp;<span class="in">`dfr`</span>, and etc. just like for<span class="in">`map()`</span>,&nbsp;<span class="in">`map2()`</span>, and&nbsp;<span class="in">`pmap()`</span>) |</span>
+<span id="cb63-352"><a href="#cb63-352" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-353"><a href="#cb63-353" aria-hidden="true" tabindex="-1"></a>| Any                           | Selected elements of the vector       | <span class="in">`l/s/vapply(X[index], FUN, ...)`</span>                                           | <span class="in">`map_if()`</span>,&nbsp;<span class="in">`map_at()`</span>                                                                            |</span>
+<span id="cb63-354"><a href="#cb63-354" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-355"><a href="#cb63-355" aria-hidden="true" tabindex="-1"></a>| List                          | Recursively apply to list within list | <span class="in">`rapply()`</span>                                                                 | <span class="in">`map_depth()`</span>                                                                                     |</span>
+<span id="cb63-356"><a href="#cb63-356" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-357"><a href="#cb63-357" aria-hidden="true" tabindex="-1"></a>| List                          | List only                             | <span class="in">`lapply()`</span>                                                                 | <span class="in">`lmap()`</span>,&nbsp;<span class="in">`lmap_at()`</span>,<span class="in">`lmap_if()`</span>                                                                 |</span>
+<span id="cb63-358"><a href="#cb63-358" aria-hidden="true" tabindex="-1"></a>+-------------------------------+---------------------------------------+----------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------+</span>
+<span id="cb63-359"><a href="#cb63-359" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-360"><a href="#cb63-360" aria-hidden="true" tabindex="-1"></a>Since a common use case for map functions is list extracting components, purrr provides a handful of shortcut functions for various uses of&nbsp;<span class="in">`[[`</span>.</span>
+<span id="cb63-361"><a href="#cb63-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-362"><a href="#cb63-362" aria-hidden="true" tabindex="-1"></a>+----------------------------+-------------------------------------------------------------------+----------------------------+</span>
+<span id="cb63-363"><a href="#cb63-363" aria-hidden="true" tabindex="-1"></a>| Input                      | base R                                                            | purrr                      |</span>
+<span id="cb63-364"><a href="#cb63-364" aria-hidden="true" tabindex="-1"></a>+============================+===================================================================+============================+</span>
+<span id="cb63-365"><a href="#cb63-365" aria-hidden="true" tabindex="-1"></a>| Extract by name            | `<span class="in">` lapply(x, `</span>[[`, "a") `<span class="in">`                                        | `</span>map(x, "a")`              |</span>
+<span id="cb63-366"><a href="#cb63-366" aria-hidden="true" tabindex="-1"></a>+----------------------------+-------------------------------------------------------------------+----------------------------+</span>
+<span id="cb63-367"><a href="#cb63-367" aria-hidden="true" tabindex="-1"></a>| Extract by position        | `<span class="in">` lapply(x, `</span>[[`, 3) `<span class="in">`                                          | `</span>map(x, 3)`                |</span>
+<span id="cb63-368"><a href="#cb63-368" aria-hidden="true" tabindex="-1"></a>+----------------------------+-------------------------------------------------------------------+----------------------------+</span>
+<span id="cb63-369"><a href="#cb63-369" aria-hidden="true" tabindex="-1"></a>| Extract deeply             | <span class="in">`lapply(x, \(y) y[[1]][["x"]][[3]])`</span>                              | <span class="in">`map(x, list(1, "x", 3))`</span>  |</span>
+<span id="cb63-370"><a href="#cb63-370" aria-hidden="true" tabindex="-1"></a>+----------------------------+-------------------------------------------------------------------+----------------------------+</span>
+<span id="cb63-371"><a href="#cb63-371" aria-hidden="true" tabindex="-1"></a>| Extract with default value | <span class="in">`lapply(x, function(y) tryCatch(y[[3]], error = function(e) NA))`</span> | <span class="in">`map(x, 3, .default = NA)`</span> |</span>
+<span id="cb63-372"><a href="#cb63-372" aria-hidden="true" tabindex="-1"></a>+----------------------------+-------------------------------------------------------------------+----------------------------+</span>
+<span id="cb63-373"><a href="#cb63-373" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb63-374"><a href="#cb63-374" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-375"><a href="#cb63-375" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb63-376"><a href="#cb63-376" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-377"><a href="#cb63-377" aria-hidden="true" tabindex="-1"></a><span class="fu">## 在循环语句中的其他常用函数</span></span>
+<span id="cb63-378"><a href="#cb63-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-379"><a href="#cb63-379" aria-hidden="true" tabindex="-1"></a><span class="fu">### `assign()`函数</span></span>
+<span id="cb63-380"><a href="#cb63-380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-381"><a href="#cb63-381" aria-hidden="true" tabindex="-1"></a><span class="in">`assign`</span>函数能够将某个值赋值给指定名称，从而实现循环中将每次运行的结果保存到一个对象中，而不覆盖上一次运行的结果。</span>
+<span id="cb63-382"><a href="#cb63-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-383"><a href="#cb63-383" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`x`</span>：变量名称/赋值对象/最后的新变量的名称</span>
+<span id="cb63-384"><a href="#cb63-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-385"><a href="#cb63-385" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`value`</span>：需要赋给<span class="in">`x`</span>的值</span>
+<span id="cb63-386"><a href="#cb63-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-387"><a href="#cb63-387" aria-hidden="true" tabindex="-1"></a>下面的案例实现输出"A", "B", "C", "D"四个变量，每个变量就是一次循环的结果：</span>
+<span id="cb63-388"><a href="#cb63-388" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-391"><a href="#cb63-391" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-392"><a href="#cb63-392" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>)){</span>
+<span id="cb63-393"><a href="#cb63-393" aria-hidden="true" tabindex="-1"></a>        y <span class="ot">&lt;-</span> <span class="fu">paste0</span>(x, x)</span>
+<span id="cb63-394"><a href="#cb63-394" aria-hidden="true" tabindex="-1"></a>        <span class="fu">assign</span>(<span class="at">x =</span> x, <span class="at">value =</span> y)</span>
+<span id="cb63-395"><a href="#cb63-395" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb63-396"><a href="#cb63-396" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-397"><a href="#cb63-397" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-398"><a href="#cb63-398" aria-hidden="true" tabindex="-1"></a><span class="fu">### `append`函数</span></span>
+<span id="cb63-399"><a href="#cb63-399" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-400"><a href="#cb63-400" aria-hidden="true" tabindex="-1"></a><span class="in">`append()`</span>函数被广泛应用于将新的向量添加到现有的向量、列表或数据框中。</span>
+<span id="cb63-401"><a href="#cb63-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-402"><a href="#cb63-402" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>将新向量添加到已有向量中：</span>
+<span id="cb63-403"><a href="#cb63-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-406"><a href="#cb63-406" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-407"><a href="#cb63-407" aria-hidden="true" tabindex="-1"></a>v1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
+<span id="cb63-408"><a href="#cb63-408" aria-hidden="true" tabindex="-1"></a>v2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>)</span>
+<span id="cb63-409"><a href="#cb63-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-410"><a href="#cb63-410" aria-hidden="true" tabindex="-1"></a>v3 <span class="ot">&lt;-</span> <span class="fu">append</span>(v1, v2)</span>
+<span id="cb63-411"><a href="#cb63-411" aria-hidden="true" tabindex="-1"></a>v3</span>
+<span id="cb63-412"><a href="#cb63-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-413"><a href="#cb63-413" aria-hidden="true" tabindex="-1"></a><span class="co">#等价于</span></span>
+<span id="cb63-414"><a href="#cb63-414" aria-hidden="true" tabindex="-1"></a>v3 <span class="ot">&lt;-</span> <span class="fu">c</span>(v1, v2)</span>
+<span id="cb63-415"><a href="#cb63-415" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-416"><a href="#cb63-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-417"><a href="#cb63-417" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>将新列表添加到已有列表中：</span>
+<span id="cb63-418"><a href="#cb63-418" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-421"><a href="#cb63-421" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-422"><a href="#cb63-422" aria-hidden="true" tabindex="-1"></a>list1 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>, <span class="at">b =</span> <span class="dv">2</span>, <span class="at">c =</span> <span class="dv">3</span>)</span>
+<span id="cb63-423"><a href="#cb63-423" aria-hidden="true" tabindex="-1"></a>list2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">d =</span> <span class="dv">4</span>, <span class="at">e =</span> <span class="dv">5</span>, <span class="at">f =</span> <span class="dv">6</span>)</span>
+<span id="cb63-424"><a href="#cb63-424" aria-hidden="true" tabindex="-1"></a>list3 <span class="ot">&lt;-</span> <span class="fu">append</span>(list1, list2)</span>
+<span id="cb63-425"><a href="#cb63-425" aria-hidden="true" tabindex="-1"></a>list3</span>
+<span id="cb63-426"><a href="#cb63-426" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-427"><a href="#cb63-427" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-428"><a href="#cb63-428" aria-hidden="true" tabindex="-1"></a>实际应用场景：在批量读取构建Seurat对象时，通过append()函数将每次的Seurat对象添加到列表中，最终得到一个包含了所有样本的单细胞数据的列表：</span>
+<span id="cb63-429"><a href="#cb63-429" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-432"><a href="#cb63-432" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-433"><a href="#cb63-433" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb63-434"><a href="#cb63-434" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (file <span class="cf">in</span> file_list) {</span>
+<span id="cb63-435"><a href="#cb63-435" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 拼接文件路径</span></span>
+<span id="cb63-436"><a href="#cb63-436" aria-hidden="true" tabindex="-1"></a>  data.path <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"data/other_single_cell_content/GSE234933_MGH_HNSCC_gex_raw_counts/"</span>, file)</span>
+<span id="cb63-437"><a href="#cb63-437" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 读取RDS文件数据</span></span>
+<span id="cb63-438"><a href="#cb63-438" aria-hidden="true" tabindex="-1"></a>  seurat_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(data.path)</span>
+<span id="cb63-439"><a href="#cb63-439" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 创建Seurat对象，并指定项目名称为文件名（去除后缀）</span></span>
+<span id="cb63-440"><a href="#cb63-440" aria-hidden="true" tabindex="-1"></a>  sample_name <span class="ot">&lt;-</span> <span class="fu">file_path_sans_ext</span>(file)</span>
+<span id="cb63-441"><a href="#cb63-441" aria-hidden="true" tabindex="-1"></a>  seurat_obj <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> seurat_data,</span>
+<span id="cb63-442"><a href="#cb63-442" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">project =</span> sample_name,</span>
+<span id="cb63-443"><a href="#cb63-443" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">min.features =</span> <span class="dv">200</span>,</span>
+<span id="cb63-444"><a href="#cb63-444" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">min.cells =</span> <span class="dv">3</span>)</span>
+<span id="cb63-445"><a href="#cb63-445" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 将Seurat对象添加到列表中</span></span>
+<span id="cb63-446"><a href="#cb63-446" aria-hidden="true" tabindex="-1"></a>  seurat_list <span class="ot">&lt;-</span> <span class="fu">append</span>(seurat_list, seurat_obj)</span>
+<span id="cb63-447"><a href="#cb63-447" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb63-448"><a href="#cb63-448" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-449"><a href="#cb63-449" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-450"><a href="#cb63-450" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb63-451"><a href="#cb63-451" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-452"><a href="#cb63-452" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb63-453"><a href="#cb63-453" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb63-454"><a href="#cb63-454" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-457"><a href="#cb63-457" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb63-458"><a href="#cb63-458" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb63-459"><a href="#cb63-459" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb63-460"><a href="#cb63-460" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb63-461"><a href="#cb63-461" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
@@ -1244,11 +2213,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
 <li class="nav-item">
- This book was built with Quarto
+ This website was built with Quarto
   </li>  
 </ul>
 </div>   
-    <div class="nav-footer-center">Copyright 2023, Du Junhong</div>
+    <div class="nav-footer-center">Copyright 2024, Du Junhong</div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
 <li class="nav-item compact">

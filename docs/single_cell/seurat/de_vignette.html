@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.3.450">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>R语言学习笔记 - 15&nbsp; 寻找不同样本类型间同一细胞类型内的差异基因</title>
+<title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 寻找不同样本类型间同一细胞类型内的差异基因</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -97,7 +97,7 @@ div.csl-indent {
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "end",
-  "type": "overlay",
+  "type": "textbox",
   "limit": 20,
   "language": {
     "search-no-results-text": "No results",
@@ -111,7 +111,13 @@ div.csl-indent {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script type="application/json" class="js-hypothesis-config">
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G2HZEXHNCE"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
+</script><script type="application/json" class="js-hypothesis-config">
 {
   "theme": "classic",
   "openSidebar": false,
@@ -119,7 +125,13 @@ div.csl-indent {
   "enableExperimentalNewNoteButton": true
 }
 </script><script async="" src="https://hypothes.is/embed.js"></script>
-<meta name="twitter:title" content="R语言学习笔记 - 15&nbsp; 寻找不同样本类型间同一细胞类型内的差异基因">
+<meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 寻找不同样本类型间同一细胞类型内的差异基因">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://djhcod.github.io/r-notes/single_cell/seurat/de_vignette_files/figure-html/unnamed-chunk-5-1.png">
+<meta property="og:site-name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
+<meta property="og:image:height" content="2304">
+<meta property="og:image:width" content="1344">
+<meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 寻找不同样本类型间同一细胞类型内的差异基因">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/seurat/de_vignette_files/figure-html/unnamed-chunk-5-1.png">
 <meta name="twitter:image-height" content="2304">
@@ -148,20 +160,20 @@ div.csl-indent {
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../intro.html" rel="" target="">
- <span class="menu-text">Introduction</span></a>
+    <a class="nav-link" href="../../r_basic/r_basics.html" rel="" target="">
+ <span class="menu-text">R语言基础</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parts" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
- <span class="menu-text">Parts</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">单细胞数据分析</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-parts">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">
 <li>
-    <a class="dropdown-item" href="../../r_basic/r_basics.html" rel="" target="">
- <span class="dropdown-text">R语言基础</span></a>
+    <a class="dropdown-item" href="../../single_cell/single_cell_intro.html" rel="" target="">
+ <span class="dropdown-text">单细胞数据分析介绍</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/seurat/seurat.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/seurat/seurat_intro.html" rel="" target="">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
@@ -172,15 +184,11 @@ div.csl-indent {
     <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
  <span class="dropdown-text">单细胞补充内容</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
- <span class="dropdown-text">Quarto基础</span></a>
-  </li>  
     </ul>
 </li>
   <li class="nav-item">
-    <a class="nav-link" href="../../references.html" rel="" target="">
- <span class="menu-text">References</span></a>
+    <a class="nav-link" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
+ <span class="menu-text">Quarto基础</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -191,25 +199,13 @@ div.csl-indent {
   </li>  
 </ul>
 <div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/djhcod/r-notes" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <div class="dropdown">
-      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
-<li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=%7Curl%7C">
-              <i class="bi bi-bi-twitter pe-1"></i>
-            Twitter
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=%7Curl%7C">
-              <i class="bi bi-bi-facebook pe-1"></i>
-            Facebook
-            </a>
-          </li>
-      </ul>
-</div>
+    <a href="https://github.com/djhcod/r-notes" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -217,35 +213,20 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/de_vignette.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat_intro.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/de_vignette.html">寻找不同样本类型间同一细胞类型内的差异基因</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">主页</span></span></a>
+ <span class="menu-text">主页</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">前言</span></a>
-  </div>
-</li>
-        <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
@@ -258,39 +239,39 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rstudio环境配置</span></span></a>
+ <span class="menu-text">Rstudio环境配置</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/data_input_output.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">数据的读取与输出</span></span></a>
+ <span class="menu-text">数据的读取与输出</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/basic_data_function.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据处理基本函数</span></span></a>
+ <span class="menu-text">数据处理基本函数</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/character.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">字符的处理</span></span></a>
+ <span class="menu-text">字符的处理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/loop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">循环</span></span></a>
+ <span class="menu-text">循环</span></a>
   </div>
 </li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../single_cell/seurat/seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Seurat v5官方文档</span></a>
+            <a href="../../single_cell/single_cell_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞数据分析</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -298,181 +279,192 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞测序技术介绍</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞RNA测序—从raw data到count matrix</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../single_cell/seurat/seurat_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat v5官方文档</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_command_list.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
+ <span class="menu-text">Seurat常用函数清单</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
+ <span class="menu-text">Seurat细胞分群官方教程</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
+ <span class="menu-text">Seurat中的数据可视化方法</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/sctransform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
+ <span class="menu-text">基于SCTransform的单细胞数据标准化</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+ <span class="menu-text">消除细胞周期的影响</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
+ <span class="menu-text">整合（integration）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+ <span class="menu-text">Seurat v5单细胞数据整合分析</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/marker_gene_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
+ <span class="menu-text">寻找marker gene</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
+ <span class="menu-text">寻找不同样本类型间同一细胞类型内的差异基因</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
+ <span class="menu-text">基于参考集的细胞注释</span></a>
   </div>
 </li>
       </ul>
 </li>
-        <li class="sidebar-item sidebar-item-section">
+          <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../single_cell/scRNA-seq_online/00_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">scRNA-seq_online学习材料</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
+ <span class="menu-text">数据导入与Seurat对象构建</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">质控</span></span></a>
+ <span class="menu-text">质控</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
+ <span class="menu-text">Single-cell RNA-seq Clustering Workflow</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+ <span class="menu-text">PCA原理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+ <span class="menu-text">Normalization and regressing out unwanted variation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+ <span class="menu-text">单细胞数据整合（Integration）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+ <span class="menu-text">细胞聚类（clustering analysis）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
+ <span class="menu-text">细胞分群质量评估</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
+ <span class="menu-text">寻找marker基因+细胞注释</span></a>
   </div>
 </li>
       </ul>
 </li>
-        <li class="sidebar-item sidebar-item-section">
+          <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">单细胞补充内容</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/read_sc_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">读取非标准格式的单细胞数据</span></span></a>
+ <span class="menu-text">读取非标准格式的单细胞数据</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/universal_marker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">细胞分群通用marker</span></span></a>
+ <span class="menu-text">细胞分群通用marker</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（上）</span></span></a>
+ <span class="menu-text">多个单细胞数据集整合分析（上）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（下）</span></span></a>
+ <span class="menu-text">多个单细胞数据集整合分析（下）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/DecontX.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">预测和去除单细胞转录组的环境游离RNA污染</span></span></a>
+ <span class="menu-text">预测和去除单细胞转录组的环境游离RNA污染</span></a>
   </div>
+</li>
+      </ul>
 </li>
       </ul>
 </li>
@@ -480,60 +472,6 @@ div.csl-indent {
       <div class="sidebar-item-container"> 
             <a href="../../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quarto基础</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">在Quarto中嵌入Shiny应用程序</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
-  </div>
-</li>
-      </ul>
-</li>
-        <li class="px-0"><hr class="sidebar-divider hi "></li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
- <span class="menu-text">参考文献</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -541,8 +479,44 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">YAML设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">图片设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">交叉引用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">插入其他内容</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">在Quarto中嵌入Shiny应用程序</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto Books</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">发布到GitHub Pages</span></a>
   </div>
 </li>
       </ul>
@@ -552,34 +526,35 @@ div.csl-indent {
 </nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">Table of contents</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">On this page</h2>
    
   <ul>
 <li>
-<a href="#sec-degs_within_the_same_cell_type_between_different_sample_types" id="toc-sec-degs_within_the_same_cell_type_between_different_sample_types" class="nav-link active" data-scroll-target="#sec-degs_within_the_same_cell_type_between_different_sample_types"><span class="header-section-number">15.1</span> 直接通过<code>FindMarkers</code>寻找差异基因</a>
+<a href="#sec-degs_within_the_same_cell_type_between_different_sample_types" id="toc-sec-degs_within_the_same_cell_type_between_different_sample_types" class="nav-link active" data-scroll-target="#sec-degs_within_the_same_cell_type_between_different_sample_types"><span class="header-section-number">1</span> 直接通过<code>FindMarkers</code>寻找差异基因</a>
   <ul class="collapse">
-<li><a href="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5" id="toc-数据导入" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5">数据导入</a></li>
-  <li><a href="#%E8%BF%90%E8%A1%8Cprepsctfindmarkers%E9%A2%84%E5%A4%84%E7%90%86sct-assay" id="toc-运行prepsctfindmarkers预处理sct-assay" class="nav-link" data-scroll-target="#%E8%BF%90%E8%A1%8Cprepsctfindmarkers%E9%A2%84%E5%A4%84%E7%90%86sct-assay">运行<code>PrepSCTFindMarkers()</code>，预处理SCT assay</a></li>
-  <li><a href="#%E5%87%86%E5%A4%87%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%88%86%E6%9E%90%E6%89%80%E9%9C%80%E5%8F%98%E9%87%8F" id="toc-准备差异表达分析所需变量" class="nav-link" data-scroll-target="#%E5%87%86%E5%A4%87%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%88%86%E6%9E%90%E6%89%80%E9%9C%80%E5%8F%98%E9%87%8F">准备差异表达分析所需变量</a></li>
-  <li><a href="#%E6%89%A7%E8%A1%8C%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%88%86%E6%9E%90" id="toc-执行差异表达分析" class="nav-link" data-scroll-target="#%E6%89%A7%E8%A1%8C%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%88%86%E6%9E%90">执行差异表达分析</a></li>
-  <li><a href="#%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%AE%E5%BC%82%E5%9F%BA%E5%9B%A0%E8%A1%A8%E8%BE%BE" id="toc-可视化差异基因表达" class="nav-link" data-scroll-target="#%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%AE%E5%BC%82%E5%9F%BA%E5%9B%A0%E8%A1%A8%E8%BE%BE">可视化差异基因表达</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5" id="toc-数据导入" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5"><span class="header-section-number">1.1</span> 数据导入</a></li>
+  <li><a href="#%E8%BF%90%E8%A1%8Cprepsctfindmarkers%E9%A2%84%E5%A4%84%E7%90%86sct-assay" id="toc-运行prepsctfindmarkers预处理sct-assay" class="nav-link" data-scroll-target="#%E8%BF%90%E8%A1%8Cprepsctfindmarkers%E9%A2%84%E5%A4%84%E7%90%86sct-assay"><span class="header-section-number">1.2</span> 运行<code>PrepSCTFindMarkers()</code>，预处理SCT assay</a></li>
+  <li><a href="#%E5%87%86%E5%A4%87%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%88%86%E6%9E%90%E6%89%80%E9%9C%80%E5%8F%98%E9%87%8F" id="toc-准备差异表达分析所需变量" class="nav-link" data-scroll-target="#%E5%87%86%E5%A4%87%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%88%86%E6%9E%90%E6%89%80%E9%9C%80%E5%8F%98%E9%87%8F"><span class="header-section-number">1.3</span> 准备差异表达分析所需变量</a></li>
+  <li><a href="#%E6%89%A7%E8%A1%8C%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%88%86%E6%9E%90" id="toc-执行差异表达分析" class="nav-link" data-scroll-target="#%E6%89%A7%E8%A1%8C%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%88%86%E6%9E%90"><span class="header-section-number">1.4</span> 执行差异表达分析</a></li>
+  <li><a href="#%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%AE%E5%BC%82%E5%9F%BA%E5%9B%A0%E8%A1%A8%E8%BE%BE" id="toc-可视化差异基因表达" class="nav-link" data-scroll-target="#%E5%8F%AF%E8%A7%86%E5%8C%96%E5%B7%AE%E5%BC%82%E5%9F%BA%E5%9B%A0%E8%A1%A8%E8%BE%BE"><span class="header-section-number">1.5</span> 可视化差异基因表达</a></li>
   </ul>
 </li>
   <li>
-<a href="#pseudobulking%E5%90%8E%E7%9A%84%E5%B7%AE%E5%BC%82%E5%88%86%E6%9E%90" id="toc-pseudobulking后的差异分析" class="nav-link" data-scroll-target="#pseudobulking%E5%90%8E%E7%9A%84%E5%B7%AE%E5%BC%82%E5%88%86%E6%9E%90"><span class="header-section-number">15.2</span> pseudobulking后的差异分析</a>
+<a href="#pseudobulking%E5%90%8E%E7%9A%84%E5%B7%AE%E5%BC%82%E5%88%86%E6%9E%90" id="toc-pseudobulking后的差异分析" class="nav-link" data-scroll-target="#pseudobulking%E5%90%8E%E7%9A%84%E5%B7%AE%E5%BC%82%E5%88%86%E6%9E%90"><span class="header-section-number">2</span> pseudobulking后的差异分析</a>
   <ul class="collapse">
-<li><a href="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E5%92%8C%E9%A2%84%E5%A4%84%E7%90%86" id="toc-数据读取和预处理" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E5%92%8C%E9%A2%84%E5%A4%84%E7%90%86">数据读取和预处理</a></li>
-  <li><a href="#%E7%9B%B4%E6%8E%A5%E9%80%9A%E8%BF%87findmarkers%E5%AF%BB%E6%89%BE%E5%B7%AE%E5%BC%82%E5%9F%BA%E5%9B%A0" id="toc-直接通过findmarkers寻找差异基因" class="nav-link" data-scroll-target="#%E7%9B%B4%E6%8E%A5%E9%80%9A%E8%BF%87findmarkers%E5%AF%BB%E6%89%BE%E5%B7%AE%E5%BC%82%E5%9F%BA%E5%9B%A0">直接通过<code>FindMarkers</code>寻找差异基因</a></li>
-  <li><a href="#%E6%89%A7%E8%A1%8Cpseudobulking" id="toc-执行pseudobulking" class="nav-link" data-scroll-target="#%E6%89%A7%E8%A1%8Cpseudobulking">执行pseudobulking</a></li>
-  <li><a href="#sec-perform_de_analysis" id="toc-sec-perform_de_analysis" class="nav-link" data-scroll-target="#sec-perform_de_analysis">执行差异分析</a></li>
-  <li><a href="#%E6%AF%94%E8%BE%83%E5%8D%95%E7%BB%86%E8%83%9E%E6%B0%B4%E5%B9%B3%E5%92%8Cpseudobulk%E6%B0%B4%E5%B9%B3%E7%9A%84%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%88%86%E6%9E%90" id="toc-比较单细胞水平和pseudobulk水平的差异表达分析" class="nav-link" data-scroll-target="#%E6%AF%94%E8%BE%83%E5%8D%95%E7%BB%86%E8%83%9E%E6%B0%B4%E5%B9%B3%E5%92%8Cpseudobulk%E6%B0%B4%E5%B9%B3%E7%9A%84%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%88%86%E6%9E%90">比较单细胞水平和pseudobulk水平的差异表达分析</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E5%92%8C%E9%A2%84%E5%A4%84%E7%90%86" id="toc-数据读取和预处理" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E5%92%8C%E9%A2%84%E5%A4%84%E7%90%86"><span class="header-section-number">2.1</span> 数据读取和预处理</a></li>
+  <li><a href="#%E7%9B%B4%E6%8E%A5%E9%80%9A%E8%BF%87findmarkers%E5%AF%BB%E6%89%BE%E5%B7%AE%E5%BC%82%E5%9F%BA%E5%9B%A0" id="toc-直接通过findmarkers寻找差异基因" class="nav-link" data-scroll-target="#%E7%9B%B4%E6%8E%A5%E9%80%9A%E8%BF%87findmarkers%E5%AF%BB%E6%89%BE%E5%B7%AE%E5%BC%82%E5%9F%BA%E5%9B%A0"><span class="header-section-number">2.2</span> 直接通过<code>FindMarkers</code>寻找差异基因</a></li>
+  <li><a href="#%E6%89%A7%E8%A1%8Cpseudobulking" id="toc-执行pseudobulking" class="nav-link" data-scroll-target="#%E6%89%A7%E8%A1%8Cpseudobulking"><span class="header-section-number">2.3</span> 执行pseudobulking</a></li>
+  <li><a href="#sec-perform_de_analysis" id="toc-sec-perform_de_analysis" class="nav-link" data-scroll-target="#sec-perform_de_analysis"><span class="header-section-number">2.4</span> 执行差异分析</a></li>
+  <li><a href="#%E6%AF%94%E8%BE%83%E5%8D%95%E7%BB%86%E8%83%9E%E6%B0%B4%E5%B9%B3%E5%92%8Cpseudobulk%E6%B0%B4%E5%B9%B3%E7%9A%84%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%88%86%E6%9E%90" id="toc-比较单细胞水平和pseudobulk水平的差异表达分析" class="nav-link" data-scroll-target="#%E6%AF%94%E8%BE%83%E5%8D%95%E7%BB%86%E8%83%9E%E6%B0%B4%E5%B9%B3%E5%92%8Cpseudobulk%E6%B0%B4%E5%B9%B3%E7%9A%84%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%88%86%E6%9E%90"><span class="header-section-number">2.5</span> 比较单细胞水平和pseudobulk水平的差异表达分析</a></li>
   </ul>
 </li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/seurat/de_vignette.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/single_cell/seurat/de_vignette.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/seurat/de_vignette.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span id="sec-differential_expression" class="quarto-section-identifier"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">寻找不同样本类型间同一细胞类型内的差异基因</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -596,10 +571,11 @@ div.csl-indent {
 <p>参考原文：<a href="https://satijalab.org/seurat/articles/integration_introduction#identify-differential-expressed-genes-across-conditions"><em>Introduction to scRNA-seq integration</em></a> <em>和 <a href="https://satijalab.org/seurat/articles/de_vignette">Differential expression testing</a></em></p>
 <p>原文发布日期：2023年10月31日</p>
 </blockquote>
-<section id="sec-degs_within_the_same_cell_type_between_different_sample_types" class="level2" data-number="15.1"><h2 data-number="15.1" class="anchored" data-anchor-id="sec-degs_within_the_same_cell_type_between_different_sample_types">
-<span class="header-section-number">15.1</span> 直接通过<code>FindMarkers</code>寻找差异基因</h2>
-<section id="数据导入" class="level3"><h3 class="anchored" data-anchor-id="数据导入">数据导入</h3>
-<p>导入我们在 <a href="integration.html"><span>Chapter&nbsp;12</span></a> 中完成<code>SCTransform</code>和整合的单细胞数据。这里的meta.data已经提前注释好了细胞类型（储存在”seurat_annotations”列中）。</p>
+<section id="sec-degs_within_the_same_cell_type_between_different_sample_types" class="level1" data-number="1"><h1 data-number="1">
+<span class="header-section-number">1</span> 直接通过<code>FindMarkers</code>寻找差异基因</h1>
+<section id="数据导入" class="level2" data-number="1.1"><h2 data-number="1.1" class="anchored" data-anchor-id="数据导入">
+<span class="header-section-number">1.1</span> 数据导入</h2>
+<p>导入我们在<a href="../../single_cell/seurat/integration.html">整合（integration）</a>中完成<code>SCTransform</code>和整合的单细胞数据。这里的meta.data已经提前注释好了细胞类型（储存在”seurat_annotations”列中）。</p>
 <div class="cell" data-hash="de_vignette_cache/html/unnamed-chunk-1_b3bbb11cbc1157d12ef5aacc5888428e">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
 <span><span class="va">ifnb_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/seurat_official/ifnb_integrated.rds"</span><span class="op">)</span></span>
@@ -624,7 +600,8 @@ AAACATACCAGAAA.1       1888          699               9               9
 AAACATACCTCGCT.1       1951          804               1               1</code></pre>
 </div>
 </div>
-</section><section id="运行prepsctfindmarkers预处理sct-assay" class="level3"><h3 class="anchored" data-anchor-id="运行prepsctfindmarkers预处理sct-assay">运行<code>PrepSCTFindMarkers()</code>，预处理SCT assay</h3>
+</section><section id="运行prepsctfindmarkers预处理sct-assay" class="level2" data-number="1.2"><h2 data-number="1.2" class="anchored" data-anchor-id="运行prepsctfindmarkers预处理sct-assay">
+<span class="header-section-number">1.2</span> 运行<code>PrepSCTFindMarkers()</code>，预处理SCT assay</h2>
 <div class="cell" data-hash="de_vignette_cache/html/unnamed-chunk-2_24116b52cc2c979617f5837166df25d5">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ifnb_integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/PrepSCTFindMarkers.html">PrepSCTFindMarkers</a></span><span class="op">(</span><span class="va">ifnb_integrated</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -642,7 +619,8 @@ Important
 <p>如果是基于<code>NormalizeData</code>标准化的单细胞数据，需要使用”RNA” assay进行差异分析（见下面的<a href="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E5%92%8C%E9%A2%84%E5%A4%84%E7%90%86">数据读取和预处理</a>），如果不是，需要通过<code>DefaultAssay(ifnb) &lt;- "RNA"</code>进行设定。Note that the raw and normalized counts are stored in the <code>counts</code> and <code>data</code> layers of <code>RNA</code> assay. By default, the functions for finding markers will use normalized <code>data</code>. 关于<code>FindMarkers</code>为什么要使用”RNA” assay，参阅：<a href="https://github.com/hbctraining/scRNA-seq_online/issues/58" class="uri">https://github.com/hbctraining/scRNA-seq_online/issues/58</a></p>
 </div>
 </div>
-</section><section id="准备差异表达分析所需变量" class="level3"><h3 class="anchored" data-anchor-id="准备差异表达分析所需变量">准备差异表达分析所需变量</h3>
+</section><section id="准备差异表达分析所需变量" class="level2" data-number="1.3"><h2 data-number="1.3" class="anchored" data-anchor-id="准备差异表达分析所需变量">
+<span class="header-section-number">1.3</span> 准备差异表达分析所需变量</h2>
 <p>We create a column in the&nbsp;<code>meta.data</code>&nbsp;slot to hold both the cell type and treatment information and switch the current&nbsp;<code>Idents</code>&nbsp;to that column.</p>
 <div class="cell" data-hash="de_vignette_cache/html/unnamed-chunk-3_3f47eabfaf02d61d82bff9b829b0a07d">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ifnb_integrated</span><span class="op">$</span><span class="va">celltype.stim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">ifnb_integrated</span><span class="op">$</span><span class="va">seurat_annotations</span>, </span>
@@ -662,7 +640,8 @@ Important
 </div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html">Idents</a></span><span class="op">(</span><span class="va">ifnb_integrated</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"celltype.stim"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="执行差异表达分析" class="level3"><h3 class="anchored" data-anchor-id="执行差异表达分析">执行差异表达分析</h3>
+</section><section id="执行差异表达分析" class="level2" data-number="1.4"><h2 data-number="1.4" class="anchored" data-anchor-id="执行差异表达分析">
+<span class="header-section-number">1.4</span> 执行差异表达分析</h2>
 <p>Then we use&nbsp;<code><a href="https://satijalab.org/seurat/reference/FindMarkers.html">FindMarkers()</a></code>&nbsp;to find the genes that are different between control and stimulated B cells.</p>
 <div class="cell" data-hash="de_vignette_cache/html/unnamed-chunk-4_398b33352fe6b858a62a87ff4ffb6378">
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 寻找对照组和刺激组之间在B细胞中的差异基因</span></span>
@@ -701,7 +680,7 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Please note that p-values obtained from this analysis should be interpreted with caution, as&nbsp;<strong>these tests treat each cell as an independent replicate, and ignore inherent correlations between cells originating from the same sample</strong>. Such analyses have been shown to find a large number of <strong>false positive associations</strong>, as has been demonstrated by&nbsp;<span class="citation" data-cites="squair2021">(<a href="../../references.html#ref-squair2021" role="doc-biblioref">Squair et al. 2021</a>)</span>,&nbsp;<span class="citation" data-cites="zimmerman2021">(<a href="../../references.html#ref-zimmerman2021" role="doc-biblioref">Zimmerman, Espeland, and Langefeld 2021</a>)</span>,&nbsp;<span class="citation" data-cites="junttila2022">(<a href="../../references.html#ref-junttila2022" role="doc-biblioref">Junttila, Smolander, and Elo 2022</a>)</span>, and others. As discussed&nbsp;here&nbsp;<span class="citation" data-cites="crowell2020a">(<a href="../../references.html#ref-crowell2020a" role="doc-biblioref">Crowell et al. 2020</a>)</span>, DE tests across multiple conditions should expressly utilize multiple samples/replicates, and can be performed after aggregating (‘pseudobulking’) cells from the same sample and subpopulation together. Below, we show how <strong>pseudobulking</strong> can be used to account for such within-sample correlation.</p>
+<p>Please note that p-values obtained from this analysis should be interpreted with caution, as&nbsp;<strong>these tests treat each cell as an independent replicate, and ignore inherent correlations between cells originating from the same sample</strong>. Such analyses have been shown to find a large number of <strong>false positive associations</strong>, as has been demonstrated by&nbsp;<span class="citation" data-cites="squair2021">(<a href="#ref-squair2021" role="doc-biblioref">Squair et al. 2021</a>)</span>,&nbsp;<span class="citation" data-cites="zimmerman2021">(<a href="#ref-zimmerman2021" role="doc-biblioref">Zimmerman, Espeland, and Langefeld 2021</a>)</span>,&nbsp;<span class="citation" data-cites="junttila2022">(<a href="#ref-junttila2022" role="doc-biblioref">Junttila, Smolander, and Elo 2022</a>)</span>, and others. As discussed&nbsp;here&nbsp;<span class="citation" data-cites="crowell2020">(<a href="#ref-crowell2020" role="doc-biblioref">Crowell et al. 2020</a>)</span>, DE tests across multiple conditions should expressly utilize multiple samples/replicates, and can be performed after aggregating (‘pseudobulking’) cells from the same sample and subpopulation together. Below, we show how <strong>pseudobulking</strong> can be used to account for such within-sample correlation.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -717,7 +696,8 @@ Warning
 <p>这里没有使用进行pseudobulking的原因是，本例中“ctrl”和“sim”组都分别只有一个重复：We do not perform this analysis here, as there is a single replicate in the data.</p>
 </div>
 </div>
-</section><section id="可视化差异基因表达" class="level3"><h3 class="anchored" data-anchor-id="可视化差异基因表达">可视化差异基因表达</h3>
+</section><section id="可视化差异基因表达" class="level2" data-number="1.5"><h2 data-number="1.5" class="anchored" data-anchor-id="可视化差异基因表达">
+<span class="header-section-number">1.5</span> 可视化差异基因表达</h2>
 <p>Another useful way to visualize these changes in gene expression is with the&nbsp;<code>split.by</code>&nbsp;option to the&nbsp;<a href="https://satijalab.org/seurat/reference/FeaturePlot.html"><code>FeaturePlot()</code></a>&nbsp;or&nbsp;<a href="https://satijalab.org/seurat/reference/VlnPlot.html"><code>VlnPlot()</code></a>&nbsp;function. This will display FeaturePlots of the list of given genes, split by a grouping variable (stimulation condition here).</p>
 <div class="cell" data-hash="de_vignette_cache/html/unnamed-chunk-5_58c96af66f12c92576553270723e2037">
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">ifnb_integrated</span>, </span>
@@ -769,11 +749,12 @@ Warning
 </div>
 </div>
 </div>
-<hr></section></section><section id="pseudobulking后的差异分析" class="level2" data-number="15.2"><h2 data-number="15.2" class="anchored" data-anchor-id="pseudobulking后的差异分析">
-<span class="header-section-number">15.2</span> pseudobulking后的差异分析</h2>
+<hr></section></section><section id="pseudobulking后的差异分析" class="level1" data-number="2"><h1 data-number="2">
+<span class="header-section-number">2</span> pseudobulking后的差异分析</h1>
 <p>这一节为了演示pseudobulking，采用的仍然是“ifnb”数据集，仍然包括了“ctrl”和“stim”两个conditions，但是每个条件下都有多个重复，即多个来自不同患者的样本。同时，为了和<a href="https://satijalab.org/seurat/articles/de_vignette">Seurat官方教程</a>一致，采用了<code>NormalizeData</code>对数据进行标准化。</p>
-<section id="数据读取和预处理" class="level3"><h3 class="anchored" data-anchor-id="数据读取和预处理">数据读取和预处理</h3>
-<p>For demonstration purposes, we will be using the interferon-beta stimulated human PBMCs dataset <span class="citation" data-cites="kang2017">(<a href="../../references.html#ref-kang2017" role="doc-biblioref">Kang et al. 2017</a>)</span> that is available via the&nbsp;<code>SeuratData</code>&nbsp;package.</p>
+<section id="数据读取和预处理" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="数据读取和预处理">
+<span class="header-section-number">2.1</span> 数据读取和预处理</h2>
+<p>For demonstration purposes, we will be using the interferon-beta stimulated human PBMCs dataset <span class="citation" data-cites="kang2017">(<a href="#ref-kang2017" role="doc-biblioref">Kang et al. 2017</a>)</span> that is available via the&nbsp;<code>SeuratData</code>&nbsp;package.</p>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -833,7 +814,8 @@ AAACATACGATGAA.1 IMMUNE_CTRL       1868          634 CTRL       CD4 Memory T</co
 <pre><code>[1] "RNA"</code></pre>
 </div>
 </div>
-</section><section id="直接通过findmarkers寻找差异基因" class="level3"><h3 class="anchored" data-anchor-id="直接通过findmarkers寻找差异基因">直接通过<code>FindMarkers</code>寻找差异基因</h3>
+</section><section id="直接通过findmarkers寻找差异基因" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="直接通过findmarkers寻找差异基因">
+<span class="header-section-number">2.2</span> 直接通过<code>FindMarkers</code>寻找差异基因</h2>
 <p>为了和pseudobulking后的差异分析结果进行比价，这里仍然先进行基于<code>FindMarkers</code>的简单差异表达分析，<strong>寻找ctrl和stim之间在CD14单核细胞中的差异基因</strong>。基本步骤和上面的<a href="#%E5%87%86%E5%A4%87%E5%B7%AE%E5%BC%82%E8%A1%A8%E8%BE%BE%E5%88%86%E6%9E%90%E6%89%80%E9%9C%80%E5%8F%98%E9%87%8F">准备差异表达分析所需变量</a>一致。</p>
 <div class="cell" data-hash="de_vignette_cache/html/unnamed-chunk-9_0dae9d154a8e65848b360cbabfbd3b8a">
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">ifnb</span><span class="op">$</span><span class="va">celltype.stim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">ifnb</span><span class="op">$</span><span class="va">seurat_annotations</span>, <span class="va">ifnb</span><span class="op">$</span><span class="va">stim</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span></span>
@@ -874,7 +856,8 @@ IDO1        0   5.455898 0.965 0.089         0
 MX1         0   5.059052 0.960 0.093         0</code></pre>
 </div>
 </div>
-</section><section id="执行pseudobulking" class="level3"><h3 class="anchored" data-anchor-id="执行pseudobulking">执行pseudobulking</h3>
+</section><section id="执行pseudobulking" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="执行pseudobulking">
+<span class="header-section-number">2.3</span> 执行pseudobulking</h2>
 <p>To pseudobulk, we will use&nbsp;<code><a href="https://satijalab.org/seurat/reference/AggregateExpression.html">AggregateExpression()</a></code>&nbsp;to sum together <strong>gene counts of all the cells from the same sample</strong> for each cell type. This results in <strong>one gene expression profile per sample</strong> <strong>and cell type</strong>. We can then perform DE analysis using&nbsp;<a href="https://bioconductor.org/packages/release/bioc/html/DESeq2.html"><code>DESeq2</code></a>&nbsp;<strong>on the sample level</strong>. This treats the samples, rather than the individual cells, as independent observations.</p>
 <p>First, we need to retrieve the sample information for each cell. This is not loaded in the metadata, so we will load it from the&nbsp;<a href="https://github.com/yelabucsf/demuxlet_paper_code/tree/master/">Github repo</a>&nbsp;of the source data for the original paper.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1021,7 +1004,8 @@ CTRL_SNG-101_CD8 T                     CD8 T</code></pre>
 [25] "pDC_STIM"          "Eryth_STIM"       </code></pre>
 </div>
 </div>
-</section><section id="sec-perform_de_analysis" class="level3"><h3 class="anchored" data-anchor-id="sec-perform_de_analysis">执行差异分析</h3>
+</section><section id="sec-perform_de_analysis" class="level2" data-number="2.4"><h2 data-number="2.4" class="anchored" data-anchor-id="sec-perform_de_analysis">
+<span class="header-section-number">2.4</span> 执行差异分析</h2>
 <p>Next, we perform DE testing on the pseudobulk level for CD14 monocytes, and compare it against the previous single-cell-level DE results.</p>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1040,7 +1024,7 @@ CTRL_SNG-101_CD8 T                     CD8 T</code></pre>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">"DESeq2"</span>)</span>
 <span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>注意，如果是用FindMarkers来寻找细胞类型的marker基因，则一般采用默认的Wilcoxon Rank Sum Test方法，这时需要调用的是<a href="https://github.com/immunogenomics/presto"><code>presto</code></a> 包（见 <a href="marker_gene_identification.html#sec-findmarkers_function"><span>Section&nbsp;14.2</span></a> ）。</p>
+<p>注意，如果是用<code>FindMarkers</code>来寻找细胞类型的marker基因，则一般采用默认的Wilcoxon Rank Sum Test方法，这时需要调用的是<a href="https://github.com/immunogenomics/presto"><code>presto</code></a> 包（见<a href="../../single_cell/seurat/marker_gene_identification.html#sec-findmarkers_function">FindMarkers-在特定cluster之间寻找marker基因</a>）。</p>
 </div>
 </div>
 <div class="cell" data-hash="de_vignette_cache/html/unnamed-chunk-16_c5b315f98fe2b63b6b3d1a6e9f3ef6cc">
@@ -1116,7 +1100,8 @@ FTL    1.636254e-307   1.318127 1.000 1.000 2.299427e-303</code></pre>
 </div>
 </div>
 </div>
-<hr></section><section id="比较单细胞水平和pseudobulk水平的差异表达分析" class="level3"><h3 class="anchored" data-anchor-id="比较单细胞水平和pseudobulk水平的差异表达分析">比较单细胞水平和pseudobulk水平的差异表达分析</h3>
+<hr></section><section id="比较单细胞水平和pseudobulk水平的差异表达分析" class="level2" data-number="2.5"><h2 data-number="2.5" class="anchored" data-anchor-id="比较单细胞水平和pseudobulk水平的差异表达分析">
+<span class="header-section-number">2.5</span> 比较单细胞水平和pseudobulk水平的差异表达分析</h2>
 <p>接下来，我们可以比较一下单细胞水平的差异表达分析的P值和pseudobulk水平的P值：</p>
 <div class="cell" data-hash="de_vignette_cache/html/unnamed-chunk-18_e490aa21a4d2d564902aa09b576033e7">
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">bulk.mono.de</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">bulk.mono.de</span><span class="op">)</span>, <span class="st">".bulk"</span><span class="op">)</span> <span class="co"># 重命名列</span></span>
@@ -1267,7 +1252,7 @@ Session Info
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.3.2 (2023-10-31)
 Platform: aarch64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.2.1
+Running under: macOS Sonoma 14.3
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
@@ -1361,12 +1346,9 @@ loaded via a namespace (and not attached):
 </div>
 </div>
 </div>
-
-
-<!-- -->
-
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
-<div id="ref-crowell2020a" class="csl-entry" role="listitem">
+</section></section><section id="references" class="level1 unnumbered"><h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-crowell2020" class="csl-entry" role="listitem">
 Crowell, Helena L., Charlotte Soneson, Pierre-Luc Germain, Daniela Calini, Ludovic Collin, Catarina Raposo, Dheeraj Malhotra, and Mark D. Robinson. 2020. <span>“Muscat Detects Subpopulation-Specific State Transitions from Multi-Sample Multi-Condition Single-Cell Transcriptomics Data.”</span> <em>Nature Communications</em> 11 (1). <a href="https://doi.org/10.1038/s41467-020-19894-4">https://doi.org/10.1038/s41467-020-19894-4</a>.
 </div>
 <div id="ref-junttila2022" class="csl-entry" role="listitem">
@@ -1382,7 +1364,11 @@ Squair, Jordan W., Matthieu Gautier, Claudia Kathe, Mark A. Anderson, Nicholas D
 Zimmerman, Kip D., Mark A. Espeland, and Carl D. Langefeld. 2021. <span>“A Practical Solution to Pseudoreplication Bias in Single-Cell Studies.”</span> <em>Nature Communications</em> 12 (1). <a href="https://doi.org/10.1038/s41467-021-21038-1">https://doi.org/10.1038/s41467-021-21038-1</a>.
 </div>
 </div>
-</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+
+
+<!-- -->
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1794,419 +1780,426 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
 });
-</script><script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script><script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../../single_cell/seurat/marker_gene_identification.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">寻找marker gene</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text">基于参考集的细胞注释</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb70" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 寻找不同样本类型间同一细胞类型内的差异基因 {#sec-differential_expression}</span></span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 参考原文：</span><span class="co">[</span><span class="ot">*Introduction to scRNA-seq integration*</span><span class="co">](https://satijalab.org/seurat/articles/integration_introduction#identify-differential-expressed-genes-across-conditions)</span><span class="at"> *和 [Differential expression testing](https://satijalab.org/seurat/articles/de_vignette)*</span></span>
-<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
-<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文发布日期：2023年10月31日</span></span>
-<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a><span class="fu">## 直接通过`FindMarkers`寻找差异基因 {#sec-degs_within_the_same_cell_type_between_different_sample_types}</span></span>
+<div class="sourceCode" id="cb70" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "寻找不同样本类型间同一细胞类型内的差异基因"</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 参考原文：</span><span class="co">[</span><span class="ot">*Introduction to scRNA-seq integration*</span><span class="co">](https://satijalab.org/seurat/articles/integration_introduction#identify-differential-expressed-genes-across-conditions)</span><span class="at"> *和 [Differential expression testing](https://satijalab.org/seurat/articles/de_vignette)*</span></span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文发布日期：2023年10月31日</span></span>
 <span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a><span class="fu">### 数据导入</span></span>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a><span class="fu"># 直接通过`FindMarkers`寻找差异基因 {#sec-degs_within_the_same_cell_type_between_different_sample_types}</span></span>
 <span id="cb70-10"><a href="#cb70-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a>导入我们在 @sec-Single-cell_data_integration 中完成<span class="in">`SCTransform`</span>和整合的单细胞数据。这里的meta.data已经提前注释好了细胞类型（储存在"seurat_annotations"列中）。</span>
+<span id="cb70-11"><a href="#cb70-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## 数据导入</span></span>
 <span id="cb70-12"><a href="#cb70-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-15"><a href="#cb70-15" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-16"><a href="#cb70-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb70-17"><a href="#cb70-17" aria-hidden="true" tabindex="-1"></a>ifnb_integrated <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/seurat_official/ifnb_integrated.rds"</span>)</span>
-<span id="cb70-18"><a href="#cb70-18" aria-hidden="true" tabindex="-1"></a>ifnb_integrated</span>
-<span id="cb70-19"><a href="#cb70-19" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ifnb_integrated, <span class="dv">3</span>)</span>
-<span id="cb70-20"><a href="#cb70-20" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-21"><a href="#cb70-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-22"><a href="#cb70-22" aria-hidden="true" tabindex="-1"></a><span class="fu">### 运行`PrepSCTFindMarkers()`，预处理SCT assay</span></span>
+<span id="cb70-13"><a href="#cb70-13" aria-hidden="true" tabindex="-1"></a>导入我们在<span class="co">[</span><span class="ot">整合（integration）</span><span class="co">](/single_cell/seurat/integration.qmd)</span>中完成<span class="in">`SCTransform`</span>和整合的单细胞数据。这里的meta.data已经提前注释好了细胞类型（储存在"seurat_annotations"列中）。</span>
+<span id="cb70-14"><a href="#cb70-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-17"><a href="#cb70-17" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-18"><a href="#cb70-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb70-19"><a href="#cb70-19" aria-hidden="true" tabindex="-1"></a>ifnb_integrated <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/seurat_official/ifnb_integrated.rds"</span>)</span>
+<span id="cb70-20"><a href="#cb70-20" aria-hidden="true" tabindex="-1"></a>ifnb_integrated</span>
+<span id="cb70-21"><a href="#cb70-21" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ifnb_integrated, <span class="dv">3</span>)</span>
+<span id="cb70-22"><a href="#cb70-22" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb70-23"><a href="#cb70-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-26"><a href="#cb70-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-27"><a href="#cb70-27" aria-hidden="true" tabindex="-1"></a>ifnb_integrated <span class="ot">&lt;-</span> <span class="fu">PrepSCTFindMarkers</span>(ifnb_integrated)</span>
-<span id="cb70-28"><a href="#cb70-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-29"><a href="#cb70-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-30"><a href="#cb70-30" aria-hidden="true" tabindex="-1"></a>::: callout-important</span>
-<span id="cb70-31"><a href="#cb70-31" aria-hidden="true" tabindex="-1"></a>对于经过<span class="in">`SCTransform`</span>归一化处理后的单细胞数据，在进行差异分析之前，需要先运行<span class="in">`PrepSCTFindMarkers()`</span>，来预处理SCT assay。详细解释见<span class="co">[</span><span class="ot">此链接</span><span class="co">](https://www.jianshu.com/p/fb2e43905559)</span>。</span>
-<span id="cb70-32"><a href="#cb70-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-33"><a href="#cb70-33" aria-hidden="true" tabindex="-1"></a>如果是基于<span class="in">`NormalizeData`</span>标准化的单细胞数据，需要使用"RNA" assay进行差异分析（见下面的<span class="co">[</span><span class="ot">数据读取和预处理</span><span class="co">](#数据读取和预处理)</span>），如果不是，需要通过<span class="in">`DefaultAssay(ifnb) &lt;- "RNA"`</span>进行设定。Note that the raw and normalized counts are stored in the <span class="in">`counts`</span> and <span class="in">`data`</span> layers of <span class="in">`RNA`</span> assay. By default, the functions for finding markers will use normalized <span class="in">`data`</span>. 关于<span class="in">`FindMarkers`</span>为什么要使用"RNA" assay，参阅：<span class="ot">&lt;https://github.com/hbctraining/scRNA-seq_online/issues/58&gt;</span></span>
-<span id="cb70-34"><a href="#cb70-34" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb70-35"><a href="#cb70-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-36"><a href="#cb70-36" aria-hidden="true" tabindex="-1"></a><span class="fu">### 准备差异表达分析所需变量 {#准备差异表达分析所需变量}</span></span>
+<span id="cb70-24"><a href="#cb70-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## 运行`PrepSCTFindMarkers()`，预处理SCT assay</span></span>
+<span id="cb70-25"><a href="#cb70-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-28"><a href="#cb70-28" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-29"><a href="#cb70-29" aria-hidden="true" tabindex="-1"></a>ifnb_integrated <span class="ot">&lt;-</span> <span class="fu">PrepSCTFindMarkers</span>(ifnb_integrated)</span>
+<span id="cb70-30"><a href="#cb70-30" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-31"><a href="#cb70-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-32"><a href="#cb70-32" aria-hidden="true" tabindex="-1"></a>::: callout-important</span>
+<span id="cb70-33"><a href="#cb70-33" aria-hidden="true" tabindex="-1"></a>对于经过<span class="in">`SCTransform`</span>归一化处理后的单细胞数据，在进行差异分析之前，需要先运行<span class="in">`PrepSCTFindMarkers()`</span>，来预处理SCT assay。详细解释见<span class="co">[</span><span class="ot">此链接</span><span class="co">](https://www.jianshu.com/p/fb2e43905559)</span>。</span>
+<span id="cb70-34"><a href="#cb70-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-35"><a href="#cb70-35" aria-hidden="true" tabindex="-1"></a>如果是基于<span class="in">`NormalizeData`</span>标准化的单细胞数据，需要使用"RNA" assay进行差异分析（见下面的<span class="co">[</span><span class="ot">数据读取和预处理</span><span class="co">](#数据读取和预处理)</span>），如果不是，需要通过<span class="in">`DefaultAssay(ifnb) &lt;- "RNA"`</span>进行设定。Note that the raw and normalized counts are stored in the <span class="in">`counts`</span> and <span class="in">`data`</span> layers of <span class="in">`RNA`</span> assay. By default, the functions for finding markers will use normalized <span class="in">`data`</span>. 关于<span class="in">`FindMarkers`</span>为什么要使用"RNA" assay，参阅：<span class="ot">&lt;https://github.com/hbctraining/scRNA-seq_online/issues/58&gt;</span></span>
+<span id="cb70-36"><a href="#cb70-36" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb70-37"><a href="#cb70-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-38"><a href="#cb70-38" aria-hidden="true" tabindex="-1"></a>We create a column in the&nbsp;<span class="in">`meta.data`</span>&nbsp;slot to hold both the cell type and treatment information and switch the current&nbsp;<span class="in">`Idents`</span>&nbsp;to that column.</span>
+<span id="cb70-38"><a href="#cb70-38" aria-hidden="true" tabindex="-1"></a><span class="fu">## 准备差异表达分析所需变量 {#准备差异表达分析所需变量}</span></span>
 <span id="cb70-39"><a href="#cb70-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-42"><a href="#cb70-42" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-43"><a href="#cb70-43" aria-hidden="true" tabindex="-1"></a>ifnb_integrated<span class="sc">$</span>celltype.stim <span class="ot">&lt;-</span> <span class="fu">paste</span>(ifnb_integrated<span class="sc">$</span>seurat_annotations, </span>
-<span id="cb70-44"><a href="#cb70-44" aria-hidden="true" tabindex="-1"></a>                                       ifnb_integrated<span class="sc">$</span>stim, </span>
-<span id="cb70-45"><a href="#cb70-45" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">sep =</span> <span class="st">"_"</span>)</span>
-<span id="cb70-46"><a href="#cb70-46" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(ifnb_integrated<span class="sc">$</span>celltype.stim)</span>
-<span id="cb70-47"><a href="#cb70-47" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb_integrated) <span class="ot">&lt;-</span> <span class="st">"celltype.stim"</span></span>
-<span id="cb70-48"><a href="#cb70-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-49"><a href="#cb70-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-50"><a href="#cb70-50" aria-hidden="true" tabindex="-1"></a><span class="fu">### 执行差异表达分析</span></span>
+<span id="cb70-40"><a href="#cb70-40" aria-hidden="true" tabindex="-1"></a>We create a column in the&nbsp;<span class="in">`meta.data`</span>&nbsp;slot to hold both the cell type and treatment information and switch the current&nbsp;<span class="in">`Idents`</span>&nbsp;to that column.</span>
+<span id="cb70-41"><a href="#cb70-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-44"><a href="#cb70-44" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-45"><a href="#cb70-45" aria-hidden="true" tabindex="-1"></a>ifnb_integrated<span class="sc">$</span>celltype.stim <span class="ot">&lt;-</span> <span class="fu">paste</span>(ifnb_integrated<span class="sc">$</span>seurat_annotations, </span>
+<span id="cb70-46"><a href="#cb70-46" aria-hidden="true" tabindex="-1"></a>                                       ifnb_integrated<span class="sc">$</span>stim, </span>
+<span id="cb70-47"><a href="#cb70-47" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb70-48"><a href="#cb70-48" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(ifnb_integrated<span class="sc">$</span>celltype.stim)</span>
+<span id="cb70-49"><a href="#cb70-49" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb_integrated) <span class="ot">&lt;-</span> <span class="st">"celltype.stim"</span></span>
+<span id="cb70-50"><a href="#cb70-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb70-51"><a href="#cb70-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-52"><a href="#cb70-52" aria-hidden="true" tabindex="-1"></a>Then we use&nbsp;<span class="in">`FindMarkers()`</span>&nbsp;to find the genes that are different between control and stimulated B cells.</span>
+<span id="cb70-52"><a href="#cb70-52" aria-hidden="true" tabindex="-1"></a><span class="fu">## 执行差异表达分析</span></span>
 <span id="cb70-53"><a href="#cb70-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-56"><a href="#cb70-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-57"><a href="#cb70-57" aria-hidden="true" tabindex="-1"></a><span class="co"># 寻找对照组和刺激组之间在B细胞中的差异基因</span></span>
-<span id="cb70-58"><a href="#cb70-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-59"><a href="#cb70-59" aria-hidden="true" tabindex="-1"></a>b.interferon.response <span class="ot">&lt;-</span> <span class="fu">FindMarkers</span>(ifnb_integrated, </span>
-<span id="cb70-60"><a href="#cb70-60" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">ident.1 =</span> <span class="st">"B_STIM"</span>, </span>
-<span id="cb70-61"><a href="#cb70-61" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">ident.2 =</span> <span class="st">"B_CTRL"</span>, </span>
-<span id="cb70-62"><a href="#cb70-62" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb70-63"><a href="#cb70-63" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(b.interferon.response, <span class="at">n =</span> <span class="dv">15</span>)</span>
-<span id="cb70-64"><a href="#cb70-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-65"><a href="#cb70-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-66"><a href="#cb70-66" aria-hidden="true" tabindex="-1"></a>::: callout-warning</span>
-<span id="cb70-67"><a href="#cb70-67" aria-hidden="true" tabindex="-1"></a>Please note that p-values obtained from this analysis should be interpreted with caution, as&nbsp;**these tests treat each cell as an independent replicate, and ignore inherent correlations between cells originating from the same sample**. Such analyses have been shown to find a large number of **false positive associations**, as has been demonstrated by&nbsp;[@squair2021],&nbsp;[@zimmerman2021],&nbsp;[@junttila2022], and others. As discussed&nbsp;here&nbsp;[@crowell2020a], DE tests across multiple conditions should expressly utilize multiple samples/replicates, and can be performed after aggregating (‘pseudobulking’) cells from the same sample and subpopulation together. Below, we show how **pseudobulking** can be used to account for such within-sample correlation.</span>
-<span id="cb70-68"><a href="#cb70-68" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb70-69"><a href="#cb70-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-70"><a href="#cb70-70" aria-hidden="true" tabindex="-1"></a>::: callout-warning</span>
-<span id="cb70-71"><a href="#cb70-71" aria-hidden="true" tabindex="-1"></a>这里没有使用进行pseudobulking的原因是，本例中“ctrl”和“sim”组都分别只有一个重复：We do not perform this analysis here, as there is a single replicate in the data.</span>
-<span id="cb70-72"><a href="#cb70-72" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb70-73"><a href="#cb70-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-74"><a href="#cb70-74" aria-hidden="true" tabindex="-1"></a><span class="fu">### 可视化差异基因表达</span></span>
+<span id="cb70-54"><a href="#cb70-54" aria-hidden="true" tabindex="-1"></a>Then we use&nbsp;<span class="in">`FindMarkers()`</span>&nbsp;to find the genes that are different between control and stimulated B cells.</span>
+<span id="cb70-55"><a href="#cb70-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-58"><a href="#cb70-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-59"><a href="#cb70-59" aria-hidden="true" tabindex="-1"></a><span class="co"># 寻找对照组和刺激组之间在B细胞中的差异基因</span></span>
+<span id="cb70-60"><a href="#cb70-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-61"><a href="#cb70-61" aria-hidden="true" tabindex="-1"></a>b.interferon.response <span class="ot">&lt;-</span> <span class="fu">FindMarkers</span>(ifnb_integrated, </span>
+<span id="cb70-62"><a href="#cb70-62" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">ident.1 =</span> <span class="st">"B_STIM"</span>, </span>
+<span id="cb70-63"><a href="#cb70-63" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">ident.2 =</span> <span class="st">"B_CTRL"</span>, </span>
+<span id="cb70-64"><a href="#cb70-64" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb70-65"><a href="#cb70-65" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(b.interferon.response, <span class="at">n =</span> <span class="dv">15</span>)</span>
+<span id="cb70-66"><a href="#cb70-66" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-67"><a href="#cb70-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-68"><a href="#cb70-68" aria-hidden="true" tabindex="-1"></a>::: callout-warning</span>
+<span id="cb70-69"><a href="#cb70-69" aria-hidden="true" tabindex="-1"></a>Please note that p-values obtained from this analysis should be interpreted with caution, as&nbsp;**these tests treat each cell as an independent replicate, and ignore inherent correlations between cells originating from the same sample**. Such analyses have been shown to find a large number of **false positive associations**, as has been demonstrated by&nbsp;[@squair2021],&nbsp;[@zimmerman2021],&nbsp;[@junttila2022], and others. As discussed&nbsp;here&nbsp;[@crowell2020], DE tests across multiple conditions should expressly utilize multiple samples/replicates, and can be performed after aggregating (‘pseudobulking’) cells from the same sample and subpopulation together. Below, we show how **pseudobulking** can be used to account for such within-sample correlation.</span>
+<span id="cb70-70"><a href="#cb70-70" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb70-71"><a href="#cb70-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-72"><a href="#cb70-72" aria-hidden="true" tabindex="-1"></a>::: callout-warning</span>
+<span id="cb70-73"><a href="#cb70-73" aria-hidden="true" tabindex="-1"></a>这里没有使用进行pseudobulking的原因是，本例中“ctrl”和“sim”组都分别只有一个重复：We do not perform this analysis here, as there is a single replicate in the data.</span>
+<span id="cb70-74"><a href="#cb70-74" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb70-75"><a href="#cb70-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-76"><a href="#cb70-76" aria-hidden="true" tabindex="-1"></a>Another useful way to visualize these changes in gene expression is with the&nbsp;<span class="in">`split.by`</span>&nbsp;option to the&nbsp;<span class="co">[</span><span class="ot">`FeaturePlot()`</span><span class="co">](https://satijalab.org/seurat/reference/FeaturePlot.html)</span>&nbsp;or&nbsp;<span class="co">[</span><span class="ot">`VlnPlot()`</span><span class="co">](https://satijalab.org/seurat/reference/VlnPlot.html)</span>&nbsp;function. This will display FeaturePlots of the list of given genes, split by a grouping variable (stimulation condition here).</span>
+<span id="cb70-76"><a href="#cb70-76" aria-hidden="true" tabindex="-1"></a><span class="fu">## 可视化差异基因表达</span></span>
 <span id="cb70-77"><a href="#cb70-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-80"><a href="#cb70-80" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-81"><a href="#cb70-81" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 12</span></span>
-<span id="cb70-82"><a href="#cb70-82" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(ifnb_integrated, </span>
-<span id="cb70-83"><a href="#cb70-83" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD3D"</span>, <span class="st">"GNLY"</span>, <span class="st">"IFI6"</span>, <span class="st">"ISG15"</span>, <span class="st">"CD14"</span>, <span class="st">"CXCL10"</span>), </span>
-<span id="cb70-84"><a href="#cb70-84" aria-hidden="true" tabindex="-1"></a>            <span class="at">split.by =</span> <span class="st">"stim"</span>, </span>
-<span id="cb70-85"><a href="#cb70-85" aria-hidden="true" tabindex="-1"></a>            <span class="at">max.cutoff =</span> <span class="dv">3</span>, </span>
-<span id="cb70-86"><a href="#cb70-86" aria-hidden="true" tabindex="-1"></a>            <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"grey"</span>, <span class="st">"red"</span>), </span>
-<span id="cb70-87"><a href="#cb70-87" aria-hidden="true" tabindex="-1"></a>            <span class="at">reduction =</span> <span class="st">"umap"</span>)</span>
-<span id="cb70-88"><a href="#cb70-88" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-89"><a href="#cb70-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-92"><a href="#cb70-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-93"><a href="#cb70-93" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
-<span id="cb70-94"><a href="#cb70-94" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 15</span></span>
-<span id="cb70-95"><a href="#cb70-95" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">&lt;-</span> <span class="fu">VlnPlot</span>(ifnb_integrated,</span>
-<span id="cb70-96"><a href="#cb70-96" aria-hidden="true" tabindex="-1"></a>                 <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD3D"</span>, <span class="st">"GNLY"</span>, <span class="st">"IFI6"</span>, <span class="st">"ISG15"</span>, <span class="st">"CD14"</span>, <span class="st">"CXCL10"</span>, <span class="st">"LYZ"</span>),</span>
-<span id="cb70-97"><a href="#cb70-97" aria-hidden="true" tabindex="-1"></a>                 <span class="at">split.by =</span> <span class="st">"stim"</span>,</span>
-<span id="cb70-98"><a href="#cb70-98" aria-hidden="true" tabindex="-1"></a>                 <span class="at">group.by =</span> <span class="st">"seurat_annotations"</span>,</span>
-<span id="cb70-99"><a href="#cb70-99" aria-hidden="true" tabindex="-1"></a>                 <span class="at">pt.size =</span> <span class="dv">0</span>,</span>
-<span id="cb70-100"><a href="#cb70-100" aria-hidden="true" tabindex="-1"></a>                 <span class="at">combine =</span> <span class="cn">FALSE</span>) <span class="co"># 由于VlnPlot绘制组图时没有图例，所以这里取消绘制组图</span></span>
-<span id="cb70-101"><a href="#cb70-101" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb70-102"><a href="#cb70-102" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(<span class="at">plots =</span> plots, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="co"># 将plots列表组合成组图</span></span>
-<span id="cb70-103"><a href="#cb70-103" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-104"><a href="#cb70-104" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-105"><a href="#cb70-105" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true"}</span>
-<span id="cb70-106"><a href="#cb70-106" aria-hidden="true" tabindex="-1"></a><span class="fu">###### 结果解读</span></span>
-<span id="cb70-107"><a href="#cb70-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-108"><a href="#cb70-108" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>*Genes such as&nbsp;**CD3D**&nbsp;and&nbsp;**GNLY**&nbsp;are canonical cell type markers (for T cells and NK/CD8 T cells) that are virtually&nbsp;**unaffected by interferon stimulation**&nbsp;and&nbsp;**display similar gene expression patterns in the control and stimulated group**.*</span>
-<span id="cb70-109"><a href="#cb70-109" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>***IFI6**&nbsp;and&nbsp;**ISG15**, on the other hand, are&nbsp;**core interferon response genes**&nbsp;and are&nbsp;**upregulated**&nbsp;accordingly&nbsp;**in all cell types**.*</span>
-<span id="cb70-110"><a href="#cb70-110" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>***CD14**&nbsp;and&nbsp;**CXCL10**&nbsp;are genes that show a&nbsp;**cell type specific interferon response**.*</span>
-<span id="cb70-111"><a href="#cb70-111" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>***CD14**&nbsp;expression&nbsp;**decreases**&nbsp;after stimulation in&nbsp;**CD14 monocytes**,&nbsp;[which could lead to misclassification in a supervised analysis framework, underscoring the value of integrated analysis.]{.underline}**如果用于识别细胞类型的marker本身在不同的样本类型（处理 vs.&nbsp;对照、恶性组织 vs.&nbsp;正常组织）中存在表达量的差异，那么就会导致对细胞类型判断的错误。而本篇的数据整合则能够避免出现这种情况。***</span>
-<span id="cb70-112"><a href="#cb70-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-113"><a href="#cb70-113" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>***CXCL10**&nbsp;shows a distinct&nbsp;**upregulation**&nbsp;in&nbsp;**monocytes**&nbsp;and&nbsp;**B cells**&nbsp;after interferon stimulation but not in other cell types.*</span>
-<span id="cb70-114"><a href="#cb70-114" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb70-115"><a href="#cb70-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-116"><a href="#cb70-116" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb70-78"><a href="#cb70-78" aria-hidden="true" tabindex="-1"></a>Another useful way to visualize these changes in gene expression is with the&nbsp;<span class="in">`split.by`</span>&nbsp;option to the&nbsp;<span class="co">[</span><span class="ot">`FeaturePlot()`</span><span class="co">](https://satijalab.org/seurat/reference/FeaturePlot.html)</span>&nbsp;or&nbsp;<span class="co">[</span><span class="ot">`VlnPlot()`</span><span class="co">](https://satijalab.org/seurat/reference/VlnPlot.html)</span>&nbsp;function. This will display FeaturePlots of the list of given genes, split by a grouping variable (stimulation condition here).</span>
+<span id="cb70-79"><a href="#cb70-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-82"><a href="#cb70-82" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-83"><a href="#cb70-83" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 12</span></span>
+<span id="cb70-84"><a href="#cb70-84" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(ifnb_integrated, </span>
+<span id="cb70-85"><a href="#cb70-85" aria-hidden="true" tabindex="-1"></a>            <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD3D"</span>, <span class="st">"GNLY"</span>, <span class="st">"IFI6"</span>, <span class="st">"ISG15"</span>, <span class="st">"CD14"</span>, <span class="st">"CXCL10"</span>), </span>
+<span id="cb70-86"><a href="#cb70-86" aria-hidden="true" tabindex="-1"></a>            <span class="at">split.by =</span> <span class="st">"stim"</span>, </span>
+<span id="cb70-87"><a href="#cb70-87" aria-hidden="true" tabindex="-1"></a>            <span class="at">max.cutoff =</span> <span class="dv">3</span>, </span>
+<span id="cb70-88"><a href="#cb70-88" aria-hidden="true" tabindex="-1"></a>            <span class="at">cols =</span> <span class="fu">c</span>(<span class="st">"grey"</span>, <span class="st">"red"</span>), </span>
+<span id="cb70-89"><a href="#cb70-89" aria-hidden="true" tabindex="-1"></a>            <span class="at">reduction =</span> <span class="st">"umap"</span>)</span>
+<span id="cb70-90"><a href="#cb70-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-91"><a href="#cb70-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-94"><a href="#cb70-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-95"><a href="#cb70-95" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb70-96"><a href="#cb70-96" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 15</span></span>
+<span id="cb70-97"><a href="#cb70-97" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">&lt;-</span> <span class="fu">VlnPlot</span>(ifnb_integrated,</span>
+<span id="cb70-98"><a href="#cb70-98" aria-hidden="true" tabindex="-1"></a>                 <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"CD3D"</span>, <span class="st">"GNLY"</span>, <span class="st">"IFI6"</span>, <span class="st">"ISG15"</span>, <span class="st">"CD14"</span>, <span class="st">"CXCL10"</span>, <span class="st">"LYZ"</span>),</span>
+<span id="cb70-99"><a href="#cb70-99" aria-hidden="true" tabindex="-1"></a>                 <span class="at">split.by =</span> <span class="st">"stim"</span>,</span>
+<span id="cb70-100"><a href="#cb70-100" aria-hidden="true" tabindex="-1"></a>                 <span class="at">group.by =</span> <span class="st">"seurat_annotations"</span>,</span>
+<span id="cb70-101"><a href="#cb70-101" aria-hidden="true" tabindex="-1"></a>                 <span class="at">pt.size =</span> <span class="dv">0</span>,</span>
+<span id="cb70-102"><a href="#cb70-102" aria-hidden="true" tabindex="-1"></a>                 <span class="at">combine =</span> <span class="cn">FALSE</span>) <span class="co"># 由于VlnPlot绘制组图时没有图例，所以这里取消绘制组图</span></span>
+<span id="cb70-103"><a href="#cb70-103" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb70-104"><a href="#cb70-104" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(<span class="at">plots =</span> plots, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="co"># 将plots列表组合成组图</span></span>
+<span id="cb70-105"><a href="#cb70-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-106"><a href="#cb70-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-107"><a href="#cb70-107" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true"}</span>
+<span id="cb70-108"><a href="#cb70-108" aria-hidden="true" tabindex="-1"></a><span class="fu">###### 结果解读</span></span>
+<span id="cb70-109"><a href="#cb70-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-110"><a href="#cb70-110" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>*Genes such as&nbsp;**CD3D**&nbsp;and&nbsp;**GNLY**&nbsp;are canonical cell type markers (for T cells and NK/CD8 T cells) that are virtually&nbsp;**unaffected by interferon stimulation**&nbsp;and&nbsp;**display similar gene expression patterns in the control and stimulated group**.*</span>
+<span id="cb70-111"><a href="#cb70-111" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>***IFI6**&nbsp;and&nbsp;**ISG15**, on the other hand, are&nbsp;**core interferon response genes**&nbsp;and are&nbsp;**upregulated**&nbsp;accordingly&nbsp;**in all cell types**.*</span>
+<span id="cb70-112"><a href="#cb70-112" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>***CD14**&nbsp;and&nbsp;**CXCL10**&nbsp;are genes that show a&nbsp;**cell type specific interferon response**.*</span>
+<span id="cb70-113"><a href="#cb70-113" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>***CD14**&nbsp;expression&nbsp;**decreases**&nbsp;after stimulation in&nbsp;**CD14 monocytes**,&nbsp;[which could lead to misclassification in a supervised analysis framework, underscoring the value of integrated analysis.]{.underline}**如果用于识别细胞类型的marker本身在不同的样本类型（处理 vs.&nbsp;对照、恶性组织 vs.&nbsp;正常组织）中存在表达量的差异，那么就会导致对细胞类型判断的错误。而本篇的数据整合则能够避免出现这种情况。***</span>
+<span id="cb70-114"><a href="#cb70-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-115"><a href="#cb70-115" aria-hidden="true" tabindex="-1"></a><span class="ss">    -   </span>***CXCL10**&nbsp;shows a distinct&nbsp;**upregulation**&nbsp;in&nbsp;**monocytes**&nbsp;and&nbsp;**B cells**&nbsp;after interferon stimulation but not in other cell types.*</span>
+<span id="cb70-116"><a href="#cb70-116" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb70-117"><a href="#cb70-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-118"><a href="#cb70-118" aria-hidden="true" tabindex="-1"></a><span class="fu">## pseudobulking后的差异分析</span></span>
+<span id="cb70-118"><a href="#cb70-118" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb70-119"><a href="#cb70-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-120"><a href="#cb70-120" aria-hidden="true" tabindex="-1"></a>这一节为了演示pseudobulking，采用的仍然是“ifnb”数据集，仍然包括了“ctrl”和“stim”两个conditions，但是每个条件下都有多个重复，即多个来自不同患者的样本。同时，为了和<span class="co">[</span><span class="ot">Seurat官方教程</span><span class="co">](https://satijalab.org/seurat/articles/de_vignette)</span>一致，采用了<span class="in">`NormalizeData`</span>对数据进行标准化。</span>
+<span id="cb70-120"><a href="#cb70-120" aria-hidden="true" tabindex="-1"></a><span class="fu"># pseudobulking后的差异分析</span></span>
 <span id="cb70-121"><a href="#cb70-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-122"><a href="#cb70-122" aria-hidden="true" tabindex="-1"></a><span class="fu">### 数据读取和预处理 {#数据读取和预处理}</span></span>
+<span id="cb70-122"><a href="#cb70-122" aria-hidden="true" tabindex="-1"></a>这一节为了演示pseudobulking，采用的仍然是“ifnb”数据集，仍然包括了“ctrl”和“stim”两个conditions，但是每个条件下都有多个重复，即多个来自不同患者的样本。同时，为了和<span class="co">[</span><span class="ot">Seurat官方教程</span><span class="co">](https://satijalab.org/seurat/articles/de_vignette)</span>一致，采用了<span class="in">`NormalizeData`</span>对数据进行标准化。</span>
 <span id="cb70-123"><a href="#cb70-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-124"><a href="#cb70-124" aria-hidden="true" tabindex="-1"></a>For demonstration purposes, we will be using the interferon-beta stimulated human PBMCs dataset <span class="co">[</span><span class="ot">@kang2017</span><span class="co">]</span> that is available via the&nbsp;<span class="in">`SeuratData`</span>&nbsp;package.</span>
+<span id="cb70-124"><a href="#cb70-124" aria-hidden="true" tabindex="-1"></a><span class="fu">## 数据读取和预处理 {#数据读取和预处理}</span></span>
 <span id="cb70-125"><a href="#cb70-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-126"><a href="#cb70-126" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" appearance="minimal" icon="false"}</span>
-<span id="cb70-127"><a href="#cb70-127" aria-hidden="true" tabindex="-1"></a><span class="fu">###### 在线读取（可能需要全局代理）</span></span>
-<span id="cb70-128"><a href="#cb70-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-131"><a href="#cb70-131" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-132"><a href="#cb70-132" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb70-133"><a href="#cb70-133" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
-<span id="cb70-134"><a href="#cb70-134" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb70-135"><a href="#cb70-135" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SeuratData)</span>
-<span id="cb70-136"><a href="#cb70-136" aria-hidden="true" tabindex="-1"></a><span class="fu">InstallData</span>(<span class="st">"ifnb"</span>)</span>
-<span id="cb70-137"><a href="#cb70-137" aria-hidden="true" tabindex="-1"></a>ifnb <span class="ot">&lt;-</span> <span class="fu">LoadData</span>(<span class="st">"ifnb"</span>)</span>
-<span id="cb70-138"><a href="#cb70-138" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-139"><a href="#cb70-139" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb70-140"><a href="#cb70-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-141"><a href="#cb70-141" aria-hidden="true" tabindex="-1"></a>从本地下载好的数据读取：</span>
+<span id="cb70-126"><a href="#cb70-126" aria-hidden="true" tabindex="-1"></a>For demonstration purposes, we will be using the interferon-beta stimulated human PBMCs dataset <span class="co">[</span><span class="ot">@kang2017</span><span class="co">]</span> that is available via the&nbsp;<span class="in">`SeuratData`</span>&nbsp;package.</span>
+<span id="cb70-127"><a href="#cb70-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-128"><a href="#cb70-128" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" appearance="minimal" icon="false"}</span>
+<span id="cb70-129"><a href="#cb70-129" aria-hidden="true" tabindex="-1"></a><span class="fu">###### 在线读取（可能需要全局代理）</span></span>
+<span id="cb70-130"><a href="#cb70-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-133"><a href="#cb70-133" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-134"><a href="#cb70-134" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb70-135"><a href="#cb70-135" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
+<span id="cb70-136"><a href="#cb70-136" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb70-137"><a href="#cb70-137" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SeuratData)</span>
+<span id="cb70-138"><a href="#cb70-138" aria-hidden="true" tabindex="-1"></a><span class="fu">InstallData</span>(<span class="st">"ifnb"</span>)</span>
+<span id="cb70-139"><a href="#cb70-139" aria-hidden="true" tabindex="-1"></a>ifnb <span class="ot">&lt;-</span> <span class="fu">LoadData</span>(<span class="st">"ifnb"</span>)</span>
+<span id="cb70-140"><a href="#cb70-140" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-141"><a href="#cb70-141" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb70-142"><a href="#cb70-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-145"><a href="#cb70-145" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-146"><a href="#cb70-146" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
-<span id="cb70-147"><a href="#cb70-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-148"><a href="#cb70-148" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb70-149"><a href="#cb70-149" aria-hidden="true" tabindex="-1"></a>ifnb <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seurat_official/pbmc_ifnb.rds"</span>)</span>
-<span id="cb70-150"><a href="#cb70-150" aria-hidden="true" tabindex="-1"></a>ifnb</span>
-<span id="cb70-151"><a href="#cb70-151" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ifnb<span class="sc">@</span>meta.data, <span class="dv">5</span>)</span>
-<span id="cb70-152"><a href="#cb70-152" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(ifnb<span class="sc">$</span>seurat_annotations) <span class="co"># 这里的数据已经提前注释好了细胞类型</span></span>
-<span id="cb70-153"><a href="#cb70-153" aria-hidden="true" tabindex="-1"></a><span class="co"># 标准化</span></span>
-<span id="cb70-154"><a href="#cb70-154" aria-hidden="true" tabindex="-1"></a>ifnb <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(ifnb)</span>
-<span id="cb70-155"><a href="#cb70-155" aria-hidden="true" tabindex="-1"></a><span class="co"># 核对目前的默认assay，保证是RNA assay</span></span>
-<span id="cb70-156"><a href="#cb70-156" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(ifnb)</span>
-<span id="cb70-157"><a href="#cb70-157" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-158"><a href="#cb70-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-159"><a href="#cb70-159" aria-hidden="true" tabindex="-1"></a><span class="fu">### 直接通过`FindMarkers`寻找差异基因</span></span>
+<span id="cb70-143"><a href="#cb70-143" aria-hidden="true" tabindex="-1"></a>从本地下载好的数据读取：</span>
+<span id="cb70-144"><a href="#cb70-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-147"><a href="#cb70-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-148"><a href="#cb70-148" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
+<span id="cb70-149"><a href="#cb70-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-150"><a href="#cb70-150" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb70-151"><a href="#cb70-151" aria-hidden="true" tabindex="-1"></a>ifnb <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seurat_official/pbmc_ifnb.rds"</span>)</span>
+<span id="cb70-152"><a href="#cb70-152" aria-hidden="true" tabindex="-1"></a>ifnb</span>
+<span id="cb70-153"><a href="#cb70-153" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ifnb<span class="sc">@</span>meta.data, <span class="dv">5</span>)</span>
+<span id="cb70-154"><a href="#cb70-154" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(ifnb<span class="sc">$</span>seurat_annotations) <span class="co"># 这里的数据已经提前注释好了细胞类型</span></span>
+<span id="cb70-155"><a href="#cb70-155" aria-hidden="true" tabindex="-1"></a><span class="co"># 标准化</span></span>
+<span id="cb70-156"><a href="#cb70-156" aria-hidden="true" tabindex="-1"></a>ifnb <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(ifnb)</span>
+<span id="cb70-157"><a href="#cb70-157" aria-hidden="true" tabindex="-1"></a><span class="co"># 核对目前的默认assay，保证是RNA assay</span></span>
+<span id="cb70-158"><a href="#cb70-158" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(ifnb)</span>
+<span id="cb70-159"><a href="#cb70-159" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb70-160"><a href="#cb70-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-161"><a href="#cb70-161" aria-hidden="true" tabindex="-1"></a>为了和pseudobulking后的差异分析结果进行比价，这里仍然先进行基于<span class="in">`FindMarkers`</span>的简单差异表达分析，**寻找ctrl和stim之间在CD14单核细胞中的差异基因**。基本步骤和上面的<span class="co">[</span><span class="ot">准备差异表达分析所需变量</span><span class="co">](#准备差异表达分析所需变量)</span>一致。</span>
+<span id="cb70-161"><a href="#cb70-161" aria-hidden="true" tabindex="-1"></a><span class="fu">## 直接通过`FindMarkers`寻找差异基因</span></span>
 <span id="cb70-162"><a href="#cb70-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-165"><a href="#cb70-165" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-166"><a href="#cb70-166" aria-hidden="true" tabindex="-1"></a>ifnb<span class="sc">$</span>celltype.stim <span class="ot">&lt;-</span> <span class="fu">paste</span>(ifnb<span class="sc">$</span>seurat_annotations, ifnb<span class="sc">$</span>stim, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
-<span id="cb70-167"><a href="#cb70-167" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(ifnb<span class="sc">$</span>celltype.stim)</span>
-<span id="cb70-168"><a href="#cb70-168" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb) <span class="ot">&lt;-</span> <span class="st">"celltype.stim"</span></span>
-<span id="cb70-169"><a href="#cb70-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-170"><a href="#cb70-170" aria-hidden="true" tabindex="-1"></a>mono.de <span class="ot">&lt;-</span> <span class="fu">FindMarkers</span>(ifnb, </span>
-<span id="cb70-171"><a href="#cb70-171" aria-hidden="true" tabindex="-1"></a>                       <span class="at">ident.1 =</span> <span class="st">"CD14 Mono_STIM"</span>, </span>
-<span id="cb70-172"><a href="#cb70-172" aria-hidden="true" tabindex="-1"></a>                       <span class="at">ident.2 =</span> <span class="st">"CD14 Mono_CTRL"</span>, </span>
-<span id="cb70-173"><a href="#cb70-173" aria-hidden="true" tabindex="-1"></a>                       <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb70-174"><a href="#cb70-174" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(mono.de)</span>
-<span id="cb70-175"><a href="#cb70-175" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mono.de, <span class="at">n =</span> <span class="dv">10</span>)</span>
-<span id="cb70-176"><a href="#cb70-176" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-177"><a href="#cb70-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-178"><a href="#cb70-178" aria-hidden="true" tabindex="-1"></a><span class="fu">### 执行pseudobulking</span></span>
+<span id="cb70-163"><a href="#cb70-163" aria-hidden="true" tabindex="-1"></a>为了和pseudobulking后的差异分析结果进行比价，这里仍然先进行基于<span class="in">`FindMarkers`</span>的简单差异表达分析，**寻找ctrl和stim之间在CD14单核细胞中的差异基因**。基本步骤和上面的<span class="co">[</span><span class="ot">准备差异表达分析所需变量</span><span class="co">](#准备差异表达分析所需变量)</span>一致。</span>
+<span id="cb70-164"><a href="#cb70-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-167"><a href="#cb70-167" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-168"><a href="#cb70-168" aria-hidden="true" tabindex="-1"></a>ifnb<span class="sc">$</span>celltype.stim <span class="ot">&lt;-</span> <span class="fu">paste</span>(ifnb<span class="sc">$</span>seurat_annotations, ifnb<span class="sc">$</span>stim, <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb70-169"><a href="#cb70-169" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(ifnb<span class="sc">$</span>celltype.stim)</span>
+<span id="cb70-170"><a href="#cb70-170" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb) <span class="ot">&lt;-</span> <span class="st">"celltype.stim"</span></span>
+<span id="cb70-171"><a href="#cb70-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-172"><a href="#cb70-172" aria-hidden="true" tabindex="-1"></a>mono.de <span class="ot">&lt;-</span> <span class="fu">FindMarkers</span>(ifnb, </span>
+<span id="cb70-173"><a href="#cb70-173" aria-hidden="true" tabindex="-1"></a>                       <span class="at">ident.1 =</span> <span class="st">"CD14 Mono_STIM"</span>, </span>
+<span id="cb70-174"><a href="#cb70-174" aria-hidden="true" tabindex="-1"></a>                       <span class="at">ident.2 =</span> <span class="st">"CD14 Mono_CTRL"</span>, </span>
+<span id="cb70-175"><a href="#cb70-175" aria-hidden="true" tabindex="-1"></a>                       <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb70-176"><a href="#cb70-176" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(mono.de)</span>
+<span id="cb70-177"><a href="#cb70-177" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mono.de, <span class="at">n =</span> <span class="dv">10</span>)</span>
+<span id="cb70-178"><a href="#cb70-178" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb70-179"><a href="#cb70-179" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-180"><a href="#cb70-180" aria-hidden="true" tabindex="-1"></a>To pseudobulk, we will use&nbsp;<span class="in">`AggregateExpression()`</span>&nbsp;to sum together **gene counts of all the cells from the same sample** for each cell type. This results in **one gene expression profile per sample** **and cell type**. We can then perform DE analysis using&nbsp;[`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)&nbsp;**on the sample level**. This treats the samples, rather than the individual cells, as independent observations.</span>
+<span id="cb70-180"><a href="#cb70-180" aria-hidden="true" tabindex="-1"></a><span class="fu">## 执行pseudobulking</span></span>
 <span id="cb70-181"><a href="#cb70-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-182"><a href="#cb70-182" aria-hidden="true" tabindex="-1"></a>First, we need to retrieve the sample information for each cell. This is not loaded in the metadata, so we will load it from the&nbsp;<span class="co">[</span><span class="ot">Github repo</span><span class="co">](https://github.com/yelabucsf/demuxlet_paper_code/tree/master/)</span>&nbsp;of the source data for the original paper.</span>
+<span id="cb70-182"><a href="#cb70-182" aria-hidden="true" tabindex="-1"></a>To pseudobulk, we will use&nbsp;<span class="in">`AggregateExpression()`</span>&nbsp;to sum together **gene counts of all the cells from the same sample** for each cell type. This results in **one gene expression profile per sample** **and cell type**. We can then perform DE analysis using&nbsp;[`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html)&nbsp;**on the sample level**. This treats the samples, rather than the individual cells, as independent observations.</span>
 <span id="cb70-183"><a href="#cb70-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-184"><a href="#cb70-184" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
-<span id="cb70-185"><a href="#cb70-185" aria-hidden="true" tabindex="-1"></a><span class="fu">###### Add sample information to the dataset</span></span>
-<span id="cb70-186"><a href="#cb70-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-189"><a href="#cb70-189" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-190"><a href="#cb70-190" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb70-191"><a href="#cb70-191" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
-<span id="cb70-192"><a href="#cb70-192" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-193"><a href="#cb70-193" aria-hidden="true" tabindex="-1"></a><span class="co"># 从GitHub仓库读取（可能需要代理）</span></span>
-<span id="cb70-194"><a href="#cb70-194" aria-hidden="true" tabindex="-1"></a><span class="co"># load the inferred sample IDs of each cell</span></span>
-<span id="cb70-195"><a href="#cb70-195" aria-hidden="true" tabindex="-1"></a>ctrl <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="fu">url</span>(<span class="st">"https://raw.githubusercontent.com/yelabucsf/demuxlet_paper_code/master/fig3/ye1.ctrl.8.10.sm.best"</span>), <span class="at">head =</span> T, <span class="at">stringsAsFactors =</span> F)</span>
-<span id="cb70-196"><a href="#cb70-196" aria-hidden="true" tabindex="-1"></a>stim <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="fu">url</span>(<span class="st">"https://raw.githubusercontent.com/yelabucsf/demuxlet_paper_code/master/fig3/ye2.stim.8.10.sm.best"</span>), <span class="at">head =</span> T, <span class="at">stringsAsFactors =</span> F)</span>
-<span id="cb70-197"><a href="#cb70-197" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-198"><a href="#cb70-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-201"><a href="#cb70-201" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-202"><a href="#cb70-202" aria-hidden="true" tabindex="-1"></a><span class="co"># 这里提前下载好了两个样本信息文件，所以直接从本地读取</span></span>
-<span id="cb70-203"><a href="#cb70-203" aria-hidden="true" tabindex="-1"></a>ctrl <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seurat_official/inferred_sample_ids_ctrl.rds"</span>)</span>
-<span id="cb70-204"><a href="#cb70-204" aria-hidden="true" tabindex="-1"></a>stim <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seurat_official/inferred_sample_ids_stim.rds"</span>)</span>
-<span id="cb70-205"><a href="#cb70-205" aria-hidden="true" tabindex="-1"></a>info <span class="ot">&lt;-</span> <span class="fu">rbind</span>(ctrl, stim)</span>
-<span id="cb70-206"><a href="#cb70-206" aria-hidden="true" tabindex="-1"></a>info<span class="sc">$</span>BARCODE[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb70-207"><a href="#cb70-207" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ifnb)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb70-208"><a href="#cb70-208" aria-hidden="true" tabindex="-1"></a><span class="co"># 可以看到两者的barcode形式不一致</span></span>
-<span id="cb70-209"><a href="#cb70-209" aria-hidden="true" tabindex="-1"></a><span class="co"># rename the cell IDs by substituting the '-' into '.'</span></span>
-<span id="cb70-210"><a href="#cb70-210" aria-hidden="true" tabindex="-1"></a>info<span class="sc">$</span>BARCODE <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">-"</span>, <span class="at">replacement =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, info<span class="sc">$</span>BARCODE)</span>
-<span id="cb70-211"><a href="#cb70-211" aria-hidden="true" tabindex="-1"></a>info<span class="sc">$</span>BARCODE[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb70-212"><a href="#cb70-212" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-213"><a href="#cb70-213" aria-hidden="true" tabindex="-1"></a><span class="co"># only keep the cells with high-confidence sample ID</span></span>
-<span id="cb70-214"><a href="#cb70-214" aria-hidden="true" tabindex="-1"></a>info <span class="ot">&lt;-</span> info[<span class="fu">grep</span>(<span class="at">pattern =</span> <span class="st">"SNG"</span>, <span class="at">x =</span> info<span class="sc">$</span>BEST), ]</span>
-<span id="cb70-215"><a href="#cb70-215" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-216"><a href="#cb70-216" aria-hidden="true" tabindex="-1"></a><span class="co"># remove cells with duplicated IDs in both ctrl and stim groups</span></span>
-<span id="cb70-217"><a href="#cb70-217" aria-hidden="true" tabindex="-1"></a>info <span class="ot">&lt;-</span> info[<span class="sc">!</span><span class="fu">duplicated</span>(info<span class="sc">$</span>BARCODE) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">duplicated</span>(info<span class="sc">$</span>BARCODE, <span class="at">fromLast =</span> T), ]</span>
-<span id="cb70-218"><a href="#cb70-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-219"><a href="#cb70-219" aria-hidden="true" tabindex="-1"></a><span class="co"># now add the sample IDs to ifnb </span></span>
-<span id="cb70-220"><a href="#cb70-220" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(info) <span class="ot">&lt;-</span> info<span class="sc">$</span>BARCODE</span>
-<span id="cb70-221"><a href="#cb70-221" aria-hidden="true" tabindex="-1"></a>info <span class="ot">&lt;-</span> info[, <span class="fu">c</span>(<span class="st">"BEST"</span>), drop <span class="ot">=</span> F]</span>
-<span id="cb70-222"><a href="#cb70-222" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(info) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"donor_id"</span>)</span>
-<span id="cb70-223"><a href="#cb70-223" aria-hidden="true" tabindex="-1"></a>ifnb <span class="ot">&lt;-</span> <span class="fu">AddMetaData</span>(ifnb, <span class="at">metadata =</span> info)</span>
-<span id="cb70-224"><a href="#cb70-224" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-225"><a href="#cb70-225" aria-hidden="true" tabindex="-1"></a><span class="co"># remove cells without donor IDs</span></span>
-<span id="cb70-226"><a href="#cb70-226" aria-hidden="true" tabindex="-1"></a>ifnb<span class="sc">$</span>donor_id[<span class="fu">is.na</span>(ifnb<span class="sc">$</span>donor_id)] <span class="ot">&lt;-</span> <span class="st">"unknown"</span></span>
-<span id="cb70-227"><a href="#cb70-227" aria-hidden="true" tabindex="-1"></a>ifnb <span class="ot">&lt;-</span> <span class="fu">subset</span>(ifnb, <span class="at">subset =</span> donor_id <span class="sc">!=</span> <span class="st">"unknown"</span>)</span>
-<span id="cb70-228"><a href="#cb70-228" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-229"><a href="#cb70-229" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb70-230"><a href="#cb70-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-231"><a href="#cb70-231" aria-hidden="true" tabindex="-1"></a>可以看到，现在的meta.dat中多了样本信息列（<span class="in">`donor_id`</span>），记录了每个细胞来自哪个患者：</span>
+<span id="cb70-184"><a href="#cb70-184" aria-hidden="true" tabindex="-1"></a>First, we need to retrieve the sample information for each cell. This is not loaded in the metadata, so we will load it from the&nbsp;<span class="co">[</span><span class="ot">Github repo</span><span class="co">](https://github.com/yelabucsf/demuxlet_paper_code/tree/master/)</span>&nbsp;of the source data for the original paper.</span>
+<span id="cb70-185"><a href="#cb70-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-186"><a href="#cb70-186" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb70-187"><a href="#cb70-187" aria-hidden="true" tabindex="-1"></a><span class="fu">###### Add sample information to the dataset</span></span>
+<span id="cb70-188"><a href="#cb70-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-191"><a href="#cb70-191" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-192"><a href="#cb70-192" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb70-193"><a href="#cb70-193" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
+<span id="cb70-194"><a href="#cb70-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-195"><a href="#cb70-195" aria-hidden="true" tabindex="-1"></a><span class="co"># 从GitHub仓库读取（可能需要代理）</span></span>
+<span id="cb70-196"><a href="#cb70-196" aria-hidden="true" tabindex="-1"></a><span class="co"># load the inferred sample IDs of each cell</span></span>
+<span id="cb70-197"><a href="#cb70-197" aria-hidden="true" tabindex="-1"></a>ctrl <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="fu">url</span>(<span class="st">"https://raw.githubusercontent.com/yelabucsf/demuxlet_paper_code/master/fig3/ye1.ctrl.8.10.sm.best"</span>), <span class="at">head =</span> T, <span class="at">stringsAsFactors =</span> F)</span>
+<span id="cb70-198"><a href="#cb70-198" aria-hidden="true" tabindex="-1"></a>stim <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="fu">url</span>(<span class="st">"https://raw.githubusercontent.com/yelabucsf/demuxlet_paper_code/master/fig3/ye2.stim.8.10.sm.best"</span>), <span class="at">head =</span> T, <span class="at">stringsAsFactors =</span> F)</span>
+<span id="cb70-199"><a href="#cb70-199" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-200"><a href="#cb70-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-203"><a href="#cb70-203" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-204"><a href="#cb70-204" aria-hidden="true" tabindex="-1"></a><span class="co"># 这里提前下载好了两个样本信息文件，所以直接从本地读取</span></span>
+<span id="cb70-205"><a href="#cb70-205" aria-hidden="true" tabindex="-1"></a>ctrl <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seurat_official/inferred_sample_ids_ctrl.rds"</span>)</span>
+<span id="cb70-206"><a href="#cb70-206" aria-hidden="true" tabindex="-1"></a>stim <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seurat_official/inferred_sample_ids_stim.rds"</span>)</span>
+<span id="cb70-207"><a href="#cb70-207" aria-hidden="true" tabindex="-1"></a>info <span class="ot">&lt;-</span> <span class="fu">rbind</span>(ctrl, stim)</span>
+<span id="cb70-208"><a href="#cb70-208" aria-hidden="true" tabindex="-1"></a>info<span class="sc">$</span>BARCODE[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb70-209"><a href="#cb70-209" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(ifnb)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb70-210"><a href="#cb70-210" aria-hidden="true" tabindex="-1"></a><span class="co"># 可以看到两者的barcode形式不一致</span></span>
+<span id="cb70-211"><a href="#cb70-211" aria-hidden="true" tabindex="-1"></a><span class="co"># rename the cell IDs by substituting the '-' into '.'</span></span>
+<span id="cb70-212"><a href="#cb70-212" aria-hidden="true" tabindex="-1"></a>info<span class="sc">$</span>BARCODE <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">-"</span>, <span class="at">replacement =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">."</span>, info<span class="sc">$</span>BARCODE)</span>
+<span id="cb70-213"><a href="#cb70-213" aria-hidden="true" tabindex="-1"></a>info<span class="sc">$</span>BARCODE[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb70-214"><a href="#cb70-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-215"><a href="#cb70-215" aria-hidden="true" tabindex="-1"></a><span class="co"># only keep the cells with high-confidence sample ID</span></span>
+<span id="cb70-216"><a href="#cb70-216" aria-hidden="true" tabindex="-1"></a>info <span class="ot">&lt;-</span> info[<span class="fu">grep</span>(<span class="at">pattern =</span> <span class="st">"SNG"</span>, <span class="at">x =</span> info<span class="sc">$</span>BEST), ]</span>
+<span id="cb70-217"><a href="#cb70-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-218"><a href="#cb70-218" aria-hidden="true" tabindex="-1"></a><span class="co"># remove cells with duplicated IDs in both ctrl and stim groups</span></span>
+<span id="cb70-219"><a href="#cb70-219" aria-hidden="true" tabindex="-1"></a>info <span class="ot">&lt;-</span> info[<span class="sc">!</span><span class="fu">duplicated</span>(info<span class="sc">$</span>BARCODE) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">duplicated</span>(info<span class="sc">$</span>BARCODE, <span class="at">fromLast =</span> T), ]</span>
+<span id="cb70-220"><a href="#cb70-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-221"><a href="#cb70-221" aria-hidden="true" tabindex="-1"></a><span class="co"># now add the sample IDs to ifnb </span></span>
+<span id="cb70-222"><a href="#cb70-222" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(info) <span class="ot">&lt;-</span> info<span class="sc">$</span>BARCODE</span>
+<span id="cb70-223"><a href="#cb70-223" aria-hidden="true" tabindex="-1"></a>info <span class="ot">&lt;-</span> info[, <span class="fu">c</span>(<span class="st">"BEST"</span>), drop <span class="ot">=</span> F]</span>
+<span id="cb70-224"><a href="#cb70-224" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(info) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"donor_id"</span>)</span>
+<span id="cb70-225"><a href="#cb70-225" aria-hidden="true" tabindex="-1"></a>ifnb <span class="ot">&lt;-</span> <span class="fu">AddMetaData</span>(ifnb, <span class="at">metadata =</span> info)</span>
+<span id="cb70-226"><a href="#cb70-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-227"><a href="#cb70-227" aria-hidden="true" tabindex="-1"></a><span class="co"># remove cells without donor IDs</span></span>
+<span id="cb70-228"><a href="#cb70-228" aria-hidden="true" tabindex="-1"></a>ifnb<span class="sc">$</span>donor_id[<span class="fu">is.na</span>(ifnb<span class="sc">$</span>donor_id)] <span class="ot">&lt;-</span> <span class="st">"unknown"</span></span>
+<span id="cb70-229"><a href="#cb70-229" aria-hidden="true" tabindex="-1"></a>ifnb <span class="ot">&lt;-</span> <span class="fu">subset</span>(ifnb, <span class="at">subset =</span> donor_id <span class="sc">!=</span> <span class="st">"unknown"</span>)</span>
+<span id="cb70-230"><a href="#cb70-230" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-231"><a href="#cb70-231" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb70-232"><a href="#cb70-232" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-235"><a href="#cb70-235" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-236"><a href="#cb70-236" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ifnb<span class="sc">@</span>meta.data, <span class="dv">5</span>)</span>
-<span id="cb70-237"><a href="#cb70-237" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ifnb<span class="sc">$</span>donor_id, ifnb<span class="sc">$</span>stim)</span>
-<span id="cb70-238"><a href="#cb70-238" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-239"><a href="#cb70-239" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-240"><a href="#cb70-240" aria-hidden="true" tabindex="-1"></a>按照治疗分组（STIM vs. CTRL）、患者IDs、细胞类型（seurat_annotations）3个条件，执行pseudobulking (<span class="in">`AggregateExpression`</span>)。通过<span class="in">`AggregateExpression`</span>命令将同一类型的细胞按照不同的处理条件合并起来，形成一个假的组织水平的测序数据。本例中，有2个治疗分组、13种细胞类型和8个患者，总共被合并成206个类别，将每一个类别看作是一个样本，这样就形成了一个所谓的假的组织水平的测序数据。</span>
+<span id="cb70-233"><a href="#cb70-233" aria-hidden="true" tabindex="-1"></a>可以看到，现在的meta.dat中多了样本信息列（<span class="in">`donor_id`</span>），记录了每个细胞来自哪个患者：</span>
+<span id="cb70-234"><a href="#cb70-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-237"><a href="#cb70-237" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-238"><a href="#cb70-238" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ifnb<span class="sc">@</span>meta.data, <span class="dv">5</span>)</span>
+<span id="cb70-239"><a href="#cb70-239" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(ifnb<span class="sc">$</span>donor_id, ifnb<span class="sc">$</span>stim)</span>
+<span id="cb70-240"><a href="#cb70-240" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb70-241"><a href="#cb70-241" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-244"><a href="#cb70-244" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-245"><a href="#cb70-245" aria-hidden="true" tabindex="-1"></a>pseudo_ifnb <span class="ot">&lt;-</span> <span class="fu">AggregateExpression</span>(ifnb, </span>
-<span id="cb70-246"><a href="#cb70-246" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">assays =</span> <span class="st">"RNA"</span>, </span>
-<span id="cb70-247"><a href="#cb70-247" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">return.seurat =</span> T, </span>
-<span id="cb70-248"><a href="#cb70-248" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">group.by =</span> <span class="fu">c</span>(<span class="st">"stim"</span>, <span class="st">"donor_id"</span>, <span class="st">"seurat_annotations"</span>))</span>
-<span id="cb70-249"><a href="#cb70-249" aria-hidden="true" tabindex="-1"></a>pseudo_ifnb</span>
-<span id="cb70-250"><a href="#cb70-250" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pseudo_ifnb<span class="sc">@</span>meta.data) <span class="co"># 可以看到现在的表达矩阵的barcode变成了治疗分组+患者IDs+细胞类型</span></span>
-<span id="cb70-251"><a href="#cb70-251" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-252"><a href="#cb70-252" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-253"><a href="#cb70-253" aria-hidden="true" tabindex="-1"></a>然后和此前一样，我们在meta.data中增加一列，记录治疗分组（STIM vs. CTRL）+ 细胞类型，这是用于差异分析的分组依据。</span>
+<span id="cb70-242"><a href="#cb70-242" aria-hidden="true" tabindex="-1"></a>按照治疗分组（STIM vs. CTRL）、患者IDs、细胞类型（seurat_annotations）3个条件，执行pseudobulking (<span class="in">`AggregateExpression`</span>)。通过<span class="in">`AggregateExpression`</span>命令将同一类型的细胞按照不同的处理条件合并起来，形成一个假的组织水平的测序数据。本例中，有2个治疗分组、13种细胞类型和8个患者，总共被合并成206个类别，将每一个类别看作是一个样本，这样就形成了一个所谓的假的组织水平的测序数据。</span>
+<span id="cb70-243"><a href="#cb70-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-246"><a href="#cb70-246" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-247"><a href="#cb70-247" aria-hidden="true" tabindex="-1"></a>pseudo_ifnb <span class="ot">&lt;-</span> <span class="fu">AggregateExpression</span>(ifnb, </span>
+<span id="cb70-248"><a href="#cb70-248" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">assays =</span> <span class="st">"RNA"</span>, </span>
+<span id="cb70-249"><a href="#cb70-249" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">return.seurat =</span> T, </span>
+<span id="cb70-250"><a href="#cb70-250" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">group.by =</span> <span class="fu">c</span>(<span class="st">"stim"</span>, <span class="st">"donor_id"</span>, <span class="st">"seurat_annotations"</span>))</span>
+<span id="cb70-251"><a href="#cb70-251" aria-hidden="true" tabindex="-1"></a>pseudo_ifnb</span>
+<span id="cb70-252"><a href="#cb70-252" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pseudo_ifnb<span class="sc">@</span>meta.data) <span class="co"># 可以看到现在的表达矩阵的barcode变成了治疗分组+患者IDs+细胞类型</span></span>
+<span id="cb70-253"><a href="#cb70-253" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb70-254"><a href="#cb70-254" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-257"><a href="#cb70-257" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-258"><a href="#cb70-258" aria-hidden="true" tabindex="-1"></a>pseudo_ifnb<span class="sc">$</span>celltype.stim <span class="ot">&lt;-</span> <span class="fu">paste</span>(pseudo_ifnb<span class="sc">$</span>seurat_annotations, </span>
-<span id="cb70-259"><a href="#cb70-259" aria-hidden="true" tabindex="-1"></a>                                   pseudo_ifnb<span class="sc">$</span>stim, </span>
-<span id="cb70-260"><a href="#cb70-260" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">sep =</span> <span class="st">"_"</span>)</span>
-<span id="cb70-261"><a href="#cb70-261" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(pseudo_ifnb<span class="sc">$</span>celltype.stim)</span>
-<span id="cb70-262"><a href="#cb70-262" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-263"><a href="#cb70-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-264"><a href="#cb70-264" aria-hidden="true" tabindex="-1"></a><span class="fu">### 执行差异分析 {#sec-perform_de_analysis}</span></span>
+<span id="cb70-255"><a href="#cb70-255" aria-hidden="true" tabindex="-1"></a>然后和此前一样，我们在meta.data中增加一列，记录治疗分组（STIM vs. CTRL）+ 细胞类型，这是用于差异分析的分组依据。</span>
+<span id="cb70-256"><a href="#cb70-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-259"><a href="#cb70-259" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-260"><a href="#cb70-260" aria-hidden="true" tabindex="-1"></a>pseudo_ifnb<span class="sc">$</span>celltype.stim <span class="ot">&lt;-</span> <span class="fu">paste</span>(pseudo_ifnb<span class="sc">$</span>seurat_annotations, </span>
+<span id="cb70-261"><a href="#cb70-261" aria-hidden="true" tabindex="-1"></a>                                   pseudo_ifnb<span class="sc">$</span>stim, </span>
+<span id="cb70-262"><a href="#cb70-262" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">sep =</span> <span class="st">"_"</span>)</span>
+<span id="cb70-263"><a href="#cb70-263" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(pseudo_ifnb<span class="sc">$</span>celltype.stim)</span>
+<span id="cb70-264"><a href="#cb70-264" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb70-265"><a href="#cb70-265" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-266"><a href="#cb70-266" aria-hidden="true" tabindex="-1"></a>Next, we perform DE testing on the pseudobulk level for CD14 monocytes, and compare it against the previous single-cell-level DE results.</span>
+<span id="cb70-266"><a href="#cb70-266" aria-hidden="true" tabindex="-1"></a><span class="fu">## 执行差异分析 {#sec-perform_de_analysis}</span></span>
 <span id="cb70-267"><a href="#cb70-267" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-268"><a href="#cb70-268" aria-hidden="true" tabindex="-1"></a>::: callout-caution</span>
-<span id="cb70-269"><a href="#cb70-269" aria-hidden="true" tabindex="-1"></a><span class="fu">###### 安装`DESeq2`包</span></span>
-<span id="cb70-270"><a href="#cb70-270" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-271"><a href="#cb70-271" aria-hidden="true" tabindex="-1"></a>由于pseudobulking后的<span class="in">`FindMarkers`</span>差异分析需要采用<span class="in">`DESeq2`</span>包提供的方法，所以需要提前安装<span class="in">`DESeq2`</span>包：</span>
+<span id="cb70-268"><a href="#cb70-268" aria-hidden="true" tabindex="-1"></a>Next, we perform DE testing on the pseudobulk level for CD14 monocytes, and compare it against the previous single-cell-level DE results.</span>
+<span id="cb70-269"><a href="#cb70-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-270"><a href="#cb70-270" aria-hidden="true" tabindex="-1"></a>::: callout-caution</span>
+<span id="cb70-271"><a href="#cb70-271" aria-hidden="true" tabindex="-1"></a><span class="fu">###### 安装`DESeq2`包</span></span>
 <span id="cb70-272"><a href="#cb70-272" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-275"><a href="#cb70-275" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-276"><a href="#cb70-276" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb70-277"><a href="#cb70-277" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
-<span id="cb70-278"><a href="#cb70-278" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">"DESeq2"</span>)</span>
-<span id="cb70-279"><a href="#cb70-279" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-280"><a href="#cb70-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-281"><a href="#cb70-281" aria-hidden="true" tabindex="-1"></a>注意，如果是用FindMarkers来寻找细胞类型的marker基因，则一般采用默认的Wilcoxon Rank Sum Test方法，这时需要调用的是<span class="co">[</span><span class="ot">`presto`</span><span class="co">](https://github.com/immunogenomics/presto)</span> 包（见 @sec-findmarkers_function ）。</span>
-<span id="cb70-282"><a href="#cb70-282" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb70-283"><a href="#cb70-283" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-286"><a href="#cb70-286" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-287"><a href="#cb70-287" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(pseudo_ifnb) <span class="ot">&lt;-</span> <span class="st">"celltype.stim"</span></span>
-<span id="cb70-288"><a href="#cb70-288" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-289"><a href="#cb70-289" aria-hidden="true" tabindex="-1"></a>bulk.mono.de <span class="ot">&lt;-</span> <span class="fu">FindMarkers</span>(pseudo_ifnb, </span>
-<span id="cb70-290"><a href="#cb70-290" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ident.1 =</span> <span class="st">"CD14 Mono_STIM"</span>, </span>
-<span id="cb70-291"><a href="#cb70-291" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ident.2 =</span> <span class="st">"CD14 Mono_CTRL"</span>,</span>
-<span id="cb70-292"><a href="#cb70-292" aria-hidden="true" tabindex="-1"></a>                            <span class="at">test.use =</span> <span class="st">"DESeq2"</span>) <span class="co"># 指定差异分析方法为"DESeq2"</span></span>
-<span id="cb70-293"><a href="#cb70-293" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bulk.mono.de, <span class="at">n =</span> <span class="dv">15</span>)</span>
-<span id="cb70-294"><a href="#cb70-294" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-295"><a href="#cb70-295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-296"><a href="#cb70-296" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
-<span id="cb70-297"><a href="#cb70-297" aria-hidden="true" tabindex="-1"></a><span class="fu">###### `FindMarkers`支持的差异分析方法</span></span>
-<span id="cb70-298"><a href="#cb70-298" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-299"><a href="#cb70-299" aria-hidden="true" tabindex="-1"></a>We also support many other DE tests using other methods. For completeness, the following tests are currently supported:</span>
+<span id="cb70-273"><a href="#cb70-273" aria-hidden="true" tabindex="-1"></a>由于pseudobulking后的<span class="in">`FindMarkers`</span>差异分析需要采用<span class="in">`DESeq2`</span>包提供的方法，所以需要提前安装<span class="in">`DESeq2`</span>包：</span>
+<span id="cb70-274"><a href="#cb70-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-277"><a href="#cb70-277" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-278"><a href="#cb70-278" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb70-279"><a href="#cb70-279" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
+<span id="cb70-280"><a href="#cb70-280" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">"DESeq2"</span>)</span>
+<span id="cb70-281"><a href="#cb70-281" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-282"><a href="#cb70-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-283"><a href="#cb70-283" aria-hidden="true" tabindex="-1"></a>注意，如果是用<span class="in">`FindMarkers`</span>来寻找细胞类型的marker基因，则一般采用默认的Wilcoxon Rank Sum Test方法，这时需要调用的是<span class="co">[</span><span class="ot">`presto`</span><span class="co">](https://github.com/immunogenomics/presto)</span> 包（见<span class="co">[</span><span class="ot">FindMarkers-在特定cluster之间寻找marker基因</span><span class="co">](/single_cell/seurat/marker_gene_identification.qmd#sec-findmarkers_function)</span>）。</span>
+<span id="cb70-284"><a href="#cb70-284" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb70-285"><a href="#cb70-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-288"><a href="#cb70-288" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-289"><a href="#cb70-289" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(pseudo_ifnb) <span class="ot">&lt;-</span> <span class="st">"celltype.stim"</span></span>
+<span id="cb70-290"><a href="#cb70-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-291"><a href="#cb70-291" aria-hidden="true" tabindex="-1"></a>bulk.mono.de <span class="ot">&lt;-</span> <span class="fu">FindMarkers</span>(pseudo_ifnb, </span>
+<span id="cb70-292"><a href="#cb70-292" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ident.1 =</span> <span class="st">"CD14 Mono_STIM"</span>, </span>
+<span id="cb70-293"><a href="#cb70-293" aria-hidden="true" tabindex="-1"></a>                            <span class="at">ident.2 =</span> <span class="st">"CD14 Mono_CTRL"</span>,</span>
+<span id="cb70-294"><a href="#cb70-294" aria-hidden="true" tabindex="-1"></a>                            <span class="at">test.use =</span> <span class="st">"DESeq2"</span>) <span class="co"># 指定差异分析方法为"DESeq2"</span></span>
+<span id="cb70-295"><a href="#cb70-295" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bulk.mono.de, <span class="at">n =</span> <span class="dv">15</span>)</span>
+<span id="cb70-296"><a href="#cb70-296" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-297"><a href="#cb70-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-298"><a href="#cb70-298" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb70-299"><a href="#cb70-299" aria-hidden="true" tabindex="-1"></a><span class="fu">###### `FindMarkers`支持的差异分析方法</span></span>
 <span id="cb70-300"><a href="#cb70-300" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-301"><a href="#cb70-301" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"wilcox" : Wilcoxon rank sum test (default, using '<span class="co">[</span><span class="ot">presto</span><span class="co">](https://github.com/immunogenomics/presto)</span>' package)</span>
+<span id="cb70-301"><a href="#cb70-301" aria-hidden="true" tabindex="-1"></a>We also support many other DE tests using other methods. For completeness, the following tests are currently supported:</span>
 <span id="cb70-302"><a href="#cb70-302" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-303"><a href="#cb70-303" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"wilcox_limma" : Wilcoxon rank sum test (using '<span class="co">[</span><span class="ot">limma</span><span class="co">](https://bioconductor.org/packages/release/bioc/html/limma.html)</span>' package)</span>
+<span id="cb70-303"><a href="#cb70-303" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"wilcox" : Wilcoxon rank sum test (default, using '<span class="co">[</span><span class="ot">presto</span><span class="co">](https://github.com/immunogenomics/presto)</span>' package)</span>
 <span id="cb70-304"><a href="#cb70-304" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-305"><a href="#cb70-305" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"bimod" : Likelihood-ratio test for single cell feature expression, (McDavid et al., Bioinformatics, 2013)</span>
+<span id="cb70-305"><a href="#cb70-305" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"wilcox_limma" : Wilcoxon rank sum test (using '<span class="co">[</span><span class="ot">limma</span><span class="co">](https://bioconductor.org/packages/release/bioc/html/limma.html)</span>' package)</span>
 <span id="cb70-306"><a href="#cb70-306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-307"><a href="#cb70-307" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"roc" : Standard AUC classifier</span>
+<span id="cb70-307"><a href="#cb70-307" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"bimod" : Likelihood-ratio test for single cell feature expression, (McDavid et al., Bioinformatics, 2013)</span>
 <span id="cb70-308"><a href="#cb70-308" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-309"><a href="#cb70-309" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"t" : Student's t-test</span>
+<span id="cb70-309"><a href="#cb70-309" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"roc" : Standard AUC classifier</span>
 <span id="cb70-310"><a href="#cb70-310" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-311"><a href="#cb70-311" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"poisson" : Likelihood ratio test assuming an underlying negative binomial distribution. Use only for UMI-based datasets</span>
+<span id="cb70-311"><a href="#cb70-311" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"t" : Student's t-test</span>
 <span id="cb70-312"><a href="#cb70-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-313"><a href="#cb70-313" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"negbinom" : Likelihood ratio test assuming an underlying negative binomial distribution. Use only for UMI-based datasets</span>
+<span id="cb70-313"><a href="#cb70-313" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"poisson" : Likelihood ratio test assuming an underlying negative binomial distribution. Use only for UMI-based datasets</span>
 <span id="cb70-314"><a href="#cb70-314" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-315"><a href="#cb70-315" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"LR" : Uses a logistic regression framework to determine differentially expressed genes. Constructs a logistic regression model predicting group membership based on each feature individually and compares this to a null model with a likelihood ratio test.</span>
+<span id="cb70-315"><a href="#cb70-315" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"negbinom" : Likelihood ratio test assuming an underlying negative binomial distribution. Use only for UMI-based datasets</span>
 <span id="cb70-316"><a href="#cb70-316" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-317"><a href="#cb70-317" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"MAST" : GLM-framework that treates cellular detection rate as a covariate (Finak et al, Genome Biology, 2015) (Installation instructions)</span>
+<span id="cb70-317"><a href="#cb70-317" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"LR" : Uses a logistic regression framework to determine differentially expressed genes. Constructs a logistic regression model predicting group membership based on each feature individually and compares this to a null model with a likelihood ratio test.</span>
 <span id="cb70-318"><a href="#cb70-318" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-319"><a href="#cb70-319" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"DESeq2" : DE based on a model using the negative binomial distribution (Love et al, Genome Biology, 2014) (Installation instructions) For MAST and DESeq2, please ensure that these packages are installed separately in order to use them as part of Seurat. Once installed, use the test.use parameter can be used to specify which DE test to use.</span>
+<span id="cb70-319"><a href="#cb70-319" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"MAST" : GLM-framework that treates cellular detection rate as a covariate (Finak et al, Genome Biology, 2015) (Installation instructions)</span>
 <span id="cb70-320"><a href="#cb70-320" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-323"><a href="#cb70-323" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-324"><a href="#cb70-324" aria-hidden="true" tabindex="-1"></a><span class="co"># Test for DE features using the MAST package</span></span>
-<span id="cb70-325"><a href="#cb70-325" aria-hidden="true" tabindex="-1"></a><span class="co"># BiocManager::install('limma')</span></span>
-<span id="cb70-326"><a href="#cb70-326" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb) <span class="ot">&lt;-</span> <span class="st">"seurat_annotations"</span></span>
-<span id="cb70-327"><a href="#cb70-327" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">FindMarkers</span>(ifnb, </span>
-<span id="cb70-328"><a href="#cb70-328" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ident.1 =</span> <span class="st">"CD14 Mono"</span>, </span>
-<span id="cb70-329"><a href="#cb70-329" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ident.2 =</span> <span class="st">"CD16 Mono"</span>, </span>
-<span id="cb70-330"><a href="#cb70-330" aria-hidden="true" tabindex="-1"></a>                 <span class="at">test.use =</span> <span class="st">"wilcox_limma"</span>))</span>
-<span id="cb70-331"><a href="#cb70-331" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-332"><a href="#cb70-332" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb70-333"><a href="#cb70-333" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-334"><a href="#cb70-334" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb70-321"><a href="#cb70-321" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>"DESeq2" : DE based on a model using the negative binomial distribution (Love et al, Genome Biology, 2014) (Installation instructions) For MAST and DESeq2, please ensure that these packages are installed separately in order to use them as part of Seurat. Once installed, use the test.use parameter can be used to specify which DE test to use.</span>
+<span id="cb70-322"><a href="#cb70-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-325"><a href="#cb70-325" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-326"><a href="#cb70-326" aria-hidden="true" tabindex="-1"></a><span class="co"># Test for DE features using the MAST package</span></span>
+<span id="cb70-327"><a href="#cb70-327" aria-hidden="true" tabindex="-1"></a><span class="co"># BiocManager::install('limma')</span></span>
+<span id="cb70-328"><a href="#cb70-328" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb) <span class="ot">&lt;-</span> <span class="st">"seurat_annotations"</span></span>
+<span id="cb70-329"><a href="#cb70-329" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">FindMarkers</span>(ifnb, </span>
+<span id="cb70-330"><a href="#cb70-330" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ident.1 =</span> <span class="st">"CD14 Mono"</span>, </span>
+<span id="cb70-331"><a href="#cb70-331" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ident.2 =</span> <span class="st">"CD16 Mono"</span>, </span>
+<span id="cb70-332"><a href="#cb70-332" aria-hidden="true" tabindex="-1"></a>                 <span class="at">test.use =</span> <span class="st">"wilcox_limma"</span>))</span>
+<span id="cb70-333"><a href="#cb70-333" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-334"><a href="#cb70-334" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb70-335"><a href="#cb70-335" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-336"><a href="#cb70-336" aria-hidden="true" tabindex="-1"></a><span class="fu">### 比较单细胞水平和pseudobulk水平的差异表达分析</span></span>
+<span id="cb70-336"><a href="#cb70-336" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb70-337"><a href="#cb70-337" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-338"><a href="#cb70-338" aria-hidden="true" tabindex="-1"></a>接下来，我们可以比较一下单细胞水平的差异表达分析的P值和pseudobulk水平的P值：</span>
+<span id="cb70-338"><a href="#cb70-338" aria-hidden="true" tabindex="-1"></a><span class="fu">## 比较单细胞水平和pseudobulk水平的差异表达分析</span></span>
 <span id="cb70-339"><a href="#cb70-339" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-342"><a href="#cb70-342" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-343"><a href="#cb70-343" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(bulk.mono.de) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">names</span>(bulk.mono.de), <span class="st">".bulk"</span>) <span class="co"># 重命名列</span></span>
-<span id="cb70-344"><a href="#cb70-344" aria-hidden="true" tabindex="-1"></a>bulk.mono.de<span class="sc">$</span>gene <span class="ot">&lt;-</span> <span class="fu">rownames</span>(bulk.mono.de)</span>
-<span id="cb70-345"><a href="#cb70-345" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-346"><a href="#cb70-346" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(mono.de) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">names</span>(mono.de), <span class="st">".sc"</span>)</span>
-<span id="cb70-347"><a href="#cb70-347" aria-hidden="true" tabindex="-1"></a>mono.de<span class="sc">$</span>gene <span class="ot">&lt;-</span> <span class="fu">rownames</span>(mono.de)</span>
-<span id="cb70-348"><a href="#cb70-348" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-349"><a href="#cb70-349" aria-hidden="true" tabindex="-1"></a>merge_dat <span class="ot">&lt;-</span> <span class="fu">merge</span>(mono.de, bulk.mono.de, <span class="at">by =</span> <span class="st">"gene"</span>)</span>
-<span id="cb70-350"><a href="#cb70-350" aria-hidden="true" tabindex="-1"></a>merge_dat <span class="ot">&lt;-</span> merge_dat[<span class="fu">order</span>(merge_dat<span class="sc">$</span>p_val.bulk), ]</span>
-<span id="cb70-351"><a href="#cb70-351" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-352"><a href="#cb70-352" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看在两种差异分析方法中P值都有意义的基因名</span></span>
-<span id="cb70-353"><a href="#cb70-353" aria-hidden="true" tabindex="-1"></a>common <span class="ot">&lt;-</span> merge_dat<span class="sc">$</span>gene[<span class="fu">which</span>(merge_dat<span class="sc">$</span>p_val.bulk <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> </span>
-<span id="cb70-354"><a href="#cb70-354" aria-hidden="true" tabindex="-1"></a>                                merge_dat<span class="sc">$</span>p_val.sc <span class="sc">&lt;</span> <span class="fl">0.05</span>)]</span>
-<span id="cb70-355"><a href="#cb70-355" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看在pseudobulk水平P&gt;0.05但是在单细胞水平P&lt;0.05的基因名：</span></span>
-<span id="cb70-356"><a href="#cb70-356" aria-hidden="true" tabindex="-1"></a>only_sc <span class="ot">&lt;-</span> merge_dat<span class="sc">$</span>gene[<span class="fu">which</span>(merge_dat<span class="sc">$</span>p_val.bulk <span class="sc">&gt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> </span>
-<span id="cb70-357"><a href="#cb70-357" aria-hidden="true" tabindex="-1"></a>                                  merge_dat<span class="sc">$</span>p_val.sc <span class="sc">&lt;</span> <span class="fl">0.05</span>)]</span>
-<span id="cb70-358"><a href="#cb70-358" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看在pseudobulk水平P&lt;0.05但是在单细胞水平P&gt;0.05的基因名：</span></span>
-<span id="cb70-359"><a href="#cb70-359" aria-hidden="true" tabindex="-1"></a>only_bulk <span class="ot">&lt;-</span> merge_dat<span class="sc">$</span>gene[<span class="fu">which</span>(merge_dat<span class="sc">$</span>p_val.bulk <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> </span>
-<span id="cb70-360"><a href="#cb70-360" aria-hidden="true" tabindex="-1"></a>                                    merge_dat<span class="sc">$</span>p_val.sc <span class="sc">&gt;</span> <span class="fl">0.05</span>)]</span>
-<span id="cb70-361"><a href="#cb70-361" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">'# 在两种差异分析方法中P值都&lt;0.05的基因有: '</span>,<span class="fu">length</span>(common), <span class="st">"个"</span>))</span>
-<span id="cb70-362"><a href="#cb70-362" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">'# 仅在细胞水平差异分析中P值&lt;0.05的基因有: '</span>,<span class="fu">length</span>(only_sc), <span class="st">"个"</span>))</span>
-<span id="cb70-363"><a href="#cb70-363" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">'# 仅在pseudobulk差异分析中P值&lt;0.05的基因有: '</span>,<span class="fu">length</span>(only_bulk), <span class="st">"个"</span>))</span>
-<span id="cb70-364"><a href="#cb70-364" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-365"><a href="#cb70-365" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-366"><a href="#cb70-366" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; We can see that while the p-values are correlated between the single-cell and pseudobulk data, the </span><span class="co">[</span><span class="ot">**single-cell p-values are often smaller**</span><span class="co">]</span><span class="at">{.underline} and suggest higher levels of significance. In particular, there are 3,519 genes with evidence of differential expression (prior to multiple hypothesis testing) in both analyses, 1,649 genes that only appear to be differentially expressed in the single-cell analysis, and just 204 genes that only appear to be differentially expressed in the bulk analysis.</span></span>
+<span id="cb70-340"><a href="#cb70-340" aria-hidden="true" tabindex="-1"></a>接下来，我们可以比较一下单细胞水平的差异表达分析的P值和pseudobulk水平的P值：</span>
+<span id="cb70-341"><a href="#cb70-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-344"><a href="#cb70-344" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-345"><a href="#cb70-345" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(bulk.mono.de) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">names</span>(bulk.mono.de), <span class="st">".bulk"</span>) <span class="co"># 重命名列</span></span>
+<span id="cb70-346"><a href="#cb70-346" aria-hidden="true" tabindex="-1"></a>bulk.mono.de<span class="sc">$</span>gene <span class="ot">&lt;-</span> <span class="fu">rownames</span>(bulk.mono.de)</span>
+<span id="cb70-347"><a href="#cb70-347" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-348"><a href="#cb70-348" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(mono.de) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">names</span>(mono.de), <span class="st">".sc"</span>)</span>
+<span id="cb70-349"><a href="#cb70-349" aria-hidden="true" tabindex="-1"></a>mono.de<span class="sc">$</span>gene <span class="ot">&lt;-</span> <span class="fu">rownames</span>(mono.de)</span>
+<span id="cb70-350"><a href="#cb70-350" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-351"><a href="#cb70-351" aria-hidden="true" tabindex="-1"></a>merge_dat <span class="ot">&lt;-</span> <span class="fu">merge</span>(mono.de, bulk.mono.de, <span class="at">by =</span> <span class="st">"gene"</span>)</span>
+<span id="cb70-352"><a href="#cb70-352" aria-hidden="true" tabindex="-1"></a>merge_dat <span class="ot">&lt;-</span> merge_dat[<span class="fu">order</span>(merge_dat<span class="sc">$</span>p_val.bulk), ]</span>
+<span id="cb70-353"><a href="#cb70-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-354"><a href="#cb70-354" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看在两种差异分析方法中P值都有意义的基因名</span></span>
+<span id="cb70-355"><a href="#cb70-355" aria-hidden="true" tabindex="-1"></a>common <span class="ot">&lt;-</span> merge_dat<span class="sc">$</span>gene[<span class="fu">which</span>(merge_dat<span class="sc">$</span>p_val.bulk <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> </span>
+<span id="cb70-356"><a href="#cb70-356" aria-hidden="true" tabindex="-1"></a>                                merge_dat<span class="sc">$</span>p_val.sc <span class="sc">&lt;</span> <span class="fl">0.05</span>)]</span>
+<span id="cb70-357"><a href="#cb70-357" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看在pseudobulk水平P&gt;0.05但是在单细胞水平P&lt;0.05的基因名：</span></span>
+<span id="cb70-358"><a href="#cb70-358" aria-hidden="true" tabindex="-1"></a>only_sc <span class="ot">&lt;-</span> merge_dat<span class="sc">$</span>gene[<span class="fu">which</span>(merge_dat<span class="sc">$</span>p_val.bulk <span class="sc">&gt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> </span>
+<span id="cb70-359"><a href="#cb70-359" aria-hidden="true" tabindex="-1"></a>                                  merge_dat<span class="sc">$</span>p_val.sc <span class="sc">&lt;</span> <span class="fl">0.05</span>)]</span>
+<span id="cb70-360"><a href="#cb70-360" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看在pseudobulk水平P&lt;0.05但是在单细胞水平P&gt;0.05的基因名：</span></span>
+<span id="cb70-361"><a href="#cb70-361" aria-hidden="true" tabindex="-1"></a>only_bulk <span class="ot">&lt;-</span> merge_dat<span class="sc">$</span>gene[<span class="fu">which</span>(merge_dat<span class="sc">$</span>p_val.bulk <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> </span>
+<span id="cb70-362"><a href="#cb70-362" aria-hidden="true" tabindex="-1"></a>                                    merge_dat<span class="sc">$</span>p_val.sc <span class="sc">&gt;</span> <span class="fl">0.05</span>)]</span>
+<span id="cb70-363"><a href="#cb70-363" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">'# 在两种差异分析方法中P值都&lt;0.05的基因有: '</span>,<span class="fu">length</span>(common), <span class="st">"个"</span>))</span>
+<span id="cb70-364"><a href="#cb70-364" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">'# 仅在细胞水平差异分析中P值&lt;0.05的基因有: '</span>,<span class="fu">length</span>(only_sc), <span class="st">"个"</span>))</span>
+<span id="cb70-365"><a href="#cb70-365" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">'# 仅在pseudobulk差异分析中P值&lt;0.05的基因有: '</span>,<span class="fu">length</span>(only_bulk), <span class="st">"个"</span>))</span>
+<span id="cb70-366"><a href="#cb70-366" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb70-367"><a href="#cb70-367" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-368"><a href="#cb70-368" aria-hidden="true" tabindex="-1"></a>接下来，我们通过小提琴图来检查两种方法中的Top共同差异基因在在刺激组和对照组的表达水平：</span>
+<span id="cb70-368"><a href="#cb70-368" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; We can see that while the p-values are correlated between the single-cell and pseudobulk data, the </span><span class="co">[</span><span class="ot">**single-cell p-values are often smaller**</span><span class="co">]</span><span class="at">{.underline} and suggest higher levels of significance. In particular, there are 3,519 genes with evidence of differential expression (prior to multiple hypothesis testing) in both analyses, 1,649 genes that only appear to be differentially expressed in the single-cell analysis, and just 204 genes that only appear to be differentially expressed in the bulk analysis.</span></span>
 <span id="cb70-369"><a href="#cb70-369" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-372"><a href="#cb70-372" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-373"><a href="#cb70-373" aria-hidden="true" tabindex="-1"></a><span class="co"># create a new column to annotate sample-condition-celltype in the single-cell dataset</span></span>
-<span id="cb70-374"><a href="#cb70-374" aria-hidden="true" tabindex="-1"></a>ifnb<span class="sc">$</span>donor_id.stim <span class="ot">&lt;-</span> <span class="fu">paste0</span>(ifnb<span class="sc">$</span>stim, <span class="st">"-"</span>, ifnb<span class="sc">$</span>donor_id)</span>
-<span id="cb70-375"><a href="#cb70-375" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ifnb<span class="sc">@</span>meta.data)</span>
-<span id="cb70-376"><a href="#cb70-376" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(ifnb<span class="sc">$</span>celltype.stim)</span>
-<span id="cb70-377"><a href="#cb70-377" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-378"><a href="#cb70-378" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb) <span class="ot">&lt;-</span> <span class="st">"celltype.stim"</span></span>
+<span id="cb70-370"><a href="#cb70-370" aria-hidden="true" tabindex="-1"></a>接下来，我们通过小提琴图来检查两种方法中的Top共同差异基因在在刺激组和对照组的表达水平：</span>
+<span id="cb70-371"><a href="#cb70-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-374"><a href="#cb70-374" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-375"><a href="#cb70-375" aria-hidden="true" tabindex="-1"></a><span class="co"># create a new column to annotate sample-condition-celltype in the single-cell dataset</span></span>
+<span id="cb70-376"><a href="#cb70-376" aria-hidden="true" tabindex="-1"></a>ifnb<span class="sc">$</span>donor_id.stim <span class="ot">&lt;-</span> <span class="fu">paste0</span>(ifnb<span class="sc">$</span>stim, <span class="st">"-"</span>, ifnb<span class="sc">$</span>donor_id)</span>
+<span id="cb70-377"><a href="#cb70-377" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ifnb<span class="sc">@</span>meta.data)</span>
+<span id="cb70-378"><a href="#cb70-378" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(ifnb<span class="sc">$</span>celltype.stim)</span>
 <span id="cb70-379"><a href="#cb70-379" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-380"><a href="#cb70-380" aria-hidden="true" tabindex="-1"></a><span class="co"># 这里我们检查p_val.bulk最小的前两个Top差异基因</span></span>
-<span id="cb70-381"><a href="#cb70-381" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(merge_dat[merge_dat<span class="sc">$</span>gene <span class="sc">%in%</span> common[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="fu">c</span>(<span class="st">'gene'</span>,<span class="st">'p_val.sc'</span>,<span class="st">'p_val.bulk'</span>)])</span>
-<span id="cb70-382"><a href="#cb70-382" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-383"><a href="#cb70-383" aria-hidden="true" tabindex="-1"></a><span class="co"># 在细胞类型水平（CD14 Mono）查看这两个Top差异基因在刺激组和对照组的表达水平</span></span>
-<span id="cb70-384"><a href="#cb70-384" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, </span>
-<span id="cb70-385"><a href="#cb70-385" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> common[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], </span>
-<span id="cb70-386"><a href="#cb70-386" aria-hidden="true" tabindex="-1"></a>        <span class="at">idents =</span> <span class="fu">c</span>(<span class="st">"CD14 Mono_CTRL"</span>, <span class="st">"CD14 Mono_STIM"</span>), </span>
-<span id="cb70-387"><a href="#cb70-387" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="st">"stim"</span>) </span>
-<span id="cb70-388"><a href="#cb70-388" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-389"><a href="#cb70-389" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-392"><a href="#cb70-392" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-393"><a href="#cb70-393" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
-<span id="cb70-394"><a href="#cb70-394" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 8</span></span>
-<span id="cb70-395"><a href="#cb70-395" aria-hidden="true" tabindex="-1"></a><span class="co"># 在样本（患者）水平查看这两个Top差异基因在刺激组和对照组的表达水平</span></span>
-<span id="cb70-396"><a href="#cb70-396" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, </span>
-<span id="cb70-397"><a href="#cb70-397" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> common[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], </span>
-<span id="cb70-398"><a href="#cb70-398" aria-hidden="true" tabindex="-1"></a>        <span class="at">idents =</span> <span class="fu">c</span>(<span class="st">"CD14 Mono_CTRL"</span>, <span class="st">"CD14 Mono_STIM"</span>), </span>
-<span id="cb70-399"><a href="#cb70-399" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="st">"donor_id.stim"</span>, </span>
-<span id="cb70-400"><a href="#cb70-400" aria-hidden="true" tabindex="-1"></a>        <span class="at">ncol =</span> <span class="dv">1</span>) </span>
-<span id="cb70-401"><a href="#cb70-401" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-402"><a href="#cb70-402" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-403"><a href="#cb70-403" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; In both the pseudobulk and single-cell analyses, the p-values for these two genes are astronomically small. For both of these genes, when just comparing all stimulated CD4 monocytes to all control CD4 monocytes across samples, we see much higher expression in the stimulated cells.</span></span>
-<span id="cb70-404"><a href="#cb70-404" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
-<span id="cb70-405"><a href="#cb70-405" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; When breaking down these cells by sample, we continue to see consistently higher expression levels in the stimulated samples compared to the control samples; in other words, this finding is not driven by just one or two samples. Because of this consistency, we find this signal in both analyses.</span></span>
-<span id="cb70-406"><a href="#cb70-406" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-407"><a href="#cb70-407" aria-hidden="true" tabindex="-1"></a>By contrast, we can examine examples of genes that are only DE under the single-cell analysis.</span>
+<span id="cb70-380"><a href="#cb70-380" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(ifnb) <span class="ot">&lt;-</span> <span class="st">"celltype.stim"</span></span>
+<span id="cb70-381"><a href="#cb70-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-382"><a href="#cb70-382" aria-hidden="true" tabindex="-1"></a><span class="co"># 这里我们检查p_val.bulk最小的前两个Top差异基因</span></span>
+<span id="cb70-383"><a href="#cb70-383" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(merge_dat[merge_dat<span class="sc">$</span>gene <span class="sc">%in%</span> common[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="fu">c</span>(<span class="st">'gene'</span>,<span class="st">'p_val.sc'</span>,<span class="st">'p_val.bulk'</span>)])</span>
+<span id="cb70-384"><a href="#cb70-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-385"><a href="#cb70-385" aria-hidden="true" tabindex="-1"></a><span class="co"># 在细胞类型水平（CD14 Mono）查看这两个Top差异基因在刺激组和对照组的表达水平</span></span>
+<span id="cb70-386"><a href="#cb70-386" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, </span>
+<span id="cb70-387"><a href="#cb70-387" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> common[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], </span>
+<span id="cb70-388"><a href="#cb70-388" aria-hidden="true" tabindex="-1"></a>        <span class="at">idents =</span> <span class="fu">c</span>(<span class="st">"CD14 Mono_CTRL"</span>, <span class="st">"CD14 Mono_STIM"</span>), </span>
+<span id="cb70-389"><a href="#cb70-389" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="st">"stim"</span>) </span>
+<span id="cb70-390"><a href="#cb70-390" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-391"><a href="#cb70-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-394"><a href="#cb70-394" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-395"><a href="#cb70-395" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb70-396"><a href="#cb70-396" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 8</span></span>
+<span id="cb70-397"><a href="#cb70-397" aria-hidden="true" tabindex="-1"></a><span class="co"># 在样本（患者）水平查看这两个Top差异基因在刺激组和对照组的表达水平</span></span>
+<span id="cb70-398"><a href="#cb70-398" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, </span>
+<span id="cb70-399"><a href="#cb70-399" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> common[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], </span>
+<span id="cb70-400"><a href="#cb70-400" aria-hidden="true" tabindex="-1"></a>        <span class="at">idents =</span> <span class="fu">c</span>(<span class="st">"CD14 Mono_CTRL"</span>, <span class="st">"CD14 Mono_STIM"</span>), </span>
+<span id="cb70-401"><a href="#cb70-401" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="st">"donor_id.stim"</span>, </span>
+<span id="cb70-402"><a href="#cb70-402" aria-hidden="true" tabindex="-1"></a>        <span class="at">ncol =</span> <span class="dv">1</span>) </span>
+<span id="cb70-403"><a href="#cb70-403" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-404"><a href="#cb70-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-405"><a href="#cb70-405" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; In both the pseudobulk and single-cell analyses, the p-values for these two genes are astronomically small. For both of these genes, when just comparing all stimulated CD4 monocytes to all control CD4 monocytes across samples, we see much higher expression in the stimulated cells.</span></span>
+<span id="cb70-406"><a href="#cb70-406" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb70-407"><a href="#cb70-407" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; When breaking down these cells by sample, we continue to see consistently higher expression levels in the stimulated samples compared to the control samples; in other words, this finding is not driven by just one or two samples. Because of this consistency, we find this signal in both analyses.</span></span>
 <span id="cb70-408"><a href="#cb70-408" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-411"><a href="#cb70-411" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-412"><a href="#cb70-412" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(merge_dat[merge_dat<span class="sc">$</span>gene <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'SRGN'</span>,<span class="st">'HLA-DRA'</span>), </span>
-<span id="cb70-413"><a href="#cb70-413" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">'gene'</span>,<span class="st">'p_val.sc'</span>,<span class="st">'p_val.bulk'</span>)])</span>
-<span id="cb70-414"><a href="#cb70-414" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, </span>
-<span id="cb70-415"><a href="#cb70-415" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> <span class="fu">c</span>(<span class="st">'SRGN'</span>,<span class="st">'HLA-DRA'</span>), </span>
-<span id="cb70-416"><a href="#cb70-416" aria-hidden="true" tabindex="-1"></a>        <span class="at">idents =</span> <span class="fu">c</span>(<span class="st">"CD14 Mono_CTRL"</span>, <span class="st">"CD14 Mono_STIM"</span>), </span>
-<span id="cb70-417"><a href="#cb70-417" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="st">"stim"</span>) </span>
-<span id="cb70-418"><a href="#cb70-418" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-419"><a href="#cb70-419" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-422"><a href="#cb70-422" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-423"><a href="#cb70-423" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
-<span id="cb70-424"><a href="#cb70-424" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 8</span></span>
-<span id="cb70-425"><a href="#cb70-425" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, </span>
-<span id="cb70-426"><a href="#cb70-426" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> <span class="fu">c</span>(<span class="st">'SRGN'</span>,<span class="st">'HLA-DRA'</span>), </span>
-<span id="cb70-427"><a href="#cb70-427" aria-hidden="true" tabindex="-1"></a>        <span class="at">idents =</span> <span class="fu">c</span>(<span class="st">"CD14 Mono_CTRL"</span>, <span class="st">"CD14 Mono_STIM"</span>), </span>
-<span id="cb70-428"><a href="#cb70-428" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="st">"donor_id.stim"</span>, </span>
-<span id="cb70-429"><a href="#cb70-429" aria-hidden="true" tabindex="-1"></a>        <span class="at">ncol =</span> <span class="dv">1</span>) </span>
-<span id="cb70-430"><a href="#cb70-430" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-431"><a href="#cb70-431" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-432"><a href="#cb70-432" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Here, SRGN and HLA-DRA both have very small p-values in the single-cell analysis (on the orders of&nbsp;10^−21^&nbsp;and&nbsp;10^−9^), but much larger p-values around 0.18 in the pseudobulk analysis. While there appears to be a difference between control and simulated cells when ignoring sample information, the signal is much weaker on the sample level, and we can see notable variability from sample to sample.</span></span>
+<span id="cb70-409"><a href="#cb70-409" aria-hidden="true" tabindex="-1"></a>By contrast, we can examine examples of genes that are only DE under the single-cell analysis.</span>
+<span id="cb70-410"><a href="#cb70-410" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-413"><a href="#cb70-413" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-414"><a href="#cb70-414" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(merge_dat[merge_dat<span class="sc">$</span>gene <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'SRGN'</span>,<span class="st">'HLA-DRA'</span>), </span>
+<span id="cb70-415"><a href="#cb70-415" aria-hidden="true" tabindex="-1"></a>                <span class="fu">c</span>(<span class="st">'gene'</span>,<span class="st">'p_val.sc'</span>,<span class="st">'p_val.bulk'</span>)])</span>
+<span id="cb70-416"><a href="#cb70-416" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, </span>
+<span id="cb70-417"><a href="#cb70-417" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> <span class="fu">c</span>(<span class="st">'SRGN'</span>,<span class="st">'HLA-DRA'</span>), </span>
+<span id="cb70-418"><a href="#cb70-418" aria-hidden="true" tabindex="-1"></a>        <span class="at">idents =</span> <span class="fu">c</span>(<span class="st">"CD14 Mono_CTRL"</span>, <span class="st">"CD14 Mono_STIM"</span>), </span>
+<span id="cb70-419"><a href="#cb70-419" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="st">"stim"</span>) </span>
+<span id="cb70-420"><a href="#cb70-420" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-421"><a href="#cb70-421" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-424"><a href="#cb70-424" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-425"><a href="#cb70-425" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb70-426"><a href="#cb70-426" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 8</span></span>
+<span id="cb70-427"><a href="#cb70-427" aria-hidden="true" tabindex="-1"></a><span class="fu">VlnPlot</span>(ifnb, </span>
+<span id="cb70-428"><a href="#cb70-428" aria-hidden="true" tabindex="-1"></a>        <span class="at">features =</span> <span class="fu">c</span>(<span class="st">'SRGN'</span>,<span class="st">'HLA-DRA'</span>), </span>
+<span id="cb70-429"><a href="#cb70-429" aria-hidden="true" tabindex="-1"></a>        <span class="at">idents =</span> <span class="fu">c</span>(<span class="st">"CD14 Mono_CTRL"</span>, <span class="st">"CD14 Mono_STIM"</span>), </span>
+<span id="cb70-430"><a href="#cb70-430" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="st">"donor_id.stim"</span>, </span>
+<span id="cb70-431"><a href="#cb70-431" aria-hidden="true" tabindex="-1"></a>        <span class="at">ncol =</span> <span class="dv">1</span>) </span>
+<span id="cb70-432"><a href="#cb70-432" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb70-433"><a href="#cb70-433" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-434"><a href="#cb70-434" aria-hidden="true" tabindex="-1"></a>所以，从这个例子中可以看出**pseudobulk后的差异分析的结果更加准确**。</span>
+<span id="cb70-434"><a href="#cb70-434" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; Here, SRGN and HLA-DRA both have very small p-values in the single-cell analysis (on the orders of&nbsp;10^−21^&nbsp;and&nbsp;10^−9^), but much larger p-values around 0.18 in the pseudobulk analysis. While there appears to be a difference between control and simulated cells when ignoring sample information, the signal is much weaker on the sample level, and we can see notable variability from sample to sample.</span></span>
 <span id="cb70-435"><a href="#cb70-435" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-436"><a href="#cb70-436" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb70-436"><a href="#cb70-436" aria-hidden="true" tabindex="-1"></a>所以，从这个例子中可以看出**pseudobulk后的差异分析的结果更加准确**。</span>
 <span id="cb70-437"><a href="#cb70-437" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-438"><a href="#cb70-438" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb70-439"><a href="#cb70-439" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
-<span id="cb70-440"><a href="#cb70-440" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-443"><a href="#cb70-443" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb70-444"><a href="#cb70-444" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb70-445"><a href="#cb70-445" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb70-446"><a href="#cb70-446" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb70-447"><a href="#cb70-447" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb70-438"><a href="#cb70-438" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb70-439"><a href="#cb70-439" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-440"><a href="#cb70-440" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb70-441"><a href="#cb70-441" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb70-442"><a href="#cb70-442" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-445"><a href="#cb70-445" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb70-446"><a href="#cb70-446" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb70-447"><a href="#cb70-447" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb70-448"><a href="#cb70-448" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb70-449"><a href="#cb70-449" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb70-450"><a href="#cb70-450" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-451"><a href="#cb70-451" aria-hidden="true" tabindex="-1"></a><span class="fu"># References {.unnumbered}</span></span>
+<span id="cb70-452"><a href="#cb70-452" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb70-453"><a href="#cb70-453" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb70-454"><a href="#cb70-454" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
@@ -2214,11 +2207,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
 <li class="nav-item">
- This book was built with Quarto
+ This website was built with Quarto
   </li>  
 </ul>
 </div>   
-    <div class="nav-footer-center">Copyright 2023, Du Junhong</div>
+    <div class="nav-footer-center">Copyright 2024, Du Junhong</div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
 <li class="nav-item compact">

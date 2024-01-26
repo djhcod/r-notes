@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.3.450">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>R语言学习笔记 - 7&nbsp; Seurat常用函数清单</title>
+<title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - Seurat常用函数清单</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
 <link href="../../single_cell/seurat/seurat_tutorial.html" rel="next">
-<link href="../../single_cell/seurat/seurat.html" rel="prev">
+<link href="../../single_cell/seurat/seurat_intro.html" rel="prev">
 <link href="../../images/logo.jpg" rel="icon" type="image/jpeg">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "end",
-  "type": "overlay",
+  "type": "textbox",
   "limit": 20,
   "language": {
     "search-no-results-text": "No results",
@@ -92,7 +92,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script type="application/json" class="js-hypothesis-config">
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G2HZEXHNCE"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
+</script><script type="application/json" class="js-hypothesis-config">
 {
   "theme": "classic",
   "openSidebar": false,
@@ -100,7 +106,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "enableExperimentalNewNoteButton": true
 }
 </script><script async="" src="https://hypothes.is/embed.js"></script>
-<meta name="twitter:title" content="R语言学习笔记 - 7&nbsp; Seurat常用函数清单">
+<meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - Seurat常用函数清单">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://djhcod.github.io/r-notes/single_cell/seurat/seurat_command_list_files/figure-html/unnamed-chunk-3-1.png">
+<meta property="og:site-name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
+<meta property="og:image:height" content="960">
+<meta property="og:image:width" content="1344">
+<meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - Seurat常用函数清单">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/seurat/seurat_command_list_files/figure-html/unnamed-chunk-3-1.png">
 <meta name="twitter:image-height" content="960">
@@ -129,20 +141,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../intro.html" rel="" target="">
- <span class="menu-text">Introduction</span></a>
+    <a class="nav-link" href="../../r_basic/r_basics.html" rel="" target="">
+ <span class="menu-text">R语言基础</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parts" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
- <span class="menu-text">Parts</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">单细胞数据分析</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-parts">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">
 <li>
-    <a class="dropdown-item" href="../../r_basic/r_basics.html" rel="" target="">
- <span class="dropdown-text">R语言基础</span></a>
+    <a class="dropdown-item" href="../../single_cell/single_cell_intro.html" rel="" target="">
+ <span class="dropdown-text">单细胞数据分析介绍</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/seurat/seurat.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/seurat/seurat_intro.html" rel="" target="">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
@@ -153,15 +165,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
  <span class="dropdown-text">单细胞补充内容</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
- <span class="dropdown-text">Quarto基础</span></a>
-  </li>  
     </ul>
 </li>
   <li class="nav-item">
-    <a class="nav-link" href="../../references.html" rel="" target="">
- <span class="menu-text">References</span></a>
+    <a class="nav-link" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
+ <span class="menu-text">Quarto基础</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -172,25 +180,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
 <div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/djhcod/r-notes" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <div class="dropdown">
-      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
-<li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=%7Curl%7C">
-              <i class="bi bi-bi-twitter pe-1"></i>
-            Twitter
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=%7Curl%7C">
-              <i class="bi bi-bi-facebook pe-1"></i>
-            Facebook
-            </a>
-          </li>
-      </ul>
-</div>
+    <a href="https://github.com/djhcod/r-notes" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -198,35 +194,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat_command_list.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat_intro.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat_command_list.html">Seurat常用函数清单</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">主页</span></span></a>
+ <span class="menu-text">主页</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">前言</span></a>
-  </div>
-</li>
-        <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
@@ -239,39 +220,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rstudio环境配置</span></span></a>
+ <span class="menu-text">Rstudio环境配置</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/data_input_output.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">数据的读取与输出</span></span></a>
+ <span class="menu-text">数据的读取与输出</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/basic_data_function.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据处理基本函数</span></span></a>
+ <span class="menu-text">数据处理基本函数</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/character.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">字符的处理</span></span></a>
+ <span class="menu-text">字符的处理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/loop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">循环</span></span></a>
+ <span class="menu-text">循环</span></a>
   </div>
 </li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../single_cell/seurat/seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Seurat v5官方文档</span></a>
+            <a href="../../single_cell/single_cell_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞数据分析</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -279,181 +260,192 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞测序技术介绍</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞RNA测序—从raw data到count matrix</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../single_cell/seurat/seurat_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat v5官方文档</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_command_list.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
+ <span class="menu-text">Seurat常用函数清单</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
+ <span class="menu-text">Seurat细胞分群官方教程</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
+ <span class="menu-text">Seurat中的数据可视化方法</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/sctransform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
+ <span class="menu-text">基于SCTransform的单细胞数据标准化</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+ <span class="menu-text">消除细胞周期的影响</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
+ <span class="menu-text">整合（integration）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+ <span class="menu-text">Seurat v5单细胞数据整合分析</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/marker_gene_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
+ <span class="menu-text">寻找marker gene</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
+ <span class="menu-text">寻找不同样本类型间同一细胞类型内的差异基因</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
+ <span class="menu-text">基于参考集的细胞注释</span></a>
   </div>
 </li>
       </ul>
 </li>
-        <li class="sidebar-item sidebar-item-section">
+          <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../single_cell/scRNA-seq_online/00_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">scRNA-seq_online学习材料</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
+ <span class="menu-text">数据导入与Seurat对象构建</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">质控</span></span></a>
+ <span class="menu-text">质控</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
+ <span class="menu-text">Single-cell RNA-seq Clustering Workflow</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+ <span class="menu-text">PCA原理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+ <span class="menu-text">Normalization and regressing out unwanted variation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+ <span class="menu-text">单细胞数据整合（Integration）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+ <span class="menu-text">细胞聚类（clustering analysis）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
+ <span class="menu-text">细胞分群质量评估</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
+ <span class="menu-text">寻找marker基因+细胞注释</span></a>
   </div>
 </li>
       </ul>
 </li>
-        <li class="sidebar-item sidebar-item-section">
+          <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">单细胞补充内容</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/read_sc_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">读取非标准格式的单细胞数据</span></span></a>
+ <span class="menu-text">读取非标准格式的单细胞数据</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/universal_marker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">细胞分群通用marker</span></span></a>
+ <span class="menu-text">细胞分群通用marker</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（上）</span></span></a>
+ <span class="menu-text">多个单细胞数据集整合分析（上）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（下）</span></span></a>
+ <span class="menu-text">多个单细胞数据集整合分析（下）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/DecontX.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">预测和去除单细胞转录组的环境游离RNA污染</span></span></a>
+ <span class="menu-text">预测和去除单细胞转录组的环境游离RNA污染</span></a>
   </div>
+</li>
+      </ul>
 </li>
       </ul>
 </li>
@@ -461,60 +453,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="sidebar-item-container"> 
             <a href="../../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quarto基础</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">在Quarto中嵌入Shiny应用程序</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
-  </div>
-</li>
-      </ul>
-</li>
-        <li class="px-0"><hr class="sidebar-divider hi "></li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
- <span class="menu-text">参考文献</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -522,8 +460,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">YAML设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">图片设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">交叉引用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">插入其他内容</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">在Quarto中嵌入Shiny应用程序</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto Books</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">发布到GitHub Pages</span></a>
   </div>
 </li>
       </ul>
@@ -533,17 +507,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">Table of contents</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">On this page</h2>
    
   <ul>
 <li>
-<a href="#%E6%A0%87%E5%87%86seurat%E6%B5%81%E7%A8%8B%E5%9F%BA%E6%9C%AC%E5%87%BD%E6%95%B0" id="toc-标准seurat流程基本函数" class="nav-link active" data-scroll-target="#%E6%A0%87%E5%87%86seurat%E6%B5%81%E7%A8%8B%E5%9F%BA%E6%9C%AC%E5%87%BD%E6%95%B0"><span class="header-section-number">7.1</span> 标准Seurat流程基本函数</a>
+<a href="#%E6%A0%87%E5%87%86seurat%E6%B5%81%E7%A8%8B%E5%9F%BA%E6%9C%AC%E5%87%BD%E6%95%B0" id="toc-标准seurat流程基本函数" class="nav-link active" data-scroll-target="#%E6%A0%87%E5%87%86seurat%E6%B5%81%E7%A8%8B%E5%9F%BA%E6%9C%AC%E5%87%BD%E6%95%B0"><span class="header-section-number">1</span> 标准Seurat流程基本函数</a>
   <ul class="collapse">
 <li><a href="#%E9%87%87%E7%94%A8sctransform%E6%A0%87%E5%87%86%E5%8C%96%E6%97%B6%E7%9A%84%E6%B5%81%E7%A8%8B" id="toc-采用sctransform标准化时的流程" class="nav-link" data-scroll-target="#%E9%87%87%E7%94%A8sctransform%E6%A0%87%E5%87%86%E5%8C%96%E6%97%B6%E7%9A%84%E6%B5%81%E7%A8%8B">采用<code>SCtransform</code>标准化时的流程：</a></li>
   </ul>
 </li>
   <li>
-<a href="#%E6%8F%90%E5%8F%96seurat%E5%AF%B9%E8%B1%A1%E5%86%85%E7%9A%84%E5%90%84%E6%95%B0%E6%8D%AE" id="toc-提取seurat对象内的各数据" class="nav-link" data-scroll-target="#%E6%8F%90%E5%8F%96seurat%E5%AF%B9%E8%B1%A1%E5%86%85%E7%9A%84%E5%90%84%E6%95%B0%E6%8D%AE"><span class="header-section-number">7.2</span> 提取<code>Seurat</code>对象内的各数据</a>
+<a href="#%E6%8F%90%E5%8F%96seurat%E5%AF%B9%E8%B1%A1%E5%86%85%E7%9A%84%E5%90%84%E6%95%B0%E6%8D%AE" id="toc-提取seurat对象内的各数据" class="nav-link" data-scroll-target="#%E6%8F%90%E5%8F%96seurat%E5%AF%B9%E8%B1%A1%E5%86%85%E7%9A%84%E5%90%84%E6%95%B0%E6%8D%AE"><span class="header-section-number">2</span> 提取<code>Seurat</code>对象内的各数据</a>
   <ul class="collapse">
 <li><a href="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E5%9F%BA%E5%9B%A0assayslayers%E5%90%8D%E7%A7%B0" id="toc-获取细胞基因assayslayers名称" class="nav-link" data-scroll-target="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E5%9F%BA%E5%9B%A0assayslayers%E5%90%8D%E7%A7%B0">获取细胞、基因、assays、layers名称</a></li>
   <li><a href="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E6%B3%A8%E9%87%8A%E4%BF%A1%E6%81%AFcell-identities" id="toc-获取细胞注释信息cell-identities" class="nav-link" data-scroll-target="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E6%B3%A8%E9%87%8A%E4%BF%A1%E6%81%AFcell-identities">获取细胞注释信息（cell identities）</a></li>
@@ -554,7 +528,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul>
 </li>
   <li>
-<a href="#seurat%E5%AF%B9%E8%B1%A1%E5%8F%96%E5%AD%90%E9%9B%86%E5%92%8C%E5%90%88%E5%B9%B6" id="toc-seurat对象取子集和合并" class="nav-link" data-scroll-target="#seurat%E5%AF%B9%E8%B1%A1%E5%8F%96%E5%AD%90%E9%9B%86%E5%92%8C%E5%90%88%E5%B9%B6"><span class="header-section-number">7.3</span> Seurat对象取子集和合并</a>
+<a href="#seurat%E5%AF%B9%E8%B1%A1%E5%8F%96%E5%AD%90%E9%9B%86%E5%92%8C%E5%90%88%E5%B9%B6" id="toc-seurat对象取子集和合并" class="nav-link" data-scroll-target="#seurat%E5%AF%B9%E8%B1%A1%E5%8F%96%E5%AD%90%E9%9B%86%E5%92%8C%E5%90%88%E5%B9%B6"><span class="header-section-number">3</span> Seurat对象取子集和合并</a>
   <ul class="collapse">
 <li><a href="#sec-subset_seurat" id="toc-sec-subset_seurat" class="nav-link" data-scroll-target="#sec-subset_seurat">取子集</a></li>
   <li><a href="#%E5%88%86%E5%89%B2layers" id="toc-分割layers" class="nav-link" data-scroll-target="#%E5%88%86%E5%89%B2layers">分割layers</a></li>
@@ -563,11 +537,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#merge-objects-with-integration" id="toc-merge-objects-with-integration" class="nav-link" data-scroll-target="#merge-objects-with-integration">Merge objects (with integration)</a></li>
   </ul>
 </li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/seurat/seurat_command_list.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/single_cell/seurat/seurat_command_list.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
+  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/seurat/seurat_command_list.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span id="sec-seurat_command_list" class="quarto-section-identifier"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">Seurat常用函数清单</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -584,7 +558,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>原文：<a href="https://satijalab.org/seurat/articles/essential_commands"><em>Seurat Command List</em></a></p>
 <p>原文发布日期：2023年10月31日</p>
 </blockquote>
-<p>为了演示各函数的效果，这里的案例数据选取了在 <a href="seurat_tutorial.html"><span>Chapter&nbsp;8</span></a> 中用到的包含了2700个细胞的外周血单核细胞数据（<code>pbmc</code>）。数据可在<a href="https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz">此链接</a>下载。</p>
+<p>为了演示各函数的效果，这里的案例数据选取了在<a href="../../single_cell/seurat/seurat_tutorial.html">Seurat细胞分群官方教程</a>中用到的包含了2700个细胞的外周血单核细胞数据（<code>pbmc</code>）。数据可在<a href="https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz">此链接</a>下载。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-1_217afc1ad7dd2191ba982031b32d7462">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
 <span></span>
@@ -604,9 +578,9 @@ Active assay: RNA (13714 features, 0 variable features)
 </div>
 </div>
 <hr>
-<section id="标准seurat流程基本函数" class="level2" data-number="7.1"><h2 data-number="7.1" class="anchored" data-anchor-id="标准seurat流程基本函数">
-<span class="header-section-number">7.1</span> 标准Seurat流程基本函数</h2>
-<p>见 <a href="seurat_tutorial.html"><span>Chapter&nbsp;8</span></a> 。</p>
+<section id="标准seurat流程基本函数" class="level2" data-number="1"><h2 data-number="1" class="anchored" data-anchor-id="标准seurat流程基本函数">
+<span class="header-section-number">1</span> 标准Seurat流程基本函数</h2>
+<p>见<a href="../../single_cell/seurat/seurat_tutorial.html">Seurat细胞分群官方教程</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-2_f972ba04b4f3c06120e3bd4c32e7c358">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc</span><span class="op">)</span></span>
 <span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc</span><span class="op">)</span></span>
@@ -618,7 +592,7 @@ Active assay: RNA (13714 features, 0 variable features)
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="采用sctransform标准化时的流程" class="level3"><h3 class="anchored" data-anchor-id="采用sctransform标准化时的流程">采用<code>SCtransform</code>标准化时的流程：</h3>
-<p>见 <a href="sctransform.html"><span>Chapter&nbsp;10</span></a> 。</p>
+<p>详见<a href="../../single_cell/seurat/sctransform.html">基于SCTransform的单细胞数据标准化</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-3_94829bdebb7cdd258023c347f0d18034">
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/SCTransform.html">SCTransform</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
 <span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html">RunPCA</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
@@ -638,8 +612,8 @@ Active assay: RNA (13714 features, 0 variable features)
 <span>    <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html">FindClusters</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>    <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html">RunUMAP</a></span><span class="op">(</span>dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<hr></section></section><section id="提取seurat对象内的各数据" class="level2" data-number="7.2"><h2 data-number="7.2" class="anchored" data-anchor-id="提取seurat对象内的各数据">
-<span class="header-section-number">7.2</span> 提取<code>Seurat</code>对象内的各数据</h2>
+<hr></section></section><section id="提取seurat对象内的各数据" class="level2" data-number="2"><h2 data-number="2" class="anchored" data-anchor-id="提取seurat对象内的各数据">
+<span class="header-section-number">2</span> 提取<code>Seurat</code>对象内的各数据</h2>
 <section id="获取细胞基因assayslayers名称" class="level3"><h3 class="anchored" data-anchor-id="获取细胞基因assayslayers名称">获取细胞、基因、assays、layers名称</h3>
 <section id="获取细胞的barcode" class="level4"><h4 class="anchored" data-anchor-id="获取细胞的barcode">获取细胞的barcode：</h4>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-5_df7d5228c2b22455ec7fffe44c97c73e">
@@ -723,7 +697,7 @@ Active assay: RNA (13714 features, 0 variable features)
 </div>
 </div>
 </section><section id="获取高变基因列表" class="level4"><h4 class="anchored" data-anchor-id="获取高变基因列表">获取高变基因列表</h4>
-<p>详见 <a href="seurat_tutorial.html#sec-highly_variable_features"><span>Section&nbsp;8.4</span></a> 。</p>
+<p>详见<a href="../../single_cell/seurat/seurat_tutorial.html#sec-highly_variable_features">识别高变基因（highly variable features）</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-10_7b088c185245ba8a1b1e185c5cc71f35">
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/VariableFeatures.html">VariableFeatures</a></span><span class="op">(</span><span class="va">pbmc</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -741,7 +715,7 @@ Active assay: RNA (13714 features, 0 variable features)
 </div>
 </section><section id="获取设定assay" class="level4"><h4 class="anchored" data-anchor-id="获取设定assay">获取/设定assay：</h4>
 <p>列出所有的assay，如”RNA” assay、运行<code>SCTransform</code>之后的”SCT” assay。一个Seurat对象可以包括多个assay对象，但是在某个时刻，只有一个assay对象是默认激活的。</p>
-<p>实际应用场景见 <a href="marker_gene_identification.html#sec-findmarkers_function"><span>Section&nbsp;14.2</span></a> 。</p>
+<p>实际应用场景见<a href="../../single_cell/seurat/marker_gene_identification.html#sec-findmarkers_function">此章节</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-12_434a2441beee1219cabc08b7a9aa099b">
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 列出所有的assay</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/ObjectAccess.html">Assays</a></span><span class="op">(</span><span class="va">pbmc</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -766,7 +740,7 @@ Active assay: RNA (13714 features, 0 variable features)
 <pre><code>[1] '5.0.1'</code></pre>
 </div>
 </div>
-<p>这里我们导入在 <a href="../scRNA-seq_online/07_SC_clustering_cells_SCT.html#sec-Load_case_data"><span>Section&nbsp;25.4.1</span></a> 中用到的案例数据，这个Seurat对象是使用V4版本的<code>Seurat</code>包创建的。</p>
+<p>这里我们导入在<a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html#sec-Load_case_data">后续章节</a>中用到的案例数据，这个Seurat对象是使用V4版本的<code>Seurat</code>包创建的。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-14_ce427ca3ced55160906d34436231921f">
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/connections.html">bzfile</a></span><span class="op">(</span><span class="st">"data/scRNA-seq_online/additional_data/seurat_integrated.RData.bz2"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">seurat_integrated</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -827,7 +801,7 @@ Levels: 0 1 2 3 4 5 6 7 8 9 10 11 12</code></pre>
 </div>
 </div>
 </section><section id="设定细胞identities" class="level4"><h4 class="anchored" data-anchor-id="设定细胞identities">设定细胞identities：</h4>
-<p>实际应用场景见 <a href="marker_gene_identification.html#sec-findmarkers_function"><span>Section&nbsp;14.2</span></a> 。</p>
+<p>实际应用场景见<a href="../../single_cell/seurat/marker_gene_identification.html#sec-findmarkers_function">后续章节</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-19_8e1fab86ca57b78cd10775fe9048d2ed">
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 将meta.data中的"seurat_clusters"列设置为cell identities</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Idents.html">Idents</a></span><span class="op">(</span><span class="va">pbmc</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"seurat_clusters"</span></span>
@@ -1018,7 +992,7 @@ LINC00115                    .                .</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Layers.html">LayerData</a></span><span class="op">(</span><span class="va">pbmc</span>, assay <span class="op">=</span> <span class="st">"RNA"</span>, layer <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">new.data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="获取pca降维信息" class="level3"><h3 class="anchored" data-anchor-id="获取pca降维信息">获取PCA降维信息</h3>
-<p>实际应用场景见 <a href="../scRNA-seq_online/08_SC_clustering_quality_control.html#sec-Effect_of_pcs_clustering"><span>Section&nbsp;26.6</span></a> 。</p>
+<p>实际应用场景见<a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html#sec-Effect_of_pcs_clustering">分析主成分（PCs）对细胞分群的影响</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-25_737ae6108ab650570e0451c92206859a">
 <div class="sourceCode" id="cb73"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 获取细胞在所有主成分上的评分（坐标）</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Embeddings.html">Embeddings</a></span><span class="op">(</span><span class="va">pbmc</span>, reduction <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1077,7 +1051,7 @@ Negative:  HLA-DRA, CD74, CD79A, HLA-DPB1, HLA-DQA1 </code></pre>
 <span><span class="va">pbmc</span><span class="op">[[</span><span class="st">"custom_pca"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">new_reduction</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="通过fetchdata从seurat对象中获取任意信息" class="level3"><h3 class="anchored" data-anchor-id="通过fetchdata从seurat对象中获取任意信息">通过<code>FetchData</code>从Seurat对象中获取任意信息</h3>
-<p><code>FetchData</code> can access anything from expression matrices, cell embeddings, or metadata use the previously listed commands to access entire matrices。通过FetchData可以提取包括表达量数据、PCA分数以及meta.data内的任何变量并形成一个数据框。实际应用场景见 <a href="../scRNA-seq_online/08_SC_clustering_quality_control.html#sec-Effect_of_pcs_clustering"><span>Section&nbsp;26.6</span></a> 。</p>
+<p><code>FetchData</code> can access anything from expression matrices, cell embeddings, or metadata use the previously listed commands to access entire matrices。通过FetchData可以提取包括表达量数据、PCA分数以及meta.data内的任何变量并形成一个数据框。实际应用场景见<a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html#sec-Effect_of_pcs_clustering">分析主成分（PCs）对细胞分群的影响</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-27_e36cad597f5681a89194c475ba7c9c54">
 <div class="sourceCode" id="cb84"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/FetchData.html">FetchData</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc</span>, </span>
 <span>          vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PC_1"</span>, <span class="st">"nFeature_RNA"</span>, <span class="st">"MS4A1"</span><span class="op">)</span>, </span>
@@ -1092,10 +1066,10 @@ AAACCGTGTATGCG-1  -2.536685          521     0
 AAACGCACTGGTAC-1  -6.559842          781     0</code></pre>
 </div>
 </div>
-<hr></section></section><section id="seurat对象取子集和合并" class="level2" data-number="7.3"><h2 data-number="7.3" class="anchored" data-anchor-id="seurat对象取子集和合并">
-<span class="header-section-number">7.3</span> Seurat对象取子集和合并</h2>
+<hr></section></section><section id="seurat对象取子集和合并" class="level2" data-number="3"><h2 data-number="3" class="anchored" data-anchor-id="seurat对象取子集和合并">
+<span class="header-section-number">3</span> Seurat对象取子集和合并</h2>
 <section id="sec-subset_seurat" class="level3"><h3 class="anchored" data-anchor-id="sec-subset_seurat">取子集</h3>
-<p>实际应用见 <a href="../scRNA-seq_online/04_SC_quality_control.html#sec-filtering"><span>Section&nbsp;20.3</span></a> 。</p>
+<p>实际应用见<a href="../../single_cell/seurat/seurat_tutorial.html#过滤细胞">过滤细胞</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-28_0f28cc7428d41467006114da8558ba24">
 <div class="sourceCode" id="cb86"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 根据meta data中的信息取子集</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">pbmc</span>, subset <span class="op">=</span> <span class="va">groups</span> <span class="op">==</span> <span class="st">"Cancer"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1168,7 +1142,7 @@ Active assay: SCT (12572 features, 3000 variable features)
 </div>
 </div>
 </section><section id="分割layers" class="level3"><h3 class="anchored" data-anchor-id="分割layers">分割layers</h3>
-<p>In Seurat v5, users can now split in object directly into different layers keeps expression data in one object, but splits multiple samples into layers can proceed directly to integration workflow after splitting layers。实际应用场景见 <a href="integration.html"><span>Chapter&nbsp;12</span></a> 。</p>
+<p>In Seurat v5, users can now split in object directly into different layers keeps expression data in one object, but splits multiple samples into layers can proceed directly to integration workflow after splitting layers。实际应用场景见<a href="../../single_cell/seurat/integration.html">数据整合</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-29_aef074e8b80b100366c842b0f3661071">
 <div class="sourceCode" id="cb100"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/DefaultAssay.html">DefaultAssay</a></span><span class="op">(</span><span class="va">pbmc</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"RNA"</span></span>
 <span><span class="co"># 按照meta.data中的stim列分割layer</span></span>
@@ -1204,7 +1178,7 @@ Active assay: RNA (13714 features, 0 variable features)
 </div>
 <p><img src="images/截屏2024-01-15 18.42.35.png" class="img-fluid"></p>
 </section><section id="merge-objects-without-integration" class="level3"><h3 class="anchored" data-anchor-id="merge-objects-without-integration">Merge objects (without integration)</h3>
-<p>In Seurat v5, merging creates a single object, but <strong>keeps the expression information split into different layers</strong> for integration. If not proceeding with integration, rejoin the layers after merging. 实际应用场景，见<a href="https://hbctraining.github.io/scRNA-seq_online/lessons/03_SC_quality_control-setup.html">此链接</a>。</p>
+<p>In Seurat v5, merging creates a single object, but <strong>keeps the expression information split into different layers</strong> for integration. If not proceeding with integration, rejoin the layers after merging. 实际应用场景，见<a href="../../single_cell/sc_supplementary/read_sc_data.html">后续章节</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-32_35d961575e80807e389eea91ff224a6b">
 <div class="sourceCode" id="cb104"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Merge two Seurat objects</span></span>
 <span><span class="va">merged_pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">seurat_list</span><span class="op">[[</span><span class="st">"Control"</span><span class="op">]</span><span class="op">]</span>, </span>
@@ -1217,7 +1191,7 @@ Active assay: RNA (13714 features, 0 variable features)
 <span>      y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">pbmc2</span>, <span class="va">pbmc3</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="merge-objects-with-integration" class="level3"><h3 class="anchored" data-anchor-id="merge-objects-with-integration">Merge objects (with integration)</h3>
-<p>关于单细胞数据的整合，参考： <a href="integration.html"><span>Chapter&nbsp;12</span></a> 。</p>
+<p>关于单细胞数据的整合，参考<a href="../../single_cell/seurat/integration.html">后续章节</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-34_dfcb66e922a2af7fec707258a75d3a80">
 <div class="sourceCode" id="cb106"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">merged_pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">merged_pbmc</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
 <span><span class="va">merged_pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">merged_pbmc</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
@@ -1276,7 +1250,7 @@ Session Info
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.3.2 (2023-10-31)
 Platform: aarch64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.2.1
+Running under: macOS Sonoma 14.3
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
@@ -1295,43 +1269,75 @@ other attached packages:
 [1] Seurat_5.0.1       SeuratObject_5.0.1 sp_2.1-2          
 
 loaded via a namespace (and not attached):
-  [1] deldir_2.0-2           pbapply_1.7-2          gridExtra_2.3         
-  [4] rlang_1.1.2            magrittr_2.0.3         RcppAnnoy_0.0.21      
-  [7] spatstat.geom_3.2-7    matrixStats_1.2.0      ggridges_0.5.5        
- [10] compiler_4.3.2         png_0.1-8              vctrs_0.6.5           
- [13] reshape2_1.4.4         stringr_1.5.1          pkgconfig_2.0.3       
- [16] fastmap_1.1.1          ellipsis_0.3.2         utf8_1.2.4            
- [19] promises_1.2.1         rmarkdown_2.25         purrr_1.0.2           
- [22] xfun_0.41              jsonlite_1.8.8         goftest_1.2-3         
- [25] later_1.3.2            spatstat.utils_3.0-4   irlba_2.3.5.1         
- [28] parallel_4.3.2         cluster_2.1.6          R6_2.5.1              
- [31] ica_1.0-3              stringi_1.8.3          RColorBrewer_1.1-3    
- [34] spatstat.data_3.0-3    reticulate_1.34.0      parallelly_1.36.0     
- [37] lmtest_0.9-40          scattermore_1.2        Rcpp_1.0.11           
- [40] knitr_1.45             tensor_1.5             future.apply_1.11.0   
- [43] zoo_1.8-12             sctransform_0.4.1      httpuv_1.6.13         
- [46] Matrix_1.6-4           splines_4.3.2          igraph_1.6.0          
- [49] tidyselect_1.2.0       abind_1.4-5            rstudioapi_0.15.0     
- [52] yaml_2.3.8             spatstat.random_3.2-2  codetools_0.2-19      
- [55] miniUI_0.1.1.1         spatstat.explore_3.2-5 listenv_0.9.0         
- [58] lattice_0.22-5         tibble_3.2.1           plyr_1.8.9            
- [61] shiny_1.8.0            ROCR_1.0-11            evaluate_0.23         
- [64] Rtsne_0.17             future_1.33.0          fastDummies_1.7.3     
- [67] survival_3.5-7         polyclip_1.10-6        fitdistrplus_1.1-11   
- [70] pillar_1.9.0           KernSmooth_2.23-22     plotly_4.10.3         
- [73] generics_0.1.3         RcppHNSW_0.5.0         ggplot2_3.4.4         
- [76] munsell_0.5.0          scales_1.3.0           globals_0.16.2        
- [79] xtable_1.8-4           glue_1.6.2             lazyeval_0.2.2        
- [82] tools_4.3.2            data.table_1.14.10     RSpectra_0.16-1       
- [85] RANN_2.6.1             leiden_0.4.3.1         dotCall64_1.1-1       
- [88] cowplot_1.1.2          grid_4.3.2             tidyr_1.3.0           
- [91] colorspace_2.1-0       nlme_3.1-164           patchwork_1.1.3       
- [94] cli_3.6.2              spatstat.sparse_3.0-3  spam_2.10-0           
- [97] fansi_1.0.6            viridisLite_0.4.2      dplyr_1.1.4           
-[100] uwot_0.1.16            gtable_0.3.4           digest_0.6.33         
-[103] progressr_0.14.0       ggrepel_0.9.4          htmlwidgets_1.6.4     
-[106] htmltools_0.5.7        lifecycle_1.0.4        httr_1.4.7            
-[109] mime_0.12              MASS_7.3-60           </code></pre>
+  [1] RColorBrewer_1.1-3          rstudioapi_0.15.0          
+  [3] jsonlite_1.8.8              magrittr_2.0.3             
+  [5] spatstat.utils_3.0-4        farver_2.1.1               
+  [7] rmarkdown_2.25              zlibbioc_1.48.0            
+  [9] vctrs_0.6.5                 ROCR_1.0-11                
+ [11] DelayedMatrixStats_1.24.0   spatstat.explore_3.2-5     
+ [13] RCurl_1.98-1.14             S4Arrays_1.2.0             
+ [15] htmltools_0.5.7             SparseArray_1.2.3          
+ [17] sctransform_0.4.1           parallelly_1.36.0          
+ [19] KernSmooth_2.23-22          htmlwidgets_1.6.4          
+ [21] ica_1.0-3                   plyr_1.8.9                 
+ [23] plotly_4.10.4               zoo_1.8-12                 
+ [25] igraph_1.6.0                mime_0.12                  
+ [27] lifecycle_1.0.4             pkgconfig_2.0.3            
+ [29] Matrix_1.6-5                R6_2.5.1                   
+ [31] fastmap_1.1.1               GenomeInfoDbData_1.2.11    
+ [33] MatrixGenerics_1.14.0       fitdistrplus_1.1-11        
+ [35] future_1.33.1               shiny_1.8.0                
+ [37] digest_0.6.34               colorspace_2.1-0           
+ [39] patchwork_1.2.0             S4Vectors_0.40.2           
+ [41] tensor_1.5                  RSpectra_0.16-1            
+ [43] irlba_2.3.5.1               GenomicRanges_1.54.1       
+ [45] labeling_0.4.3              progressr_0.14.0           
+ [47] fansi_1.0.6                 spatstat.sparse_3.0-3      
+ [49] httr_1.4.7                  polyclip_1.10-6            
+ [51] abind_1.4-5                 compiler_4.3.2             
+ [53] withr_3.0.0                 fastDummies_1.7.3          
+ [55] R.utils_2.12.3              MASS_7.3-60.0.1            
+ [57] DelayedArray_0.28.0         tools_4.3.2                
+ [59] lmtest_0.9-40               httpuv_1.6.13              
+ [61] future.apply_1.11.1         goftest_1.2-3              
+ [63] R.oo_1.25.0                 glmGamPoi_1.14.0           
+ [65] glue_1.7.0                  nlme_3.1-164               
+ [67] promises_1.2.1              grid_4.3.2                 
+ [69] Rtsne_0.17                  cluster_2.1.6              
+ [71] reshape2_1.4.4              generics_0.1.3             
+ [73] gtable_0.3.4                spatstat.data_3.0-4        
+ [75] R.methodsS3_1.8.2           tidyr_1.3.0                
+ [77] data.table_1.14.10          XVector_0.42.0             
+ [79] utf8_1.2.4                  BiocGenerics_0.48.1        
+ [81] spatstat.geom_3.2-7         RcppAnnoy_0.0.21           
+ [83] ggrepel_0.9.5               RANN_2.6.1                 
+ [85] pillar_1.9.0                stringr_1.5.1              
+ [87] spam_2.10-0                 RcppHNSW_0.5.0             
+ [89] later_1.3.2                 splines_4.3.2              
+ [91] dplyr_1.1.4                 lattice_0.22-5             
+ [93] survival_3.5-7              deldir_2.0-2               
+ [95] tidyselect_1.2.0            miniUI_0.1.1.1             
+ [97] pbapply_1.7-2               knitr_1.45                 
+ [99] gridExtra_2.3               IRanges_2.36.0             
+[101] SummarizedExperiment_1.32.0 scattermore_1.2            
+[103] stats4_4.3.2                xfun_0.41                  
+[105] Biobase_2.62.0              matrixStats_1.2.0          
+[107] stringi_1.8.3               lazyeval_0.2.2             
+[109] yaml_2.3.8                  evaluate_0.23              
+[111] codetools_0.2-19            tibble_3.2.1               
+[113] cli_3.6.2                   uwot_0.1.16                
+[115] xtable_1.8-4                reticulate_1.34.0          
+[117] munsell_0.5.0               Rcpp_1.0.12                
+[119] GenomeInfoDb_1.38.5         globals_0.16.2             
+[121] spatstat.random_3.2-2       png_0.1-8                  
+[123] parallel_4.3.2              ellipsis_0.3.2             
+[125] ggplot2_3.4.4               dotCall64_1.1-1            
+[127] sparseMatrixStats_1.14.0    bitops_1.0-7               
+[129] listenv_0.9.0               viridisLite_0.4.2          
+[131] scales_1.3.0                ggridges_0.5.5             
+[133] crayon_1.5.2                leiden_0.4.3.1             
+[135] purrr_1.0.2                 rlang_1.1.3                
+[137] cowplot_1.1.2              </code></pre>
 </div>
 </div>
 </div>
@@ -1753,449 +1759,451 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
 });
-</script><script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script><script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../../single_cell/seurat/seurat.html" class="pagination-link">
+      <a href="../../single_cell/seurat/seurat_intro.html" class="pagination-link">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Seurat v5官方文档</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../single_cell/seurat/seurat_tutorial.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text">Seurat细胞分群官方教程</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb109" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Seurat常用函数清单 {#sec-seurat_command_list}</span></span>
-<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文：</span><span class="co">[</span><span class="ot">*Seurat Command List*</span><span class="co">](https://satijalab.org/seurat/articles/essential_commands)</span></span>
-<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
-<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文发布日期：2023年10月31日</span></span>
-<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a>为了演示各函数的效果，这里的案例数据选取了在 @sec-seurat_cell_clustering_official_tutorial 中用到的包含了2700个细胞的外周血单核细胞数据（<span class="in">`pbmc`</span>）。数据可在<span class="co">[</span><span class="ot">此链接</span><span class="co">](https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz)</span>下载。</span>
+<div class="sourceCode" id="cb109" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb109-2"><a href="#cb109-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Seurat常用函数清单"</span></span>
+<span id="cb109-3"><a href="#cb109-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb109-4"><a href="#cb109-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-5"><a href="#cb109-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文：</span><span class="co">[</span><span class="ot">*Seurat Command List*</span><span class="co">](https://satijalab.org/seurat/articles/essential_commands)</span></span>
+<span id="cb109-6"><a href="#cb109-6" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb109-7"><a href="#cb109-7" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文发布日期：2023年10月31日</span></span>
 <span id="cb109-8"><a href="#cb109-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-11"><a href="#cb109-11" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-12"><a href="#cb109-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb109-13"><a href="#cb109-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-14"><a href="#cb109-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取PBMC数据集</span></span>
-<span id="cb109-15"><a href="#cb109-15" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">Read10X</span>(<span class="at">data.dir =</span> <span class="st">"data/seurat_official/filtered_gene_bc_matrices/hg19"</span>)</span>
-<span id="cb109-16"><a href="#cb109-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the Seurat object with the raw (non-normalized data).</span></span>
-<span id="cb109-17"><a href="#cb109-17" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> counts, </span>
-<span id="cb109-18"><a href="#cb109-18" aria-hidden="true" tabindex="-1"></a>                           <span class="at">project =</span> <span class="st">"pbmc3k"</span>, </span>
-<span id="cb109-19"><a href="#cb109-19" aria-hidden="true" tabindex="-1"></a>                           <span class="at">min.cells =</span> <span class="dv">3</span>, </span>
-<span id="cb109-20"><a href="#cb109-20" aria-hidden="true" tabindex="-1"></a>                           <span class="at">min.features =</span> <span class="dv">200</span>)</span>
-<span id="cb109-21"><a href="#cb109-21" aria-hidden="true" tabindex="-1"></a>pbmc</span>
-<span id="cb109-22"><a href="#cb109-22" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-23"><a href="#cb109-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-24"><a href="#cb109-24" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb109-9"><a href="#cb109-9" aria-hidden="true" tabindex="-1"></a>为了演示各函数的效果，这里的案例数据选取了在<span class="co">[</span><span class="ot">Seurat细胞分群官方教程</span><span class="co">](/single_cell/seurat/seurat_tutorial.qmd)</span>中用到的包含了2700个细胞的外周血单核细胞数据（<span class="in">`pbmc`</span>）。数据可在<span class="co">[</span><span class="ot">此链接</span><span class="co">](https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz)</span>下载。</span>
+<span id="cb109-10"><a href="#cb109-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-13"><a href="#cb109-13" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-14"><a href="#cb109-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb109-15"><a href="#cb109-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-16"><a href="#cb109-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取PBMC数据集</span></span>
+<span id="cb109-17"><a href="#cb109-17" aria-hidden="true" tabindex="-1"></a>counts <span class="ot">&lt;-</span> <span class="fu">Read10X</span>(<span class="at">data.dir =</span> <span class="st">"data/seurat_official/filtered_gene_bc_matrices/hg19"</span>)</span>
+<span id="cb109-18"><a href="#cb109-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the Seurat object with the raw (non-normalized data).</span></span>
+<span id="cb109-19"><a href="#cb109-19" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> counts, </span>
+<span id="cb109-20"><a href="#cb109-20" aria-hidden="true" tabindex="-1"></a>                           <span class="at">project =</span> <span class="st">"pbmc3k"</span>, </span>
+<span id="cb109-21"><a href="#cb109-21" aria-hidden="true" tabindex="-1"></a>                           <span class="at">min.cells =</span> <span class="dv">3</span>, </span>
+<span id="cb109-22"><a href="#cb109-22" aria-hidden="true" tabindex="-1"></a>                           <span class="at">min.features =</span> <span class="dv">200</span>)</span>
+<span id="cb109-23"><a href="#cb109-23" aria-hidden="true" tabindex="-1"></a>pbmc</span>
+<span id="cb109-24"><a href="#cb109-24" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-25"><a href="#cb109-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-26"><a href="#cb109-26" aria-hidden="true" tabindex="-1"></a><span class="fu">## 标准Seurat流程基本函数</span></span>
+<span id="cb109-26"><a href="#cb109-26" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb109-27"><a href="#cb109-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-28"><a href="#cb109-28" aria-hidden="true" tabindex="-1"></a>见 @sec-seurat_cell_clustering_official_tutorial 。</span>
+<span id="cb109-28"><a href="#cb109-28" aria-hidden="true" tabindex="-1"></a><span class="fu">## 标准Seurat流程基本函数</span></span>
 <span id="cb109-29"><a href="#cb109-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-32"><a href="#cb109-32" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-33"><a href="#cb109-33" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb109-34"><a href="#cb109-34" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(<span class="at">object =</span> pbmc)</span>
-<span id="cb109-35"><a href="#cb109-35" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(<span class="at">object =</span> pbmc)</span>
-<span id="cb109-36"><a href="#cb109-36" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(<span class="at">object =</span> pbmc)</span>
-<span id="cb109-37"><a href="#cb109-37" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(<span class="at">object =</span> pbmc)</span>
-<span id="cb109-38"><a href="#cb109-38" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(<span class="at">object =</span> pbmc, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb109-39"><a href="#cb109-39" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(<span class="at">object =</span> pbmc)</span>
-<span id="cb109-40"><a href="#cb109-40" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(<span class="at">object =</span> pbmc, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb109-41"><a href="#cb109-41" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(<span class="at">object =</span> pbmc, <span class="at">reduction =</span> <span class="st">"umap"</span>)</span>
-<span id="cb109-42"><a href="#cb109-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-43"><a href="#cb109-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-44"><a href="#cb109-44" aria-hidden="true" tabindex="-1"></a><span class="fu">### 采用`SCtransform`标准化时的流程：</span></span>
+<span id="cb109-30"><a href="#cb109-30" aria-hidden="true" tabindex="-1"></a>见<span class="co">[</span><span class="ot">Seurat细胞分群官方教程</span><span class="co">](/single_cell/seurat/seurat_tutorial.qmd)</span>。</span>
+<span id="cb109-31"><a href="#cb109-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-34"><a href="#cb109-34" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-35"><a href="#cb109-35" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb109-36"><a href="#cb109-36" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(<span class="at">object =</span> pbmc)</span>
+<span id="cb109-37"><a href="#cb109-37" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(<span class="at">object =</span> pbmc)</span>
+<span id="cb109-38"><a href="#cb109-38" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(<span class="at">object =</span> pbmc)</span>
+<span id="cb109-39"><a href="#cb109-39" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(<span class="at">object =</span> pbmc)</span>
+<span id="cb109-40"><a href="#cb109-40" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(<span class="at">object =</span> pbmc, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb109-41"><a href="#cb109-41" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(<span class="at">object =</span> pbmc)</span>
+<span id="cb109-42"><a href="#cb109-42" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(<span class="at">object =</span> pbmc, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb109-43"><a href="#cb109-43" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(<span class="at">object =</span> pbmc, <span class="at">reduction =</span> <span class="st">"umap"</span>)</span>
+<span id="cb109-44"><a href="#cb109-44" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-45"><a href="#cb109-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-46"><a href="#cb109-46" aria-hidden="true" tabindex="-1"></a>见 @sec-sctransform 。</span>
+<span id="cb109-46"><a href="#cb109-46" aria-hidden="true" tabindex="-1"></a><span class="fu">### 采用`SCtransform`标准化时的流程：</span></span>
 <span id="cb109-47"><a href="#cb109-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-50"><a href="#cb109-50" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-51"><a href="#cb109-51" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(<span class="at">object =</span> pbmc, <span class="at">verbose =</span> F)</span>
-<span id="cb109-52"><a href="#cb109-52" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(<span class="at">object =</span> pbmc, <span class="at">verbose =</span> F)</span>
-<span id="cb109-53"><a href="#cb109-53" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(<span class="at">object =</span> pbmc, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">verbose =</span> F)</span>
-<span id="cb109-54"><a href="#cb109-54" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(<span class="at">object =</span> pbmc, <span class="at">verbose =</span> F)</span>
-<span id="cb109-55"><a href="#cb109-55" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(<span class="at">object =</span> pbmc, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">verbose =</span> F)</span>
-<span id="cb109-56"><a href="#cb109-56" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(<span class="at">object =</span> pbmc, <span class="at">reduction =</span> <span class="st">"umap"</span>)</span>
-<span id="cb109-57"><a href="#cb109-57" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-58"><a href="#cb109-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-59"><a href="#cb109-59" aria-hidden="true" tabindex="-1"></a>或者通过管道函数：</span>
+<span id="cb109-48"><a href="#cb109-48" aria-hidden="true" tabindex="-1"></a>详见<span class="co">[</span><span class="ot">基于SCTransform的单细胞数据标准化</span><span class="co">](/single_cell/seurat/sctransform.qmd)</span>。</span>
+<span id="cb109-49"><a href="#cb109-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-52"><a href="#cb109-52" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-53"><a href="#cb109-53" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(<span class="at">object =</span> pbmc, <span class="at">verbose =</span> F)</span>
+<span id="cb109-54"><a href="#cb109-54" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(<span class="at">object =</span> pbmc, <span class="at">verbose =</span> F)</span>
+<span id="cb109-55"><a href="#cb109-55" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(<span class="at">object =</span> pbmc, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">verbose =</span> F)</span>
+<span id="cb109-56"><a href="#cb109-56" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(<span class="at">object =</span> pbmc, <span class="at">verbose =</span> F)</span>
+<span id="cb109-57"><a href="#cb109-57" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(<span class="at">object =</span> pbmc, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">verbose =</span> F)</span>
+<span id="cb109-58"><a href="#cb109-58" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(<span class="at">object =</span> pbmc, <span class="at">reduction =</span> <span class="st">"umap"</span>)</span>
+<span id="cb109-59"><a href="#cb109-59" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-60"><a href="#cb109-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-63"><a href="#cb109-63" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-64"><a href="#cb109-64" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb109-65"><a href="#cb109-65" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(pbmc) <span class="sc">%&gt;%</span></span>
-<span id="cb109-66"><a href="#cb109-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">RunPCA</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb109-67"><a href="#cb109-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">FindNeighbors</span>(<span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb109-68"><a href="#cb109-68" aria-hidden="true" tabindex="-1"></a>    <span class="fu">FindClusters</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb109-69"><a href="#cb109-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">RunUMAP</span>(<span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb109-70"><a href="#cb109-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-71"><a href="#cb109-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-72"><a href="#cb109-72" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb109-61"><a href="#cb109-61" aria-hidden="true" tabindex="-1"></a>或者通过管道函数：</span>
+<span id="cb109-62"><a href="#cb109-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-65"><a href="#cb109-65" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-66"><a href="#cb109-66" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb109-67"><a href="#cb109-67" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(pbmc) <span class="sc">%&gt;%</span></span>
+<span id="cb109-68"><a href="#cb109-68" aria-hidden="true" tabindex="-1"></a>    <span class="fu">RunPCA</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb109-69"><a href="#cb109-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">FindNeighbors</span>(<span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb109-70"><a href="#cb109-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">FindClusters</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb109-71"><a href="#cb109-71" aria-hidden="true" tabindex="-1"></a>    <span class="fu">RunUMAP</span>(<span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb109-72"><a href="#cb109-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-73"><a href="#cb109-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-74"><a href="#cb109-74" aria-hidden="true" tabindex="-1"></a><span class="fu">## 提取`Seurat`对象内的各数据</span></span>
+<span id="cb109-74"><a href="#cb109-74" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb109-75"><a href="#cb109-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-76"><a href="#cb109-76" aria-hidden="true" tabindex="-1"></a><span class="fu">### 获取细胞、基因、assays、layers名称</span></span>
+<span id="cb109-76"><a href="#cb109-76" aria-hidden="true" tabindex="-1"></a><span class="fu">## 提取`Seurat`对象内的各数据</span></span>
 <span id="cb109-77"><a href="#cb109-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-78"><a href="#cb109-78" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 获取细胞的barcode：</span></span>
+<span id="cb109-78"><a href="#cb109-78" aria-hidden="true" tabindex="-1"></a><span class="fu">### 获取细胞、基因、assays、layers名称</span></span>
 <span id="cb109-79"><a href="#cb109-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-82"><a href="#cb109-82" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-83"><a href="#cb109-83" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pbmc)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb109-84"><a href="#cb109-84" aria-hidden="true" tabindex="-1"></a><span class="fu">Cells</span>(pbmc)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>] <span class="co"># 效果同上</span></span>
-<span id="cb109-85"><a href="#cb109-85" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-86"><a href="#cb109-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-87"><a href="#cb109-87" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 获取基因（feature）名。</span></span>
+<span id="cb109-80"><a href="#cb109-80" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 获取细胞的barcode：</span></span>
+<span id="cb109-81"><a href="#cb109-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-84"><a href="#cb109-84" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-85"><a href="#cb109-85" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(pbmc)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb109-86"><a href="#cb109-86" aria-hidden="true" tabindex="-1"></a><span class="fu">Cells</span>(pbmc)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>] <span class="co"># 效果同上</span></span>
+<span id="cb109-87"><a href="#cb109-87" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-88"><a href="#cb109-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-91"><a href="#cb109-91" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-92"><a href="#cb109-92" aria-hidden="true" tabindex="-1"></a><span class="fu">Features</span>(pbmc)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb109-93"><a href="#cb109-93" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(pbmc)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>] <span class="co"># 同上</span></span>
-<span id="cb109-94"><a href="#cb109-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-95"><a href="#cb109-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-96"><a href="#cb109-96" aria-hidden="true" tabindex="-1"></a>可以指定提取哪一个assay下的基因名，如果未指定，则提取默认assay内的基因名。这里的pbmc数据经过了**`SCTransform`，**所以有两个assay，默认的归一化之后的“SCT”assay，另一个是原始的“RNA”assay。</span>
+<span id="cb109-89"><a href="#cb109-89" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 获取基因（feature）名。</span></span>
+<span id="cb109-90"><a href="#cb109-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-93"><a href="#cb109-93" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-94"><a href="#cb109-94" aria-hidden="true" tabindex="-1"></a><span class="fu">Features</span>(pbmc)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb109-95"><a href="#cb109-95" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(pbmc)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>] <span class="co"># 同上</span></span>
+<span id="cb109-96"><a href="#cb109-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-97"><a href="#cb109-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-100"><a href="#cb109-100" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-101"><a href="#cb109-101" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取“SCT” assay下的基因名</span></span>
-<span id="cb109-102"><a href="#cb109-102" aria-hidden="true" tabindex="-1"></a><span class="fu">Features</span>(pbmc[[<span class="st">"SCT"</span>]])[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb109-103"><a href="#cb109-103" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取“RNA” assay下的基因名</span></span>
-<span id="cb109-104"><a href="#cb109-104" aria-hidden="true" tabindex="-1"></a><span class="fu">Features</span>(pbmc[[<span class="st">"RNA"</span>]])[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb109-105"><a href="#cb109-105" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
-<span id="cb109-106"><a href="#cb109-106" aria-hidden="true" tabindex="-1"></a><span class="fu">Features</span>(pbmc, <span class="at">assay =</span> <span class="st">"RNA"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb109-107"><a href="#cb109-107" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-108"><a href="#cb109-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-109"><a href="#cb109-109" aria-hidden="true" tabindex="-1"></a>也可以通过添加<span class="in">`layer`</span>参数，提取指定layer下的基因名：</span>
+<span id="cb109-98"><a href="#cb109-98" aria-hidden="true" tabindex="-1"></a>可以指定提取哪一个assay下的基因名，如果未指定，则提取默认assay内的基因名。这里的pbmc数据经过了**`SCTransform`，**所以有两个assay，默认的归一化之后的“SCT”assay，另一个是原始的“RNA”assay。</span>
+<span id="cb109-99"><a href="#cb109-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-102"><a href="#cb109-102" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-103"><a href="#cb109-103" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取“SCT” assay下的基因名</span></span>
+<span id="cb109-104"><a href="#cb109-104" aria-hidden="true" tabindex="-1"></a><span class="fu">Features</span>(pbmc[[<span class="st">"SCT"</span>]])[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb109-105"><a href="#cb109-105" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取“RNA” assay下的基因名</span></span>
+<span id="cb109-106"><a href="#cb109-106" aria-hidden="true" tabindex="-1"></a><span class="fu">Features</span>(pbmc[[<span class="st">"RNA"</span>]])[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb109-107"><a href="#cb109-107" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
+<span id="cb109-108"><a href="#cb109-108" aria-hidden="true" tabindex="-1"></a><span class="fu">Features</span>(pbmc, <span class="at">assay =</span> <span class="st">"RNA"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb109-109"><a href="#cb109-109" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-110"><a href="#cb109-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-113"><a href="#cb109-113" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-114"><a href="#cb109-114" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取“counts” layer下的基因名</span></span>
-<span id="cb109-115"><a href="#cb109-115" aria-hidden="true" tabindex="-1"></a><span class="fu">Features</span>(pbmc, <span class="at">layer =</span> <span class="st">"counts"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb109-116"><a href="#cb109-116" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取"scale.data"的基因名</span></span>
-<span id="cb109-117"><a href="#cb109-117" aria-hidden="true" tabindex="-1"></a><span class="fu">Features</span>(pbmc, <span class="at">layer =</span> <span class="st">"scale.data"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb109-118"><a href="#cb109-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-119"><a href="#cb109-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-120"><a href="#cb109-120" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 获取细胞和基因的数量：</span></span>
+<span id="cb109-111"><a href="#cb109-111" aria-hidden="true" tabindex="-1"></a>也可以通过添加<span class="in">`layer`</span>参数，提取指定layer下的基因名：</span>
+<span id="cb109-112"><a href="#cb109-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-115"><a href="#cb109-115" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-116"><a href="#cb109-116" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取“counts” layer下的基因名</span></span>
+<span id="cb109-117"><a href="#cb109-117" aria-hidden="true" tabindex="-1"></a><span class="fu">Features</span>(pbmc, <span class="at">layer =</span> <span class="st">"counts"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb109-118"><a href="#cb109-118" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取"scale.data"的基因名</span></span>
+<span id="cb109-119"><a href="#cb109-119" aria-hidden="true" tabindex="-1"></a><span class="fu">Features</span>(pbmc, <span class="at">layer =</span> <span class="st">"scale.data"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb109-120"><a href="#cb109-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-121"><a href="#cb109-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-124"><a href="#cb109-124" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-125"><a href="#cb109-125" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(pbmc) <span class="co"># 细胞数量</span></span>
-<span id="cb109-126"><a href="#cb109-126" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(pbmc) <span class="co"># 基因（feature）数量</span></span>
-<span id="cb109-127"><a href="#cb109-127" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-128"><a href="#cb109-128" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-129"><a href="#cb109-129" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 获取高变基因列表</span></span>
+<span id="cb109-122"><a href="#cb109-122" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 获取细胞和基因的数量：</span></span>
+<span id="cb109-123"><a href="#cb109-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-126"><a href="#cb109-126" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-127"><a href="#cb109-127" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(pbmc) <span class="co"># 细胞数量</span></span>
+<span id="cb109-128"><a href="#cb109-128" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(pbmc) <span class="co"># 基因（feature）数量</span></span>
+<span id="cb109-129"><a href="#cb109-129" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-130"><a href="#cb109-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-131"><a href="#cb109-131" aria-hidden="true" tabindex="-1"></a>详见 @sec-highly_variable_features 。</span>
+<span id="cb109-131"><a href="#cb109-131" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 获取高变基因列表</span></span>
 <span id="cb109-132"><a href="#cb109-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-135"><a href="#cb109-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-136"><a href="#cb109-136" aria-hidden="true" tabindex="-1"></a><span class="fu">VariableFeatures</span>(pbmc)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb109-137"><a href="#cb109-137" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-138"><a href="#cb109-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-139"><a href="#cb109-139" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 列出layers</span></span>
+<span id="cb109-133"><a href="#cb109-133" aria-hidden="true" tabindex="-1"></a>详见<span class="co">[</span><span class="ot">识别高变基因（highly variable features）</span><span class="co">](/single_cell/seurat/seurat_tutorial.qmd#sec-highly_variable_features)</span>。</span>
+<span id="cb109-134"><a href="#cb109-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-137"><a href="#cb109-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-138"><a href="#cb109-138" aria-hidden="true" tabindex="-1"></a><span class="fu">VariableFeatures</span>(pbmc)[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb109-139"><a href="#cb109-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-140"><a href="#cb109-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-143"><a href="#cb109-143" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-144"><a href="#cb109-144" aria-hidden="true" tabindex="-1"></a><span class="co"># 列出所有的layers</span></span>
-<span id="cb109-145"><a href="#cb109-145" aria-hidden="true" tabindex="-1"></a><span class="fu">Layers</span>(pbmc)</span>
-<span id="cb109-146"><a href="#cb109-146" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-147"><a href="#cb109-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-148"><a href="#cb109-148" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 获取/设定assay：</span></span>
+<span id="cb109-141"><a href="#cb109-141" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 列出layers</span></span>
+<span id="cb109-142"><a href="#cb109-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-145"><a href="#cb109-145" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-146"><a href="#cb109-146" aria-hidden="true" tabindex="-1"></a><span class="co"># 列出所有的layers</span></span>
+<span id="cb109-147"><a href="#cb109-147" aria-hidden="true" tabindex="-1"></a><span class="fu">Layers</span>(pbmc)</span>
+<span id="cb109-148"><a href="#cb109-148" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-149"><a href="#cb109-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-150"><a href="#cb109-150" aria-hidden="true" tabindex="-1"></a>列出所有的assay，如"RNA" assay、运行<span class="in">`SCTransform`</span>之后的"SCT" assay。一个Seurat对象可以包括多个assay对象，但是在某个时刻，只有一个assay对象是默认激活的。</span>
+<span id="cb109-150"><a href="#cb109-150" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 获取/设定assay：</span></span>
 <span id="cb109-151"><a href="#cb109-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-152"><a href="#cb109-152" aria-hidden="true" tabindex="-1"></a>实际应用场景见 @sec-findmarkers_function 。</span>
+<span id="cb109-152"><a href="#cb109-152" aria-hidden="true" tabindex="-1"></a>列出所有的assay，如"RNA" assay、运行<span class="in">`SCTransform`</span>之后的"SCT" assay。一个Seurat对象可以包括多个assay对象，但是在某个时刻，只有一个assay对象是默认激活的。</span>
 <span id="cb109-153"><a href="#cb109-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-156"><a href="#cb109-156" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-157"><a href="#cb109-157" aria-hidden="true" tabindex="-1"></a><span class="co"># 列出所有的assay</span></span>
-<span id="cb109-158"><a href="#cb109-158" aria-hidden="true" tabindex="-1"></a><span class="fu">Assays</span>(pbmc)</span>
-<span id="cb109-159"><a href="#cb109-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-160"><a href="#cb109-160" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取目前的默认assay名称</span></span>
-<span id="cb109-161"><a href="#cb109-161" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(pbmc)</span>
-<span id="cb109-162"><a href="#cb109-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-163"><a href="#cb109-163" aria-hidden="true" tabindex="-1"></a><span class="co"># 设定默认assay</span></span>
-<span id="cb109-164"><a href="#cb109-164" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(pbmc) <span class="ot">&lt;-</span> <span class="st">"RNA"</span></span>
-<span id="cb109-165"><a href="#cb109-165" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(pbmc) <span class="ot">&lt;-</span> <span class="st">"SCT"</span></span>
-<span id="cb109-166"><a href="#cb109-166" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-167"><a href="#cb109-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-168"><a href="#cb109-168" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 转换不同版本的Seurat对象：</span></span>
+<span id="cb109-154"><a href="#cb109-154" aria-hidden="true" tabindex="-1"></a>实际应用场景见<span class="co">[</span><span class="ot">此章节</span><span class="co">](/single_cell/seurat/marker_gene_identification.qmd#sec-findmarkers_function)</span>。</span>
+<span id="cb109-155"><a href="#cb109-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-158"><a href="#cb109-158" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-159"><a href="#cb109-159" aria-hidden="true" tabindex="-1"></a><span class="co"># 列出所有的assay</span></span>
+<span id="cb109-160"><a href="#cb109-160" aria-hidden="true" tabindex="-1"></a><span class="fu">Assays</span>(pbmc)</span>
+<span id="cb109-161"><a href="#cb109-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-162"><a href="#cb109-162" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取目前的默认assay名称</span></span>
+<span id="cb109-163"><a href="#cb109-163" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(pbmc)</span>
+<span id="cb109-164"><a href="#cb109-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-165"><a href="#cb109-165" aria-hidden="true" tabindex="-1"></a><span class="co"># 设定默认assay</span></span>
+<span id="cb109-166"><a href="#cb109-166" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(pbmc) <span class="ot">&lt;-</span> <span class="st">"RNA"</span></span>
+<span id="cb109-167"><a href="#cb109-167" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(pbmc) <span class="ot">&lt;-</span> <span class="st">"SCT"</span></span>
+<span id="cb109-168"><a href="#cb109-168" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-169"><a href="#cb109-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-170"><a href="#cb109-170" aria-hidden="true" tabindex="-1"></a>上面我们使用的pbmc对象使用V5版本的Seurat包创建的，可以通过如下命令查看：</span>
+<span id="cb109-170"><a href="#cb109-170" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 转换不同版本的Seurat对象：</span></span>
 <span id="cb109-171"><a href="#cb109-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-174"><a href="#cb109-174" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-175"><a href="#cb109-175" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看Seurat对象是用哪个版本的Seurat包创建的</span></span>
-<span id="cb109-176"><a href="#cb109-176" aria-hidden="true" tabindex="-1"></a>pbmc<span class="sc">@</span>version</span>
-<span id="cb109-177"><a href="#cb109-177" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-178"><a href="#cb109-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-179"><a href="#cb109-179" aria-hidden="true" tabindex="-1"></a>这里我们导入在 @sec-Load_case_data 中用到的案例数据，这个Seurat对象是使用V4版本的<span class="in">`Seurat`</span>包创建的。</span>
+<span id="cb109-172"><a href="#cb109-172" aria-hidden="true" tabindex="-1"></a>上面我们使用的pbmc对象使用V5版本的Seurat包创建的，可以通过如下命令查看：</span>
+<span id="cb109-173"><a href="#cb109-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-176"><a href="#cb109-176" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-177"><a href="#cb109-177" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看Seurat对象是用哪个版本的Seurat包创建的</span></span>
+<span id="cb109-178"><a href="#cb109-178" aria-hidden="true" tabindex="-1"></a>pbmc<span class="sc">@</span>version</span>
+<span id="cb109-179"><a href="#cb109-179" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-180"><a href="#cb109-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-183"><a href="#cb109-183" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-184"><a href="#cb109-184" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache-lazy: false</span></span>
-<span id="cb109-185"><a href="#cb109-185" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">bzfile</span>(<span class="st">"data/scRNA-seq_online/additional_data/seurat_integrated.RData.bz2"</span>))</span>
-<span id="cb109-186"><a href="#cb109-186" aria-hidden="true" tabindex="-1"></a>seurat_integrated</span>
-<span id="cb109-187"><a href="#cb109-187" aria-hidden="true" tabindex="-1"></a>seurat_integrated<span class="sc">@</span>version</span>
-<span id="cb109-188"><a href="#cb109-188" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-189"><a href="#cb109-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-190"><a href="#cb109-190" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-15%2019.49.57.png)</span></span>
+<span id="cb109-181"><a href="#cb109-181" aria-hidden="true" tabindex="-1"></a>这里我们导入在<span class="co">[</span><span class="ot">后续章节</span><span class="co">](/single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.qmd#sec-Load_case_data)</span>中用到的案例数据，这个Seurat对象是使用V4版本的<span class="in">`Seurat`</span>包创建的。</span>
+<span id="cb109-182"><a href="#cb109-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-185"><a href="#cb109-185" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-186"><a href="#cb109-186" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache-lazy: false</span></span>
+<span id="cb109-187"><a href="#cb109-187" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">bzfile</span>(<span class="st">"data/scRNA-seq_online/additional_data/seurat_integrated.RData.bz2"</span>))</span>
+<span id="cb109-188"><a href="#cb109-188" aria-hidden="true" tabindex="-1"></a>seurat_integrated</span>
+<span id="cb109-189"><a href="#cb109-189" aria-hidden="true" tabindex="-1"></a>seurat_integrated<span class="sc">@</span>version</span>
+<span id="cb109-190"><a href="#cb109-190" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-191"><a href="#cb109-191" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-192"><a href="#cb109-192" aria-hidden="true" tabindex="-1"></a>可以看到，这个seurat_integrated对象的“RNA” assay没有layers结构，是典型的V5版本之前的Seurat对象的结构。我们可以通过as()函数将V4或V3版本的“RNA” assay转换成V5版本的“RNA” assay：</span>
+<span id="cb109-192"><a href="#cb109-192" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-15%2019.49.57.png)</span></span>
 <span id="cb109-193"><a href="#cb109-193" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-196"><a href="#cb109-196" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-197"><a href="#cb109-197" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache-lazy: false</span></span>
-<span id="cb109-198"><a href="#cb109-198" aria-hidden="true" tabindex="-1"></a><span class="co"># convert a v4 or v3 assay to a v5 assay</span></span>
-<span id="cb109-199"><a href="#cb109-199" aria-hidden="true" tabindex="-1"></a>seurat_integrated[[<span class="st">"RNA5"</span>]] <span class="ot">&lt;-</span> <span class="fu">as</span>(<span class="at">object =</span> seurat_integrated[[<span class="st">"RNA"</span>]], </span>
-<span id="cb109-200"><a href="#cb109-200" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Class =</span> <span class="st">"Assay5"</span>)</span>
-<span id="cb109-201"><a href="#cb109-201" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_integrated) <span class="ot">=</span> <span class="st">"RNA5"</span></span>
-<span id="cb109-202"><a href="#cb109-202" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-203"><a href="#cb109-203" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-204"><a href="#cb109-204" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-15%2019.54.40.png)</span></span>
+<span id="cb109-194"><a href="#cb109-194" aria-hidden="true" tabindex="-1"></a>可以看到，这个seurat_integrated对象的“RNA” assay没有layers结构，是典型的V5版本之前的Seurat对象的结构。我们可以通过as()函数将V4或V3版本的“RNA” assay转换成V5版本的“RNA” assay：</span>
+<span id="cb109-195"><a href="#cb109-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-198"><a href="#cb109-198" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-199"><a href="#cb109-199" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache-lazy: false</span></span>
+<span id="cb109-200"><a href="#cb109-200" aria-hidden="true" tabindex="-1"></a><span class="co"># convert a v4 or v3 assay to a v5 assay</span></span>
+<span id="cb109-201"><a href="#cb109-201" aria-hidden="true" tabindex="-1"></a>seurat_integrated[[<span class="st">"RNA5"</span>]] <span class="ot">&lt;-</span> <span class="fu">as</span>(<span class="at">object =</span> seurat_integrated[[<span class="st">"RNA"</span>]], </span>
+<span id="cb109-202"><a href="#cb109-202" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Class =</span> <span class="st">"Assay5"</span>)</span>
+<span id="cb109-203"><a href="#cb109-203" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(seurat_integrated) <span class="ot">=</span> <span class="st">"RNA5"</span></span>
+<span id="cb109-204"><a href="#cb109-204" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-205"><a href="#cb109-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-206"><a href="#cb109-206" aria-hidden="true" tabindex="-1"></a>转换后seurat_integrated<span class="sc">\[\[</span>"RNA5"<span class="sc">\]\]</span>里面是V5版的Seurat结构。如果不想要原来的“RNA” assay可以将其删除：</span>
+<span id="cb109-206"><a href="#cb109-206" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-15%2019.54.40.png)</span></span>
 <span id="cb109-207"><a href="#cb109-207" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-210"><a href="#cb109-210" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-211"><a href="#cb109-211" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache-lazy: false</span></span>
-<span id="cb109-212"><a href="#cb109-212" aria-hidden="true" tabindex="-1"></a>seurat_integrated[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb109-213"><a href="#cb109-213" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-214"><a href="#cb109-214" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-215"><a href="#cb109-215" aria-hidden="true" tabindex="-1"></a>也可以将V5版本的“RNA” assay转换成V4或V3版本的“RNA” assay：</span>
+<span id="cb109-208"><a href="#cb109-208" aria-hidden="true" tabindex="-1"></a>转换后seurat_integrated<span class="sc">\[\[</span>"RNA5"<span class="sc">\]\]</span>里面是V5版的Seurat结构。如果不想要原来的“RNA” assay可以将其删除：</span>
+<span id="cb109-209"><a href="#cb109-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-212"><a href="#cb109-212" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-213"><a href="#cb109-213" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache-lazy: false</span></span>
+<span id="cb109-214"><a href="#cb109-214" aria-hidden="true" tabindex="-1"></a>seurat_integrated[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb109-215"><a href="#cb109-215" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-216"><a href="#cb109-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-219"><a href="#cb109-219" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-220"><a href="#cb109-220" aria-hidden="true" tabindex="-1"></a><span class="co"># convert a v5 assay to a v4 or v3 assay</span></span>
-<span id="cb109-221"><a href="#cb109-221" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"RNA3"</span>]] <span class="ot">&lt;-</span> <span class="fu">as</span>(<span class="at">object =</span> pbmc[[<span class="st">"RNA"</span>]], <span class="at">Class =</span> <span class="st">"Assay"</span>)</span>
-<span id="cb109-222"><a href="#cb109-222" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-223"><a href="#cb109-223" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-224"><a href="#cb109-224" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-15%2020.01.30.png)</span></span>
+<span id="cb109-217"><a href="#cb109-217" aria-hidden="true" tabindex="-1"></a>也可以将V5版本的“RNA” assay转换成V4或V3版本的“RNA” assay：</span>
+<span id="cb109-218"><a href="#cb109-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-221"><a href="#cb109-221" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-222"><a href="#cb109-222" aria-hidden="true" tabindex="-1"></a><span class="co"># convert a v5 assay to a v4 or v3 assay</span></span>
+<span id="cb109-223"><a href="#cb109-223" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"RNA3"</span>]] <span class="ot">&lt;-</span> <span class="fu">as</span>(<span class="at">object =</span> pbmc[[<span class="st">"RNA"</span>]], <span class="at">Class =</span> <span class="st">"Assay"</span>)</span>
+<span id="cb109-224"><a href="#cb109-224" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-225"><a href="#cb109-225" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-226"><a href="#cb109-226" aria-hidden="true" tabindex="-1"></a><span class="fu">### 获取细胞注释信息（cell identities）</span></span>
+<span id="cb109-226"><a href="#cb109-226" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-15%2020.01.30.png)</span></span>
 <span id="cb109-227"><a href="#cb109-227" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-228"><a href="#cb109-228" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 查看cell identities：</span></span>
+<span id="cb109-228"><a href="#cb109-228" aria-hidden="true" tabindex="-1"></a><span class="fu">### 获取细胞注释信息（cell identities）</span></span>
 <span id="cb109-229"><a href="#cb109-229" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-230"><a href="#cb109-230" aria-hidden="true" tabindex="-1"></a>即**细胞的类型**，在Seurat对象中，细胞可能有好几种不同方法注释的类型，但是在某一时刻，只有一种细胞类型是默认激活的。</span>
+<span id="cb109-230"><a href="#cb109-230" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 查看cell identities：</span></span>
 <span id="cb109-231"><a href="#cb109-231" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-234"><a href="#cb109-234" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-235"><a href="#cb109-235" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(pbmc)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb109-236"><a href="#cb109-236" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">Idents</span>(pbmc))</span>
-<span id="cb109-237"><a href="#cb109-237" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-238"><a href="#cb109-238" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看目前cell identities的水平</span></span>
-<span id="cb109-239"><a href="#cb109-239" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(pbmc)</span>
-<span id="cb109-240"><a href="#cb109-240" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-241"><a href="#cb109-241" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-242"><a href="#cb109-242" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 设定细胞identities：</span></span>
+<span id="cb109-232"><a href="#cb109-232" aria-hidden="true" tabindex="-1"></a>即**细胞的类型**，在Seurat对象中，细胞可能有好几种不同方法注释的类型，但是在某一时刻，只有一种细胞类型是默认激活的。</span>
+<span id="cb109-233"><a href="#cb109-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-236"><a href="#cb109-236" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-237"><a href="#cb109-237" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(pbmc)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb109-238"><a href="#cb109-238" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">Idents</span>(pbmc))</span>
+<span id="cb109-239"><a href="#cb109-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-240"><a href="#cb109-240" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看目前cell identities的水平</span></span>
+<span id="cb109-241"><a href="#cb109-241" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(pbmc)</span>
+<span id="cb109-242"><a href="#cb109-242" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-243"><a href="#cb109-243" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-244"><a href="#cb109-244" aria-hidden="true" tabindex="-1"></a>实际应用场景见 @sec-findmarkers_function 。</span>
+<span id="cb109-244"><a href="#cb109-244" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 设定细胞identities：</span></span>
 <span id="cb109-245"><a href="#cb109-245" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-248"><a href="#cb109-248" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-249"><a href="#cb109-249" aria-hidden="true" tabindex="-1"></a><span class="co"># 将meta.data中的"seurat_clusters"列设置为cell identities</span></span>
-<span id="cb109-250"><a href="#cb109-250" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(pbmc) <span class="ot">&lt;-</span> <span class="st">"seurat_clusters"</span></span>
-<span id="cb109-251"><a href="#cb109-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-252"><a href="#cb109-252" aria-hidden="true" tabindex="-1"></a><span class="co"># 重命名细胞注释标签或重新排序细胞类型标签</span></span>
-<span id="cb109-253"><a href="#cb109-253" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(pbmc) <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">Idents</span>(pbmc), </span>
-<span id="cb109-254"><a href="#cb109-254" aria-hidden="true" tabindex="-1"></a>                       <span class="at">levels =</span> <span class="fu">levels</span>(pbmc),</span>
-<span id="cb109-255"><a href="#cb109-255" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"pDC"</span>, <span class="st">"Mk"</span>, <span class="st">"DC"</span>, <span class="st">"CD14 Mono"</span>, <span class="st">"CD16 Mono"</span>, </span>
-<span id="cb109-256"><a href="#cb109-256" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"B Activated"</span>, <span class="st">"B"</span>, <span class="st">"CD8 T"</span>, <span class="st">"NK"</span>, <span class="st">"T activated"</span>, </span>
-<span id="cb109-257"><a href="#cb109-257" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"CD4 Naive T"</span>, <span class="st">"CD4 Memory T"</span>, <span class="st">"epi"</span>))</span>
-<span id="cb109-258"><a href="#cb109-258" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(pbmc) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span>
-<span id="cb109-259"><a href="#cb109-259" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-260"><a href="#cb109-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-261"><a href="#cb109-261" aria-hidden="true" tabindex="-1"></a>将目前的cell identities保存到meta.data新的一列中：</span>
+<span id="cb109-246"><a href="#cb109-246" aria-hidden="true" tabindex="-1"></a>实际应用场景见<span class="co">[</span><span class="ot">后续章节</span><span class="co">](/single_cell/seurat/marker_gene_identification.qmd#sec-findmarkers_function)</span>。</span>
+<span id="cb109-247"><a href="#cb109-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-250"><a href="#cb109-250" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-251"><a href="#cb109-251" aria-hidden="true" tabindex="-1"></a><span class="co"># 将meta.data中的"seurat_clusters"列设置为cell identities</span></span>
+<span id="cb109-252"><a href="#cb109-252" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(pbmc) <span class="ot">&lt;-</span> <span class="st">"seurat_clusters"</span></span>
+<span id="cb109-253"><a href="#cb109-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-254"><a href="#cb109-254" aria-hidden="true" tabindex="-1"></a><span class="co"># 重命名细胞注释标签或重新排序细胞类型标签</span></span>
+<span id="cb109-255"><a href="#cb109-255" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(pbmc) <span class="ot">&lt;-</span> <span class="fu">factor</span>(<span class="fu">Idents</span>(pbmc), </span>
+<span id="cb109-256"><a href="#cb109-256" aria-hidden="true" tabindex="-1"></a>                       <span class="at">levels =</span> <span class="fu">levels</span>(pbmc),</span>
+<span id="cb109-257"><a href="#cb109-257" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"pDC"</span>, <span class="st">"Mk"</span>, <span class="st">"DC"</span>, <span class="st">"CD14 Mono"</span>, <span class="st">"CD16 Mono"</span>, </span>
+<span id="cb109-258"><a href="#cb109-258" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"B Activated"</span>, <span class="st">"B"</span>, <span class="st">"CD8 T"</span>, <span class="st">"NK"</span>, <span class="st">"T activated"</span>, </span>
+<span id="cb109-259"><a href="#cb109-259" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"CD4 Naive T"</span>, <span class="st">"CD4 Memory T"</span>, <span class="st">"epi"</span>))</span>
+<span id="cb109-260"><a href="#cb109-260" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(pbmc) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span>
+<span id="cb109-261"><a href="#cb109-261" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-262"><a href="#cb109-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-265"><a href="#cb109-265" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-266"><a href="#cb109-266" aria-hidden="true" tabindex="-1"></a><span class="co"># 将目前的cell identities储存到meta.data的"old.ident"列中</span></span>
-<span id="cb109-267"><a href="#cb109-267" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"old.ident"</span>]] <span class="ot">&lt;-</span> <span class="fu">Idents</span>(pbmc) </span>
-<span id="cb109-268"><a href="#cb109-268" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-269"><a href="#cb109-269" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-270"><a href="#cb109-270" aria-hidden="true" tabindex="-1"></a>重命名某个cell identities：</span>
+<span id="cb109-263"><a href="#cb109-263" aria-hidden="true" tabindex="-1"></a>将目前的cell identities保存到meta.data新的一列中：</span>
+<span id="cb109-264"><a href="#cb109-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-267"><a href="#cb109-267" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-268"><a href="#cb109-268" aria-hidden="true" tabindex="-1"></a><span class="co"># 将目前的cell identities储存到meta.data的"old.ident"列中</span></span>
+<span id="cb109-269"><a href="#cb109-269" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"old.ident"</span>]] <span class="ot">&lt;-</span> <span class="fu">Idents</span>(pbmc) </span>
+<span id="cb109-270"><a href="#cb109-270" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-271"><a href="#cb109-271" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-274"><a href="#cb109-274" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-275"><a href="#cb109-275" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">RenameIdents</span>(pbmc, </span>
-<span id="cb109-276"><a href="#cb109-276" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"B"</span> <span class="ot">=</span> <span class="st">"B cell"</span>)</span>
-<span id="cb109-277"><a href="#cb109-277" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(pbmc) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span>
-<span id="cb109-278"><a href="#cb109-278" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-279"><a href="#cb109-279" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-280"><a href="#cb109-280" aria-hidden="true" tabindex="-1"></a><span class="fu">### 获取meta.data</span></span>
+<span id="cb109-272"><a href="#cb109-272" aria-hidden="true" tabindex="-1"></a>重命名某个cell identities：</span>
+<span id="cb109-273"><a href="#cb109-273" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-276"><a href="#cb109-276" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-277"><a href="#cb109-277" aria-hidden="true" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">RenameIdents</span>(pbmc, </span>
+<span id="cb109-278"><a href="#cb109-278" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"B"</span> <span class="ot">=</span> <span class="st">"B cell"</span>)</span>
+<span id="cb109-279"><a href="#cb109-279" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(pbmc) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span>
+<span id="cb109-280"><a href="#cb109-280" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-281"><a href="#cb109-281" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-284"><a href="#cb109-284" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-285"><a href="#cb109-285" aria-hidden="true" tabindex="-1"></a><span class="co"># View metadata data frame, stored in object@meta.data</span></span>
-<span id="cb109-286"><a href="#cb109-286" aria-hidden="true" tabindex="-1"></a>pbmc<span class="sc">@</span>meta.data <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
-<span id="cb109-287"><a href="#cb109-287" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
-<span id="cb109-288"><a href="#cb109-288" aria-hidden="true" tabindex="-1"></a>pbmc[[]] <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
-<span id="cb109-289"><a href="#cb109-289" aria-hidden="true" tabindex="-1"></a><span class="co"># 如果是展示前6行的话也可以直接这样写：</span></span>
-<span id="cb109-290"><a href="#cb109-290" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pbmc)</span>
-<span id="cb109-291"><a href="#cb109-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-292"><a href="#cb109-292" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve specific values from the metadata</span></span>
-<span id="cb109-293"><a href="#cb109-293" aria-hidden="true" tabindex="-1"></a>pbmc<span class="sc">$</span>nCount_RNA[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb109-294"><a href="#cb109-294" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="fu">c</span>(<span class="st">"nCount_RNA"</span>, <span class="st">"nFeature_RNA"</span>)]][<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,]</span>
-<span id="cb109-295"><a href="#cb109-295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-296"><a href="#cb109-296" aria-hidden="true" tabindex="-1"></a><span class="co"># Add metadata, see ?AddMetaData</span></span>
-<span id="cb109-297"><a href="#cb109-297" aria-hidden="true" tabindex="-1"></a>random_group_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"Cancer"</span>, <span class="fu">nrow</span>(pbmc<span class="sc">@</span>meta.data)<span class="sc">/</span><span class="dv">2</span>), </span>
-<span id="cb109-298"><a href="#cb109-298" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">rep</span>(<span class="st">"Control"</span>, <span class="fu">nrow</span>(pbmc<span class="sc">@</span>meta.data)<span class="sc">/</span><span class="dv">2</span>))</span>
-<span id="cb109-299"><a href="#cb109-299" aria-hidden="true" tabindex="-1"></a>pbmc<span class="sc">$</span>groups <span class="ot">&lt;-</span> random_group_labels</span>
-<span id="cb109-300"><a href="#cb109-300" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-301"><a href="#cb109-301" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-302"><a href="#cb109-302" aria-hidden="true" tabindex="-1"></a><span class="fu">### 获取表达量信息 (stored as layers in Seurat v5)</span></span>
+<span id="cb109-282"><a href="#cb109-282" aria-hidden="true" tabindex="-1"></a><span class="fu">### 获取meta.data</span></span>
+<span id="cb109-283"><a href="#cb109-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-286"><a href="#cb109-286" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-287"><a href="#cb109-287" aria-hidden="true" tabindex="-1"></a><span class="co"># View metadata data frame, stored in object@meta.data</span></span>
+<span id="cb109-288"><a href="#cb109-288" aria-hidden="true" tabindex="-1"></a>pbmc<span class="sc">@</span>meta.data <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
+<span id="cb109-289"><a href="#cb109-289" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
+<span id="cb109-290"><a href="#cb109-290" aria-hidden="true" tabindex="-1"></a>pbmc[[]] <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
+<span id="cb109-291"><a href="#cb109-291" aria-hidden="true" tabindex="-1"></a><span class="co"># 如果是展示前6行的话也可以直接这样写：</span></span>
+<span id="cb109-292"><a href="#cb109-292" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pbmc)</span>
+<span id="cb109-293"><a href="#cb109-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-294"><a href="#cb109-294" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve specific values from the metadata</span></span>
+<span id="cb109-295"><a href="#cb109-295" aria-hidden="true" tabindex="-1"></a>pbmc<span class="sc">$</span>nCount_RNA[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb109-296"><a href="#cb109-296" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="fu">c</span>(<span class="st">"nCount_RNA"</span>, <span class="st">"nFeature_RNA"</span>)]][<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,]</span>
+<span id="cb109-297"><a href="#cb109-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-298"><a href="#cb109-298" aria-hidden="true" tabindex="-1"></a><span class="co"># Add metadata, see ?AddMetaData</span></span>
+<span id="cb109-299"><a href="#cb109-299" aria-hidden="true" tabindex="-1"></a>random_group_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"Cancer"</span>, <span class="fu">nrow</span>(pbmc<span class="sc">@</span>meta.data)<span class="sc">/</span><span class="dv">2</span>), </span>
+<span id="cb109-300"><a href="#cb109-300" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">rep</span>(<span class="st">"Control"</span>, <span class="fu">nrow</span>(pbmc<span class="sc">@</span>meta.data)<span class="sc">/</span><span class="dv">2</span>))</span>
+<span id="cb109-301"><a href="#cb109-301" aria-hidden="true" tabindex="-1"></a>pbmc<span class="sc">$</span>groups <span class="ot">&lt;-</span> random_group_labels</span>
+<span id="cb109-302"><a href="#cb109-302" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-303"><a href="#cb109-303" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-306"><a href="#cb109-306" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-307"><a href="#cb109-307" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve data in an expression matrix RNA counts matrix</span></span>
-<span id="cb109-308"><a href="#cb109-308" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"RNA"</span>]]<span class="sc">$</span>counts[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb109-309"><a href="#cb109-309" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
-<span id="cb109-310"><a href="#cb109-310" aria-hidden="true" tabindex="-1"></a><span class="fu">LayerData</span>(pbmc, <span class="at">assay =</span> <span class="st">"RNA"</span>, <span class="at">layer =</span> <span class="st">"counts"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb109-311"><a href="#cb109-311" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-312"><a href="#cb109-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-315"><a href="#cb109-315" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-316"><a href="#cb109-316" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb109-317"><a href="#cb109-317" aria-hidden="true" tabindex="-1"></a><span class="co"># Set expression data assume new.data is a new expression matrix</span></span>
-<span id="cb109-318"><a href="#cb109-318" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"RNA"</span>]]<span class="sc">$</span>counts <span class="ot">&lt;-</span> new.data</span>
-<span id="cb109-319"><a href="#cb109-319" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
-<span id="cb109-320"><a href="#cb109-320" aria-hidden="true" tabindex="-1"></a><span class="fu">LayerData</span>(pbmc, <span class="at">assay =</span> <span class="st">"RNA"</span>, <span class="at">layer =</span> <span class="st">"counts"</span>) <span class="ot">&lt;-</span> new.data</span>
-<span id="cb109-321"><a href="#cb109-321" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-322"><a href="#cb109-322" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-323"><a href="#cb109-323" aria-hidden="true" tabindex="-1"></a><span class="fu">### 获取PCA降维信息</span></span>
+<span id="cb109-304"><a href="#cb109-304" aria-hidden="true" tabindex="-1"></a><span class="fu">### 获取表达量信息 (stored as layers in Seurat v5)</span></span>
+<span id="cb109-305"><a href="#cb109-305" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-308"><a href="#cb109-308" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-309"><a href="#cb109-309" aria-hidden="true" tabindex="-1"></a><span class="co"># Retrieve data in an expression matrix RNA counts matrix</span></span>
+<span id="cb109-310"><a href="#cb109-310" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"RNA"</span>]]<span class="sc">$</span>counts[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb109-311"><a href="#cb109-311" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
+<span id="cb109-312"><a href="#cb109-312" aria-hidden="true" tabindex="-1"></a><span class="fu">LayerData</span>(pbmc, <span class="at">assay =</span> <span class="st">"RNA"</span>, <span class="at">layer =</span> <span class="st">"counts"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb109-313"><a href="#cb109-313" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb109-314"><a href="#cb109-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-317"><a href="#cb109-317" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-318"><a href="#cb109-318" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb109-319"><a href="#cb109-319" aria-hidden="true" tabindex="-1"></a><span class="co"># Set expression data assume new.data is a new expression matrix</span></span>
+<span id="cb109-320"><a href="#cb109-320" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"RNA"</span>]]<span class="sc">$</span>counts <span class="ot">&lt;-</span> new.data</span>
+<span id="cb109-321"><a href="#cb109-321" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
+<span id="cb109-322"><a href="#cb109-322" aria-hidden="true" tabindex="-1"></a><span class="fu">LayerData</span>(pbmc, <span class="at">assay =</span> <span class="st">"RNA"</span>, <span class="at">layer =</span> <span class="st">"counts"</span>) <span class="ot">&lt;-</span> new.data</span>
+<span id="cb109-323"><a href="#cb109-323" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-324"><a href="#cb109-324" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-325"><a href="#cb109-325" aria-hidden="true" tabindex="-1"></a>实际应用场景见 @sec-Effect_of_pcs_clustering 。</span>
+<span id="cb109-325"><a href="#cb109-325" aria-hidden="true" tabindex="-1"></a><span class="fu">### 获取PCA降维信息</span></span>
 <span id="cb109-326"><a href="#cb109-326" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-329"><a href="#cb109-329" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-330"><a href="#cb109-330" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取细胞在所有主成分上的评分（坐标）</span></span>
-<span id="cb109-331"><a href="#cb109-331" aria-hidden="true" tabindex="-1"></a><span class="fu">Embeddings</span>(pbmc, <span class="at">reduction =</span> <span class="st">"pca"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb109-332"><a href="#cb109-332" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
-<span id="cb109-333"><a href="#cb109-333" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">'pca'</span>]]<span class="sc">@</span>cell.embeddings[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb109-334"><a href="#cb109-334" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-335"><a href="#cb109-335" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取基因在所有主成分上的评分（坐标）</span></span>
-<span id="cb109-336"><a href="#cb109-336" aria-hidden="true" tabindex="-1"></a><span class="fu">Loadings</span>(pbmc, <span class="at">reduction =</span> <span class="st">"pca"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb109-337"><a href="#cb109-337" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
-<span id="cb109-338"><a href="#cb109-338" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"pca"</span>]]<span class="sc">@</span>feature.loadings[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb109-339"><a href="#cb109-339" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-340"><a href="#cb109-340" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取PCA信息中的第二主成分，并展示对该主成分影响最大的前5个基因名</span></span>
-<span id="cb109-341"><a href="#cb109-341" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pbmc[[<span class="st">"pca"</span>]], <span class="at">dims =</span> <span class="dv">2</span>, <span class="at">nfeatures =</span> <span class="dv">5</span>)</span>
-<span id="cb109-342"><a href="#cb109-342" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-343"><a href="#cb109-343" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-346"><a href="#cb109-346" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-347"><a href="#cb109-347" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb109-348"><a href="#cb109-348" aria-hidden="true" tabindex="-1"></a><span class="co"># Create custom dimensional reduction loadings matrix is optional</span></span>
-<span id="cb109-349"><a href="#cb109-349" aria-hidden="true" tabindex="-1"></a>new_reduction <span class="ot">&lt;-</span> <span class="fu">CreateDimReducObject</span>(<span class="at">embeddings =</span> new.embeddings, </span>
-<span id="cb109-350"><a href="#cb109-350" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">loadings =</span> new.loadings, </span>
-<span id="cb109-351"><a href="#cb109-351" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">key =</span> <span class="st">"custom_pca"</span>)</span>
-<span id="cb109-352"><a href="#cb109-352" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
-<span id="cb109-353"><a href="#cb109-353" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"custom_pca"</span>]] <span class="ot">&lt;-</span> new_reduction</span>
-<span id="cb109-354"><a href="#cb109-354" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-355"><a href="#cb109-355" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-356"><a href="#cb109-356" aria-hidden="true" tabindex="-1"></a><span class="fu">### 通过`FetchData`从Seurat对象中获取任意信息</span></span>
+<span id="cb109-327"><a href="#cb109-327" aria-hidden="true" tabindex="-1"></a>实际应用场景见<span class="co">[</span><span class="ot">分析主成分（PCs）对细胞分群的影响</span><span class="co">](/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd#sec-Effect_of_pcs_clustering)</span>。</span>
+<span id="cb109-328"><a href="#cb109-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-331"><a href="#cb109-331" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-332"><a href="#cb109-332" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取细胞在所有主成分上的评分（坐标）</span></span>
+<span id="cb109-333"><a href="#cb109-333" aria-hidden="true" tabindex="-1"></a><span class="fu">Embeddings</span>(pbmc, <span class="at">reduction =</span> <span class="st">"pca"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb109-334"><a href="#cb109-334" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
+<span id="cb109-335"><a href="#cb109-335" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">'pca'</span>]]<span class="sc">@</span>cell.embeddings[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb109-336"><a href="#cb109-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-337"><a href="#cb109-337" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取基因在所有主成分上的评分（坐标）</span></span>
+<span id="cb109-338"><a href="#cb109-338" aria-hidden="true" tabindex="-1"></a><span class="fu">Loadings</span>(pbmc, <span class="at">reduction =</span> <span class="st">"pca"</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb109-339"><a href="#cb109-339" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
+<span id="cb109-340"><a href="#cb109-340" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"pca"</span>]]<span class="sc">@</span>feature.loadings[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb109-341"><a href="#cb109-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-342"><a href="#cb109-342" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取PCA信息中的第二主成分，并展示对该主成分影响最大的前5个基因名</span></span>
+<span id="cb109-343"><a href="#cb109-343" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pbmc[[<span class="st">"pca"</span>]], <span class="at">dims =</span> <span class="dv">2</span>, <span class="at">nfeatures =</span> <span class="dv">5</span>)</span>
+<span id="cb109-344"><a href="#cb109-344" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb109-345"><a href="#cb109-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-348"><a href="#cb109-348" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-349"><a href="#cb109-349" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb109-350"><a href="#cb109-350" aria-hidden="true" tabindex="-1"></a><span class="co"># Create custom dimensional reduction loadings matrix is optional</span></span>
+<span id="cb109-351"><a href="#cb109-351" aria-hidden="true" tabindex="-1"></a>new_reduction <span class="ot">&lt;-</span> <span class="fu">CreateDimReducObject</span>(<span class="at">embeddings =</span> new.embeddings, </span>
+<span id="cb109-352"><a href="#cb109-352" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">loadings =</span> new.loadings, </span>
+<span id="cb109-353"><a href="#cb109-353" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">key =</span> <span class="st">"custom_pca"</span>)</span>
+<span id="cb109-354"><a href="#cb109-354" aria-hidden="true" tabindex="-1"></a><span class="co"># 或</span></span>
+<span id="cb109-355"><a href="#cb109-355" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"custom_pca"</span>]] <span class="ot">&lt;-</span> new_reduction</span>
+<span id="cb109-356"><a href="#cb109-356" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-357"><a href="#cb109-357" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-358"><a href="#cb109-358" aria-hidden="true" tabindex="-1"></a><span class="in">`FetchData`</span> can access anything from expression matrices, cell embeddings, or metadata use the previously listed commands to access entire matrices。通过FetchData可以提取包括表达量数据、PCA分数以及meta.data内的任何变量并形成一个数据框。实际应用场景见 @sec-Effect_of_pcs_clustering 。</span>
+<span id="cb109-358"><a href="#cb109-358" aria-hidden="true" tabindex="-1"></a><span class="fu">### 通过`FetchData`从Seurat对象中获取任意信息</span></span>
 <span id="cb109-359"><a href="#cb109-359" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-362"><a href="#cb109-362" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-363"><a href="#cb109-363" aria-hidden="true" tabindex="-1"></a><span class="fu">FetchData</span>(<span class="at">object =</span> pbmc, </span>
-<span id="cb109-364"><a href="#cb109-364" aria-hidden="true" tabindex="-1"></a>          <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"PC_1"</span>, <span class="st">"nFeature_RNA"</span>, <span class="st">"MS4A1"</span>), </span>
-<span id="cb109-365"><a href="#cb109-365" aria-hidden="true" tabindex="-1"></a>          <span class="at">layer =</span> <span class="st">"counts"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
-<span id="cb109-366"><a href="#cb109-366" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-367"><a href="#cb109-367" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-368"><a href="#cb109-368" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb109-360"><a href="#cb109-360" aria-hidden="true" tabindex="-1"></a><span class="in">`FetchData`</span> can access anything from expression matrices, cell embeddings, or metadata use the previously listed commands to access entire matrices。通过FetchData可以提取包括表达量数据、PCA分数以及meta.data内的任何变量并形成一个数据框。实际应用场景见<span class="co">[</span><span class="ot">分析主成分（PCs）对细胞分群的影响</span><span class="co">](/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd#sec-Effect_of_pcs_clustering)</span>。</span>
+<span id="cb109-361"><a href="#cb109-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-364"><a href="#cb109-364" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-365"><a href="#cb109-365" aria-hidden="true" tabindex="-1"></a><span class="fu">FetchData</span>(<span class="at">object =</span> pbmc, </span>
+<span id="cb109-366"><a href="#cb109-366" aria-hidden="true" tabindex="-1"></a>          <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"PC_1"</span>, <span class="st">"nFeature_RNA"</span>, <span class="st">"MS4A1"</span>), </span>
+<span id="cb109-367"><a href="#cb109-367" aria-hidden="true" tabindex="-1"></a>          <span class="at">layer =</span> <span class="st">"counts"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>()</span>
+<span id="cb109-368"><a href="#cb109-368" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-369"><a href="#cb109-369" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-370"><a href="#cb109-370" aria-hidden="true" tabindex="-1"></a><span class="fu">## Seurat对象取子集和合并</span></span>
+<span id="cb109-370"><a href="#cb109-370" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb109-371"><a href="#cb109-371" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-372"><a href="#cb109-372" aria-hidden="true" tabindex="-1"></a><span class="fu">### 取子集 {#sec-subset_seurat}</span></span>
+<span id="cb109-372"><a href="#cb109-372" aria-hidden="true" tabindex="-1"></a><span class="fu">## Seurat对象取子集和合并</span></span>
 <span id="cb109-373"><a href="#cb109-373" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-374"><a href="#cb109-374" aria-hidden="true" tabindex="-1"></a>实际应用见 @sec-filtering 。</span>
+<span id="cb109-374"><a href="#cb109-374" aria-hidden="true" tabindex="-1"></a><span class="fu">### 取子集 {#sec-subset_seurat}</span></span>
 <span id="cb109-375"><a href="#cb109-375" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-378"><a href="#cb109-378" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-379"><a href="#cb109-379" aria-hidden="true" tabindex="-1"></a><span class="co"># 根据meta data中的信息取子集</span></span>
-<span id="cb109-380"><a href="#cb109-380" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">subset =</span> groups <span class="sc">==</span> <span class="st">"Cancer"</span>)</span>
-<span id="cb109-381"><a href="#cb109-381" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-382"><a href="#cb109-382" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取特定cell identities, also see ?SubsetData</span></span>
-<span id="cb109-383"><a href="#cb109-383" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">idents =</span> <span class="st">"B cell"</span>)</span>
-<span id="cb109-384"><a href="#cb109-384" aria-hidden="true" tabindex="-1"></a><span class="co"># 反选</span></span>
-<span id="cb109-385"><a href="#cb109-385" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">idents =</span> <span class="fu">c</span>(<span class="st">"CD4 Naive T"</span>, <span class="st">"CD8 T"</span>), <span class="at">invert =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb109-386"><a href="#cb109-386" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-387"><a href="#cb109-387" aria-hidden="true" tabindex="-1"></a><span class="co"># 根据特定gene/feature表达水平取子集</span></span>
-<span id="cb109-388"><a href="#cb109-388" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">subset =</span> S100A9 <span class="sc">&gt;</span> <span class="fl">1.5</span>)</span>
-<span id="cb109-389"><a href="#cb109-389" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-390"><a href="#cb109-390" aria-hidden="true" tabindex="-1"></a><span class="co"># 采用多个标准取子集</span></span>
-<span id="cb109-391"><a href="#cb109-391" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">subset =</span> S100A9 <span class="sc">&gt;</span> <span class="fl">1.5</span> <span class="sc">&amp;</span> PC_1 <span class="sc">&gt;</span> <span class="dv">5</span>)</span>
-<span id="cb109-392"><a href="#cb109-392" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">subset =</span> S100A9 <span class="sc">&gt;</span> <span class="fl">1.5</span>, <span class="at">idents =</span> <span class="st">"CD8 T"</span>)</span>
-<span id="cb109-393"><a href="#cb109-393" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-394"><a href="#cb109-394" aria-hidden="true" tabindex="-1"></a><span class="co"># Downsample the number of cells per identity class</span></span>
-<span id="cb109-395"><a href="#cb109-395" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">downsample =</span> <span class="dv">100</span>)</span>
-<span id="cb109-396"><a href="#cb109-396" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-397"><a href="#cb109-397" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-398"><a href="#cb109-398" aria-hidden="true" tabindex="-1"></a><span class="fu">### 分割layers</span></span>
+<span id="cb109-376"><a href="#cb109-376" aria-hidden="true" tabindex="-1"></a>实际应用见<span class="co">[</span><span class="ot">过滤细胞</span><span class="co">](/single_cell/seurat/seurat_tutorial.qmd#过滤细胞)</span>。</span>
+<span id="cb109-377"><a href="#cb109-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-380"><a href="#cb109-380" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-381"><a href="#cb109-381" aria-hidden="true" tabindex="-1"></a><span class="co"># 根据meta data中的信息取子集</span></span>
+<span id="cb109-382"><a href="#cb109-382" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">subset =</span> groups <span class="sc">==</span> <span class="st">"Cancer"</span>)</span>
+<span id="cb109-383"><a href="#cb109-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-384"><a href="#cb109-384" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取特定cell identities, also see ?SubsetData</span></span>
+<span id="cb109-385"><a href="#cb109-385" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">idents =</span> <span class="st">"B cell"</span>)</span>
+<span id="cb109-386"><a href="#cb109-386" aria-hidden="true" tabindex="-1"></a><span class="co"># 反选</span></span>
+<span id="cb109-387"><a href="#cb109-387" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">idents =</span> <span class="fu">c</span>(<span class="st">"CD4 Naive T"</span>, <span class="st">"CD8 T"</span>), <span class="at">invert =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb109-388"><a href="#cb109-388" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-389"><a href="#cb109-389" aria-hidden="true" tabindex="-1"></a><span class="co"># 根据特定gene/feature表达水平取子集</span></span>
+<span id="cb109-390"><a href="#cb109-390" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">subset =</span> S100A9 <span class="sc">&gt;</span> <span class="fl">1.5</span>)</span>
+<span id="cb109-391"><a href="#cb109-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-392"><a href="#cb109-392" aria-hidden="true" tabindex="-1"></a><span class="co"># 采用多个标准取子集</span></span>
+<span id="cb109-393"><a href="#cb109-393" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">subset =</span> S100A9 <span class="sc">&gt;</span> <span class="fl">1.5</span> <span class="sc">&amp;</span> PC_1 <span class="sc">&gt;</span> <span class="dv">5</span>)</span>
+<span id="cb109-394"><a href="#cb109-394" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">subset =</span> S100A9 <span class="sc">&gt;</span> <span class="fl">1.5</span>, <span class="at">idents =</span> <span class="st">"CD8 T"</span>)</span>
+<span id="cb109-395"><a href="#cb109-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-396"><a href="#cb109-396" aria-hidden="true" tabindex="-1"></a><span class="co"># Downsample the number of cells per identity class</span></span>
+<span id="cb109-397"><a href="#cb109-397" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="at">x =</span> pbmc, <span class="at">downsample =</span> <span class="dv">100</span>)</span>
+<span id="cb109-398"><a href="#cb109-398" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-399"><a href="#cb109-399" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-400"><a href="#cb109-400" aria-hidden="true" tabindex="-1"></a>In Seurat v5, users can now split in object directly into different layers keeps expression data in one object, but splits multiple samples into layers can proceed directly to integration workflow after splitting layers。实际应用场景见 @sec-Single-cell_data_integration 。</span>
+<span id="cb109-400"><a href="#cb109-400" aria-hidden="true" tabindex="-1"></a><span class="fu">### 分割layers</span></span>
 <span id="cb109-401"><a href="#cb109-401" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-404"><a href="#cb109-404" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-405"><a href="#cb109-405" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(pbmc) <span class="ot">&lt;-</span> <span class="st">"RNA"</span></span>
-<span id="cb109-406"><a href="#cb109-406" aria-hidden="true" tabindex="-1"></a><span class="co"># 按照meta.data中的stim列分割layer</span></span>
-<span id="cb109-407"><a href="#cb109-407" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">split</span>(pbmc[[<span class="st">"RNA"</span>]], <span class="at">f =</span> pbmc<span class="sc">$</span>groups)</span>
-<span id="cb109-408"><a href="#cb109-408" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-409"><a href="#cb109-409" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-410"><a href="#cb109-410" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-15%2018.36.23.png)</span></span>
+<span id="cb109-402"><a href="#cb109-402" aria-hidden="true" tabindex="-1"></a>In Seurat v5, users can now split in object directly into different layers keeps expression data in one object, but splits multiple samples into layers can proceed directly to integration workflow after splitting layers。实际应用场景见<span class="co">[</span><span class="ot">数据整合</span><span class="co">](/single_cell/seurat/integration.qmd)</span>。</span>
+<span id="cb109-403"><a href="#cb109-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-406"><a href="#cb109-406" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-407"><a href="#cb109-407" aria-hidden="true" tabindex="-1"></a><span class="fu">DefaultAssay</span>(pbmc) <span class="ot">&lt;-</span> <span class="st">"RNA"</span></span>
+<span id="cb109-408"><a href="#cb109-408" aria-hidden="true" tabindex="-1"></a><span class="co"># 按照meta.data中的stim列分割layer</span></span>
+<span id="cb109-409"><a href="#cb109-409" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">split</span>(pbmc[[<span class="st">"RNA"</span>]], <span class="at">f =</span> pbmc<span class="sc">$</span>groups)</span>
+<span id="cb109-410"><a href="#cb109-410" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-411"><a href="#cb109-411" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-412"><a href="#cb109-412" aria-hidden="true" tabindex="-1"></a>如果需要，例如在整合之后，可以将各layers再次合并在一起：</span>
+<span id="cb109-412"><a href="#cb109-412" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-15%2018.36.23.png)</span></span>
 <span id="cb109-413"><a href="#cb109-413" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-416"><a href="#cb109-416" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-417"><a href="#cb109-417" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(pbmc[[<span class="st">"RNA"</span>]])</span>
-<span id="cb109-418"><a href="#cb109-418" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-419"><a href="#cb109-419" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-420"><a href="#cb109-420" aria-hidden="true" tabindex="-1"></a><span class="fu">### 分割Seurat</span></span>
+<span id="cb109-414"><a href="#cb109-414" aria-hidden="true" tabindex="-1"></a>如果需要，例如在整合之后，可以将各layers再次合并在一起：</span>
+<span id="cb109-415"><a href="#cb109-415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-418"><a href="#cb109-418" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-419"><a href="#cb109-419" aria-hidden="true" tabindex="-1"></a>pbmc[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(pbmc[[<span class="st">"RNA"</span>]])</span>
+<span id="cb109-420"><a href="#cb109-420" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-421"><a href="#cb109-421" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-422"><a href="#cb109-422" aria-hidden="true" tabindex="-1"></a>In line with prior workflows, you can also split your Seurat object into a **list** of multiple objects based on a metadata column creates a list of two objects。通过<span class="in">`SplitObject()`</span>分割Seurat之后生成的是包含多个Seurat对象的列表。</span>
+<span id="cb109-422"><a href="#cb109-422" aria-hidden="true" tabindex="-1"></a><span class="fu">### 分割Seurat</span></span>
 <span id="cb109-423"><a href="#cb109-423" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-426"><a href="#cb109-426" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-427"><a href="#cb109-427" aria-hidden="true" tabindex="-1"></a>seurat_list <span class="ot">&lt;-</span> <span class="fu">SplitObject</span>(pbmc, <span class="at">split.by =</span> <span class="st">"groups"</span>)</span>
-<span id="cb109-428"><a href="#cb109-428" aria-hidden="true" tabindex="-1"></a>seurat_list</span>
-<span id="cb109-429"><a href="#cb109-429" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-430"><a href="#cb109-430" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-431"><a href="#cb109-431" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-15%2018.42.35.png)</span></span>
+<span id="cb109-424"><a href="#cb109-424" aria-hidden="true" tabindex="-1"></a>In line with prior workflows, you can also split your Seurat object into a **list** of multiple objects based on a metadata column creates a list of two objects。通过<span class="in">`SplitObject()`</span>分割Seurat之后生成的是包含多个Seurat对象的列表。</span>
+<span id="cb109-425"><a href="#cb109-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-428"><a href="#cb109-428" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-429"><a href="#cb109-429" aria-hidden="true" tabindex="-1"></a>seurat_list <span class="ot">&lt;-</span> <span class="fu">SplitObject</span>(pbmc, <span class="at">split.by =</span> <span class="st">"groups"</span>)</span>
+<span id="cb109-430"><a href="#cb109-430" aria-hidden="true" tabindex="-1"></a>seurat_list</span>
+<span id="cb109-431"><a href="#cb109-431" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-432"><a href="#cb109-432" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-433"><a href="#cb109-433" aria-hidden="true" tabindex="-1"></a><span class="fu">### Merge objects (without integration)</span></span>
+<span id="cb109-433"><a href="#cb109-433" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-15%2018.42.35.png)</span></span>
 <span id="cb109-434"><a href="#cb109-434" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-435"><a href="#cb109-435" aria-hidden="true" tabindex="-1"></a>In Seurat v5, merging creates a single object, but **keeps the expression information split into different layers** for integration. If not proceeding with integration, rejoin the layers after merging. 实际应用场景，见<span class="co">[</span><span class="ot">此链接</span><span class="co">](https://hbctraining.github.io/scRNA-seq_online/lessons/03_SC_quality_control-setup.html)</span>。</span>
+<span id="cb109-435"><a href="#cb109-435" aria-hidden="true" tabindex="-1"></a><span class="fu">### Merge objects (without integration)</span></span>
 <span id="cb109-436"><a href="#cb109-436" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-439"><a href="#cb109-439" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-440"><a href="#cb109-440" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge two Seurat objects</span></span>
-<span id="cb109-441"><a href="#cb109-441" aria-hidden="true" tabindex="-1"></a>merged_pbmc <span class="ot">&lt;-</span> <span class="fu">merge</span>(<span class="at">x =</span> seurat_list[[<span class="st">"Control"</span>]], </span>
-<span id="cb109-442"><a href="#cb109-442" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> seurat_list[[<span class="st">"Cancer"</span>]])</span>
-<span id="cb109-443"><a href="#cb109-443" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-444"><a href="#cb109-444" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-445"><a href="#cb109-445" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-15%2018.19.15.png)</span></span>
+<span id="cb109-437"><a href="#cb109-437" aria-hidden="true" tabindex="-1"></a>In Seurat v5, merging creates a single object, but **keeps the expression information split into different layers** for integration. If not proceeding with integration, rejoin the layers after merging. 实际应用场景，见<span class="co">[</span><span class="ot">后续章节</span><span class="co">](/single_cell/sc_supplementary/read_sc_data.qmd)</span>。</span>
+<span id="cb109-438"><a href="#cb109-438" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-441"><a href="#cb109-441" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-442"><a href="#cb109-442" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge two Seurat objects</span></span>
+<span id="cb109-443"><a href="#cb109-443" aria-hidden="true" tabindex="-1"></a>merged_pbmc <span class="ot">&lt;-</span> <span class="fu">merge</span>(<span class="at">x =</span> seurat_list[[<span class="st">"Control"</span>]], </span>
+<span id="cb109-444"><a href="#cb109-444" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> seurat_list[[<span class="st">"Cancer"</span>]])</span>
+<span id="cb109-445"><a href="#cb109-445" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-446"><a href="#cb109-446" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-449"><a href="#cb109-449" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-450"><a href="#cb109-450" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb109-451"><a href="#cb109-451" aria-hidden="true" tabindex="-1"></a><span class="co"># Example to merge more than two Seurat objects</span></span>
-<span id="cb109-452"><a href="#cb109-452" aria-hidden="true" tabindex="-1"></a><span class="fu">merge</span>(<span class="at">x =</span> pbmc1, </span>
-<span id="cb109-453"><a href="#cb109-453" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="fu">list</span>(pbmc2, pbmc3))</span>
-<span id="cb109-454"><a href="#cb109-454" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-455"><a href="#cb109-455" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-456"><a href="#cb109-456" aria-hidden="true" tabindex="-1"></a><span class="fu">### Merge objects (with integration)</span></span>
+<span id="cb109-447"><a href="#cb109-447" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-01-15%2018.19.15.png)</span></span>
+<span id="cb109-448"><a href="#cb109-448" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-451"><a href="#cb109-451" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-452"><a href="#cb109-452" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb109-453"><a href="#cb109-453" aria-hidden="true" tabindex="-1"></a><span class="co"># Example to merge more than two Seurat objects</span></span>
+<span id="cb109-454"><a href="#cb109-454" aria-hidden="true" tabindex="-1"></a><span class="fu">merge</span>(<span class="at">x =</span> pbmc1, </span>
+<span id="cb109-455"><a href="#cb109-455" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="fu">list</span>(pbmc2, pbmc3))</span>
+<span id="cb109-456"><a href="#cb109-456" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-457"><a href="#cb109-457" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-458"><a href="#cb109-458" aria-hidden="true" tabindex="-1"></a>关于单细胞数据的整合，参考： @sec-Single-cell_data_integration 。</span>
+<span id="cb109-458"><a href="#cb109-458" aria-hidden="true" tabindex="-1"></a><span class="fu">### Merge objects (with integration)</span></span>
 <span id="cb109-459"><a href="#cb109-459" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-462"><a href="#cb109-462" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-463"><a href="#cb109-463" aria-hidden="true" tabindex="-1"></a>merged_pbmc <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(merged_pbmc, <span class="at">verbose =</span> F)</span>
-<span id="cb109-464"><a href="#cb109-464" aria-hidden="true" tabindex="-1"></a>merged_pbmc <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(merged_pbmc, <span class="at">verbose =</span> F)</span>
-<span id="cb109-465"><a href="#cb109-465" aria-hidden="true" tabindex="-1"></a>merged_pbmc <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(merged_pbmc, <span class="at">verbose =</span> F)</span>
-<span id="cb109-466"><a href="#cb109-466" aria-hidden="true" tabindex="-1"></a>merged_pbmc <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(merged_pbmc, <span class="at">verbose =</span> F)</span>
-<span id="cb109-467"><a href="#cb109-467" aria-hidden="true" tabindex="-1"></a>merged_pbmc <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(<span class="at">object =</span> merged_pbmc, </span>
-<span id="cb109-468"><a href="#cb109-468" aria-hidden="true" tabindex="-1"></a>                               <span class="at">method =</span> RPCAIntegration, </span>
-<span id="cb109-469"><a href="#cb109-469" aria-hidden="true" tabindex="-1"></a>                               <span class="at">orig.reduction =</span> <span class="st">"pca"</span>, </span>
-<span id="cb109-470"><a href="#cb109-470" aria-hidden="true" tabindex="-1"></a>                               <span class="at">new.reduction =</span> <span class="st">"integrated.rpca"</span>,</span>
-<span id="cb109-471"><a href="#cb109-471" aria-hidden="true" tabindex="-1"></a>                               <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb109-472"><a href="#cb109-472" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-473"><a href="#cb109-473" aria-hidden="true" tabindex="-1"></a><span class="co"># now that integration is complete, rejoin layers</span></span>
-<span id="cb109-474"><a href="#cb109-474" aria-hidden="true" tabindex="-1"></a>merged_pbmc[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(merged_pbmc[[<span class="st">"RNA"</span>]])</span>
-<span id="cb109-475"><a href="#cb109-475" aria-hidden="true" tabindex="-1"></a>merged_pbmc</span>
-<span id="cb109-476"><a href="#cb109-476" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-477"><a href="#cb109-477" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-478"><a href="#cb109-478" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb109-460"><a href="#cb109-460" aria-hidden="true" tabindex="-1"></a>关于单细胞数据的整合，参考<span class="co">[</span><span class="ot">后续章节</span><span class="co">](/single_cell/seurat/integration.qmd)</span>。</span>
+<span id="cb109-461"><a href="#cb109-461" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-464"><a href="#cb109-464" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-465"><a href="#cb109-465" aria-hidden="true" tabindex="-1"></a>merged_pbmc <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(merged_pbmc, <span class="at">verbose =</span> F)</span>
+<span id="cb109-466"><a href="#cb109-466" aria-hidden="true" tabindex="-1"></a>merged_pbmc <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(merged_pbmc, <span class="at">verbose =</span> F)</span>
+<span id="cb109-467"><a href="#cb109-467" aria-hidden="true" tabindex="-1"></a>merged_pbmc <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(merged_pbmc, <span class="at">verbose =</span> F)</span>
+<span id="cb109-468"><a href="#cb109-468" aria-hidden="true" tabindex="-1"></a>merged_pbmc <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(merged_pbmc, <span class="at">verbose =</span> F)</span>
+<span id="cb109-469"><a href="#cb109-469" aria-hidden="true" tabindex="-1"></a>merged_pbmc <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(<span class="at">object =</span> merged_pbmc, </span>
+<span id="cb109-470"><a href="#cb109-470" aria-hidden="true" tabindex="-1"></a>                               <span class="at">method =</span> RPCAIntegration, </span>
+<span id="cb109-471"><a href="#cb109-471" aria-hidden="true" tabindex="-1"></a>                               <span class="at">orig.reduction =</span> <span class="st">"pca"</span>, </span>
+<span id="cb109-472"><a href="#cb109-472" aria-hidden="true" tabindex="-1"></a>                               <span class="at">new.reduction =</span> <span class="st">"integrated.rpca"</span>,</span>
+<span id="cb109-473"><a href="#cb109-473" aria-hidden="true" tabindex="-1"></a>                               <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb109-474"><a href="#cb109-474" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-475"><a href="#cb109-475" aria-hidden="true" tabindex="-1"></a><span class="co"># now that integration is complete, rejoin layers</span></span>
+<span id="cb109-476"><a href="#cb109-476" aria-hidden="true" tabindex="-1"></a>merged_pbmc[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(merged_pbmc[[<span class="st">"RNA"</span>]])</span>
+<span id="cb109-477"><a href="#cb109-477" aria-hidden="true" tabindex="-1"></a>merged_pbmc</span>
+<span id="cb109-478"><a href="#cb109-478" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb109-479"><a href="#cb109-479" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-480"><a href="#cb109-480" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
-<span id="cb109-481"><a href="#cb109-481" aria-hidden="true" tabindex="-1"></a><span class="fu">###### Additional resources</span></span>
-<span id="cb109-482"><a href="#cb109-482" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-483"><a href="#cb109-483" aria-hidden="true" tabindex="-1"></a>Users who are particularly interested in some of the technical changes to data storage in Seurat v5 can explore the following resources:</span>
+<span id="cb109-480"><a href="#cb109-480" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb109-481"><a href="#cb109-481" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-482"><a href="#cb109-482" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
+<span id="cb109-483"><a href="#cb109-483" aria-hidden="true" tabindex="-1"></a><span class="fu">###### Additional resources</span></span>
 <span id="cb109-484"><a href="#cb109-484" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-485"><a href="#cb109-485" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="co">[</span><span class="ot">SeuratObject manual</span><span class="co">](https://mojaveazure.github.io/seurat-object/)</span></span>
+<span id="cb109-485"><a href="#cb109-485" aria-hidden="true" tabindex="-1"></a>Users who are particularly interested in some of the technical changes to data storage in Seurat v5 can explore the following resources:</span>
 <span id="cb109-486"><a href="#cb109-486" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-487"><a href="#cb109-487" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="co">[</span><span class="ot">Seurat v5 and Assay5 introductory vignette</span><span class="co">](https://satijalab.org/seurat/articles/seurat5_essential_commands)</span></span>
-<span id="cb109-488"><a href="#cb109-488" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb109-489"><a href="#cb109-489" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-490"><a href="#cb109-490" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb109-487"><a href="#cb109-487" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="co">[</span><span class="ot">SeuratObject manual</span><span class="co">](https://mojaveazure.github.io/seurat-object/)</span></span>
+<span id="cb109-488"><a href="#cb109-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-489"><a href="#cb109-489" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="co">[</span><span class="ot">Seurat v5 and Assay5 introductory vignette</span><span class="co">](https://satijalab.org/seurat/articles/seurat5_essential_commands)</span></span>
+<span id="cb109-490"><a href="#cb109-490" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb109-491"><a href="#cb109-491" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-492"><a href="#cb109-492" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb109-493"><a href="#cb109-493" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
-<span id="cb109-494"><a href="#cb109-494" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb109-497"><a href="#cb109-497" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb109-498"><a href="#cb109-498" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb109-499"><a href="#cb109-499" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb109-500"><a href="#cb109-500" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb109-501"><a href="#cb109-501" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb109-492"><a href="#cb109-492" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb109-493"><a href="#cb109-493" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-494"><a href="#cb109-494" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb109-495"><a href="#cb109-495" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb109-496"><a href="#cb109-496" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-499"><a href="#cb109-499" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb109-500"><a href="#cb109-500" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb109-501"><a href="#cb109-501" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb109-502"><a href="#cb109-502" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb109-503"><a href="#cb109-503" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
@@ -2203,11 +2211,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
 <li class="nav-item">
- This book was built with Quarto
+ This website was built with Quarto
   </li>  
 </ul>
 </div>   
-    <div class="nav-footer-center">Copyright 2023, Du Junhong</div>
+    <div class="nav-footer-center">Copyright 2024, Du Junhong</div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
 <li class="nav-item compact">

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.3.450">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>R语言学习笔记 - 32&nbsp; 预测和去除单细胞转录组的环境游离RNA污染</title>
+<title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 预测和去除单细胞转录组的环境游离RNA污染</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -97,7 +97,7 @@ div.csl-indent {
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "end",
-  "type": "overlay",
+  "type": "textbox",
   "limit": 20,
   "language": {
     "search-no-results-text": "No results",
@@ -111,7 +111,13 @@ div.csl-indent {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script type="application/json" class="js-hypothesis-config">
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G2HZEXHNCE"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
+</script><script type="application/json" class="js-hypothesis-config">
 {
   "theme": "classic",
   "openSidebar": false,
@@ -119,7 +125,13 @@ div.csl-indent {
   "enableExperimentalNewNoteButton": true
 }
 </script><script async="" src="https://hypothes.is/embed.js"></script>
-<meta name="twitter:title" content="R语言学习笔记 - 32&nbsp; 预测和去除单细胞转录组的环境游离RNA污染">
+<meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 预测和去除单细胞转录组的环境游离RNA污染">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://djhcod.github.io/r-notes/single_cell/sc_supplementary/images/640-02.png">
+<meta property="og:site-name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
+<meta property="og:image:height" content="750">
+<meta property="og:image:width" content="1080">
+<meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 预测和去除单细胞转录组的环境游离RNA污染">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/sc_supplementary/images/640-02.png">
 <meta name="twitter:image-height" content="750">
@@ -148,20 +160,20 @@ div.csl-indent {
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../intro.html" rel="" target="">
- <span class="menu-text">Introduction</span></a>
+    <a class="nav-link" href="../../r_basic/r_basics.html" rel="" target="">
+ <span class="menu-text">R语言基础</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parts" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
- <span class="menu-text">Parts</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">单细胞数据分析</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-parts">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">
 <li>
-    <a class="dropdown-item" href="../../r_basic/r_basics.html" rel="" target="">
- <span class="dropdown-text">R语言基础</span></a>
+    <a class="dropdown-item" href="../../single_cell/single_cell_intro.html" rel="" target="">
+ <span class="dropdown-text">单细胞数据分析介绍</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/seurat/seurat.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/seurat/seurat_intro.html" rel="" target="">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
@@ -172,15 +184,11 @@ div.csl-indent {
     <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
  <span class="dropdown-text">单细胞补充内容</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
- <span class="dropdown-text">Quarto基础</span></a>
-  </li>  
     </ul>
 </li>
   <li class="nav-item">
-    <a class="nav-link" href="../../references.html" rel="" target="">
- <span class="menu-text">References</span></a>
+    <a class="nav-link" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
+ <span class="menu-text">Quarto基础</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -191,25 +199,13 @@ div.csl-indent {
   </li>  
 </ul>
 <div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/djhcod/r-notes" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <div class="dropdown">
-      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
-<li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=%7Curl%7C">
-              <i class="bi bi-bi-twitter pe-1"></i>
-            Twitter
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=%7Curl%7C">
-              <i class="bi bi-bi-facebook pe-1"></i>
-            Facebook
-            </a>
-          </li>
-      </ul>
-</div>
+    <a href="https://github.com/djhcod/r-notes" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -217,35 +213,20 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/sc_supplementary/sc_supplementary_intro.html">单细胞补充内容</a></li><li class="breadcrumb-item"><a href="../../single_cell/sc_supplementary/DecontX.html"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">预测和去除单细胞转录组的环境游离RNA污染</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/sc_supplementary/sc_supplementary_intro.html">单细胞补充内容</a></li><li class="breadcrumb-item"><a href="../../single_cell/sc_supplementary/DecontX.html">预测和去除单细胞转录组的环境游离RNA污染</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">主页</span></span></a>
+ <span class="menu-text">主页</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">前言</span></a>
-  </div>
-</li>
-        <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
@@ -258,221 +239,232 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rstudio环境配置</span></span></a>
+ <span class="menu-text">Rstudio环境配置</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/data_input_output.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">数据的读取与输出</span></span></a>
+ <span class="menu-text">数据的读取与输出</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/basic_data_function.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据处理基本函数</span></span></a>
+ <span class="menu-text">数据处理基本函数</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/character.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">字符的处理</span></span></a>
+ <span class="menu-text">字符的处理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/loop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">循环</span></span></a>
+ <span class="menu-text">循环</span></a>
   </div>
 </li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../single_cell/seurat/seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Seurat v5官方文档</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="false" aria-label="Toggle section">
+            <a href="../../single_cell/single_cell_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞数据分析</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞测序技术介绍</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞RNA测序—从raw data到count matrix</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../single_cell/seurat/seurat_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat v5官方文档</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_command_list.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
+ <span class="menu-text">Seurat常用函数清单</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
+ <span class="menu-text">Seurat细胞分群官方教程</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
+ <span class="menu-text">Seurat中的数据可视化方法</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/sctransform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
+ <span class="menu-text">基于SCTransform的单细胞数据标准化</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+ <span class="menu-text">消除细胞周期的影响</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
+ <span class="menu-text">整合（integration）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+ <span class="menu-text">Seurat v5单细胞数据整合分析</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/marker_gene_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
+ <span class="menu-text">寻找marker gene</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
+ <span class="menu-text">寻找不同样本类型间同一细胞类型内的差异基因</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
+ <span class="menu-text">基于参考集的细胞注释</span></a>
   </div>
 </li>
       </ul>
 </li>
-        <li class="sidebar-item sidebar-item-section">
+          <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../single_cell/scRNA-seq_online/00_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">scRNA-seq_online学习材料</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
+ <span class="menu-text">数据导入与Seurat对象构建</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">质控</span></span></a>
+ <span class="menu-text">质控</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
+ <span class="menu-text">Single-cell RNA-seq Clustering Workflow</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+ <span class="menu-text">PCA原理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+ <span class="menu-text">Normalization and regressing out unwanted variation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+ <span class="menu-text">单细胞数据整合（Integration）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+ <span class="menu-text">细胞聚类（clustering analysis）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
+ <span class="menu-text">细胞分群质量评估</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
+ <span class="menu-text">寻找marker基因+细胞注释</span></a>
   </div>
 </li>
       </ul>
 </li>
-        <li class="sidebar-item sidebar-item-section">
+          <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">单细胞补充内容</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/read_sc_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">读取非标准格式的单细胞数据</span></span></a>
+ <span class="menu-text">读取非标准格式的单细胞数据</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/universal_marker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">细胞分群通用marker</span></span></a>
+ <span class="menu-text">细胞分群通用marker</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（上）</span></span></a>
+ <span class="menu-text">多个单细胞数据集整合分析（上）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（下）</span></span></a>
+ <span class="menu-text">多个单细胞数据集整合分析（下）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/DecontX.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">预测和去除单细胞转录组的环境游离RNA污染</span></span></a>
+ <span class="menu-text">预测和去除单细胞转录组的环境游离RNA污染</span></a>
   </div>
+</li>
+      </ul>
 </li>
       </ul>
 </li>
@@ -480,60 +472,6 @@ div.csl-indent {
       <div class="sidebar-item-container"> 
             <a href="../../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quarto基础</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">在Quarto中嵌入Shiny应用程序</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
-  </div>
-</li>
-      </ul>
-</li>
-        <li class="px-0"><hr class="sidebar-divider hi "></li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
- <span class="menu-text">参考文献</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -541,8 +479,44 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">YAML设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">图片设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">交叉引用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">插入其他内容</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">在Quarto中嵌入Shiny应用程序</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto Books</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">发布到GitHub Pages</span></a>
   </div>
 </li>
       </ul>
@@ -552,22 +526,21 @@ div.csl-indent {
 </nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">Table of contents</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">On this page</h2>
    
   <ul>
-<li><a href="#%E5%8A%A0%E8%BD%BD%E5%8C%85" id="toc-加载包" class="nav-link active" data-scroll-target="#%E5%8A%A0%E8%BD%BD%E5%8C%85"><span class="header-section-number">32.1</span> 加载包</a></li>
-  <li><a href="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5%E8%B4%A8%E6%8E%A7" id="toc-数据导入质控" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5%E8%B4%A8%E6%8E%A7"><span class="header-section-number">32.2</span> 数据导入/质控</a></li>
-  <li><a href="#%E6%89%A7%E8%A1%8Cdecontx" id="toc-执行decontx" class="nav-link" data-scroll-target="#%E6%89%A7%E8%A1%8Cdecontx"><span class="header-section-number">32.3</span> 执行<code>decontX</code></a></li>
-  <li><a href="#%E8%BF%87%E6%BB%A4%E9%AB%98%E7%8E%AF%E5%A2%83rna%E6%B1%A1%E6%9F%93%E7%9A%84%E7%BB%86%E8%83%9E" id="toc-过滤高环境rna污染的细胞" class="nav-link" data-scroll-target="#%E8%BF%87%E6%BB%A4%E9%AB%98%E7%8E%AF%E5%A2%83rna%E6%B1%A1%E6%9F%93%E7%9A%84%E7%BB%86%E8%83%9E"><span class="header-section-number">32.4</span> 过滤高环境RNA污染的细胞</a></li>
-  <li><a href="#sctranform%E6%95%B4%E5%90%88" id="toc-sctranform整合" class="nav-link" data-scroll-target="#sctranform%E6%95%B4%E5%90%88"><span class="header-section-number">32.5</span> SCTranform、整合</a></li>
-  <li><a href="#%E9%9D%9E%E7%BA%BF%E6%80%A7%E9%99%8D%E7%BB%B4%E5%88%86%E7%BE%A4" id="toc-非线性降维分群" class="nav-link" data-scroll-target="#%E9%9D%9E%E7%BA%BF%E6%80%A7%E9%99%8D%E7%BB%B4%E5%88%86%E7%BE%A4"><span class="header-section-number">32.6</span> 非线性降维、分群</a></li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/sc_supplementary/DecontX.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/single_cell/sc_supplementary/DecontX.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
+<li><a href="#%E5%8A%A0%E8%BD%BD%E5%8C%85" id="toc-加载包" class="nav-link active" data-scroll-target="#%E5%8A%A0%E8%BD%BD%E5%8C%85"><span class="header-section-number">1</span> 加载包</a></li>
+  <li><a href="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5%E8%B4%A8%E6%8E%A7" id="toc-数据导入质控" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5%E8%B4%A8%E6%8E%A7"><span class="header-section-number">2</span> 数据导入/质控</a></li>
+  <li><a href="#%E6%89%A7%E8%A1%8Cdecontx" id="toc-执行decontx" class="nav-link" data-scroll-target="#%E6%89%A7%E8%A1%8Cdecontx"><span class="header-section-number">3</span> 执行<code>decontX</code></a></li>
+  <li><a href="#%E8%BF%87%E6%BB%A4%E9%AB%98%E7%8E%AF%E5%A2%83rna%E6%B1%A1%E6%9F%93%E7%9A%84%E7%BB%86%E8%83%9E" id="toc-过滤高环境rna污染的细胞" class="nav-link" data-scroll-target="#%E8%BF%87%E6%BB%A4%E9%AB%98%E7%8E%AF%E5%A2%83rna%E6%B1%A1%E6%9F%93%E7%9A%84%E7%BB%86%E8%83%9E"><span class="header-section-number">4</span> 过滤高环境RNA污染的细胞</a></li>
+  <li><a href="#sctranform%E6%95%B4%E5%90%88" id="toc-sctranform整合" class="nav-link" data-scroll-target="#sctranform%E6%95%B4%E5%90%88"><span class="header-section-number">5</span> SCTranform、整合</a></li>
+  <li><a href="#%E9%9D%9E%E7%BA%BF%E6%80%A7%E9%99%8D%E7%BB%B4%E5%88%86%E7%BE%A4" id="toc-非线性降维分群" class="nav-link" data-scroll-target="#%E9%9D%9E%E7%BA%BF%E6%80%A7%E9%99%8D%E7%BB%B4%E5%88%86%E7%BE%A4"><span class="header-section-number">6</span> 非线性降维、分群</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/sc_supplementary/DecontX.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">
-<span class="chapter-number">32</span>&nbsp; <span class="chapter-title">预测和去除单细胞转录组的环境游离RNA污染</span>
-</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">预测和去除单细胞转录组的环境游离RNA污染</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -604,13 +577,13 @@ Note
 <blockquote class="blockquote">
 <p>在单细胞测序中，由于在处理细胞样品的时候需要用到机械解离或者酶解的步骤，所以免不了会造成细胞的破裂同时产生环境游离RNA。细胞悬液中的环境 RNA 可能会与细胞的原生 mRNA 一起被异常计数，从而导致不同细胞群之间转录本的交叉污染。环境游离RNA污染对细胞测序质量的影响较大，因此，有效地计算和预测游离RNA污染，去除污染严重的低质量细胞对单细胞测序分析具有重要意义。</p>
 </blockquote>
-<p>目前，R包<a href="https://github.com/constantAmateur/SoupX"><code>SoupX</code></a>就可以实现这样的目的，<a href="https://mp.weixin.qq.com/s/7g9Zo6IPqTafSjKCeAFNIQ"><em>详见：SoupX——去除RNA污染</em></a>。这篇笔记我们介绍另一个R包<a href="https://bioconductor.org/packages/release/bioc/html/decontX.html"><code>decontX</code></a><span class="citation" data-cites="yang2020">(<a href="../../references.html#ref-yang2020" role="doc-biblioref">Yang et al. 2020</a>)</span>。这个包的主要优点是使用方便，步骤简便，且结果容易使用。<code>DecontX</code> 是一种新的贝叶斯方法，用于估计和去除单细胞数据中的环境污染，可以整合到 scRNA-seq 工作流中，以改进下游分析<strong>。</strong><code>DecontX</code>既可以用于去除单细胞转录组数据中的环境游离RNA污染（<a href="https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontX.html"><code>decontX</code></a>），也可以用于单细胞蛋白表达谱中的污染（<a href="https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontPro.html"><code>deconPro</code></a>）。</p>
+<p>目前，R包<a href="https://github.com/constantAmateur/SoupX"><code>SoupX</code></a>就可以实现这样的目的，<a href="https://mp.weixin.qq.com/s/7g9Zo6IPqTafSjKCeAFNIQ"><em>详见：SoupX——去除RNA污染</em></a>。这篇笔记我们介绍另一个R包<a href="https://bioconductor.org/packages/release/bioc/html/decontX.html"><code>decontX</code></a> <span class="citation" data-cites="Yang2020">(<a href="#ref-Yang2020" role="doc-biblioref">Yang et al. 2020</a>)</span>。这个包的主要优点是使用方便，步骤简便，且结果容易使用。<code>DecontX</code> 是一种新的贝叶斯方法，用于估计和去除单细胞数据中的环境污染，可以整合到 scRNA-seq 工作流中，以改进下游分析<strong>。</strong><code>DecontX</code>既可以用于去除单细胞转录组数据中的环境游离RNA污染（<a href="https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontX.html"><code>decontX</code></a>），也可以用于单细胞蛋白表达谱中的污染（<a href="https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontPro.html"><code>deconPro</code></a>）。</p>
 <p>安装<code>SoupX</code>：</p>
 <div class="cell" data-hash="DecontX_cache/html/unnamed-chunk-1_efa1735569f75cda37605ca58a091d8a">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html">install</a></span><span class="op">(</span><span class="st">"decontX"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="加载包" class="level2" data-number="32.1"><h2 data-number="32.1" class="anchored" data-anchor-id="加载包">
-<span class="header-section-number">32.1</span> 加载包</h2>
+<section id="加载包" class="level1" data-number="1"><h1 data-number="1">
+<span class="header-section-number">1</span> 加载包</h1>
 <div class="cell" data-hash="DecontX_cache/html/unnamed-chunk-2_08ad3cb1a8e24ff598cf6f94036b9e42">
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">decontX</span><span class="op">)</span></span>
@@ -618,9 +591,9 @@ Note
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/">cowplot</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">beepr</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="数据导入质控" class="level2" data-number="32.2"><h2 data-number="32.2" class="anchored" data-anchor-id="数据导入质控">
-<span class="header-section-number">32.2</span> 数据导入/质控</h2>
-<p><code>DecontX</code> can take either a&nbsp;<a href="https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html">SingleCellExperiment</a>&nbsp;object or a counts matrix as input.&nbsp;<code>decontX</code>&nbsp;will attempt to convert any input matrix to class&nbsp;<code>dgCMatrix</code>&nbsp;from package&nbsp;<a href="https://cran.r-project.org/web/packages/Matrix/index.html"><code>Matrix</code></a>&nbsp;before starting the analysis. 在Seurat工作流中，评估并去除环境游离RNA的污染一般在质控之后进行。这里我们用 <a href="../scRNA-seq_online/04_SC_quality_control.html"><span>Chapter&nbsp;20</span></a> 中已经完成质控的Seurat对象作为演示。最后和 <a href="../scRNA-seq_online/07_SC_clustering_cells_SCT.html"><span>Chapter&nbsp;25</span></a> 中没有进行环境游离RNA去除的细胞分群结果进行比较。</p>
+</section><section id="数据导入质控" class="level1" data-number="2"><h1 data-number="2">
+<span class="header-section-number">2</span> 数据导入/质控</h1>
+<p><code>DecontX</code> can take either a&nbsp;<a href="https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html">SingleCellExperiment</a>&nbsp;object or a counts matrix as input.&nbsp;<code>decontX</code>&nbsp;will attempt to convert any input matrix to class&nbsp;<code>dgCMatrix</code>&nbsp;from package&nbsp;<a href="https://cran.r-project.org/web/packages/Matrix/index.html"><code>Matrix</code></a>&nbsp;before starting the analysis. 在Seurat工作流中，评估并去除环境游离RNA的污染一般在质控之后进行。这里我们用<a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html">scRNA-seq_online-质控</a>中已经完成质控的Seurat对象作为演示。最后和<a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html#sec-visualize-clusters-of-cells">scRNA-seq_online-细胞聚类</a>中没有进行环境游离RNA去除的细胞分群结果进行比较。</p>
 <div class="cell" data-hash="DecontX_cache/html/unnamed-chunk-3_ec16842272866ae92e04bd1fc467d53f">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">filtered_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"output/scRNA-seq_online/seurat_filtered.rds"</span><span class="op">)</span></span>
 <span><span class="va">filtered_seurat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -646,9 +619,9 @@ ctrl_AAACATACCAGCTA-1        0.8512622 0.01379945 ctrl_AAACATACCAGCTA-1
 ctrl_AAACATACCATGCA-1        0.8906861 0.02144772 ctrl_AAACATACCATGCA-1</code></pre>
 </div>
 </div>
-</section><section id="执行decontx" class="level2" data-number="32.3"><h2 data-number="32.3" class="anchored" data-anchor-id="执行decontx">
-<span class="header-section-number">32.3</span> 执行<code>decontX</code>
-</h2>
+</section><section id="执行decontx" class="level1" data-number="3"><h1 data-number="3">
+<span class="header-section-number">3</span> 执行<code>decontX</code>
+</h1>
 <p>In this scenario,&nbsp;<code>decontX</code>&nbsp;will estimate the contamination distribution for each cell cluster based on the profiles of the other cell clusters in the filtered dataset. The estimated contamination results can be found in the&nbsp;<code>colData(sce)$decontX_contamination</code>&nbsp;and the decontaminated counts can be accessed with&nbsp;<code>decontXcounts(sce)</code>.</p>
 <div class="cell" data-hash="DecontX_cache/html/unnamed-chunk-4_dd385849f5350f5896608ae95e27d365">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">decontx_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/decontX/man/decontX.html">decontX</a></span><span class="op">(</span><span class="va">filtered_seurat</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">counts</span><span class="op">)</span></span>
@@ -710,8 +683,8 @@ ctrl_AAACATACCATGCA-1  0.2893165532</code></pre>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.1</span>, color <span class="op">=</span> <span class="st">"gray"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="过滤高环境rna污染的细胞" class="level2" data-number="32.4"><h2 data-number="32.4" class="anchored" data-anchor-id="过滤高环境rna污染的细胞">
-<span class="header-section-number">32.4</span> 过滤高环境RNA污染的细胞</h2>
+</section><section id="过滤高环境rna污染的细胞" class="level1" data-number="4"><h1 data-number="4">
+<span class="header-section-number">4</span> 过滤高环境RNA污染的细胞</h1>
 <p>对于污染率的过滤标准，DecontX官方并没有给予明确的建议，这里参考的了<code>SoupX</code>的官方文档，选择<code>Contamination &lt; 0.2</code>。</p>
 <div class="cell" data-hash="DecontX_cache/html/unnamed-chunk-7_78183309d0af737f92f9a2c4685b4e82">
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">low_con_seurat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">filtered_seurat</span>, <span class="va">Contamination</span> <span class="op">&lt;</span> <span class="fl">0.2</span><span class="op">)</span></span>
@@ -746,8 +719,8 @@ ctrl_AAACATACCATGCA-1  0.2893165532</code></pre>
 </div>
 </div>
 </div>
-</section><section id="sctranform整合" class="level2" data-number="32.5"><h2 data-number="32.5" class="anchored" data-anchor-id="sctranform整合">
-<span class="header-section-number">32.5</span> SCTranform、整合</h2>
+</section><section id="sctranform整合" class="level1" data-number="5"><h1 data-number="5">
+<span class="header-section-number">5</span> SCTranform、整合</h1>
 <p>这里省略细胞周期、线粒体基因等非期望变异来源的评估，省略整合前细胞分群情况的评估。</p>
 <div class="cell" data-hash="DecontX_cache/html/unnamed-chunk-9_ef760c873bbfb6a5559442734882e289">
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 分割layer，执行SCTranform</span></span>
@@ -797,8 +770,8 @@ Active assay: SCT (13979 features, 3000 variable features)
 <pre><code>[1] "pca"           "integrated.dr"</code></pre>
 </div>
 </div>
-</section><section id="非线性降维分群" class="level2" data-number="32.6"><h2 data-number="32.6" class="anchored" data-anchor-id="非线性降维分群">
-<span class="header-section-number">32.6</span> 非线性降维、分群</h2>
+</section><section id="非线性降维分群" class="level1" data-number="6"><h1 data-number="6">
+<span class="header-section-number">6</span> 非线性降维、分群</h1>
 <div class="cell" data-hash="DecontX_cache/html/unnamed-chunk-10_1daceb887aa3885111ce077a385c84e9">
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Set seed</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123456</span><span class="op">)</span></span>
@@ -831,7 +804,7 @@ Number of edges: 985955
 Running Louvain algorithm...
 Maximum modularity in 10 random starts: 0.8805
 Number of communities: 21
-Elapsed time: 5 seconds</code></pre>
+Elapsed time: 4 seconds</code></pre>
 </div>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">seurat_integrated</span>, <span class="fl">5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -882,7 +855,7 @@ ctrl_AAACATACCTCGCT-1               1</code></pre>
 </div>
 </div>
 </div>
-<p>可以看到和来自 <a href="../scRNA-seq_online/07_SC_clustering_cells_SCT.html"><span>Chapter&nbsp;25</span></a> （下图）的分群情况相比，去除了高环境RNA污染的细胞后，细胞群边缘的毛刺有所减少，细胞界线更加清晰。</p>
+<p>可以看到和来自<a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html#sec-visualize-clusters-of-cells">scRNA-seq_online-细胞聚类</a> （下图）的分群情况相比，去除了高环境RNA污染的细胞后，细胞群边缘的毛刺有所减少，细胞界线更加清晰。</p>
 <div class="quarto-figure quarto-figure-left">
 <figure class="figure"><p><img src="images/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="512"></p>
 <figcaption class="figure-caption">未去除高环境游离RNA污染细胞的分群情况</figcaption></figure>
@@ -963,7 +936,7 @@ Session Info
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.3.2 (2023-10-31)
 Platform: aarch64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.2.1
+Running under: macOS Sonoma 14.3
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
@@ -1068,15 +1041,16 @@ loaded via a namespace (and not attached):
 </div>
 </div>
 </div>
+</section><section id="references" class="level1 unnumbered"><h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-Yang2020" class="csl-entry" role="listitem">
+Yang, Shiyi, Sean E. Corbett, Yusuke Koga, Zhe Wang, W Evan Johnson, Masanao Yajima, and Joshua D. Campbell. 2020. <span>“Decontamination of Ambient RNA in Single-Cell RNA-Seq with DecontX.”</span> <em>Genome Biology</em> 21 (1). <a href="https://doi.org/10.1186/s13059-020-1950-6">https://doi.org/10.1186/s13059-020-1950-6</a>.
+</div>
+</div>
 
 
 <!-- -->
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
-<div id="ref-yang2020" class="csl-entry" role="listitem">
-Yang, Shiyi, Sean E. Corbett, Yusuke Koga, Zhe Wang, W Evan Johnson, Masanao Yajima, and Joshua D. Campbell. 2020. <span>“Decontamination of Ambient RNA in Single-Cell RNA-Seq with DecontX.”</span> <em>Genome Biology</em> 21 (1). <a href="https://doi.org/10.1186/s13059-020-1950-6">https://doi.org/10.1186/s13059-020-1950-6</a>.
-</div>
-</div>
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1489,10 +1463,10 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
 });
-</script><script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script><script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（下）</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">多个单细胞数据集整合分析（下）</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
@@ -1502,279 +1476,282 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="sourceCode" id="cb38" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="an">bibliography:</span><span class="co"> references.bib</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "预测和去除单细胞转录组的环境游离RNA污染"</span></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="fu"># 预测和去除单细胞转录组的环境游离RNA污染</span></span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 参考：</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 参考：</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; </span><span class="co">[</span><span class="ot">*使用DecontX预测和去除单细胞转录组的环境游离RNA污染*</span><span class="co">](https://mp.weixin.qq.com/s?__biz=MzAxMDkxODM1Ng==&amp;mid=2247524847&amp;idx=1&amp;sn=0d351498b922f25aef134278d1b3671b&amp;chksm=9b4b2154ac3ca84249b773e01138442d6cdb463f392336d5c421caf1a5c0810d4c83a3d0efde&amp;mpshare=1&amp;scene=1&amp;srcid=0918PFOiDNLm3WW8e3vpiKLM&amp;sharer_shareinfo=0532b6cb2d1ec65e2db68ea5b30a639a&amp;sharer_shareinfo_first=0532b6cb2d1ec65e2db68ea5b30a639a#rd)</span></span>
 <span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; </span><span class="co">[</span><span class="ot">*使用DecontX预测和去除单细胞转录组的环境游离RNA污染*</span><span class="co">](https://mp.weixin.qq.com/s?__biz=MzAxMDkxODM1Ng==&amp;mid=2247524847&amp;idx=1&amp;sn=0d351498b922f25aef134278d1b3671b&amp;chksm=9b4b2154ac3ca84249b773e01138442d6cdb463f392336d5c421caf1a5c0810d4c83a3d0efde&amp;mpshare=1&amp;scene=1&amp;srcid=0918PFOiDNLm3WW8e3vpiKLM&amp;sharer_shareinfo=0532b6cb2d1ec65e2db68ea5b30a639a&amp;sharer_shareinfo_first=0532b6cb2d1ec65e2db68ea5b30a639a#rd)</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; </span><span class="co">[</span><span class="ot">*Decontamination of ambient RNA in single-cell genomic data with DecontX*</span><span class="co">](https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontX.html)</span></span>
 <span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; </span><span class="co">[</span><span class="ot">*Decontamination of ambient RNA in single-cell genomic data with DecontX*</span><span class="co">](https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontX.html)</span></span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; </span><span class="co">[</span><span class="ot">*SoupX 帮助文档*</span><span class="co">](https://rawcdn.githack.com/constantAmateur/SoupX/204b602418df12e9fdb4b68775a8b486c6504fe4/inst/doc/pbmcTutorial.html)</span></span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>如果你的UMAP可视化时候总是出现**毛毛躁躁的边缘和大量散在细胞**，还有很多细胞亚群之间有连续的细胞（maybe可能时真是存在的过渡态细胞），就需要考虑这个使用<span class="in">`DecontX`</span>预测和去除单细胞转录组的环境游离RNA污染。</span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/640-02.png)</span>{width="436"}</span>
-<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; </span><span class="co">[</span><span class="ot">*SoupX 帮助文档*</span><span class="co">](https://rawcdn.githack.com/constantAmateur/SoupX/204b602418df12e9fdb4b68775a8b486c6504fe4/inst/doc/pbmcTutorial.html)</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>如果你的UMAP可视化时候总是出现**毛毛躁躁的边缘和大量散在细胞**，还有很多细胞亚群之间有连续的细胞（maybe可能时真是存在的过渡态细胞），就需要考虑这个使用<span class="in">`DecontX`</span>预测和去除单细胞转录组的环境游离RNA污染。</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/640-02.png)</span>{width="436"}</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>In droplet based, single cell RNA-seq experiments, there is always a certain amount of **background mRNAs** present in the dilution that **gets distributed into the droplets with cells and sequenced along with them**. The net effect of this is to produce a **background contamination** that represents **expression not from the cell contained within a droplet, but the solution that contained the cells**.</span>
 <span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>In droplet based, single cell RNA-seq experiments, there is always a certain amount of **background mRNAs** present in the dilution that **gets distributed into the droplets with cells and sequenced along with them**. The net effect of this is to produce a **background contamination** that represents **expression not from the cell contained within a droplet, but the solution that contained the cells**.</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 在单细胞测序中，由于在处理细胞样品的时候需要用到机械解离或者酶解的步骤，所以免不了会造成细胞的破裂同时产生环境游离RNA。细胞悬液中的环境 RNA 可能会与细胞的原生 mRNA 一起被异常计数，从而导致不同细胞群之间转录本的交叉污染。环境游离RNA污染对细胞测序质量的影响较大，因此，有效地计算和预测游离RNA污染，去除污染严重的低质量细胞对单细胞测序分析具有重要意义。</span></span>
 <span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 在单细胞测序中，由于在处理细胞样品的时候需要用到机械解离或者酶解的步骤，所以免不了会造成细胞的破裂同时产生环境游离RNA。细胞悬液中的环境 RNA 可能会与细胞的原生 mRNA 一起被异常计数，从而导致不同细胞群之间转录本的交叉污染。环境游离RNA污染对细胞测序质量的影响较大，因此，有效地计算和预测游离RNA污染，去除污染严重的低质量细胞对单细胞测序分析具有重要意义。</span></span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>目前，R包<span class="co">[</span><span class="ot">`SoupX`</span><span class="co">](https://github.com/constantAmateur/SoupX)</span>就可以实现这样的目的，<span class="co">[</span><span class="ot">*详见：SoupX——去除RNA污染*</span><span class="co">](https://mp.weixin.qq.com/s/7g9Zo6IPqTafSjKCeAFNIQ)</span>。这篇笔记我们介绍另一个R包<span class="co">[</span><span class="ot">`decontX`</span><span class="co">](https://bioconductor.org/packages/release/bioc/html/decontX.html)</span> <span class="co">[</span><span class="ot">@Yang2020</span><span class="co">]</span>。这个包的主要优点是使用方便，步骤简便，且结果容易使用。<span class="in">`DecontX`</span> 是一种新的贝叶斯方法，用于估计和去除单细胞数据中的环境污染，可以整合到 scRNA-seq 工作流中，以改进下游分析**。**<span class="in">`DecontX`</span>既可以用于去除单细胞转录组数据中的环境游离RNA污染（<span class="co">[</span><span class="ot">`decontX`</span><span class="co">](https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontX.html)</span>），也可以用于单细胞蛋白表达谱中的污染（<span class="co">[</span><span class="ot">`deconPro`</span><span class="co">](https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontPro.html)</span>）。</span>
 <span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>目前，R包<span class="co">[</span><span class="ot">`SoupX`</span><span class="co">](https://github.com/constantAmateur/SoupX)</span>就可以实现这样的目的，<span class="co">[</span><span class="ot">*详见：SoupX——去除RNA污染*</span><span class="co">](https://mp.weixin.qq.com/s/7g9Zo6IPqTafSjKCeAFNIQ)</span>。这篇笔记我们介绍另一个R包<span class="co">[</span><span class="ot">`decontX`</span><span class="co">](https://bioconductor.org/packages/release/bioc/html/decontX.html)[</span><span class="ot">@yang2020</span><span class="co">]</span>。这个包的主要优点是使用方便，步骤简便，且结果容易使用。<span class="in">`DecontX`</span> 是一种新的贝叶斯方法，用于估计和去除单细胞数据中的环境污染，可以整合到 scRNA-seq 工作流中，以改进下游分析**。**<span class="in">`DecontX`</span>既可以用于去除单细胞转录组数据中的环境游离RNA污染（<span class="co">[</span><span class="ot">`decontX`</span><span class="co">](https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontX.html)</span>），也可以用于单细胞蛋白表达谱中的污染（<span class="co">[</span><span class="ot">`deconPro`</span><span class="co">](https://bioconductor.org/packages/release/bioc/vignettes/decontX/inst/doc/decontPro.html)</span>）。</span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>安装<span class="in">`SoupX`</span>：</span>
 <span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>安装<span class="in">`SoupX`</span>：</span>
-<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">"decontX"</span>)</span>
-<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">"decontX"</span>)</span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a><span class="fu"># 加载包</span></span>
 <span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a><span class="fu">## 加载包</span></span>
-<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-40"><a href="#cb38-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-41"><a href="#cb38-41" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb38-42"><a href="#cb38-42" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(decontX)</span>
-<span id="cb38-43"><a href="#cb38-43" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb38-44"><a href="#cb38-44" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
-<span id="cb38-45"><a href="#cb38-45" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(beepr)</span>
-<span id="cb38-46"><a href="#cb38-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-38"><a href="#cb38-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-39"><a href="#cb38-39" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb38-40"><a href="#cb38-40" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(decontX)</span>
+<span id="cb38-41"><a href="#cb38-41" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb38-42"><a href="#cb38-42" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb38-43"><a href="#cb38-43" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(beepr)</span>
+<span id="cb38-44"><a href="#cb38-44" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-45"><a href="#cb38-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-46"><a href="#cb38-46" aria-hidden="true" tabindex="-1"></a><span class="fu"># 数据导入/质控</span></span>
 <span id="cb38-47"><a href="#cb38-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-48"><a href="#cb38-48" aria-hidden="true" tabindex="-1"></a><span class="fu">## 数据导入/质控</span></span>
+<span id="cb38-48"><a href="#cb38-48" aria-hidden="true" tabindex="-1"></a><span class="in">`DecontX`</span> can take either a&nbsp;<span class="co">[</span><span class="ot">SingleCellExperiment</span><span class="co">](https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html)</span>&nbsp;object or a counts matrix as input.&nbsp;<span class="in">`decontX`</span>&nbsp;will attempt to convert any input matrix to class&nbsp;<span class="in">`dgCMatrix`</span>&nbsp;from package&nbsp;<span class="co">[</span><span class="ot">`Matrix`</span><span class="co">](https://cran.r-project.org/web/packages/Matrix/index.html)</span>&nbsp;before starting the analysis. 在Seurat工作流中，评估并去除环境游离RNA的污染一般在质控之后进行。这里我们用<span class="co">[</span><span class="ot">scRNA-seq_online-质控</span><span class="co">](/single_cell/scRNA-seq_online/04_SC_quality_control.qmd)</span>中已经完成质控的Seurat对象作为演示。最后和<span class="co">[</span><span class="ot">scRNA-seq_online-细胞聚类</span><span class="co">](/single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.qmd#sec-visualize-clusters-of-cells)</span>中没有进行环境游离RNA去除的细胞分群结果进行比较。</span>
 <span id="cb38-49"><a href="#cb38-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-50"><a href="#cb38-50" aria-hidden="true" tabindex="-1"></a><span class="in">`DecontX`</span> can take either a&nbsp;<span class="co">[</span><span class="ot">SingleCellExperiment</span><span class="co">](https://bioconductor.org/packages/release/bioc/html/SingleCellExperiment.html)</span>&nbsp;object or a counts matrix as input.&nbsp;<span class="in">`decontX`</span>&nbsp;will attempt to convert any input matrix to class&nbsp;<span class="in">`dgCMatrix`</span>&nbsp;from package&nbsp;<span class="co">[</span><span class="ot">`Matrix`</span><span class="co">](https://cran.r-project.org/web/packages/Matrix/index.html)</span>&nbsp;before starting the analysis. 在Seurat工作流中，评估并去除环境游离RNA的污染一般在质控之后进行。这里我们用 @sec-qc 中已经完成质控的Seurat对象作为演示。最后和 @sec-clustering_analysis 中没有进行环境游离RNA去除的细胞分群结果进行比较。</span>
-<span id="cb38-51"><a href="#cb38-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-54"><a href="#cb38-54" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-55"><a href="#cb38-55" aria-hidden="true" tabindex="-1"></a>filtered_seurat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/scRNA-seq_online/seurat_filtered.rds"</span>)</span>
-<span id="cb38-56"><a href="#cb38-56" aria-hidden="true" tabindex="-1"></a>filtered_seurat</span>
-<span id="cb38-57"><a href="#cb38-57" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(filtered_seurat, <span class="dv">5</span>)</span>
-<span id="cb38-58"><a href="#cb38-58" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-52"><a href="#cb38-52" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-53"><a href="#cb38-53" aria-hidden="true" tabindex="-1"></a>filtered_seurat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"output/scRNA-seq_online/seurat_filtered.rds"</span>)</span>
+<span id="cb38-54"><a href="#cb38-54" aria-hidden="true" tabindex="-1"></a>filtered_seurat</span>
+<span id="cb38-55"><a href="#cb38-55" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(filtered_seurat, <span class="dv">5</span>)</span>
+<span id="cb38-56"><a href="#cb38-56" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-57"><a href="#cb38-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-58"><a href="#cb38-58" aria-hidden="true" tabindex="-1"></a><span class="fu"># 执行`decontX`</span></span>
 <span id="cb38-59"><a href="#cb38-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-60"><a href="#cb38-60" aria-hidden="true" tabindex="-1"></a><span class="fu">## 执行`decontX`</span></span>
+<span id="cb38-60"><a href="#cb38-60" aria-hidden="true" tabindex="-1"></a>In this scenario,&nbsp;<span class="in">`decontX`</span>&nbsp;will estimate the contamination distribution for each cell cluster based on the profiles of the other cell clusters in the filtered dataset. The estimated contamination results can be found in the&nbsp;<span class="in">`colData(sce)$decontX_contamination`</span>&nbsp;and the decontaminated counts can be accessed with&nbsp;<span class="in">`decontXcounts(sce)`</span>.</span>
 <span id="cb38-61"><a href="#cb38-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-62"><a href="#cb38-62" aria-hidden="true" tabindex="-1"></a>In this scenario,&nbsp;<span class="in">`decontX`</span>&nbsp;will estimate the contamination distribution for each cell cluster based on the profiles of the other cell clusters in the filtered dataset. The estimated contamination results can be found in the&nbsp;<span class="in">`colData(sce)$decontX_contamination`</span>&nbsp;and the decontaminated counts can be accessed with&nbsp;<span class="in">`decontXcounts(sce)`</span>.</span>
-<span id="cb38-63"><a href="#cb38-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-66"><a href="#cb38-66" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-67"><a href="#cb38-67" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 5</span></span>
-<span id="cb38-68"><a href="#cb38-68" aria-hidden="true" tabindex="-1"></a>decontx_result <span class="ot">&lt;-</span> <span class="fu">decontX</span>(filtered_seurat[[<span class="st">"RNA"</span>]]<span class="sc">$</span>counts)</span>
-<span id="cb38-69"><a href="#cb38-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-70"><a href="#cb38-70" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取环境RNA污染的预测结果</span></span>
-<span id="cb38-71"><a href="#cb38-71" aria-hidden="true" tabindex="-1"></a>decontx_result<span class="sc">$</span>contamination[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb38-72"><a href="#cb38-72" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(decontx_result<span class="sc">$</span>contamination)</span>
-<span id="cb38-73"><a href="#cb38-73" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(decontx_result<span class="sc">$</span>contamination)</span>
-<span id="cb38-74"><a href="#cb38-74" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-64"><a href="#cb38-64" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-65"><a href="#cb38-65" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 5</span></span>
+<span id="cb38-66"><a href="#cb38-66" aria-hidden="true" tabindex="-1"></a>decontx_result <span class="ot">&lt;-</span> <span class="fu">decontX</span>(filtered_seurat[[<span class="st">"RNA"</span>]]<span class="sc">$</span>counts)</span>
+<span id="cb38-67"><a href="#cb38-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-68"><a href="#cb38-68" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取环境RNA污染的预测结果</span></span>
+<span id="cb38-69"><a href="#cb38-69" aria-hidden="true" tabindex="-1"></a>decontx_result<span class="sc">$</span>contamination[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb38-70"><a href="#cb38-70" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(decontx_result<span class="sc">$</span>contamination)</span>
+<span id="cb38-71"><a href="#cb38-71" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(decontx_result<span class="sc">$</span>contamination)</span>
+<span id="cb38-72"><a href="#cb38-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-73"><a href="#cb38-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-74"><a href="#cb38-74" aria-hidden="true" tabindex="-1"></a>可以看到每个细胞都有一个decontx_result\$contamination结果，即预测的环境游离RNA的比例。因此，接下来我们可以将其直接写入Seurat对象的meta.data中，并根据这一信息进行细胞过滤。</span>
 <span id="cb38-75"><a href="#cb38-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-76"><a href="#cb38-76" aria-hidden="true" tabindex="-1"></a>可以看到每个细胞都有一个decontx_result\$contamination结果，即预测的环境游离RNA的比例。因此，接下来我们可以将其直接写入Seurat对象的meta.data中，并根据这一信息进行细胞过滤。</span>
-<span id="cb38-77"><a href="#cb38-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-80"><a href="#cb38-80" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-81"><a href="#cb38-81" aria-hidden="true" tabindex="-1"></a><span class="co"># 将环境RNA污染的预测结果写入Seurat对象的meta.data中</span></span>
-<span id="cb38-82"><a href="#cb38-82" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">$</span>Contamination <span class="ot">&lt;-</span> decontx_result<span class="sc">$</span>contamination</span>
-<span id="cb38-83"><a href="#cb38-83" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(filtered_seurat, <span class="dv">5</span>)</span>
-<span id="cb38-84"><a href="#cb38-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-78"><a href="#cb38-78" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-79"><a href="#cb38-79" aria-hidden="true" tabindex="-1"></a><span class="co"># 将环境RNA污染的预测结果写入Seurat对象的meta.data中</span></span>
+<span id="cb38-80"><a href="#cb38-80" aria-hidden="true" tabindex="-1"></a>filtered_seurat<span class="sc">$</span>Contamination <span class="ot">&lt;-</span> decontx_result<span class="sc">$</span>contamination</span>
+<span id="cb38-81"><a href="#cb38-81" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(filtered_seurat, <span class="dv">5</span>)</span>
+<span id="cb38-82"><a href="#cb38-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-83"><a href="#cb38-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-84"><a href="#cb38-84" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb38-85"><a href="#cb38-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-86"><a href="#cb38-86" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-86"><a href="#cb38-86" aria-hidden="true" tabindex="-1"></a>绘图展示污染率的分布情况</span>
 <span id="cb38-87"><a href="#cb38-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-88"><a href="#cb38-88" aria-hidden="true" tabindex="-1"></a>绘图展示污染率的分布情况</span>
-<span id="cb38-89"><a href="#cb38-89" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-92"><a href="#cb38-92" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-93"><a href="#cb38-93" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> filtered_seurat<span class="sc">@</span>meta.data <span class="sc">|&gt;</span> </span>
-<span id="cb38-94"><a href="#cb38-94" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">color =</span> sample, <span class="at">x =</span> Contamination, <span class="at">fill =</span> sample)) <span class="sc">+</span> </span>
-<span id="cb38-95"><a href="#cb38-95" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb38-96"><a href="#cb38-96" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
-<span id="cb38-97"><a href="#cb38-97" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Cell density"</span>) <span class="sc">+</span></span>
-<span id="cb38-98"><a href="#cb38-98" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb38-99"><a href="#cb38-99" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
-<span id="cb38-100"><a href="#cb38-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-101"><a href="#cb38-101" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> filtered_seurat<span class="sc">@</span>meta.data <span class="sc">|&gt;</span> </span>
-<span id="cb38-102"><a href="#cb38-102" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sample, <span class="at">y =</span> Contamination, <span class="at">fill =</span> sample)) <span class="sc">+</span></span>
-<span id="cb38-103"><a href="#cb38-103" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_violin</span>(<span class="at">width =</span> <span class="fl">1.4</span>) <span class="sc">+</span></span>
-<span id="cb38-104"><a href="#cb38-104" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span></span>
-<span id="cb38-105"><a href="#cb38-105" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
-<span id="cb38-106"><a href="#cb38-106" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-90"><a href="#cb38-90" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-91"><a href="#cb38-91" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> filtered_seurat<span class="sc">@</span>meta.data <span class="sc">|&gt;</span> </span>
+<span id="cb38-92"><a href="#cb38-92" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">color =</span> sample, <span class="at">x =</span> Contamination, <span class="at">fill =</span> sample)) <span class="sc">+</span> </span>
+<span id="cb38-93"><a href="#cb38-93" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
+<span id="cb38-94"><a href="#cb38-94" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
+<span id="cb38-95"><a href="#cb38-95" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Cell density"</span>) <span class="sc">+</span></span>
+<span id="cb38-96"><a href="#cb38-96" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb38-97"><a href="#cb38-97" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
+<span id="cb38-98"><a href="#cb38-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-99"><a href="#cb38-99" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> filtered_seurat<span class="sc">@</span>meta.data <span class="sc">|&gt;</span> </span>
+<span id="cb38-100"><a href="#cb38-100" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sample, <span class="at">y =</span> Contamination, <span class="at">fill =</span> sample)) <span class="sc">+</span></span>
+<span id="cb38-101"><a href="#cb38-101" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_violin</span>(<span class="at">width =</span> <span class="fl">1.4</span>) <span class="sc">+</span></span>
+<span id="cb38-102"><a href="#cb38-102" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb38-103"><a href="#cb38-103" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
+<span id="cb38-104"><a href="#cb38-104" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-105"><a href="#cb38-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-106"><a href="#cb38-106" aria-hidden="true" tabindex="-1"></a><span class="fu"># 过滤高环境RNA污染的细胞</span></span>
 <span id="cb38-107"><a href="#cb38-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-108"><a href="#cb38-108" aria-hidden="true" tabindex="-1"></a><span class="fu">## 过滤高环境RNA污染的细胞</span></span>
+<span id="cb38-108"><a href="#cb38-108" aria-hidden="true" tabindex="-1"></a>对于污染率的过滤标准，DecontX官方并没有给予明确的建议，这里参考的了<span class="in">`SoupX`</span>的官方文档，选择<span class="in">`Contamination &lt; 0.2`</span>。</span>
 <span id="cb38-109"><a href="#cb38-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-110"><a href="#cb38-110" aria-hidden="true" tabindex="-1"></a>对于污染率的过滤标准，DecontX官方并没有给予明确的建议，这里参考的了<span class="in">`SoupX`</span>的官方文档，选择<span class="in">`Contamination &lt; 0.2`</span>。</span>
-<span id="cb38-111"><a href="#cb38-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-114"><a href="#cb38-114" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-115"><a href="#cb38-115" aria-hidden="true" tabindex="-1"></a>low_con_seurat <span class="ot">&lt;-</span> <span class="fu">subset</span>(filtered_seurat, Contamination <span class="sc">&lt;</span> <span class="fl">0.2</span>)</span>
-<span id="cb38-116"><a href="#cb38-116" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"通过decontX过滤掉了"</span>, <span class="fu">ncol</span>(filtered_seurat) <span class="sc">-</span> <span class="fu">ncol</span>(low_con_seurat), <span class="st">"个细胞"</span>)</span>
-<span id="cb38-117"><a href="#cb38-117" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-112"><a href="#cb38-112" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-113"><a href="#cb38-113" aria-hidden="true" tabindex="-1"></a>low_con_seurat <span class="ot">&lt;-</span> <span class="fu">subset</span>(filtered_seurat, Contamination <span class="sc">&lt;</span> <span class="fl">0.2</span>)</span>
+<span id="cb38-114"><a href="#cb38-114" aria-hidden="true" tabindex="-1"></a><span class="fu">paste0</span>(<span class="st">"通过decontX过滤掉了"</span>, <span class="fu">ncol</span>(filtered_seurat) <span class="sc">-</span> <span class="fu">ncol</span>(low_con_seurat), <span class="st">"个细胞"</span>)</span>
+<span id="cb38-115"><a href="#cb38-115" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-116"><a href="#cb38-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-117"><a href="#cb38-117" aria-hidden="true" tabindex="-1"></a>重新评估污染率的分布情况</span>
 <span id="cb38-118"><a href="#cb38-118" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-119"><a href="#cb38-119" aria-hidden="true" tabindex="-1"></a>重新评估污染率的分布情况</span>
-<span id="cb38-120"><a href="#cb38-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-123"><a href="#cb38-123" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-124"><a href="#cb38-124" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "去除高环境RNA污染的细胞前（A、B）后（C、D）的环境RNA比例分布"</span></span>
-<span id="cb38-125"><a href="#cb38-125" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
-<span id="cb38-126"><a href="#cb38-126" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> low_con_seurat<span class="sc">@</span>meta.data <span class="sc">|&gt;</span> </span>
-<span id="cb38-127"><a href="#cb38-127" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">color =</span> sample, <span class="at">x =</span> Contamination, <span class="at">fill =</span> sample)) <span class="sc">+</span> </span>
-<span id="cb38-128"><a href="#cb38-128" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb38-129"><a href="#cb38-129" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
-<span id="cb38-130"><a href="#cb38-130" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Cell density"</span>) <span class="sc">+</span></span>
-<span id="cb38-131"><a href="#cb38-131" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb38-132"><a href="#cb38-132" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
-<span id="cb38-133"><a href="#cb38-133" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-134"><a href="#cb38-134" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> low_con_seurat<span class="sc">@</span>meta.data <span class="sc">|&gt;</span> </span>
-<span id="cb38-135"><a href="#cb38-135" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sample, <span class="at">y =</span> Contamination, <span class="at">fill =</span> sample)) <span class="sc">+</span></span>
-<span id="cb38-136"><a href="#cb38-136" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_violin</span>(<span class="at">width =</span> <span class="fl">1.4</span>) <span class="sc">+</span></span>
-<span id="cb38-137"><a href="#cb38-137" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span></span>
-<span id="cb38-138"><a href="#cb38-138" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
-<span id="cb38-139"><a href="#cb38-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-140"><a href="#cb38-140" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p2, p3, p4,</span>
-<span id="cb38-141"><a href="#cb38-141" aria-hidden="true" tabindex="-1"></a>          <span class="at">ncol =</span> <span class="dv">2</span>, </span>
-<span id="cb38-142"><a href="#cb38-142" aria-hidden="true" tabindex="-1"></a>          <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
-<span id="cb38-143"><a href="#cb38-143" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-121"><a href="#cb38-121" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-122"><a href="#cb38-122" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "去除高环境RNA污染的细胞前（A、B）后（C、D）的环境RNA比例分布"</span></span>
+<span id="cb38-123"><a href="#cb38-123" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb38-124"><a href="#cb38-124" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> low_con_seurat<span class="sc">@</span>meta.data <span class="sc">|&gt;</span> </span>
+<span id="cb38-125"><a href="#cb38-125" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">color =</span> sample, <span class="at">x =</span> Contamination, <span class="at">fill =</span> sample)) <span class="sc">+</span> </span>
+<span id="cb38-126"><a href="#cb38-126" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
+<span id="cb38-127"><a href="#cb38-127" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span> </span>
+<span id="cb38-128"><a href="#cb38-128" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="st">"Cell density"</span>) <span class="sc">+</span></span>
+<span id="cb38-129"><a href="#cb38-129" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb38-130"><a href="#cb38-130" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
+<span id="cb38-131"><a href="#cb38-131" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-132"><a href="#cb38-132" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> low_con_seurat<span class="sc">@</span>meta.data <span class="sc">|&gt;</span> </span>
+<span id="cb38-133"><a href="#cb38-133" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sample, <span class="at">y =</span> Contamination, <span class="at">fill =</span> sample)) <span class="sc">+</span></span>
+<span id="cb38-134"><a href="#cb38-134" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_violin</span>(<span class="at">width =</span> <span class="fl">1.4</span>) <span class="sc">+</span></span>
+<span id="cb38-135"><a href="#cb38-135" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">color =</span> <span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb38-136"><a href="#cb38-136" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
+<span id="cb38-137"><a href="#cb38-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-138"><a href="#cb38-138" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(p1, p2, p3, p4,</span>
+<span id="cb38-139"><a href="#cb38-139" aria-hidden="true" tabindex="-1"></a>          <span class="at">ncol =</span> <span class="dv">2</span>, </span>
+<span id="cb38-140"><a href="#cb38-140" aria-hidden="true" tabindex="-1"></a>          <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
+<span id="cb38-141"><a href="#cb38-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-142"><a href="#cb38-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-143"><a href="#cb38-143" aria-hidden="true" tabindex="-1"></a><span class="fu"># SCTranform、整合</span></span>
 <span id="cb38-144"><a href="#cb38-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-145"><a href="#cb38-145" aria-hidden="true" tabindex="-1"></a><span class="fu">## SCTranform、整合</span></span>
+<span id="cb38-145"><a href="#cb38-145" aria-hidden="true" tabindex="-1"></a>这里省略细胞周期、线粒体基因等非期望变异来源的评估，省略整合前细胞分群情况的评估。</span>
 <span id="cb38-146"><a href="#cb38-146" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-147"><a href="#cb38-147" aria-hidden="true" tabindex="-1"></a>这里省略细胞周期、线粒体基因等非期望变异来源的评估，省略整合前细胞分群情况的评估。</span>
-<span id="cb38-148"><a href="#cb38-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-151"><a href="#cb38-151" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-152"><a href="#cb38-152" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache-lazy: false</span></span>
-<span id="cb38-153"><a href="#cb38-153" aria-hidden="true" tabindex="-1"></a><span class="co"># 分割layer，执行SCTranform</span></span>
-<span id="cb38-154"><a href="#cb38-154" aria-hidden="true" tabindex="-1"></a>low_con_seurat[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">split</span>(low_con_seurat[[<span class="st">"RNA"</span>]], </span>
-<span id="cb38-155"><a href="#cb38-155" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">f =</span> low_con_seurat<span class="sc">$</span>sample) </span>
-<span id="cb38-156"><a href="#cb38-156" aria-hidden="true" tabindex="-1"></a>low_con_seurat</span>
-<span id="cb38-157"><a href="#cb38-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-158"><a href="#cb38-158" aria-hidden="true" tabindex="-1"></a><span class="co"># SCTranform</span></span>
-<span id="cb38-159"><a href="#cb38-159" aria-hidden="true" tabindex="-1"></a>low_con_seurat <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(</span>
-<span id="cb38-160"><a href="#cb38-160" aria-hidden="true" tabindex="-1"></a>  low_con_seurat, </span>
-<span id="cb38-161"><a href="#cb38-161" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars.to.regress =</span> <span class="fu">c</span>(<span class="st">"mitoRatio"</span>),</span>
-<span id="cb38-162"><a href="#cb38-162" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
-<span id="cb38-163"><a href="#cb38-163" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb38-164"><a href="#cb38-164" aria-hidden="true" tabindex="-1"></a>low_con_seurat</span>
-<span id="cb38-165"><a href="#cb38-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-166"><a href="#cb38-166" aria-hidden="true" tabindex="-1"></a><span class="co"># Run PCA</span></span>
-<span id="cb38-167"><a href="#cb38-167" aria-hidden="true" tabindex="-1"></a>low_con_seurat <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(low_con_seurat)</span>
-<span id="cb38-168"><a href="#cb38-168" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(low_con_seurat<span class="sc">@</span>reductions)</span>
-<span id="cb38-169"><a href="#cb38-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-170"><a href="#cb38-170" aria-hidden="true" tabindex="-1"></a><span class="co"># 整合</span></span>
-<span id="cb38-171"><a href="#cb38-171" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
-<span id="cb38-172"><a href="#cb38-172" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> low_con_seurat,</span>
-<span id="cb38-173"><a href="#cb38-173" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> CCAIntegration,</span>
-<span id="cb38-174"><a href="#cb38-174" aria-hidden="true" tabindex="-1"></a>  <span class="at">normalization.method =</span> <span class="st">"SCT"</span>,</span>
-<span id="cb38-175"><a href="#cb38-175" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb38-176"><a href="#cb38-176" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
-<span id="cb38-177"><a href="#cb38-177" aria-hidden="true" tabindex="-1"></a>); <span class="fu">beep</span>()</span>
-<span id="cb38-178"><a href="#cb38-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-179"><a href="#cb38-179" aria-hidden="true" tabindex="-1"></a><span class="co"># 整合后重新合并RNA layer</span></span>
-<span id="cb38-180"><a href="#cb38-180" aria-hidden="true" tabindex="-1"></a>seurat_integrated[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(seurat_integrated[[<span class="st">"RNA"</span>]])</span>
-<span id="cb38-181"><a href="#cb38-181" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看整合后的降维信息</span></span>
-<span id="cb38-182"><a href="#cb38-182" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(seurat_integrated<span class="sc">@</span>reductions)</span>
-<span id="cb38-183"><a href="#cb38-183" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-149"><a href="#cb38-149" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-150"><a href="#cb38-150" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache-lazy: false</span></span>
+<span id="cb38-151"><a href="#cb38-151" aria-hidden="true" tabindex="-1"></a><span class="co"># 分割layer，执行SCTranform</span></span>
+<span id="cb38-152"><a href="#cb38-152" aria-hidden="true" tabindex="-1"></a>low_con_seurat[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">split</span>(low_con_seurat[[<span class="st">"RNA"</span>]], </span>
+<span id="cb38-153"><a href="#cb38-153" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">f =</span> low_con_seurat<span class="sc">$</span>sample) </span>
+<span id="cb38-154"><a href="#cb38-154" aria-hidden="true" tabindex="-1"></a>low_con_seurat</span>
+<span id="cb38-155"><a href="#cb38-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-156"><a href="#cb38-156" aria-hidden="true" tabindex="-1"></a><span class="co"># SCTranform</span></span>
+<span id="cb38-157"><a href="#cb38-157" aria-hidden="true" tabindex="-1"></a>low_con_seurat <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(</span>
+<span id="cb38-158"><a href="#cb38-158" aria-hidden="true" tabindex="-1"></a>  low_con_seurat, </span>
+<span id="cb38-159"><a href="#cb38-159" aria-hidden="true" tabindex="-1"></a>  <span class="at">vars.to.regress =</span> <span class="fu">c</span>(<span class="st">"mitoRatio"</span>),</span>
+<span id="cb38-160"><a href="#cb38-160" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb38-161"><a href="#cb38-161" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb38-162"><a href="#cb38-162" aria-hidden="true" tabindex="-1"></a>low_con_seurat</span>
+<span id="cb38-163"><a href="#cb38-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-164"><a href="#cb38-164" aria-hidden="true" tabindex="-1"></a><span class="co"># Run PCA</span></span>
+<span id="cb38-165"><a href="#cb38-165" aria-hidden="true" tabindex="-1"></a>low_con_seurat <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(low_con_seurat)</span>
+<span id="cb38-166"><a href="#cb38-166" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(low_con_seurat<span class="sc">@</span>reductions)</span>
+<span id="cb38-167"><a href="#cb38-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-168"><a href="#cb38-168" aria-hidden="true" tabindex="-1"></a><span class="co"># 整合</span></span>
+<span id="cb38-169"><a href="#cb38-169" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
+<span id="cb38-170"><a href="#cb38-170" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> low_con_seurat,</span>
+<span id="cb38-171"><a href="#cb38-171" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> CCAIntegration,</span>
+<span id="cb38-172"><a href="#cb38-172" aria-hidden="true" tabindex="-1"></a>  <span class="at">normalization.method =</span> <span class="st">"SCT"</span>,</span>
+<span id="cb38-173"><a href="#cb38-173" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>,</span>
+<span id="cb38-174"><a href="#cb38-174" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb38-175"><a href="#cb38-175" aria-hidden="true" tabindex="-1"></a>); <span class="fu">beep</span>()</span>
+<span id="cb38-176"><a href="#cb38-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-177"><a href="#cb38-177" aria-hidden="true" tabindex="-1"></a><span class="co"># 整合后重新合并RNA layer</span></span>
+<span id="cb38-178"><a href="#cb38-178" aria-hidden="true" tabindex="-1"></a>seurat_integrated[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(seurat_integrated[[<span class="st">"RNA"</span>]])</span>
+<span id="cb38-179"><a href="#cb38-179" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看整合后的降维信息</span></span>
+<span id="cb38-180"><a href="#cb38-180" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(seurat_integrated<span class="sc">@</span>reductions)</span>
+<span id="cb38-181"><a href="#cb38-181" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-182"><a href="#cb38-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-183"><a href="#cb38-183" aria-hidden="true" tabindex="-1"></a><span class="fu"># 非线性降维、分群</span></span>
 <span id="cb38-184"><a href="#cb38-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-185"><a href="#cb38-185" aria-hidden="true" tabindex="-1"></a><span class="fu">## 非线性降维、分群</span></span>
-<span id="cb38-186"><a href="#cb38-186" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-189"><a href="#cb38-189" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-190"><a href="#cb38-190" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache-lazy: false</span></span>
-<span id="cb38-191"><a href="#cb38-191" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "去除高环境游离RNA污染细胞后的分群情况"</span></span>
-<span id="cb38-192"><a href="#cb38-192" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed</span></span>
-<span id="cb38-193"><a href="#cb38-193" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123456</span>)</span>
-<span id="cb38-194"><a href="#cb38-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-195"><a href="#cb38-195" aria-hidden="true" tabindex="-1"></a><span class="co"># Run UMAP</span></span>
-<span id="cb38-196"><a href="#cb38-196" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(</span>
-<span id="cb38-197"><a href="#cb38-197" aria-hidden="true" tabindex="-1"></a>  seurat_integrated,</span>
-<span id="cb38-198"><a href="#cb38-198" aria-hidden="true" tabindex="-1"></a>  <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>,</span>
-<span id="cb38-199"><a href="#cb38-199" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"integrated.dr"</span>, <span class="co"># 更改降维来源为整合后的"integrated.dr"</span></span>
-<span id="cb38-200"><a href="#cb38-200" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction.name =</span> <span class="st">"umap.integrated"</span></span>
-<span id="cb38-201"><a href="#cb38-201" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb38-202"><a href="#cb38-202" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-203"><a href="#cb38-203" aria-hidden="true" tabindex="-1"></a><span class="co"># 分群</span></span>
-<span id="cb38-204"><a href="#cb38-204" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(</span>
-<span id="cb38-205"><a href="#cb38-205" aria-hidden="true" tabindex="-1"></a>  seurat_integrated,</span>
-<span id="cb38-206"><a href="#cb38-206" aria-hidden="true" tabindex="-1"></a>  <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>,</span>
-<span id="cb38-207"><a href="#cb38-207" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"integrated.dr"</span></span>
-<span id="cb38-208"><a href="#cb38-208" aria-hidden="true" tabindex="-1"></a>) </span>
-<span id="cb38-209"><a href="#cb38-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-210"><a href="#cb38-210" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(</span>
-<span id="cb38-211"><a href="#cb38-211" aria-hidden="true" tabindex="-1"></a>  seurat_integrated,</span>
-<span id="cb38-212"><a href="#cb38-212" aria-hidden="true" tabindex="-1"></a>  <span class="at">resolution =</span> <span class="fl">0.8</span> <span class="co"># 这里省略探索分辨率的步骤，为了和此前的章节一致，将分辨率设为0.8</span></span>
-<span id="cb38-213"><a href="#cb38-213" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb38-214"><a href="#cb38-214" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(seurat_integrated, <span class="dv">5</span>)</span>
-<span id="cb38-215"><a href="#cb38-215" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-216"><a href="#cb38-216" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign identity of clusters</span></span>
-<span id="cb38-217"><a href="#cb38-217" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(seurat_integrated) <span class="ot">&lt;-</span> <span class="st">"SCT_snn_res.0.8"</span></span>
-<span id="cb38-218"><a href="#cb38-218" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">Idents</span>(seurat_integrated))</span>
-<span id="cb38-219"><a href="#cb38-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-220"><a href="#cb38-220" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP</span></span>
-<span id="cb38-221"><a href="#cb38-221" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_integrated,</span>
-<span id="cb38-222"><a href="#cb38-222" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>,</span>
-<span id="cb38-223"><a href="#cb38-223" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb38-224"><a href="#cb38-224" aria-hidden="true" tabindex="-1"></a>        <span class="at">label.size =</span> <span class="dv">6</span>)</span>
-<span id="cb38-225"><a href="#cb38-225" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-187"><a href="#cb38-187" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-188"><a href="#cb38-188" aria-hidden="true" tabindex="-1"></a><span class="co">#| cache-lazy: false</span></span>
+<span id="cb38-189"><a href="#cb38-189" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "去除高环境游离RNA污染细胞后的分群情况"</span></span>
+<span id="cb38-190"><a href="#cb38-190" aria-hidden="true" tabindex="-1"></a><span class="co"># Set seed</span></span>
+<span id="cb38-191"><a href="#cb38-191" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123456</span>)</span>
+<span id="cb38-192"><a href="#cb38-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-193"><a href="#cb38-193" aria-hidden="true" tabindex="-1"></a><span class="co"># Run UMAP</span></span>
+<span id="cb38-194"><a href="#cb38-194" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(</span>
+<span id="cb38-195"><a href="#cb38-195" aria-hidden="true" tabindex="-1"></a>  seurat_integrated,</span>
+<span id="cb38-196"><a href="#cb38-196" aria-hidden="true" tabindex="-1"></a>  <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>,</span>
+<span id="cb38-197"><a href="#cb38-197" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"integrated.dr"</span>, <span class="co"># 更改降维来源为整合后的"integrated.dr"</span></span>
+<span id="cb38-198"><a href="#cb38-198" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction.name =</span> <span class="st">"umap.integrated"</span></span>
+<span id="cb38-199"><a href="#cb38-199" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-200"><a href="#cb38-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-201"><a href="#cb38-201" aria-hidden="true" tabindex="-1"></a><span class="co"># 分群</span></span>
+<span id="cb38-202"><a href="#cb38-202" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(</span>
+<span id="cb38-203"><a href="#cb38-203" aria-hidden="true" tabindex="-1"></a>  seurat_integrated,</span>
+<span id="cb38-204"><a href="#cb38-204" aria-hidden="true" tabindex="-1"></a>  <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>,</span>
+<span id="cb38-205"><a href="#cb38-205" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"integrated.dr"</span></span>
+<span id="cb38-206"><a href="#cb38-206" aria-hidden="true" tabindex="-1"></a>) </span>
+<span id="cb38-207"><a href="#cb38-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-208"><a href="#cb38-208" aria-hidden="true" tabindex="-1"></a>seurat_integrated <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(</span>
+<span id="cb38-209"><a href="#cb38-209" aria-hidden="true" tabindex="-1"></a>  seurat_integrated,</span>
+<span id="cb38-210"><a href="#cb38-210" aria-hidden="true" tabindex="-1"></a>  <span class="at">resolution =</span> <span class="fl">0.8</span> <span class="co"># 这里省略探索分辨率的步骤，为了和此前的章节一致，将分辨率设为0.8</span></span>
+<span id="cb38-211"><a href="#cb38-211" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb38-212"><a href="#cb38-212" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(seurat_integrated, <span class="dv">5</span>)</span>
+<span id="cb38-213"><a href="#cb38-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-214"><a href="#cb38-214" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign identity of clusters</span></span>
+<span id="cb38-215"><a href="#cb38-215" aria-hidden="true" tabindex="-1"></a><span class="fu">Idents</span>(seurat_integrated) <span class="ot">&lt;-</span> <span class="st">"SCT_snn_res.0.8"</span></span>
+<span id="cb38-216"><a href="#cb38-216" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">Idents</span>(seurat_integrated))</span>
+<span id="cb38-217"><a href="#cb38-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-218"><a href="#cb38-218" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the UMAP</span></span>
+<span id="cb38-219"><a href="#cb38-219" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(seurat_integrated,</span>
+<span id="cb38-220"><a href="#cb38-220" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap.integrated"</span>,</span>
+<span id="cb38-221"><a href="#cb38-221" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb38-222"><a href="#cb38-222" aria-hidden="true" tabindex="-1"></a>        <span class="at">label.size =</span> <span class="dv">6</span>)</span>
+<span id="cb38-223"><a href="#cb38-223" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-224"><a href="#cb38-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-225"><a href="#cb38-225" aria-hidden="true" tabindex="-1"></a>可以看到和来自<span class="co">[</span><span class="ot">scRNA-seq_online-细胞聚类</span><span class="co">](/single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.qmd#sec-visualize-clusters-of-cells)</span> （下图）的分群情况相比，去除了高环境RNA污染的细胞后，细胞群边缘的毛刺有所减少，细胞界线更加清晰。</span>
 <span id="cb38-226"><a href="#cb38-226" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-227"><a href="#cb38-227" aria-hidden="true" tabindex="-1"></a>可以看到和来自 @sec-clustering_analysis （下图）的分群情况相比，去除了高环境RNA污染的细胞后，细胞群边缘的毛刺有所减少，细胞界线更加清晰。</span>
+<span id="cb38-227"><a href="#cb38-227" aria-hidden="true" tabindex="-1"></a><span class="al">![未去除高环境游离RNA污染细胞的分群情况](images/unnamed-chunk-10-1.png)</span>{width="512"}</span>
 <span id="cb38-228"><a href="#cb38-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-229"><a href="#cb38-229" aria-hidden="true" tabindex="-1"></a><span class="al">![未去除高环境游离RNA污染细胞的分群情况](images/unnamed-chunk-10-1.png)</span>{width="512"}</span>
-<span id="cb38-230"><a href="#cb38-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-231"><a href="#cb38-231" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
-<span id="cb38-232"><a href="#cb38-232" aria-hidden="true" tabindex="-1"></a><span class="in">`decontX`</span>可以整合进标准的Seurat工作流中的质控步骤中。但是，也可以在先不进行<span class="in">`decontX`</span>的情况下，进行常规的整合、降维、分群。如果分群效果不理想，即有明显的边缘毛躁和大量散在细胞的情况，可以再提取这时候的counts，执行<span class="in">`decontX`</span>。这时候可以通过<span class="in">`FeaturePlot()`</span>去可视化高游离RNA污染的细胞的分布情况：</span>
-<span id="cb38-233"><a href="#cb38-233" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-236"><a href="#cb38-236" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-237"><a href="#cb38-237" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb38-238"><a href="#cb38-238" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(</span>
-<span id="cb38-239"><a href="#cb38-239" aria-hidden="true" tabindex="-1"></a>  seurat_integrated,</span>
-<span id="cb38-240"><a href="#cb38-240" aria-hidden="true" tabindex="-1"></a>  <span class="at">features =</span> <span class="st">"Contamination"</span>,</span>
-<span id="cb38-241"><a href="#cb38-241" aria-hidden="true" tabindex="-1"></a>  <span class="at">raster =</span> <span class="cn">FALSE</span> <span class="co"># 细胞过多时候需要加这个参数</span></span>
-<span id="cb38-242"><a href="#cb38-242" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
-<span id="cb38-243"><a href="#cb38-243" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
-<span id="cb38-244"><a href="#cb38-244" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb38-245"><a href="#cb38-245" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb38-246"><a href="#cb38-246" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb38-247"><a href="#cb38-247" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb38-248"><a href="#cb38-248" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>()</span>
-<span id="cb38-249"><a href="#cb38-249" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb38-250"><a href="#cb38-250" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"scVI_UMAP_1"</span>) <span class="sc">+</span></span>
-<span id="cb38-251"><a href="#cb38-251" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"scVI_UMAP_2"</span>)</span>
-<span id="cb38-252"><a href="#cb38-252" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-229"><a href="#cb38-229" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
+<span id="cb38-230"><a href="#cb38-230" aria-hidden="true" tabindex="-1"></a><span class="in">`decontX`</span>可以整合进标准的Seurat工作流中的质控步骤中。但是，也可以在先不进行<span class="in">`decontX`</span>的情况下，进行常规的整合、降维、分群。如果分群效果不理想，即有明显的边缘毛躁和大量散在细胞的情况，可以再提取这时候的counts，执行<span class="in">`decontX`</span>。这时候可以通过<span class="in">`FeaturePlot()`</span>去可视化高游离RNA污染的细胞的分布情况：</span>
+<span id="cb38-231"><a href="#cb38-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-234"><a href="#cb38-234" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-235"><a href="#cb38-235" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb38-236"><a href="#cb38-236" aria-hidden="true" tabindex="-1"></a><span class="fu">FeaturePlot</span>(</span>
+<span id="cb38-237"><a href="#cb38-237" aria-hidden="true" tabindex="-1"></a>  seurat_integrated,</span>
+<span id="cb38-238"><a href="#cb38-238" aria-hidden="true" tabindex="-1"></a>  <span class="at">features =</span> <span class="st">"Contamination"</span>,</span>
+<span id="cb38-239"><a href="#cb38-239" aria-hidden="true" tabindex="-1"></a>  <span class="at">raster =</span> <span class="cn">FALSE</span> <span class="co"># 细胞过多时候需要加这个参数</span></span>
+<span id="cb38-240"><a href="#cb38-240" aria-hidden="true" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb38-241"><a href="#cb38-241" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
+<span id="cb38-242"><a href="#cb38-242" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb38-243"><a href="#cb38-243" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb38-244"><a href="#cb38-244" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb38-245"><a href="#cb38-245" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb38-246"><a href="#cb38-246" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb38-247"><a href="#cb38-247" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb38-248"><a href="#cb38-248" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"scVI_UMAP_1"</span>) <span class="sc">+</span></span>
+<span id="cb38-249"><a href="#cb38-249" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"scVI_UMAP_2"</span>)</span>
+<span id="cb38-250"><a href="#cb38-250" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-251"><a href="#cb38-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-252"><a href="#cb38-252" aria-hidden="true" tabindex="-1"></a><span class="al">![通过`FeaturePlot()`可视化游离RNA分布情况的示例。可以看到，通过可视化Contamination，这些边缘的毛躁就是Contamination较高地细胞。](images/640-2-01.png)</span>{width="424"}</span>
 <span id="cb38-253"><a href="#cb38-253" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-254"><a href="#cb38-254" aria-hidden="true" tabindex="-1"></a><span class="al">![通过`FeaturePlot()`可视化游离RNA分布情况的示例。可以看到，通过可视化Contamination，这些边缘的毛躁就是Contamination较高地细胞。](images/640-2-01.png)</span>{width="424"}</span>
+<span id="cb38-254"><a href="#cb38-254" aria-hidden="true" tabindex="-1"></a>然后选择合适的阈值过滤细胞。之后用过滤后的counts和meta.data重新构建Seurat对象：</span>
 <span id="cb38-255"><a href="#cb38-255" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-256"><a href="#cb38-256" aria-hidden="true" tabindex="-1"></a>然后选择合适的阈值过滤细胞。之后用过滤后的counts和meta.data重新构建Seurat对象：</span>
-<span id="cb38-257"><a href="#cb38-257" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-260"><a href="#cb38-260" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-261"><a href="#cb38-261" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb38-262"><a href="#cb38-262" aria-hidden="true" tabindex="-1"></a>low_con_seurat <span class="ot">&lt;-</span> <span class="fu">subset</span>(filtered_seurat, Contamination <span class="sc">&lt;</span> <span class="fl">0.2</span>)</span>
-<span id="cb38-263"><a href="#cb38-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-264"><a href="#cb38-264" aria-hidden="true" tabindex="-1"></a>new_seurat <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(</span>
-<span id="cb38-265"><a href="#cb38-265" aria-hidden="true" tabindex="-1"></a>  <span class="at">counts =</span> low_con_seurat[[<span class="st">"RNA"</span>]]<span class="sc">$</span>counts,</span>
-<span id="cb38-266"><a href="#cb38-266" aria-hidden="true" tabindex="-1"></a>  <span class="at">meta.data =</span> low_con_seurat<span class="sc">@</span>meta.data)</span>
-<span id="cb38-267"><a href="#cb38-267" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-258"><a href="#cb38-258" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-259"><a href="#cb38-259" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb38-260"><a href="#cb38-260" aria-hidden="true" tabindex="-1"></a>low_con_seurat <span class="ot">&lt;-</span> <span class="fu">subset</span>(filtered_seurat, Contamination <span class="sc">&lt;</span> <span class="fl">0.2</span>)</span>
+<span id="cb38-261"><a href="#cb38-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-262"><a href="#cb38-262" aria-hidden="true" tabindex="-1"></a>new_seurat <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(</span>
+<span id="cb38-263"><a href="#cb38-263" aria-hidden="true" tabindex="-1"></a>  <span class="at">counts =</span> low_con_seurat[[<span class="st">"RNA"</span>]]<span class="sc">$</span>counts,</span>
+<span id="cb38-264"><a href="#cb38-264" aria-hidden="true" tabindex="-1"></a>  <span class="at">meta.data =</span> low_con_seurat<span class="sc">@</span>meta.data)</span>
+<span id="cb38-265"><a href="#cb38-265" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-266"><a href="#cb38-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-267"><a href="#cb38-267" aria-hidden="true" tabindex="-1"></a>然后重新执行整合、降维、分群等步骤。最后和此前的细胞分群情况进行比较。</span>
 <span id="cb38-268"><a href="#cb38-268" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-269"><a href="#cb38-269" aria-hidden="true" tabindex="-1"></a>然后重新执行整合、降维、分群等步骤。最后和此前的细胞分群情况进行比较。</span>
-<span id="cb38-270"><a href="#cb38-270" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-273"><a href="#cb38-273" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-274"><a href="#cb38-274" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb38-275"><a href="#cb38-275" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
-<span id="cb38-276"><a href="#cb38-276" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: 过滤环境RNA污染前（A）后（B）的UMAP图</span></span>
-<span id="cb38-277"><a href="#cb38-277" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
-<span id="cb38-278"><a href="#cb38-278" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(</span>
-<span id="cb38-279"><a href="#cb38-279" aria-hidden="true" tabindex="-1"></a>  low_con_seurat, </span>
-<span id="cb38-280"><a href="#cb38-280" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap"</span>,</span>
-<span id="cb38-281"><a href="#cb38-281" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> T</span>
-<span id="cb38-282"><a href="#cb38-282" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb38-283"><a href="#cb38-283" aria-hidden="true" tabindex="-1"></a>p2</span>
-<span id="cb38-284"><a href="#cb38-284" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-285"><a href="#cb38-285" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(</span>
-<span id="cb38-286"><a href="#cb38-286" aria-hidden="true" tabindex="-1"></a>  p1, p2, </span>
-<span id="cb38-287"><a href="#cb38-287" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
-<span id="cb38-288"><a href="#cb38-288" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb38-289"><a href="#cb38-289" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb38-271"><a href="#cb38-271" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-272"><a href="#cb38-272" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb38-273"><a href="#cb38-273" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb38-274"><a href="#cb38-274" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: 过滤环境RNA污染前（A）后（B）的UMAP图</span></span>
+<span id="cb38-275"><a href="#cb38-275" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
+<span id="cb38-276"><a href="#cb38-276" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(</span>
+<span id="cb38-277"><a href="#cb38-277" aria-hidden="true" tabindex="-1"></a>  low_con_seurat, </span>
+<span id="cb38-278"><a href="#cb38-278" aria-hidden="true" tabindex="-1"></a>  <span class="at">reduction =</span> <span class="st">"umap"</span>,</span>
+<span id="cb38-279"><a href="#cb38-279" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> T</span>
+<span id="cb38-280"><a href="#cb38-280" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb38-281"><a href="#cb38-281" aria-hidden="true" tabindex="-1"></a>p2</span>
+<span id="cb38-282"><a href="#cb38-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-283"><a href="#cb38-283" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_grid</span>(</span>
+<span id="cb38-284"><a href="#cb38-284" aria-hidden="true" tabindex="-1"></a>  p1, p2, </span>
+<span id="cb38-285"><a href="#cb38-285" aria-hidden="true" tabindex="-1"></a>  <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
+<span id="cb38-286"><a href="#cb38-286" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-287"><a href="#cb38-287" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb38-288"><a href="#cb38-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-289"><a href="#cb38-289" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb38-290"><a href="#cb38-290" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-291"><a href="#cb38-291" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb38-292"><a href="#cb38-292" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-293"><a href="#cb38-293" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb38-294"><a href="#cb38-294" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
-<span id="cb38-295"><a href="#cb38-295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-298"><a href="#cb38-298" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb38-299"><a href="#cb38-299" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb38-300"><a href="#cb38-300" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb38-301"><a href="#cb38-301" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb38-302"><a href="#cb38-302" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb38-291"><a href="#cb38-291" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb38-292"><a href="#cb38-292" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb38-293"><a href="#cb38-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-296"><a href="#cb38-296" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb38-297"><a href="#cb38-297" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb38-298"><a href="#cb38-298" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb38-299"><a href="#cb38-299" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb38-300"><a href="#cb38-300" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb38-301"><a href="#cb38-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-302"><a href="#cb38-302" aria-hidden="true" tabindex="-1"></a><span class="fu"># References {.unnumbered}</span></span>
+<span id="cb38-303"><a href="#cb38-303" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-304"><a href="#cb38-304" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb38-305"><a href="#cb38-305" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
@@ -1782,11 +1759,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
 <li class="nav-item">
- This book was built with Quarto
+ This website was built with Quarto
   </li>  
 </ul>
 </div>   
-    <div class="nav-footer-center">Copyright 2023, Du Junhong</div>
+    <div class="nav-footer-center">Copyright 2024, Du Junhong</div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
 <li class="nav-item compact">

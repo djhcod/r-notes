@@ -1,4 +1,6 @@
-# 多个单细胞数据集整合分析（上） {#sec-multiple_single_cell_datasets_1}
+---
+title: "多个单细胞数据集整合分析（上）"
+---
 
 > 参考：[单细胞多数据集整合示例](https://mp.weixin.qq.com/s/51PtUi7ZKp1nbrFGElU74A)
 
@@ -16,7 +18,7 @@
 
 这里我们介绍第一种方式，即**对各数据集分别降维分群，然后提取并整合各个数据集的感兴趣细胞亚群。**
 
-## 加载包
+# 加载包
 
 ```{r}
 library(Seurat)
@@ -27,11 +29,9 @@ library(dplyr)
 library(clustree)
 ```
 
-## GSE150430
+# 数据导入
 
-这里我们直接载入 @sec-reading_non_standard_large_volume_text 中构建好的Seurat对象，该案例数据的介绍及读取过程参见该章节。
-
-### 数据导入
+这里我们直接载入[读取非标准大体积文本文件单细胞数据](/single_cell/sc_supplementary/read_sc_data.qmd#sec-reading_non_standard_large_volume_text)中构建好的Seurat对象，该案例数据的介绍及读取过程参见该章节。
 
 ```{r}
 merged_seurat <- readRDS("output/sc_supplementary/GSE150430_merged_seurat.rds")
@@ -40,7 +40,7 @@ head(merged_seurat, 4)
 unique(merged_seurat$samples)
 ```
 
-### 质控
+# 质控
 
 ```{r}
 #| fig-width: 3
@@ -122,10 +122,10 @@ merged_seurat@meta.data |>
 
 可以看到该数据集已经进行了质控，各项指标均在正常范围内，因此，我们可以跳过细胞/基因过滤，直接进入下面的环节。
 
-### 归一化及消除非期望变异来源
+# 归一化及消除非期望变异来源
 
 ::: callout-caution
-由于这里`SCTransform`的数据量太大，在我的16GB MacBook Pro上超出了R内存分配上限，出现了“Error: vector memory exhausted (limit reached?)”报错。因此，这里在运行下面的脚本之前通过 @sec-Raising_memory_limit 的方法进行了处理。
+由于这里`SCTransform`的数据量太大，在我的16GB MacBook Pro上超出了R内存分配上限，出现了“Error: vector memory exhausted (limit reached?)”报错。因此，这里在运行下面的脚本之前通过[提高R内存分配上限（macOS）](/r_basic/environment_configuration.qmd#sec-Raising_memory_limit)的方法进行了处理。
 :::
 
 ```{r}
@@ -143,7 +143,7 @@ DefaultAssay(merged_seurat)
 Layers(merged_seurat)
 ```
 
-#### 评估细胞周期的影响
+## 评估细胞周期的影响
 
 ```{r}
 #| cache-lazy: false
@@ -178,7 +178,7 @@ plot_grid(p1, p2, ncol = 2, labels = "AUTO")
 
 可以看到细胞周期不是变异来源。
 
-#### **评估线粒体基因的影响**
+## **评估线粒体基因的影响**
 
 ```{r}
 #| cache-lazy: false
@@ -213,9 +213,9 @@ plot_grid(p1, p2, ncol = 2, labels = "AUTO")
 
 由于细胞周期和线粒体基因比例都不是非期望变异来源，所以我们这里不需要再次运行SCTransform来回归这些变量。接下来，直接进入数据整合环节。
 
-### 数据整合
+# 数据整合
 
-#### **不进行整合时检验细胞分群情况**
+## **不进行整合时检验细胞分群情况**
 
 ```{r}
 #| cache-lazy: false
@@ -260,7 +260,7 @@ plot_grid(p1a, p2a,
           ncol = 1, labels = "AUTO")
 ```
 
-#### 整合
+## 整合
 
 这里我们用Harmony整合算法。
 
@@ -281,7 +281,7 @@ seurat_integrated[["RNA"]] <- JoinLayers(seurat_integrated[["RNA"]])
 names(seurat_integrated@reductions)
 ```
 
-#### **整合后检验细胞分群情况**
+## **整合后检验细胞分群情况**
 
 ```{r}
 #| cache-lazy: false
@@ -322,7 +322,7 @@ saveRDS(seurat_integrated,
 
 ------------------------------------------------------------------------
 
-### 聚类
+# 聚类
 
 ```{r}
 #| cache-lazy: false
@@ -378,9 +378,9 @@ DimPlot(seurat_integrated,
         label = FALSE)
 ```
 
-### **细胞分群质量评估**
+# **细胞分群质量评估**
 
-#### **分析样本类型是否影响细胞分群**
+## **分析样本类型是否影响细胞分群**
 
 ```{r}
 #| cache-lazy: false
@@ -395,7 +395,7 @@ DimPlot(seurat_integrated,
   NoLegend()
 ```
 
-#### **分析细胞周期是否影响细胞分群**
+## **分析细胞周期是否影响细胞分群**
 
 ```{r}
 #| cache-lazy: false
@@ -407,7 +407,7 @@ DimPlot(seurat_integrated,
   NoLegend()
 ```
 
-#### **分析其他非期望变异来源是否会影响细胞分群**
+## **分析其他非期望变异来源是否会影响细胞分群**
 
 ```{r}
 #| cache-lazy: false
@@ -424,7 +424,7 @@ FeaturePlot(seurat_integrated,
             label = TRUE)
 ```
 
-保存
+## 保存
 
 ```{r}
 #| cache-lazy: false
@@ -434,11 +434,11 @@ saveRDS(seurat_integrated,
 
 ------------------------------------------------------------------------
 
-### 细胞注释
+# 细胞注释
 
-#### **探索cell type markers的表达**
+## 探索cell type markers的表达
 
-这里的marker基因选用 @sec-Universal_Marker_for_initial_Cell_clustering 中的细胞初步分群通用marker。
+这里的marker基因选用[此前章节](/single_cell/sc_supplementary/universal_marker.qmd)中的细胞初步分群通用marker。
 
 ```{r}
 #| cache-lazy: false
@@ -467,7 +467,7 @@ DotPlot(seurat_clustered,
   coord_flip()
 ```
 
-#### 手动注释
+## 手动注释
 
 ```{r}
 #| cache-lazy: false
@@ -541,7 +541,7 @@ saveRDS(seurat_clustered,
         file = "output/sc_supplementary/GSE150430_seurat_annotated.RDS"); beep()
 ```
 
-### 提取髓系细胞
+# 提取髓系细胞
 
 ```{r}
 #| cache-lazy: false
@@ -579,7 +579,7 @@ saveRDS(myeloid_seurat, file = "output/sc_supplementary/GSE150430_myeloid_seurat
 ::: {.callout-tip collapse="true"}
 ###### 如何提取并处理目标细胞亚群
 
-After we have completed the scRNA-seq workflow and identified the various cell types present in our samples, we might decide that for a particular cell type, we would like to identify subtypes. For example, if we have a large cluster of **CD4+ Helper T cells**, we may want to identify subsets of **Th1, Th2, Th17, Th9, and Tfh cells**. To subset the dataset, Seurat has a handy `subset()`function（ @sec-subset_seurat ）.
+After we have completed the scRNA-seq workflow and identified the various cell types present in our samples, we might decide that for a particular cell type, we would like to identify subtypes. For example, if we have a large cluster of **CD4+ Helper T cells**, we may want to identify subsets of **Th1, Th2, Th17, Th9, and Tfh cells**. To subset the dataset, Seurat has a handy `subset()`function（见[Seurat常用函数清单](/single_cell/seurat/seurat_command_list.qmd#sec-subset_seurat)）.
 
 To perform the subclustering, there are a couple of different methods you could try. The easiest would be to run the `FindNeighbors()` and `FindClusters()` on the subsetted cells, adjusting the resolution to give you the optimal clustering. However, with this approach **you are not redefining the most variable genes** used to find clusters, so it might not work if the genes delineating these subsets are not those driving any of the top PCs used for the clustering.
 
@@ -601,4 +601,9 @@ Since subsetting the dataset can result in a much smaller number of cells, it is
 #| echo: false
 sessionInfo()
 ```
+:::
+
+# References {.unnumbered}
+
+::: {#refs}
 :::

@@ -1,6 +1,8 @@
-# 读取非标准格式的单细胞数据
+---
+title: "读取非标准格式的单细胞数据"
+---
 
-## 读取非标准10X格式文件 {#sec-Read_non-standard_10x_files}
+# 读取非标准10X格式文件 {#Read_non-standard_10x_files}
 
 该案例来自文献 [@xu2022]。该研究为了系统地研究高级别浆膜上皮卵巢癌（HGSOC）的肿瘤内异质性，采用深层单细胞RNA测序技术(scRNA-seq)**对7例初治HGSOC早期和晚期患者及5例年龄匹配的非恶性卵巢组织标本进行肿瘤分析。**共获得59,324个HGSOC和非恶性卵巢组织的单细胞，其中，33264个细胞（56%）来⾃HGSOC肿瘤患者组织，26060个（44%）来⾃⾮恶性卵巢组织标本。原始数据：[GSE184880](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE184880)。
 
@@ -168,7 +170,7 @@ merged_seurat$sample <- merged_seurat$orig.ident
 
 ------------------------------------------------------------------------
 
-## 读取raw_counts形式的数据
+# 读取raw_counts形式的数据
 
 案例来自[@Bill2023]。样本来自头颈部鳞状细胞癌（HNSCC）患者，总共52例标本，包括24例原发肿瘤、16例局部复发和12例多器官远处转移。原发部位包括口腔、喉/下咽、口咽和鼻咽。其中15份样本HPV阳性。原始数据：[GSE234933](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE234933)。
 
@@ -188,7 +190,7 @@ merged_seurat$sample <- merged_seurat$orig.ident
 
 ![](images/截屏2024-01-09%2011.12.14.png)
 
-### 读取raw_counts矩阵 {#sec-read_raw_counts}
+## 读取raw_counts矩阵 {#sec-read_raw_counts}
 
 ```{r}
 rm(list = ls())
@@ -225,7 +227,7 @@ head(seurat_combined) # 可以看到这个案例实际上不需要添加cell.ids
 unique(seurat_combined$orig.ident)
 ```
 
-### 添加样本信息
+## 添加样本信息
 
 ```{r}
 #| cache-lazy: false
@@ -250,7 +252,7 @@ summary(new_meta.data)
 seurat_combined@meta.data <- new_meta.data
 ```
 
-## 读取txt/tsv/csv等文本文件表达量矩阵信息
+# 读取txt/tsv/csv等文本文件表达量矩阵信息
 
 以2020的文章：《Single-Cell Transcriptome Analysis Reveals Dynamic Cell Populations and Differential Gene Expression Patterns in Control and Aneurysmal Human Aortic Tissue》[@Li2020] 举例说明。数据集链接：[**GSE155468**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155468)**。**
 
@@ -332,13 +334,13 @@ merged_seurat@meta.data |>
 
 ------------------------------------------------------------------------
 
-## 读取非标准大体积文本文件单细胞数据 {#sec-reading_non_standard_large_volume_text}
+# 读取非标准大体积文本文件单细胞数据 {#sec-reading_non_standard_large_volume_text}
 
-案例数据来自2020年的文章《[*Single-cell transcriptomics reveals regulators underlying immune cell diversity and immune subtypes associated with prognosis in nasopharyngeal carcinoma*](https://www.nature.com/articles/s41422-020-0374-x)》。该研究以15例鼻咽癌患者作为研究对象，1例慢性鼻咽炎患者的正常鼻咽上皮组织作为对照。所有样品均采用10x genomics V2 3'单细胞RNA测序。数据链接：[**GSE150430**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE150430)**。**
+案例数据来自2020年的文章《*Single-cell transcriptomics reveals regulators underlying immune cell diversity and immune subtypes associated with prognosis in nasopharyngeal carcinoma*》[@chen2020]。该研究以15例鼻咽癌患者作为研究对象，1例慢性鼻咽炎患者的正常鼻咽上皮组织作为对照。所有样品均采用10x genomics V2 3'单细胞RNA测序。数据链接：[**GSE150430**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE150430)**。**
 
 ![](images/截屏2024-01-10%2012.07.54.png)
 
-### 加载包
+## 加载包
 
 ```{r}
 #| eval: false
@@ -350,7 +352,7 @@ library(purrr)
 library(Seurat)
 ```
 
-### 数据读取
+## 数据读取
 
 下载数据之后，首先按照通常做法通过`data.table`包的`fread()`函数尝试读取之后，发现无法正确读取列名，即cell barcode：
 
@@ -375,7 +377,7 @@ counts <- read.table("data/sc_supplementary/GSE150430_npc_scRNA_hg19_processed_d
 
 可以发现该表达矩阵行名为基因，列为cell barcode，同时有代表样本的前缀。但是**第一行为作者注释的细胞类型**，因此，可能是由于这样的表头结构导致`fread`不能正确的读取这个数据。但是用基础的`read.table`读取这种大型数据非常耗时间，因此下面**首先用`read.table`读取前两行的数据，即cell barcode和细胞类型；然后通过`fread`读取剩余的表达矩阵；最后将cell barcode和表达矩阵进行合并以构建Seurat对象**。
 
-### 数据整理
+## 数据整理
 
 ```{r}
 #| eval: false
@@ -437,7 +439,7 @@ map(samples, function(sample) {
 })
 ```
 
-### 构建Seurat对象
+## 构建Seurat对象
 
 ```{r}
 #| eval: false
@@ -493,7 +495,7 @@ saveRDS(merged_seurat, file = "output/sc_supplementary/GSE150430_merged_seurat.r
 
 ------------------------------------------------------------------------
 
-## 读取SMART-seq测序数据
+# 读取SMART-seq测序数据
 
 数据链接：[**GSE140228**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE140228)**。**
 
@@ -549,7 +551,7 @@ head(merged_seurat, 5)
 
 ------------------------------------------------------------------------
 
-## 单独提供每个细胞测序结果的数据的读取
+# 单独提供每个细胞测序结果的数据的读取
 
 数据链接：[**GSE84465**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84465)**。**
 
@@ -566,4 +568,9 @@ head(merged_seurat, 5)
 #| echo: false
 sessionInfo()
 ```
+:::
+
+# References {.unnumbered}
+
+::: {#refs}
 :::

@@ -1,9 +1,8 @@
 ---
+title: "Quarto Books"
 execute: 
   eval: false
 ---
-
-# Quarto Books {#sec-quarto-books}
 
 Quarto Books能够将多个Quarto文档（章节）组合成一份文档。这样我们可以将所有的笔记、脚本文件汇总成一个完整的知识框架。
 
@@ -15,7 +14,7 @@ Quarto Books能够将多个Quarto文档（章节）组合成一份文档。这�
 
 ![](images/截屏2023-11-26%2011.38.25.png){width="410"}
 
-然后给项目起个名字，这个名字是最终项目文件夹和`.Rproject`文件的名字。选择项目的创建目录。如果需要将项目作为Git仓库同步到GitHub（详见： @sec-publish_github_pages ）的话可以勾选上"Create a git repository"：
+然后给项目起个名字，这个名字是最终项目文件夹和`.Rproject`文件的名字。选择项目的创建目录。如果需要将项目作为Git仓库同步到GitHub（详见[后续章节](/quarto_foundation/github_pages.qmd)）的话可以勾选上"Create a git repository"：
 
 ![](images/截屏2023-11-26%2011.38.56.png){width="416"}
 
@@ -23,9 +22,9 @@ Quarto Books能够将多个Quarto文档（章节）组合成一份文档。这�
 
 ![](images/截屏2023-11-26%2011.39.25.png){width="353"}
 
-其中后缀为`.Rproject`的文件即项目文件。`index.qmd`文件编译后是book的封面。由于Quarto Books一般编译为HTML文件，所以这个文件就是网页的首页。**注意不要更改其文件名**。`references.qmd`编译后为参考文献页面；`references.bib`为插入参考文献后自动生成的参BibTeX/Citation文件，里面包括了所有考文献的列表（详见： @sec-ref_settings ）。
+其中后缀为`.Rproject`的文件即项目文件。`index.qmd`文件编译后是book的封面。由于Quarto Books一般编译为HTML文件，所以这个文件就是网页的首页。**注意不要更改其文件名**。`references.qmd`编译后为参考文献页面；`references.bib`为插入参考文献后自动生成的参BibTeX/Citation文件，里面包括了所有考文献的列表（详见[YAML-参考文献设置](/quarto_foundation/yaml_settings.qmd#参考文献设置)）。
 
-`_quarto.yml`文件为YAML配置文件。要实现按照一定的格式将各个Quarto文档组合成一个完整的网页或Quarto Books，定义这个YAML配置文件是核心。**YAML配置文件一般以"\_quarto.yml"命名**，并保存在项目的根目录中，在每次编译书籍时都会读取这个配置文件。实际上Quarto Books的YAML配置和此前独立的qmd文档的YAML配置（ @sec-Overview_of_yaml_settings ）有大量相似之处。最大的区别是Quarto Books需要通过`chapter`来将不同的qmd文件（章节）按照一定的顺序组合起来形成一本完整的书籍。下面主要介绍YAML配置文件的主要内容。各个章节即各个独立的qmd文件的编写方法参考之前的章节即可。
+`_quarto.yml`文件为YAML配置文件。要实现按照一定的格式将各个Quarto文档组合成一个完整的网页或Quarto Books，定义这个YAML配置文件是核心。**YAML配置文件一般以"\_quarto.yml"命名**，并保存在项目的根目录中，在每次编译书籍时都会读取这个配置文件。实际上Quarto Books的YAML配置和此前独立的qmd文档的[YAML配置](/quarto_foundation/yaml_settings.qmd)有大量相似之处。最大的区别是Quarto Books需要通过`chapter`来将不同的qmd文件（章节）按照一定的顺序组合起来形成一本完整的书籍。下面主要介绍YAML配置文件的主要内容。各个章节即各个独立的qmd文件的编写方法参考之前的章节即可。
 
 ## 项目设置
 
@@ -40,7 +39,7 @@ project:
 
 -   `project`：项目类型。定义了项目编译后的文档类型，包括`default`, **`website`**（Quarto Websites）和**`book`**（Quarto Book）。这里我们在新建项目时选择了Quarto Books，所以这里自动填写了`book`。
 
--   `output-dir`：输出文件夹。编译后的HTML文件、PDF文件以及运行code chunk后产生的图像、数据等的输出文件夹。上面的例子中将输出文件夹指定为"docs"文件夹可以方便将输出的HTML文件通过GitHub Pages发布（详见 @sec-publish_github_pages ）。
+-   `output-dir`：输出文件夹。编译后的HTML文件、PDF文件以及运行code chunk后产生的图像、数据等的输出文件夹。上面的例子中将输出文件夹指定为"docs"文件夹可以方便将输出的HTML文件[通过GitHub Pages发布](/quarto_foundation/github_pages.qmd)。
 
 -   `execute-dir`：**在编译时**，各个qmd文件内的code chunk脚本运行的根目录，默认是`file`，即**当前qmd文档所在目录**，可设置为 "**project**"，这样在编译过程中执行代码块时会**将脚本运行根目录设置为项目根目录**。
 
@@ -70,7 +69,7 @@ book:
 
 -   `date`：文档发行日期。日期既可以手动添加，如"2023/11/10"，也可以通过`now`（输出样式：2023年11月11日 19:01）或`today`（输出样式：2023年11月11日）自动生成日期。
 
--   `date-format`：日期格式（详见： @sec-dateformat ）。
+-   `date-format`：日期格式（详见[YAML设置](/quarto_foundation/yaml_settings.qmd#sec-dateformat)）。
 
 -   `cover-image`：封面图片。
 
@@ -304,15 +303,17 @@ book:
 
 ![](images/截屏2023-11-26%2020.07.29.png){width="188"}
 
-### 用户批注功能
+### `comments`用户批注及评论功能
 
 Quarto Books编译后的HTML网页支持配置[Hypothesis](https://web.hypothes.is)标注功能。配置后不同的读者在登录Hypothesis账号后可以在页面上进行标注和评论。效果如下：
 
 ![](images/截屏2023-11-26%2020.13.32.png)
 
-```{r}
+YAML配置文件如下（⚠️在YAML配置文件中，`comments`既可以放到`html`下，也可以放到`book`下或独立放置）：
+
+``` md
 ---
-book:
+html:
   comments:
     hypothesis:
       theme: classic
@@ -321,6 +322,37 @@ book:
       enableExperimentalNewNoteButton: true
 ---
 ```
+
+此外，还可以启用基于[Utterances](https://utteranc.es/)的评论功能。YAML配置如下：
+
+``` md
+---
+html:
+  comments:
+    utterances:
+        repo: djhcod/r-notes
+---
+```
+
+要实现该功能需要在GitHub中安装[utterances app](https://github.com/apps/utterances)。其中的repo填写需要存储用户评论的存储库的位置，格式为“用户名/存储库名称”。配置好后，在页面下方会出现如下所示的评论框：
+
+![](images/截屏2024-01-24%2011.08.47.png)
+
+当用户在其中提交评论时，会同步到项目的GitHub issues中。
+
+与之类似的工具还有[Giscus app](https://giscus.app/)，该工具支持中文UI，通过过该工具发表的评论会被保存到GitHub项目的Discussion中。YAML配置如下：
+
+``` md
+---
+html:
+  comments:
+    giscus:
+       repo: djhcod/r-notes
+       input-position: top
+---
+```
+
+`input-position: top`表示将评论框放置在其他评论的顶部。更多关于`comments`的参数和设置，参考[Quarto官方文档](https://quarto.org/docs/reference/projects/websites.html#hypothesis)。
 
 ## `format`编译设置
 
@@ -343,7 +375,7 @@ format:
 ---
 ```
 
--   `theme`：定义了编译文档的主题（详见： @sec-theme ）。
+-   `theme`：定义了编译文档的主题（详见[YAML设置](/quarto_foundation/yaml_settings.qmd#sec-theme)）。
 
 -   `embed-resources`：是否将所有源文件嵌入HTML文件以方便分享。默认为"false"。
 
@@ -392,7 +424,7 @@ execute:
 
 -   `freeze`: 在全局渲染（project渲染）时是否冻结运算结果。在渲染包含了大量计算任务的项目时，通过更改这个参数可以改善渲染时间。默认为`false`，即在执行project渲染时重新计算之前已经生成的计算输出。`true`：在全局渲染时，不重新计算先前生成的计算输出。`auto`：只有在源文件发生变化时，才重新计算之前生成的计算输出结果。当设置为`true`或者`auto`时，在首次渲染后会在项目根目录下生成一个“\_freeze”文件夹（见下图），如果想要重新执行此前的运算可以手动删除这个文件夹。
 
-    ![](images/截屏2024-01-18 11.56.01.png)
+    ![](images/截屏2024-01-18%2011.56.01.png)
 
 ::: callout-caution
 `freeze`仅更改全局渲染时的行为。全局渲染或称project渲染指的是通过`quarto render`终端命令，或者通过RStudio中“Build”选项卡下的“Render Book”按钮发起的渲染。
@@ -514,15 +546,17 @@ bibliography: references.bib # 参考文献目录
 ---
 ```
 
-只要在编辑qmd文档时插入了参考文献，YAML中会新增参考文献的配置选项：`bibliography: references.bib`。同时根目录下会生成一个名为"references.bib"的参考文献配置文件。该配置文件包括了qmd文档中所插入的所有参考文献的列表。以BibTeX/Citation风格语言编写。`bibliography`指定了这个参考文献配置文件所在的路径。
+只要在编辑qmd文档时插入了参考文献，YAML中会新增参考文献的配置选项：`bibliography: references.bib`。同时根目录下会生成一个名为"references.bib"的参考文献配置文件。该配置文件包括了qmd文档中所插入的所有参考文献的列表（详见[YAML-参考文献设置](/quarto_foundation/yaml_settings.qmd#参考文献设置)）。以BibTeX/Citation风格语言编写。`bibliography`指定了这个参考文献配置文件所在的路径。
 
 ::: callout-tip
 关于Quarto Books的详细指南，参考：<https://quarto.org/docs/books/book-structure.html>。
+
+可以参考Quarto官方指南网站的[YAML配置文件](https://github.com/quarto-dev/quarto-web/blob/main/_quarto.yml)进行学习。
 :::
 
 ## 附：制作About Pages
 
-index.qmd文件会编译形成首页/封面文件（index.html），如果我们将书籍/网页发布（详见： @sec-publish_github_pages ），这是打开网站链接后首先看到的页面。我们可以通过Quarto提供的About Pages模板来快速创建一个美观的首页，其核心是`about`命令。下面是一个采用了About Pages模板的index.qmd文件的示例：
+index.qmd文件会编译形成首页/封面文件（index.html），如果我们将书籍/网页发布（详见[发布到GitHub Pages](/quarto_foundation/github_pages.qmd)），这是打开网站链接后首先看到的页面。我们可以通过Quarto提供的About Pages模板来快速创建一个美观的首页，其核心是`about`命令。下面是一个采用了About Pages模板的index.qmd文件的示例：
 
 ```{r}
 ---

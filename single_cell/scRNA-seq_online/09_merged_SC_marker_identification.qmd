@@ -1,4 +1,6 @@
-# 寻找marker基因+细胞注释
+---
+title: "寻找marker基因+细胞注释"
+---
 
 ::: callout-note
 ###### Learning Objectives:
@@ -34,7 +36,7 @@ Now that we have identified our desired clusters, we can move on to marker ident
 
 ## 数据导入
 
-载入 @sec-cluster_qc 中完成细胞分群质量评估的数据`seurat_clustered_qc`。
+载入[此前](/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd)完成细胞分群质量评估的数据`seurat_clustered_qc`。
 
 ```{r}
 #| cache-lazy: false
@@ -52,9 +54,9 @@ DefaultAssay(seurat_clustered_qc) <- "RNA"
 ```
 
 ::: callout-important
-[原教程](https://hbctraining.github.io/scRNA-seq_online/lessons/09_merged_SC_marker_identification.html)将默认的assay设置为了"RNA"，其解释如下：The default assay should have already been `RNA`, because we set it up in the previous clustering quality control lesson ( @sec-explore_known_markers ). But we encourage you to run this line of code above to be absolutely sure in case the active slot was changed somewhere upstream in your analysis. Note that the raw and normalized counts are stored in the `counts` and `data` slots of `RNA` assay. By default, the functions for finding markers will use normalized data. （关于`FindMarkers`为什么要使用"RNA" assay的更多解释，参阅[此链接](https://github.com/hbctraining/scRNA-seq_online/issues/58)）
+[原教程](https://hbctraining.github.io/scRNA-seq_online/lessons/09_merged_SC_marker_identification.html)将默认的assay设置为了"RNA"，其解释如下：The default assay should have already been `RNA`, because we set it up in the [previous clustering quality control lesson](/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd#sec-explore_known_markers). But we encourage you to run this line of code above to be absolutely sure in case the active slot was changed somewhere upstream in your analysis. Note that the raw and normalized counts are stored in the `counts` and `data` slots of `RNA` assay. By default, the functions for finding markers will use normalized data. （关于`FindMarkers`为什么要使用"RNA" assay的更多解释，参阅[此链接](https://github.com/hbctraining/scRNA-seq_online/issues/58)）
 
-而在Seurat V5的官方教程中（ @sec-findmarkers_function ），对于经过`SCTransform`归一化处理后的单细胞数据，在进行`FindMarkers`差异分析之前，需要先运行`seurat_clustered_qc <- PrepSCTFindMarkers(seurat_clustered_qc)`，来预处理SCT assay。详细解释见[此链接](https://www.jianshu.com/p/fb2e43905559)。
+而在[Seurat V5的官方教程](/single_cell/seurat/marker_gene_identification.qmd#sec-findmarkers_function)中，对于经过`SCTransform`归一化处理后的单细胞数据，在进行`FindMarkers`差异分析之前，需要先运行`seurat_clustered_qc <- PrepSCTFindMarkers(seurat_clustered_qc)`，来预处理SCT assay。详细解释见[此链接](https://www.jianshu.com/p/fb2e43905559)。
 
 如果是基于`NormalizeData`标准化的单细胞数据，和这里一样，需要使用"RNA" assay进行差异分析，如果不是，需要通过`DefaultAssay(seurat_clustered_qc) <- "RNA"`进行设定。
 
@@ -67,7 +69,7 @@ Our clustering analysis resulted in the following clusters:
 DimPlot(seurat_clustered_qc, label = TRUE)
 ```
 
-Remember that we had the following questions from the clustering analysis（ @sec-Preliminary_cell_type_identification_results ）:
+Remember that we had the following questions from the [clustering analysis](/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd#sec-Preliminary_cell_type_identification_results):
 
 > 1.  Do the clusters corresponding to the same cell types have biologically meaningful differences? Are there subpopulations of these cell types?
 >
@@ -119,7 +121,7 @@ The `FindAllMarkers()` function has **three important arguments** which provide 
 You could use any combination of these arguments depending on how stringent/lenient you want to be. Also, by default this function will return to you genes that exhibit both positive and negative expression changes. Typically, we add an argument `only.pos` to opt for keeping only the positive changes. The code to find markers for each cluster is shown below.
 
 ::: callout-important
-In Seurat v5, we use the **`presto`** package (as described [here](https://www.biorxiv.org/content/10.1101/653253v1) and available for installation [here](https://github.com/immunogenomics/presto)), to dramatically improve the speed of DE analysis, particularly for large datasets ( @sec-findmarkers_function ). 因此，需要先安装`presto`包：
+In Seurat v5, we use the **`presto`** package (as described [here](https://www.biorxiv.org/content/10.1101/653253v1) and available for installation [here](https://github.com/immunogenomics/presto)), to dramatically improve the speed of DE analysis, particularly for large datasets (见[Seurat-FindMarkers](/single_cell/seurat/marker_gene_identification.qmd#sec-findmarkers_function)). 因此，需要先安装`presto`包：
 
 ```{r}
 #| eval: false
@@ -431,7 +433,7 @@ head(cluster0_ann_markers, 3)
 
 #### 寻找cluster 10的conserved markers
 
-In the previous lesson ( @sec-fcgr3a_monocyte_markers ), we identified **cluster 10** as FCGR3A+ monocytes by inspecting the expression of known cell markers FCGR3A and MS4A7.
+In the [previous lesson](/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd#sec-fcgr3a_monocyte_markers), we identified **cluster 10** as FCGR3A+ monocytes by inspecting the expression of known cell markers FCGR3A and MS4A7.
 
 ```{r}
 #| fig-width: 10
@@ -488,7 +490,7 @@ get_conserved <- function(cluster) {
 
 Now that we have this function created we can use it as an argument to the appropriate `map` function. We want the output of the `map` family of functions to be a **dataframe with each cluster output bound together by rows**. （`map`函数输出的为一个list，通过`list_rbind`函数按照行组合列表中的每一个对象，并输出为数据框）
 
-Now, let's try this function to find the conserved markers for the clusters that were identified as **CD4+ T cells (4, 0, 6, 2)** from our use of known marker genes ( @sec-cd4_t_cells ).
+Now, let's try this function to find the conserved markers for the clusters that were identified as **CD4+ T cells (4, 0, 6, 2)** from our use of [known marker genes](/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd#sec-cd4_t_cells).
 
 ```{r}
 #| fig-width: 10
@@ -539,7 +541,7 @@ top_conserved_markers <- conserved_markers %>%
 
 可能的原因：
 
-> “In addition, in Seurat v5 we implement a **pseudocount** (when calculating log-FC) at the **group level** instead of the cell level. As a result, users will observe **higher logFC estimates** in v5 - but should note that these estimates may be more unstable - particularly for genes that are very lowly expressed in one of the two groups” （ @sec-changes_in_seurat_v5 ）
+> “In addition, in Seurat v5 we implement a **pseudocount** (when calculating log-FC) at the **group level** instead of the cell level. As a result, users will observe **higher logFC estimates** in v5 - but should note that these estimates may be more unstable - particularly for genes that are very lowly expressed in one of the two groups” ——[Changes in Seurat v5](/single_cell/seurat/seurat_intro.qmd#sec-changes_in_seurat_v5)
 
 这一小节的后续内容暂时以原教程的marker基因结果为准。
 :::
@@ -788,11 +790,11 @@ sink()
 
 ### 提取感兴趣细胞亚群进一步细分（Explore a subset of the cell types to discover subclusters of cells）
 
-鉴定完细胞类型后，接下来就是对鉴定的目标细胞群进行深入的研究。一般是提取目标亚群，然后在进一步细分。细胞再分群的意义在于进一步分析细胞的组成成分。实操见 @sec-multiple_single_cell_datasets_2 。
+鉴定完细胞类型后，接下来就是对鉴定的目标细胞群进行深入的研究。一般是提取目标亚群，然后在进一步细分。细胞再分群的意义在于进一步分析细胞的组成成分。见[多个单细胞数据集整合分析（下）](/single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.qmd)。
 
 ### **单细胞差异分析（**Perform **differential expression analysis** **between conditions）**
 
-在实际研究中，往往需要研究两类细胞之间的差异，或者是某类细胞在不同处理样本间的差异基因情况，因此需要将待比较的细胞群单独拿出来进行分析。后面，我们在 @sec-differential_expression 中对如何**寻找不同样本类型/条件间同一细胞类型内的差异基因**进行了探索。
+在实际研究中，往往需要研究两类细胞之间的差异，或者是某类细胞在不同处理样本间的差异基因情况，因此需要将待比较的细胞群单独拿出来进行分析。后面，我们在[此前的章节](/single_cell/seurat/de_vignette.qmd)中对如何**寻找不同样本类型/条件间同一细胞类型内的差异基因**进行了探索。
 
 除了分析细胞内基因表达的差异，也可以采用最常见的GO和KEGG富集分析，还可以进行GSEA、GSVA、SCENIC等分析，从功能、通路、基因调控网络等方面进行探究。
 

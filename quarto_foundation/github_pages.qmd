@@ -1,4 +1,5 @@
 ---
+title: "发布到GitHub Pages"
 execute:
       eval: false
       warning: false
@@ -6,19 +7,17 @@ editor_options:
   chunk_output_type: console
 ---
 
-# 发布到GitHub Pages {#sec-publish_github_pages}
-
 ::: callout-note
 本节内容参考[*Creating your personal website using Quarto*](https://ucsb-meds.github.io/creating-quarto-websites/) *和 [Happy Git and GitHub for the useR](https://happygitwithr.com)。*
 
 本节内容基于macOS，在Windows系统下的具体操作存在较大差异。
 :::
 
-## 注册GitHub账户
+# 注册GitHub账户
 
 关于注册GitHub账户的详细指南，参考：<https://happygitwithr.com/github-acct>。
 
-## 安装Git
+# 安装Git
 
 在终端APP或者RStudio的终端面板输入：
 
@@ -36,7 +35,7 @@ git --version
 
 会返回"git version 2.39.3 (Apple Git-145)"这样的信息。
 
-## 配置Git
+# 配置Git
 
 在终端（RStudio的终端面板或系统的终端）中逐个运行下面的命令，把其中的`user.name`和`user.email`替换成自己的用户名和GItHub账户的邮箱。这里的用户名不一定要和GitHub账户的的用户名一致，它会给本的Git仓库提供一个便于识别的标记。
 
@@ -62,7 +61,7 @@ use_git_config(user.name = "djhcod", user.email = "du.jh@icloud.com")
 usethis::git_sitrep()
 ```
 
-## 获取GitHub个人访问令牌（personal access token，PAT）
+# 获取GitHub个人访问令牌（personal access token，PAT）
 
 PAT相当于GitHub账户的密码，所以通过PAT才能让本地的Git仓库和远程的GitHub个人仓库建立连接。需要为每台想连接GitHub的电脑配置一个专属PAT。可以通过<https://github.com/settings/tokens>进行配置，或者运行下面的代码直接进入配置页面：
 
@@ -110,14 +109,14 @@ usethis::git_sitrep()
 更多关于PAT的获取指南，参考：<https://ucsb-meds.github.io/meds-install-mac.html>。
 :::
 
-## 将R Project文件夹初始化为Git存储库
+# 将R Project文件夹初始化为Git存储库
 
-创建Quarto Books项目的内容参考 @sec-quarto-books 。
+创建Quarto Books项目的内容参考[此前章节](/quarto_foundation/quarto_books.qmd)。
 
 ::: callout-caution
 项目文件夹的名称就是最终上传到GitHub库的名称，所以**不要使用中文和空格**，并起一个简单和有意义的名字。
 
-对于Quarto Books或者Quarto Websites项目，为了方便项目管理和GitHub Pages的转换应该在项目的YAML配置文件中**将编译文件的输出文件夹设置为"docs"**（ @sec-quarto-books ）：
+对于[Quarto Books](/quarto_foundation/quarto_books.qmd)或者Quarto Websites项目，为了方便项目管理和GitHub Pages的转换应该在项目的YAML配置文件中**将编译文件的输出文件夹设置为"docs"**：
 
 ```         
 project:
@@ -150,7 +149,7 @@ Console中会提示已经将当前项目文件夹设置为了Git存储库。当�
 
 [![Git存储库的结构](images/git-repo-ex.png){width="578"}](https://ucsb-meds.github.io/creating-quarto-websites/#fa-edit-titlepencil-and-paper-where-you-should-start-changing-stuff)
 
-## 连接本地Git仓库和远程GitHub仓库
+# 连接本地Git仓库和远程GitHub仓库
 
 运行`use_github`函数后会首先创建一个项目同名的GitHub仓库，然后将所有本地Git库的文件上传到这个GitHub库中，完成后会自动打开浏览器并导航到建好的GitHub项目仓库。
 
@@ -188,7 +187,7 @@ git config --global init.defaultBranch main
 
 然后通过`git status`再次检查默认分枝的名称，并回到GitHub项目主页刷新后查看默认分枝的名称是否已同步更改为"main"。
 
-## 将本地静态HTML文件发布到GitHub Pages {#sec-Publish_html_files_to_github_pages}
+# 将本地静态HTML文件发布到GitHub Pages {#sec-Publish_html_files_to_github_pages}
 
 首先，在项目根目录中创建一个名为`.nojekyll`的文件，该文件告诉GitHub Pages不要使用Jekyll（GitHub默认网页生成工具）对我们的文件进行额外处理。有两种方法可以做到这一点：
 
@@ -248,7 +247,7 @@ git config --global init.defaultBranch main
 原文：[*.gitignore File -- How to Ignore Files and Folders in Git*](https://www.freecodecamp.org/news/gitignore-file-how-to-ignore-files-and-folders-in-git/)**。**
 :::
 
-如上面的\@sec-将本地静态html文件发布到github-pages 所述，我们通过`git add .`命令将项目中的新文件或有变动的文件信息暂存到Git库，然后用*`git commit -m "my commit message"`*命令提交文件。其中`git add`后面跟的是需要提交的文件目录，这里我们用了"."，表示把Git文件夹内的**所有文件**变动信息都记录下来。当继续使用`git commit`命令时，每一个文件都会被添加。但是，我们有时候**不想将某些特定的文件或文件夹上传**，或者**某些文件超出了GitHub允许的单个文件容量上限（100MB）**，这个时候我们就需要通过新建一个`.gitignore`隐藏文件来告诉Git**忽略和不要追踪某些特定文件**。
+[如前所述](#sec-Publish_html_files_to_github_pages)，我们通过`git add .`命令将项目中的新文件或有变动的文件信息暂存到Git库，然后用*`git commit -m "my commit message"`*命令提交文件。其中`git add`后面跟的是需要提交的文件目录，这里我们用了"."，表示把Git文件夹内的**所有文件**变动信息都记录下来。当继续使用`git commit`命令时，每一个文件都会被添加。但是，我们有时候**不想将某些特定的文件或文件夹上传**，或者**某些文件超出了GitHub允许的单个文件容量上限（100MB）**，这个时候我们就需要通过新建一个`.gitignore`隐藏文件来告诉Git**忽略和不要追踪某些特定文件**。
 
 `.gitignore`文件是一个纯文本文件，里面列出我们要求Git忽略和不追踪的的文件的列表。在`.gitignore`中，可以通过提及特定文件或文件夹的名称或模式来告诉Git只忽略一个文件或一个文件夹。也可以用同样的方法告诉Git忽略多个文件或文件夹。
 
@@ -266,7 +265,7 @@ touch .gitignore
 
 ![](images/截屏2023-11-23%2011.50.56.png){width="328"}
 
-### **在 Git 中忽略一个文件和文件夹**
+## **在 Git 中忽略一个文件和文件夹**
 
 如果只忽略一个特定的文件，需要**提供该文件在项目根目录下的完整路径**。例如，如果想忽略位于根目录下的"text.txt"文件，可以将以下信息添加到`.gitignore`文件中：
 
@@ -286,7 +285,7 @@ touch .gitignore
 test/text.txt
 ```
 
-### 忽略多个具有特定名称的文件和文件夹
+## 忽略多个具有特定名称的文件和文件夹
 
 如果想忽略整个项目内所有具有特定名称的文件，只需要写出该文件的**文件名及其后缀**。例如，如果想忽略任何文件名为"text.txt"的文件，可以在`.gitignore`中添加以下内容：
 
@@ -322,9 +321,9 @@ img*
 *.md
 ```
 
-### **忽略以前提交的文件**
+## **忽略以前提交的文件**
 
-当你创建一个新的仓库时，最好的做法是创建一个`.gitignore`文件，包含所有你想忽略的文件和不同的文件模式\--在提交之前。Git 只能忽略尚未提交到仓库的未被追踪的文件。如果你过去已经提交了一个文件，但希望没有提交，会发生什么？比如你不小心提交了一个存储环境变量的".env"文件。你首先需要更新`.gitignore`文件以包括".env"文件：
+当你创建一个新的仓库时，最好的做法是创建一个`.gitignore`文件，包含所有你想忽略的文件和不同的文件模式--在提交之前。Git 只能忽略尚未提交到仓库的未被追踪的文件。如果你过去已经提交了一个文件，但希望没有提交，会发生什么？比如你不小心提交了一个存储环境变量的".env"文件。你首先需要更新`.gitignore`文件以包括".env"文件：
 
 ```{r}
 # 给 .gitignore 添加 .env 文件
@@ -349,7 +348,7 @@ git add .gitignore
 git commit -m "update ignored files"
 ```
 
-### 发布GitHub Pages时常用的`.gitignore`文件配置
+## 发布GitHub Pages时常用的`.gitignore`文件配置
 
 最后回到本节的实际问题中来。如果我们想要发布GitHub Pages并上传源代码，我们一般期望不要将**编译时产生的缓存文件**（如果在YAML中开启了`cache: true`）、**数据文件**（.RData/.RDS等）以及程序运行后的**输出数据文件**（.RData/.RDS等）上传。它们体积都较大，很有可能因为超出单个文件大小的限制而导致Push时报错。因此，一下列出了一个用于发布发布GitHub Pages时的典型`.gitignore`文件配置：
 

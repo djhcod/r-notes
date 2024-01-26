@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.3.450">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>R语言学习笔记 - 13&nbsp; Seurat v5单细胞数据整合分析</title>
+<title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - Seurat v5单细胞数据整合分析</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -97,7 +97,7 @@ div.csl-indent {
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "end",
-  "type": "overlay",
+  "type": "textbox",
   "limit": 20,
   "language": {
     "search-no-results-text": "No results",
@@ -111,7 +111,13 @@ div.csl-indent {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script type="application/json" class="js-hypothesis-config">
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G2HZEXHNCE"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
+</script><script type="application/json" class="js-hypothesis-config">
 {
   "theme": "classic",
   "openSidebar": false,
@@ -119,7 +125,13 @@ div.csl-indent {
   "enableExperimentalNewNoteButton": true
 }
 </script><script async="" src="https://hypothes.is/embed.js"></script>
-<meta name="twitter:title" content="R语言学习笔记 - 13&nbsp; Seurat v5单细胞数据整合分析">
+<meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - Seurat v5单细胞数据整合分析">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://djhcod.github.io/r-notes/single_cell/seurat/images/截屏2023-11-28 21.02.46.png">
+<meta property="og:site-name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
+<meta property="og:image:height" content="1388">
+<meta property="og:image:width" content="1730">
+<meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - Seurat v5单细胞数据整合分析">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/seurat/images/截屏2023-11-28 21.02.46.png">
 <meta name="twitter:image-height" content="1388">
@@ -148,20 +160,20 @@ div.csl-indent {
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../intro.html" rel="" target="">
- <span class="menu-text">Introduction</span></a>
+    <a class="nav-link" href="../../r_basic/r_basics.html" rel="" target="">
+ <span class="menu-text">R语言基础</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parts" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
- <span class="menu-text">Parts</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">单细胞数据分析</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-parts">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">
 <li>
-    <a class="dropdown-item" href="../../r_basic/r_basics.html" rel="" target="">
- <span class="dropdown-text">R语言基础</span></a>
+    <a class="dropdown-item" href="../../single_cell/single_cell_intro.html" rel="" target="">
+ <span class="dropdown-text">单细胞数据分析介绍</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/seurat/seurat.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/seurat/seurat_intro.html" rel="" target="">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
@@ -172,15 +184,11 @@ div.csl-indent {
     <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
  <span class="dropdown-text">单细胞补充内容</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
- <span class="dropdown-text">Quarto基础</span></a>
-  </li>  
     </ul>
 </li>
   <li class="nav-item">
-    <a class="nav-link" href="../../references.html" rel="" target="">
- <span class="menu-text">References</span></a>
+    <a class="nav-link" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
+ <span class="menu-text">Quarto基础</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -191,25 +199,13 @@ div.csl-indent {
   </li>  
 </ul>
 <div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/djhcod/r-notes" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <div class="dropdown">
-      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
-<li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=%7Curl%7C">
-              <i class="bi bi-bi-twitter pe-1"></i>
-            Twitter
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=%7Curl%7C">
-              <i class="bi bi-bi-facebook pe-1"></i>
-            Facebook
-            </a>
-          </li>
-      </ul>
-</div>
+    <a href="https://github.com/djhcod/r-notes" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -217,35 +213,20 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat_intro.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html">Seurat v5单细胞数据整合分析</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">主页</span></span></a>
+ <span class="menu-text">主页</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">前言</span></a>
-  </div>
-</li>
-        <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
@@ -258,39 +239,39 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rstudio环境配置</span></span></a>
+ <span class="menu-text">Rstudio环境配置</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/data_input_output.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">数据的读取与输出</span></span></a>
+ <span class="menu-text">数据的读取与输出</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/basic_data_function.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据处理基本函数</span></span></a>
+ <span class="menu-text">数据处理基本函数</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/character.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">字符的处理</span></span></a>
+ <span class="menu-text">字符的处理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/loop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">循环</span></span></a>
+ <span class="menu-text">循环</span></a>
   </div>
 </li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../single_cell/seurat/seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Seurat v5官方文档</span></a>
+            <a href="../../single_cell/single_cell_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞数据分析</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -298,181 +279,192 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞测序技术介绍</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞RNA测序—从raw data到count matrix</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../single_cell/seurat/seurat_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat v5官方文档</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_command_list.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
+ <span class="menu-text">Seurat常用函数清单</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
+ <span class="menu-text">Seurat细胞分群官方教程</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
+ <span class="menu-text">Seurat中的数据可视化方法</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/sctransform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
+ <span class="menu-text">基于SCTransform的单细胞数据标准化</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+ <span class="menu-text">消除细胞周期的影响</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
+ <span class="menu-text">整合（integration）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+ <span class="menu-text">Seurat v5单细胞数据整合分析</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/marker_gene_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
+ <span class="menu-text">寻找marker gene</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
+ <span class="menu-text">寻找不同样本类型间同一细胞类型内的差异基因</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
+ <span class="menu-text">基于参考集的细胞注释</span></a>
   </div>
 </li>
       </ul>
 </li>
-        <li class="sidebar-item sidebar-item-section">
+          <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../single_cell/scRNA-seq_online/00_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">scRNA-seq_online学习材料</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
+ <span class="menu-text">数据导入与Seurat对象构建</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">质控</span></span></a>
+ <span class="menu-text">质控</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
+ <span class="menu-text">Single-cell RNA-seq Clustering Workflow</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+ <span class="menu-text">PCA原理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+ <span class="menu-text">Normalization and regressing out unwanted variation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+ <span class="menu-text">单细胞数据整合（Integration）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+ <span class="menu-text">细胞聚类（clustering analysis）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
+ <span class="menu-text">细胞分群质量评估</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
+ <span class="menu-text">寻找marker基因+细胞注释</span></a>
   </div>
 </li>
       </ul>
 </li>
-        <li class="sidebar-item sidebar-item-section">
+          <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">单细胞补充内容</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/read_sc_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">读取非标准格式的单细胞数据</span></span></a>
+ <span class="menu-text">读取非标准格式的单细胞数据</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/universal_marker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">细胞分群通用marker</span></span></a>
+ <span class="menu-text">细胞分群通用marker</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（上）</span></span></a>
+ <span class="menu-text">多个单细胞数据集整合分析（上）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（下）</span></span></a>
+ <span class="menu-text">多个单细胞数据集整合分析（下）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/DecontX.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">预测和去除单细胞转录组的环境游离RNA污染</span></span></a>
+ <span class="menu-text">预测和去除单细胞转录组的环境游离RNA污染</span></a>
   </div>
+</li>
+      </ul>
 </li>
       </ul>
 </li>
@@ -480,60 +472,6 @@ div.csl-indent {
       <div class="sidebar-item-container"> 
             <a href="../../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quarto基础</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">在Quarto中嵌入Shiny应用程序</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
-  </div>
-</li>
-      </ul>
-</li>
-        <li class="px-0"><hr class="sidebar-divider hi "></li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
- <span class="menu-text">参考文献</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -541,8 +479,44 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">YAML设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">图片设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">交叉引用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">插入其他内容</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">在Quarto中嵌入Shiny应用程序</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto Books</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">发布到GitHub Pages</span></a>
   </div>
 </li>
       </ul>
@@ -552,29 +526,30 @@ div.csl-indent {
 </nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">Table of contents</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">On this page</h2>
    
   <ul>
-<li><a href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE" id="toc-加载数据" class="nav-link active" data-scroll-target="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE"><span class="header-section-number">13.1</span> 加载数据</a></li>
-  <li><a href="#%E6%95%B0%E6%8D%AE%E8%B4%A8%E6%8E%A7" id="toc-数据质控" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E8%B4%A8%E6%8E%A7"><span class="header-section-number">13.2</span> 数据质控</a></li>
-  <li><a href="#%E5%88%86%E5%89%B2%E6%95%B0%E6%8D%AE" id="toc-分割数据" class="nav-link" data-scroll-target="#%E5%88%86%E5%89%B2%E6%95%B0%E6%8D%AE"><span class="header-section-number">13.3</span> 分割数据</a></li>
+<li><a href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE" id="toc-加载数据" class="nav-link active" data-scroll-target="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE"><span class="header-section-number">1</span> 加载数据</a></li>
+  <li><a href="#%E6%95%B0%E6%8D%AE%E8%B4%A8%E6%8E%A7" id="toc-数据质控" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E8%B4%A8%E6%8E%A7"><span class="header-section-number">2</span> 数据质控</a></li>
+  <li><a href="#%E5%88%86%E5%89%B2%E6%95%B0%E6%8D%AE" id="toc-分割数据" class="nav-link" data-scroll-target="#%E5%88%86%E5%89%B2%E6%95%B0%E6%8D%AE"><span class="header-section-number">3</span> 分割数据</a></li>
   <li>
-<a href="#%E6%9C%AA%E6%95%B4%E5%90%88%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E6%A0%87%E5%87%86scrna-seq%E5%88%86%E6%9E%90%E6%B5%81%E7%A8%8B" id="toc-未整合情况下的标准scrna-seq分析流程" class="nav-link" data-scroll-target="#%E6%9C%AA%E6%95%B4%E5%90%88%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E6%A0%87%E5%87%86scrna-seq%E5%88%86%E6%9E%90%E6%B5%81%E7%A8%8B"><span class="header-section-number">13.4</span> 未整合情况下的标准scRNA-seq分析流程</a>
+<a href="#%E6%9C%AA%E6%95%B4%E5%90%88%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E6%A0%87%E5%87%86scrna-seq%E5%88%86%E6%9E%90%E6%B5%81%E7%A8%8B" id="toc-未整合情况下的标准scrna-seq分析流程" class="nav-link" data-scroll-target="#%E6%9C%AA%E6%95%B4%E5%90%88%E6%83%85%E5%86%B5%E4%B8%8B%E7%9A%84%E6%A0%87%E5%87%86scrna-seq%E5%88%86%E6%9E%90%E6%B5%81%E7%A8%8B"><span class="header-section-number">4</span> 未整合情况下的标准scRNA-seq分析流程</a>
   <ul class="collapse">
-<li><a href="#%E6%A0%87%E5%87%86%E5%8C%96%E6%89%BE%E9%AB%98%E5%8F%98%E5%9F%BA%E5%9B%A0%E5%BD%92%E4%B8%80%E5%8C%96%E9%99%8D%E7%BB%B4" id="toc-标准化找高变基因归一化降维" class="nav-link" data-scroll-target="#%E6%A0%87%E5%87%86%E5%8C%96%E6%89%BE%E9%AB%98%E5%8F%98%E5%9F%BA%E5%9B%A0%E5%BD%92%E4%B8%80%E5%8C%96%E9%99%8D%E7%BB%B4">标准化、找高变基因、归一化、降维</a></li>
-  <li><a href="#%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96" id="toc-聚类可视化" class="nav-link" data-scroll-target="#%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96">聚类、可视化</a></li>
+<li><a href="#%E6%A0%87%E5%87%86%E5%8C%96%E6%89%BE%E9%AB%98%E5%8F%98%E5%9F%BA%E5%9B%A0%E5%BD%92%E4%B8%80%E5%8C%96%E9%99%8D%E7%BB%B4" id="toc-标准化找高变基因归一化降维" class="nav-link" data-scroll-target="#%E6%A0%87%E5%87%86%E5%8C%96%E6%89%BE%E9%AB%98%E5%8F%98%E5%9F%BA%E5%9B%A0%E5%BD%92%E4%B8%80%E5%8C%96%E9%99%8D%E7%BB%B4"><span class="header-section-number">4.1</span> 标准化、找高变基因、归一化、降维</a></li>
+  <li><a href="#%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96" id="toc-聚类可视化" class="nav-link" data-scroll-target="#%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="header-section-number">4.2</span> 聚类、可视化</a></li>
   </ul>
 </li>
-  <li><a href="#sec-sc_integration" id="toc-sec-sc_integration" class="nav-link" data-scroll-target="#sec-sc_integration"><span class="header-section-number">13.5</span> 数据整合</a></li>
-  <li><a href="#%E9%87%8D%E6%96%B0%E9%99%8D%E7%BB%B4%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96" id="toc-重新降维聚类可视化" class="nav-link" data-scroll-target="#%E9%87%8D%E6%96%B0%E9%99%8D%E7%BB%B4%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="header-section-number">13.6</span> 重新降维、聚类、可视化</a></li>
-  <li><a href="#%E6%A3%80%E9%AA%8C%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8Bmarker%E5%9F%BA%E5%9B%A0%E7%9A%84%E8%A1%A8%E8%BE%BE" id="toc-检验细胞类型marker基因的表达" class="nav-link" data-scroll-target="#%E6%A3%80%E9%AA%8C%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8Bmarker%E5%9F%BA%E5%9B%A0%E7%9A%84%E8%A1%A8%E8%BE%BE"><span class="header-section-number">13.7</span> 检验细胞类型marker基因的表达</a></li>
-  <li><a href="#%E9%87%8D%E6%96%B0%E5%90%88%E5%B9%B6layers" id="toc-重新合并layers" class="nav-link" data-scroll-target="#%E9%87%8D%E6%96%B0%E5%90%88%E5%B9%B6layers"><span class="header-section-number">13.8</span> 重新合并layers</a></li>
-  <li><a href="#%E5%AF%B9sctransform%E5%A4%84%E7%90%86%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E7%9A%84%E6%95%B4%E5%90%88" id="toc-对sctransform处理后的数据的整合" class="nav-link" data-scroll-target="#%E5%AF%B9sctransform%E5%A4%84%E7%90%86%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E7%9A%84%E6%95%B4%E5%90%88"><span class="header-section-number">13.9</span> 对<code>SCTransform</code>处理后的数据的整合</a></li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/seurat/integrative_analysis_in_seurat_v5.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/single_cell/seurat/integrative_analysis_in_seurat_v5.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
+  <li><a href="#sec-sc_integration" id="toc-sec-sc_integration" class="nav-link" data-scroll-target="#sec-sc_integration"><span class="header-section-number">5</span> 数据整合</a></li>
+  <li><a href="#%E9%87%8D%E6%96%B0%E9%99%8D%E7%BB%B4%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96" id="toc-重新降维聚类可视化" class="nav-link" data-scroll-target="#%E9%87%8D%E6%96%B0%E9%99%8D%E7%BB%B4%E8%81%9A%E7%B1%BB%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="header-section-number">6</span> 重新降维、聚类、可视化</a></li>
+  <li><a href="#%E6%A3%80%E9%AA%8C%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8Bmarker%E5%9F%BA%E5%9B%A0%E7%9A%84%E8%A1%A8%E8%BE%BE" id="toc-检验细胞类型marker基因的表达" class="nav-link" data-scroll-target="#%E6%A3%80%E9%AA%8C%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8Bmarker%E5%9F%BA%E5%9B%A0%E7%9A%84%E8%A1%A8%E8%BE%BE"><span class="header-section-number">7</span> 检验细胞类型marker基因的表达</a></li>
+  <li><a href="#%E9%87%8D%E6%96%B0%E5%90%88%E5%B9%B6layers" id="toc-重新合并layers" class="nav-link" data-scroll-target="#%E9%87%8D%E6%96%B0%E5%90%88%E5%B9%B6layers"><span class="header-section-number">8</span> 重新合并layers</a></li>
+  <li><a href="#%E5%AF%B9sctransform%E5%A4%84%E7%90%86%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E7%9A%84%E6%95%B4%E5%90%88" id="toc-对sctransform处理后的数据的整合" class="nav-link" data-scroll-target="#%E5%AF%B9sctransform%E5%A4%84%E7%90%86%E5%90%8E%E7%9A%84%E6%95%B0%E6%8D%AE%E7%9A%84%E6%95%B4%E5%90%88"><span class="header-section-number">9</span> 对<code>SCTransform</code>处理后的数据的整合</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/seurat/integrative_analysis_in_seurat_v5.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span id="sec-Integrated_analysis_of_seurat-v5" class="quarto-section-identifier"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">Seurat v5单细胞数据整合分析</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -594,10 +569,10 @@ div.csl-indent {
 <p>Integration of single-cell sequencing datasets, for example across <strong>experimental batches</strong>, <strong>donors</strong>, or <strong>conditions</strong>, is often an important step in scRNA-seq workflows. Integrative analysis can help to <strong>match shared cell types and states across datasets</strong>, which can <strong>boost statistical power</strong>, and most importantly, <strong>facilitate accurate comparative analysis across datasets</strong>.</p>
 <p>In previous versions of Seurat we introduced methods for integrative analysis, including our ‘anchor-based’ integration workflow. Many labs have also published powerful and pioneering methods, including&nbsp;<a href="https://github.com/immunogenomics/harmony">Harmony</a>&nbsp;and&nbsp;<a href="https://yoseflab.github.io/software/scvi-tools/">scVI</a>, for integrative analysis. We recognize that while the goal of matching shared cell types across datasets may be important for many problems, users may also be concerned about which method to use, or that integration could result in a loss of biological resolution.</p>
 <p>In Seurat v5, we introduce more flexible and streamlined infrastructure to run different integration algorithms with a single line of code. This makes it easier to explore the results of different integration methods, and to compare these results to a workflow that excludes integration steps.</p>
-<p>For this vignette, we use a&nbsp;dataset of human PBMC profiled with <strong>seven different technologies</strong> <span class="citation" data-cites="ding2020">(<a href="../../references.html#ref-ding2020" role="doc-biblioref">Ding et al. 2020</a>)</span>, profiled as part of a systematic comparative analysis (<code>pbmcsca</code>). The data is available as part of our&nbsp;SeuratData&nbsp;package.</p>
+<p>For this vignette, we use a&nbsp;dataset of human PBMC profiled with <strong>seven different technologies</strong> <span class="citation" data-cites="ding2020">(<a href="#ref-ding2020" role="doc-biblioref">Ding et al. 2020</a>)</span>, profiled as part of a systematic comparative analysis (<code>pbmcsca</code>). The data is available as part of our&nbsp;SeuratData&nbsp;package.</p>
 <p><img src="images/截屏2023-11-28 21.02.46.png" class="img-fluid" width="526"></p>
-<section id="加载数据" class="level2" data-number="13.1"><h2 data-number="13.1" class="anchored" data-anchor-id="加载数据">
-<span class="header-section-number">13.1</span> 加载数据</h2>
+<section id="加载数据" class="level1" data-number="1"><h1 data-number="1">
+<span class="header-section-number">1</span> 加载数据</h1>
 <div class="callout callout-style-simple callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -676,8 +651,8 @@ pbmc1_SM2_Cell_143 Smart-seq2</code></pre>
 </div>
 </div>
 <p>The object contains data from <strong>nine different batches</strong> (stored in the&nbsp;<code>Method</code>&nbsp;column in the object metadata), representing <strong>seven different technologies</strong>. We will aim to integrate the different batches together.</p>
-</section><section id="数据质控" class="level2" data-number="13.2"><h2 data-number="13.2" class="anchored" data-anchor-id="数据质控">
-<span class="header-section-number">13.2</span> 数据质控</h2>
+</section><section id="数据质控" class="level1" data-number="2"><h1 data-number="2">
+<span class="header-section-number">2</span> 数据质控</h1>
 <p>过滤低质量细胞：</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-3_354b741552fc5c2f25fd6c5308dc3871">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html">subset</a></span><span class="op">(</span><span class="va">obj</span>, <span class="va">nFeature_RNA</span> <span class="op">&gt;</span> <span class="fl">1000</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -699,8 +674,8 @@ Plasmacytoid dendritic cell                  Unassigned
                          78                           8 </code></pre>
 </div>
 </div>
-</section><section id="分割数据" class="level2" data-number="13.3"><h2 data-number="13.3" class="anchored" data-anchor-id="分割数据">
-<span class="header-section-number">13.3</span> 分割数据</h2>
+</section><section id="分割数据" class="level1" data-number="3"><h1 data-number="3">
+<span class="header-section-number">3</span> 分割数据</h1>
 <p>In previous versions of Seurat, if we want to integrate this data, we would require the data to be represented as nine different Seurat objects. When using Seurat v5 assays, we can instead keep all the data in one object, but simply split the layers:</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-5_c7f13ec95e35450b05a9981b4af6dad6">
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">obj</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html">split</a></span><span class="op">(</span><span class="va">obj</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>, f <span class="op">=</span> <span class="va">obj</span><span class="op">$</span><span class="va">Method</span><span class="op">)</span></span>
@@ -713,9 +688,10 @@ Active assay: RNA (33694 features, 0 variable features)
 </div>
 </div>
 <p>After splitting, there are now <strong>18 layers</strong> (<strong>a&nbsp;<code>counts</code>&nbsp;and&nbsp;<code>data</code>&nbsp;layer for each batch</strong>).</p>
-</section><section id="未整合情况下的标准scrna-seq分析流程" class="level2" data-number="13.4"><h2 data-number="13.4" class="anchored" data-anchor-id="未整合情况下的标准scrna-seq分析流程">
-<span class="header-section-number">13.4</span> 未整合情况下的标准scRNA-seq分析流程</h2>
-<section id="标准化找高变基因归一化降维" class="level3"><h3 class="anchored" data-anchor-id="标准化找高变基因归一化降维">标准化、找高变基因、归一化、降维</h3>
+</section><section id="未整合情况下的标准scrna-seq分析流程" class="level1" data-number="4"><h1 data-number="4">
+<span class="header-section-number">4</span> 未整合情况下的标准scRNA-seq分析流程</h1>
+<section id="标准化找高变基因归一化降维" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="标准化找高变基因归一化降维">
+<span class="header-section-number">4.1</span> 标准化、找高变基因、归一化、降维</h2>
 <p>We can now run a standard scRNA-seq analysis (i.e.&nbsp;without integration). Note that since the data is split into layers, normalization and variable feature identification is performed for each batch independently (a consensus set of variable features is automatically identified).</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-6_ee0c4b8c6b8ae42e647bab4bb58e5064">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span>
@@ -727,7 +703,8 @@ Active assay: RNA (33694 features, 0 variable features)
 <span>               reduction <span class="op">=</span> <span class="st">"pca"</span>, </span>
 <span>               reduction.name <span class="op">=</span> <span class="st">"umap.unintegrated"</span><span class="op">)</span> <span class="co"># name to store dimensional reduction in the Seurat object</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="聚类可视化" class="level3"><h3 class="anchored" data-anchor-id="聚类可视化">聚类、可视化</h3>
+</section><section id="聚类可视化" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="聚类可视化">
+<span class="header-section-number">4.2</span> 聚类、可视化</h2>
 <p>We can now visualize the results of a standard analysis without integration. Note that cells are grouping both by <strong>cell type</strong> and by underlying <strong>method</strong>. While a UMAP analysis is just a visualization of this, clustering this dataset would return predominantly batch-specific clusters. Especially if previous cell-type annotations were not available, this would make downstream analysis extremely challenging.</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-7_f62adc5974b02f6a1843ca545640bd03">
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors</a></span><span class="op">(</span><span class="va">obj</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span>, reduction <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span></span>
@@ -751,8 +728,8 @@ Elapsed time: 0 seconds</code></pre>
 </div>
 </div>
 <p>可以看到，不同的测序技术间的细胞类型差异较大。因此需要对数据进行整合。</p>
-</section></section><section id="sec-sc_integration" class="level2" data-number="13.5"><h2 data-number="13.5" class="anchored" data-anchor-id="sec-sc_integration">
-<span class="header-section-number">13.5</span> 数据整合</h2>
+</section></section><section id="sec-sc_integration" class="level1" data-number="5"><h1 data-number="5">
+<span class="header-section-number">5</span> 数据整合</h1>
 <p>Seurat v5 enables streamlined integrative analysis using the&nbsp;<code>IntegrateLayers</code>&nbsp;function. The method currently supports <strong>five integration methods</strong>. Each of these methods performs integration in low-dimensional space, and <strong>returns a dimensional reduction</strong> (i.e.&nbsp;<code>integrated.rpca</code>) that aims to co-embed shared cell types across batches:</p>
 <ul>
 <li><p><strong>Anchor-based CCA integration</strong> (<code>method=CCAIntegration</code>)</p></li>
@@ -761,7 +738,25 @@ Elapsed time: 0 seconds</code></pre>
 <li><p><strong>FastMNN</strong> (<code>method= FastMNNIntegration</code>)</p></li>
 <li><p><strong>scVI</strong> (<code>method=scVIIntegration</code>)</p></li>
 </ul>
-<p>Note that our anchor-based RPCA integration represents a faster and more conservative (less correction) method for integration. For interested users, we discuss this method in more detail in our&nbsp;<a href="https://satijalab.org/seurat/articles/integration_rpca">previous RPCA vignette</a>.</p>
+<p>Note that our anchor-based RPCA integration represents a <strong>faster</strong> and more <strong>conservative</strong> (less correction) method for integration. For interested users, we discuss this method in more detail in our&nbsp;<a href="https://satijalab.org/seurat/articles/integration_rpca">previous RPCA vignette</a>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>当存在以下情况之一时，最好使用RPCA进行整合：</p>
+<ol type="1">
+<li><p>一个数据集中的很大一部分细胞在另一个数据集中没有匹配类型；</p></li>
+<li><p>数据集来自同一平台（即10x的多个通道）；</p></li>
+<li><p>有大量的数据集或细胞要整合。</p></li>
+</ol>
+</div>
+</div>
 <p>You can find more detail on each method, and any installation prerequisites, in Seurat’s documentation (for example,&nbsp;<code><a href="https://satijalab.org/seurat/reference/HarmonyIntegration.html">?HarmonyIntegration</a></code>). For example, harmony整合需要先安装<a href="https://cran.r-project.org/web/packages/harmony/index.html"><code>harmony</code></a>包（<code>install.packages("harmony")</code>）；scVI integration requires&nbsp;<code>reticulate</code>&nbsp;which can be installed from CRAN (<code>install.packages("reticulate")</code>) as well as&nbsp;<code>scvi-tools</code>&nbsp;and its dependencies installed in a conda environment. Please see scVI installation instructions&nbsp;<a href="https://docs.scvi-tools.org/en/stable/installation.html">here</a>.</p>
 <p>Each of the following lines perform a new integration using a single line of code:</p>
 <p>（这里我们选择其中的<code>CCAIntegration</code>和<code>HarmonyIntegration</code>两种方式分别对数据进行整合，整合后后的降维信息分别储存在”integrated.cca”和”harmony”中）</p>
@@ -830,8 +825,8 @@ Elapsed time: 0 seconds</code></pre>
 <span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(obj<span class="sc">@</span>reductions)</span>
 <span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="重新降维聚类可视化" class="level2" data-number="13.6"><h2 data-number="13.6" class="anchored" data-anchor-id="重新降维聚类可视化">
-<span class="header-section-number">13.6</span> 重新降维、聚类、可视化</h2>
+</section><section id="重新降维聚类可视化" class="level1" data-number="6"><h1 data-number="6">
+<span class="header-section-number">6</span> 重新降维、聚类、可视化</h1>
 <p><code>CCAIntegration</code>：</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-13_7ad99618a1d7bf59a8d20a163b6ea8db">
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html">RunUMAP</a></span><span class="op">(</span><span class="va">obj</span>, </span>
@@ -882,7 +877,7 @@ Number of edges: 459472
 Running Louvain algorithm...
 Maximum modularity in 10 random starts: 0.7900
 Number of communities: 24
-Elapsed time: 0 seconds</code></pre>
+Elapsed time: 1 seconds</code></pre>
 </div>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">obj</span><span class="op">@</span><span class="va">meta.data</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -906,8 +901,8 @@ Elapsed time: 0 seconds</code></pre>
 <p><img src="integrative_analysis_in_seurat_v5_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="1248"></p>
 </div>
 </div>
-</section><section id="检验细胞类型marker基因的表达" class="level2" data-number="13.7"><h2 data-number="13.7" class="anchored" data-anchor-id="检验细胞类型marker基因的表达">
-<span class="header-section-number">13.7</span> 检验细胞类型marker基因的表达</h2>
+</section><section id="检验细胞类型marker基因的表达" class="level1" data-number="7"><h1 data-number="7">
+<span class="header-section-number">7</span> 检验细胞类型marker基因的表达</h1>
 <p>We hope that by simplifying the process of performing integrative analysis, users can more carefully evaluate the biological information retained in the integrated dataset. For example, users can compare the expression of biological markers based on different clustering solutions, or visualize one method’s clustering solution on different UMAP visualizations.</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-16_594593a3211033131947d69b5f7be288">
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></span>
@@ -934,8 +929,8 @@ Elapsed time: 0 seconds</code></pre>
 <p><img src="integrative_analysis_in_seurat_v5_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="1440"></p>
 </div>
 </div>
-</section><section id="重新合并layers" class="level2" data-number="13.8"><h2 data-number="13.8" class="anchored" data-anchor-id="重新合并layers">
-<span class="header-section-number">13.8</span> 重新合并layers</h2>
+</section><section id="重新合并layers" class="level1" data-number="8"><h1 data-number="8">
+<span class="header-section-number">8</span> 重新合并layers</h1>
 <p>Once integrative analysis is complete, you can rejoin the layers - which collapses the individual datasets together and recreates the original&nbsp;<code>counts</code>&nbsp;and&nbsp;<code>data</code>&nbsp;layers. <strong>You will need to do this before performing any differential expression analysis</strong>. However, you can always resplit the layers in case you would like to reperform integrative analysis.</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-17_5624b7679f6e9c27e6d945251573698f">
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/SplitLayers.html">JoinLayers</a></span><span class="op">(</span><span class="va">obj</span><span class="op">)</span></span>
@@ -948,9 +943,9 @@ Active assay: RNA (33694 features, 2000 variable features)
  6 dimensional reductions calculated: pca, umap.unintegrated, integrated.cca, harmony, umap.cca, umap.harmony</code></pre>
 </div>
 </div>
-</section><section id="对sctransform处理后的数据的整合" class="level2" data-number="13.9"><h2 data-number="13.9" class="anchored" data-anchor-id="对sctransform处理后的数据的整合">
-<span class="header-section-number">13.9</span> 对<code>SCTransform</code>处理后的数据的整合</h2>
-<p>Users can also perform integration using sctransform-normalized data (see <a href="sctransform.html"><span>Chapter&nbsp;10</span></a> for more information), by first running <code>SCTransform</code> normalization, and then s<strong>etting the&nbsp;<code>normalization.method</code>&nbsp;argument in&nbsp;<code>IntegrateLayers</code></strong>（和 <a href="integration.html#sec-integration_after_sct"><span>Section&nbsp;12.4.2</span></a> 中一样）。</p>
+</section><section id="对sctransform处理后的数据的整合" class="level1" data-number="9"><h1 data-number="9">
+<span class="header-section-number">9</span> 对<code>SCTransform</code>处理后的数据的整合</h1>
+<p>Users can also perform integration using sctransform-normalized data (see 基<a href="../../single_cell/seurat/sctransform.html">于SCTransform的单细胞数据标准化</a> for more information), by first running <code>SCTransform</code> normalization, and then s<strong>etting the&nbsp;<code>normalization.method</code>&nbsp;argument in&nbsp;<code>IntegrateLayers</code></strong>（和<a href="../../single_cell/seurat/integration.html#sec-integration_after_sct">执行<code>SCTransform</code>标准化流程之后的整合</a>中一样）。</p>
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-18_2b082aba34c9655078b8129852a34c29">
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#重新载入数据、质控、分割</span></span>
@@ -985,7 +980,7 @@ Number of edges: 499367
 Running Louvain algorithm...
 Maximum modularity in 10 random starts: 0.8342
 Number of communities: 26
-Elapsed time: 0 seconds</code></pre>
+Elapsed time: 1 seconds</code></pre>
 </div>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">obj</span>,</span>
 <span>        reduction <span class="op">=</span> <span class="st">"umap.cca"</span>,</span>
@@ -997,7 +992,7 @@ Elapsed time: 0 seconds</code></pre>
 </div>
 <hr>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1006,13 +1001,13 @@ Session Info
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-hash="integrative_analysis_in_seurat_v5_cache/html/unnamed-chunk-19_a1b8c49604a32016ded3ad179a64a7db">
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.3.2 (2023-10-31)
 Platform: aarch64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.2.1
+Running under: macOS Sonoma 14.3
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
@@ -1034,84 +1029,88 @@ other attached packages:
 loaded via a namespace (and not attached):
   [1] RColorBrewer_1.1-3          rstudioapi_0.15.0          
   [3] jsonlite_1.8.8              magrittr_2.0.3             
-  [5] spatstat.utils_3.0-4        farver_2.1.1               
-  [7] rmarkdown_2.25              zlibbioc_1.48.0            
-  [9] vctrs_0.6.5                 ROCR_1.0-11                
- [11] DelayedMatrixStats_1.24.0   spatstat.explore_3.2-5     
- [13] RCurl_1.98-1.14             S4Arrays_1.2.0             
- [15] htmltools_0.5.7             SparseArray_1.2.3          
- [17] sctransform_0.4.1           parallelly_1.36.0          
- [19] KernSmooth_2.23-22          htmlwidgets_1.6.4          
- [21] ica_1.0-3                   plyr_1.8.9                 
- [23] plotly_4.10.4               zoo_1.8-12                 
- [25] igraph_1.6.0                mime_0.12                  
- [27] lifecycle_1.0.4             pkgconfig_2.0.3            
- [29] Matrix_1.6-5                R6_2.5.1                   
- [31] fastmap_1.1.1               GenomeInfoDbData_1.2.11    
- [33] MatrixGenerics_1.14.0       fitdistrplus_1.1-11        
- [35] future_1.33.1               shiny_1.8.0                
- [37] digest_0.6.34               colorspace_2.1-0           
- [39] S4Vectors_0.40.2            tensor_1.5                 
- [41] RSpectra_0.16-1             irlba_2.3.5.1              
- [43] GenomicRanges_1.54.1        labeling_0.4.3             
- [45] progressr_0.14.0            fansi_1.0.6                
- [47] spatstat.sparse_3.0-3       httr_1.4.7                 
- [49] polyclip_1.10-6             abind_1.4-5                
- [51] compiler_4.3.2              withr_3.0.0                
- [53] fastDummies_1.7.3           MASS_7.3-60.0.1            
- [55] DelayedArray_0.28.0         tools_4.3.2                
- [57] lmtest_0.9-40               httpuv_1.6.13              
- [59] future.apply_1.11.1         goftest_1.2-3              
- [61] glmGamPoi_1.14.0            glue_1.7.0                 
- [63] nlme_3.1-164                promises_1.2.1             
- [65] grid_4.3.2                  Rtsne_0.17                 
- [67] cluster_2.1.6               reshape2_1.4.4             
- [69] generics_0.1.3              gtable_0.3.4               
- [71] spatstat.data_3.0-4         tidyr_1.3.0                
- [73] data.table_1.14.10          XVector_0.42.0             
- [75] utf8_1.2.4                  BiocGenerics_0.48.1        
- [77] spatstat.geom_3.2-7         RcppAnnoy_0.0.21           
- [79] ggrepel_0.9.5               RANN_2.6.1                 
- [81] pillar_1.9.0                stringr_1.5.1              
- [83] spam_2.10-0                 RcppHNSW_0.5.0             
- [85] later_1.3.2                 splines_4.3.2              
- [87] dplyr_1.1.4                 lattice_0.22-5             
- [89] survival_3.5-7              deldir_2.0-2               
- [91] tidyselect_1.2.0            miniUI_0.1.1.1             
- [93] pbapply_1.7-2               knitr_1.45                 
- [95] gridExtra_2.3               IRanges_2.36.0             
- [97] SummarizedExperiment_1.32.0 scattermore_1.2            
- [99] stats4_4.3.2                xfun_0.41                  
-[101] Biobase_2.62.0              matrixStats_1.2.0          
-[103] stringi_1.8.3               lazyeval_0.2.2             
-[105] yaml_2.3.8                  evaluate_0.23              
-[107] codetools_0.2-19            tibble_3.2.1               
-[109] cli_3.6.2                   uwot_0.1.16                
-[111] xtable_1.8-4                reticulate_1.34.0          
-[113] munsell_0.5.0               Rcpp_1.0.12                
-[115] GenomeInfoDb_1.38.5         globals_0.16.2             
-[117] spatstat.random_3.2-2       png_0.1-8                  
-[119] parallel_4.3.2              ellipsis_0.3.2             
-[121] dotCall64_1.1-1             sparseMatrixStats_1.14.0   
-[123] bitops_1.0-7                listenv_0.9.0              
-[125] viridisLite_0.4.2           scales_1.3.0               
-[127] ggridges_0.5.5              crayon_1.5.2               
-[129] leiden_0.4.3.1              purrr_1.0.2                
-[131] rlang_1.1.3                 cowplot_1.1.2              </code></pre>
+  [5] spatstat.utils_3.0-4        ggbeeswarm_0.7.2           
+  [7] farver_2.1.1                rmarkdown_2.25             
+  [9] zlibbioc_1.48.0             vctrs_0.6.5                
+ [11] ROCR_1.0-11                 DelayedMatrixStats_1.24.0  
+ [13] spatstat.explore_3.2-5      RCurl_1.98-1.14            
+ [15] S4Arrays_1.2.0              htmltools_0.5.7            
+ [17] SparseArray_1.2.3           sctransform_0.4.1          
+ [19] parallelly_1.36.0           KernSmooth_2.23-22         
+ [21] htmlwidgets_1.6.4           ica_1.0-3                  
+ [23] plyr_1.8.9                  plotly_4.10.4              
+ [25] zoo_1.8-12                  igraph_1.6.0               
+ [27] mime_0.12                   lifecycle_1.0.4            
+ [29] pkgconfig_2.0.3             Matrix_1.6-5               
+ [31] R6_2.5.1                    fastmap_1.1.1              
+ [33] GenomeInfoDbData_1.2.11     MatrixGenerics_1.14.0      
+ [35] fitdistrplus_1.1-11         future_1.33.1              
+ [37] shiny_1.8.0                 digest_0.6.34              
+ [39] colorspace_2.1-0            S4Vectors_0.40.2           
+ [41] tensor_1.5                  RSpectra_0.16-1            
+ [43] irlba_2.3.5.1               GenomicRanges_1.54.1       
+ [45] labeling_0.4.3              progressr_0.14.0           
+ [47] fansi_1.0.6                 spatstat.sparse_3.0-3      
+ [49] httr_1.4.7                  polyclip_1.10-6            
+ [51] abind_1.4-5                 compiler_4.3.2             
+ [53] withr_3.0.0                 fastDummies_1.7.3          
+ [55] MASS_7.3-60.0.1             DelayedArray_0.28.0        
+ [57] tools_4.3.2                 vipor_0.4.7                
+ [59] lmtest_0.9-40               beeswarm_0.4.0             
+ [61] httpuv_1.6.13               future.apply_1.11.1        
+ [63] goftest_1.2-3               glmGamPoi_1.14.0           
+ [65] glue_1.7.0                  nlme_3.1-164               
+ [67] promises_1.2.1              grid_4.3.2                 
+ [69] Rtsne_0.17                  cluster_2.1.6              
+ [71] reshape2_1.4.4              generics_0.1.3             
+ [73] gtable_0.3.4                spatstat.data_3.0-4        
+ [75] tidyr_1.3.0                 data.table_1.14.10         
+ [77] XVector_0.42.0              utf8_1.2.4                 
+ [79] BiocGenerics_0.48.1         spatstat.geom_3.2-7        
+ [81] RcppAnnoy_0.0.21            ggrepel_0.9.5              
+ [83] RANN_2.6.1                  pillar_1.9.0               
+ [85] stringr_1.5.1               spam_2.10-0                
+ [87] RcppHNSW_0.5.0              later_1.3.2                
+ [89] splines_4.3.2               dplyr_1.1.4                
+ [91] lattice_0.22-5              survival_3.5-7             
+ [93] deldir_2.0-2                tidyselect_1.2.0           
+ [95] miniUI_0.1.1.1              pbapply_1.7-2              
+ [97] knitr_1.45                  gridExtra_2.3              
+ [99] IRanges_2.36.0              SummarizedExperiment_1.32.0
+[101] scattermore_1.2             stats4_4.3.2               
+[103] RhpcBLASctl_0.23-42         xfun_0.41                  
+[105] Biobase_2.62.0              matrixStats_1.2.0          
+[107] stringi_1.8.3               lazyeval_0.2.2             
+[109] yaml_2.3.8                  evaluate_0.23              
+[111] codetools_0.2-19            tibble_3.2.1               
+[113] cli_3.6.2                   uwot_0.1.16                
+[115] xtable_1.8-4                reticulate_1.34.0          
+[117] munsell_0.5.0               harmony_1.2.0              
+[119] GenomeInfoDb_1.38.5         Rcpp_1.0.12                
+[121] globals_0.16.2              spatstat.random_3.2-2      
+[123] png_0.1-8                   ggrastr_1.0.2              
+[125] parallel_4.3.2              ellipsis_0.3.2             
+[127] dotCall64_1.1-1             sparseMatrixStats_1.14.0   
+[129] bitops_1.0-7                listenv_0.9.0              
+[131] viridisLite_0.4.2           scales_1.3.0               
+[133] ggridges_0.5.5              crayon_1.5.2               
+[135] leiden_0.4.3.1              purrr_1.0.2                
+[137] rlang_1.1.3                 cowplot_1.1.2              </code></pre>
 </div>
 </div>
 </div>
+</div>
+</div>
+</section><section id="references" class="level1 unnumbered"><h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-ding2020" class="csl-entry" role="listitem">
+Ding, Jiarui, Xian Adiconis, Sean K. Simmons, Monika S. Kowalczyk, Cynthia C. Hession, Nemanja D. Marjanovic, Travis K. Hughes, et al. 2020. <span>“Systematic Comparison of Single-Cell and Single-Nucleus RNA-Sequencing Methods.”</span> <em>Nature Biotechnology</em> 38 (6): 737–46. <a href="https://doi.org/10.1038/s41587-020-0465-8">https://doi.org/10.1038/s41587-020-0465-8</a>.
 </div>
 </div>
 
 
 <!-- -->
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
-<div id="ref-ding2020" class="csl-entry" role="listitem">
-Ding, Jiarui, Xian Adiconis, Sean K. Simmons, Monika S. Kowalczyk, Cynthia C. Hession, Nemanja D. Marjanovic, Travis K. Hughes, et al. 2020. <span>“Systematic Comparison of Single-Cell and Single-Nucleus RNA-Sequencing Methods.”</span> <em>Nature Biotechnology</em> 38 (6): 737–46. <a href="https://doi.org/10.1038/s41587-020-0465-8">https://doi.org/10.1038/s41587-020-0465-8</a>.
-</div>
-</div>
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1524,331 +1523,348 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
 });
-</script><script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script><script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../../single_cell/seurat/integration.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">整合（integration）</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">整合（integration）</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../single_cell/seurat/marker_gene_identification.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text">寻找marker gene</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb46" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Seurat v5单细胞数据整合分析 {#sec-Integrated_analysis_of_seurat-v5}</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文：</span><span class="co">[</span><span class="ot">*Integrative analysis in Seurat v5*</span><span class="co">](https://satijalab.org/seurat/articles/seurat5_integration)</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文发布日期：2023年10月31日</span></span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>Integration of single-cell sequencing datasets, for example across **experimental batches**, **donors**, or **conditions**, is often an important step in scRNA-seq workflows. Integrative analysis can help to **match shared cell types and states across datasets**, which can **boost statistical power**, and most importantly, **facilitate accurate comparative analysis across datasets**.</span>
+<div class="sourceCode" id="cb46" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Seurat v5单细胞数据整合分析"</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文：</span><span class="co">[</span><span class="ot">*Integrative analysis in Seurat v5*</span><span class="co">](https://satijalab.org/seurat/articles/seurat5_integration)</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文发布日期：2023年10月31日</span></span>
 <span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>In previous versions of Seurat we introduced methods for integrative analysis, including our 'anchor-based' integration workflow. Many labs have also published powerful and pioneering methods, including&nbsp;<span class="co">[</span><span class="ot">Harmony</span><span class="co">](https://github.com/immunogenomics/harmony)</span>&nbsp;and&nbsp;<span class="co">[</span><span class="ot">scVI</span><span class="co">](https://yoseflab.github.io/software/scvi-tools/)</span>, for integrative analysis. We recognize that while the goal of matching shared cell types across datasets may be important for many problems, users may also be concerned about which method to use, or that integration could result in a loss of biological resolution.</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>Integration of single-cell sequencing datasets, for example across **experimental batches**, **donors**, or **conditions**, is often an important step in scRNA-seq workflows. Integrative analysis can help to **match shared cell types and states across datasets**, which can **boost statistical power**, and most importantly, **facilitate accurate comparative analysis across datasets**.</span>
 <span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>In Seurat v5, we introduce more flexible and streamlined infrastructure to run different integration algorithms with a single line of code. This makes it easier to explore the results of different integration methods, and to compare these results to a workflow that excludes integration steps.</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>In previous versions of Seurat we introduced methods for integrative analysis, including our 'anchor-based' integration workflow. Many labs have also published powerful and pioneering methods, including&nbsp;<span class="co">[</span><span class="ot">Harmony</span><span class="co">](https://github.com/immunogenomics/harmony)</span>&nbsp;and&nbsp;<span class="co">[</span><span class="ot">scVI</span><span class="co">](https://yoseflab.github.io/software/scvi-tools/)</span>, for integrative analysis. We recognize that while the goal of matching shared cell types across datasets may be important for many problems, users may also be concerned about which method to use, or that integration could result in a loss of biological resolution.</span>
 <span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>For this vignette, we use a&nbsp;dataset of human PBMC profiled with **seven different technologies** <span class="co">[</span><span class="ot">@ding2020</span><span class="co">]</span>, profiled as part of a systematic comparative analysis (<span class="in">`pbmcsca`</span>). The data is available as part of our&nbsp;SeuratData&nbsp;package.</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>In Seurat v5, we introduce more flexible and streamlined infrastructure to run different integration algorithms with a single line of code. This makes it easier to explore the results of different integration methods, and to compare these results to a workflow that excludes integration steps.</span>
 <span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-11-28%2021.02.46.png)</span>{width="526"}</span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>For this vignette, we use a&nbsp;dataset of human PBMC profiled with **seven different technologies** <span class="co">[</span><span class="ot">@ding2020</span><span class="co">]</span>, profiled as part of a systematic comparative analysis (<span class="in">`pbmcsca`</span>). The data is available as part of our&nbsp;SeuratData&nbsp;package.</span>
 <span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## 加载数据</span></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2023-11-28%2021.02.46.png)</span>{width="526"}</span>
 <span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" appearance="minimal" icon="false"}</span>
-<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a><span class="fu">###### 在线读取（可能需要全局代理）</span></span>
-<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
-<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SeuratData)</span>
-<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a><span class="fu">InstallData</span>(<span class="st">"pbmcsca"</span>)</span>
-<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">LoadData</span>(<span class="st">"pbmcsca"</span>)</span>
-<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-34"><a href="#cb46-34" aria-hidden="true" tabindex="-1"></a>从本地下载好的数据读取：</span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a><span class="fu"># 加载数据</span></span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" appearance="minimal" icon="false"}</span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a><span class="fu">###### 在线读取（可能需要全局代理）</span></span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SeuratData)</span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a><span class="fu">InstallData</span>(<span class="st">"pbmcsca"</span>)</span>
+<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb46-32"><a href="#cb46-32" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">LoadData</span>(<span class="st">"pbmcsca"</span>)</span>
+<span id="cb46-33"><a href="#cb46-33" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-34"><a href="#cb46-34" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb46-35"><a href="#cb46-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-38"><a href="#cb46-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-39"><a href="#cb46-39" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb46-40"><a href="#cb46-40" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seurat_official/pbmcsca.rds"</span>)</span>
-<span id="cb46-41"><a href="#cb46-41" aria-hidden="true" tabindex="-1"></a>obj</span>
-<span id="cb46-42"><a href="#cb46-42" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(obj)[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>]</span>
-<span id="cb46-43"><a href="#cb46-43" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(obj)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb46-44"><a href="#cb46-44" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(obj<span class="sc">@</span>meta.data, <span class="dv">5</span>)</span>
-<span id="cb46-45"><a href="#cb46-45" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(obj<span class="sc">$</span>Method)</span>
-<span id="cb46-46"><a href="#cb46-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-47"><a href="#cb46-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-48"><a href="#cb46-48" aria-hidden="true" tabindex="-1"></a>The object contains data from **nine different batches** (stored in the&nbsp;`Method`&nbsp;column in the object metadata), representing **seven different technologies**. We will aim to integrate the different batches together.</span>
+<span id="cb46-36"><a href="#cb46-36" aria-hidden="true" tabindex="-1"></a>从本地下载好的数据读取：</span>
+<span id="cb46-37"><a href="#cb46-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-40"><a href="#cb46-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-41"><a href="#cb46-41" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb46-42"><a href="#cb46-42" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seurat_official/pbmcsca.rds"</span>)</span>
+<span id="cb46-43"><a href="#cb46-43" aria-hidden="true" tabindex="-1"></a>obj</span>
+<span id="cb46-44"><a href="#cb46-44" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(obj)[<span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>]</span>
+<span id="cb46-45"><a href="#cb46-45" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(obj)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb46-46"><a href="#cb46-46" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(obj<span class="sc">@</span>meta.data, <span class="dv">5</span>)</span>
+<span id="cb46-47"><a href="#cb46-47" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(obj<span class="sc">$</span>Method)</span>
+<span id="cb46-48"><a href="#cb46-48" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb46-49"><a href="#cb46-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-50"><a href="#cb46-50" aria-hidden="true" tabindex="-1"></a><span class="fu">## 数据质控</span></span>
+<span id="cb46-50"><a href="#cb46-50" aria-hidden="true" tabindex="-1"></a>The object contains data from **nine different batches** (stored in the&nbsp;`Method`&nbsp;column in the object metadata), representing **seven different technologies**. We will aim to integrate the different batches together.</span>
 <span id="cb46-51"><a href="#cb46-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-52"><a href="#cb46-52" aria-hidden="true" tabindex="-1"></a>过滤低质量细胞：</span>
+<span id="cb46-52"><a href="#cb46-52" aria-hidden="true" tabindex="-1"></a><span class="fu"># 数据质控</span></span>
 <span id="cb46-53"><a href="#cb46-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-56"><a href="#cb46-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-57"><a href="#cb46-57" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">subset</span>(obj, nFeature_RNA <span class="sc">&gt;</span> <span class="dv">1000</span>)</span>
-<span id="cb46-58"><a href="#cb46-58" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-59"><a href="#cb46-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-60"><a href="#cb46-60" aria-hidden="true" tabindex="-1"></a>这个地方为了验证后面整合的效果对细胞类型提前进行了注释。</span>
+<span id="cb46-54"><a href="#cb46-54" aria-hidden="true" tabindex="-1"></a>过滤低质量细胞：</span>
+<span id="cb46-55"><a href="#cb46-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-58"><a href="#cb46-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-59"><a href="#cb46-59" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">subset</span>(obj, nFeature_RNA <span class="sc">&gt;</span> <span class="dv">1000</span>)</span>
+<span id="cb46-60"><a href="#cb46-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb46-61"><a href="#cb46-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-64"><a href="#cb46-64" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-65"><a href="#cb46-65" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(obj<span class="sc">$</span>CellType)</span>
-<span id="cb46-66"><a href="#cb46-66" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-67"><a href="#cb46-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-68"><a href="#cb46-68" aria-hidden="true" tabindex="-1"></a><span class="fu">## 分割数据</span></span>
+<span id="cb46-62"><a href="#cb46-62" aria-hidden="true" tabindex="-1"></a>这个地方为了验证后面整合的效果对细胞类型提前进行了注释。</span>
+<span id="cb46-63"><a href="#cb46-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-66"><a href="#cb46-66" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-67"><a href="#cb46-67" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(obj<span class="sc">$</span>CellType)</span>
+<span id="cb46-68"><a href="#cb46-68" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb46-69"><a href="#cb46-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-70"><a href="#cb46-70" aria-hidden="true" tabindex="-1"></a>In previous versions of Seurat, if we want to integrate this data, we would require the data to be represented as nine different Seurat objects. When using Seurat v5 assays, we can instead keep all the data in one object, but simply split the layers:</span>
+<span id="cb46-70"><a href="#cb46-70" aria-hidden="true" tabindex="-1"></a><span class="fu"># 分割数据</span></span>
 <span id="cb46-71"><a href="#cb46-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-74"><a href="#cb46-74" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-75"><a href="#cb46-75" aria-hidden="true" tabindex="-1"></a>obj[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">split</span>(obj[[<span class="st">"RNA"</span>]], <span class="at">f =</span> obj<span class="sc">$</span>Method)</span>
-<span id="cb46-76"><a href="#cb46-76" aria-hidden="true" tabindex="-1"></a>obj</span>
-<span id="cb46-77"><a href="#cb46-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-78"><a href="#cb46-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-79"><a href="#cb46-79" aria-hidden="true" tabindex="-1"></a>After splitting, there are now **18 layers** (**a&nbsp;`counts`&nbsp;and&nbsp;`data`&nbsp;layer for each batch**).</span>
+<span id="cb46-72"><a href="#cb46-72" aria-hidden="true" tabindex="-1"></a>In previous versions of Seurat, if we want to integrate this data, we would require the data to be represented as nine different Seurat objects. When using Seurat v5 assays, we can instead keep all the data in one object, but simply split the layers:</span>
+<span id="cb46-73"><a href="#cb46-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-76"><a href="#cb46-76" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-77"><a href="#cb46-77" aria-hidden="true" tabindex="-1"></a>obj[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">split</span>(obj[[<span class="st">"RNA"</span>]], <span class="at">f =</span> obj<span class="sc">$</span>Method)</span>
+<span id="cb46-78"><a href="#cb46-78" aria-hidden="true" tabindex="-1"></a>obj</span>
+<span id="cb46-79"><a href="#cb46-79" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb46-80"><a href="#cb46-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-81"><a href="#cb46-81" aria-hidden="true" tabindex="-1"></a><span class="fu">## 未整合情况下的标准scRNA-seq分析流程</span></span>
+<span id="cb46-81"><a href="#cb46-81" aria-hidden="true" tabindex="-1"></a>After splitting, there are now **18 layers** (**a&nbsp;`counts`&nbsp;and&nbsp;`data`&nbsp;layer for each batch**).</span>
 <span id="cb46-82"><a href="#cb46-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-83"><a href="#cb46-83" aria-hidden="true" tabindex="-1"></a><span class="fu">### 标准化、找高变基因、归一化、降维</span></span>
+<span id="cb46-83"><a href="#cb46-83" aria-hidden="true" tabindex="-1"></a><span class="fu"># 未整合情况下的标准scRNA-seq分析流程</span></span>
 <span id="cb46-84"><a href="#cb46-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-85"><a href="#cb46-85" aria-hidden="true" tabindex="-1"></a>We can now run a standard scRNA-seq analysis (i.e.&nbsp;without integration). Note that since the data is split into layers, normalization and variable feature identification is performed for each batch independently (a consensus set of variable features is automatically identified).</span>
+<span id="cb46-85"><a href="#cb46-85" aria-hidden="true" tabindex="-1"></a><span class="fu">## 标准化、找高变基因、归一化、降维</span></span>
 <span id="cb46-86"><a href="#cb46-86" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-89"><a href="#cb46-89" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-90"><a href="#cb46-90" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(obj)</span>
-<span id="cb46-91"><a href="#cb46-91" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(obj)</span>
-<span id="cb46-92"><a href="#cb46-92" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(obj)</span>
-<span id="cb46-93"><a href="#cb46-93" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(obj)</span>
-<span id="cb46-94"><a href="#cb46-94" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(obj, </span>
-<span id="cb46-95"><a href="#cb46-95" aria-hidden="true" tabindex="-1"></a>               <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, </span>
-<span id="cb46-96"><a href="#cb46-96" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction =</span> <span class="st">"pca"</span>, </span>
-<span id="cb46-97"><a href="#cb46-97" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction.name =</span> <span class="st">"umap.unintegrated"</span>) <span class="co"># name to store dimensional reduction in the Seurat object</span></span>
-<span id="cb46-98"><a href="#cb46-98" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-99"><a href="#cb46-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-100"><a href="#cb46-100" aria-hidden="true" tabindex="-1"></a><span class="fu">### 聚类、可视化</span></span>
+<span id="cb46-87"><a href="#cb46-87" aria-hidden="true" tabindex="-1"></a>We can now run a standard scRNA-seq analysis (i.e.&nbsp;without integration). Note that since the data is split into layers, normalization and variable feature identification is performed for each batch independently (a consensus set of variable features is automatically identified).</span>
+<span id="cb46-88"><a href="#cb46-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-91"><a href="#cb46-91" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-92"><a href="#cb46-92" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(obj)</span>
+<span id="cb46-93"><a href="#cb46-93" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(obj)</span>
+<span id="cb46-94"><a href="#cb46-94" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(obj)</span>
+<span id="cb46-95"><a href="#cb46-95" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(obj)</span>
+<span id="cb46-96"><a href="#cb46-96" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(obj, </span>
+<span id="cb46-97"><a href="#cb46-97" aria-hidden="true" tabindex="-1"></a>               <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, </span>
+<span id="cb46-98"><a href="#cb46-98" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction =</span> <span class="st">"pca"</span>, </span>
+<span id="cb46-99"><a href="#cb46-99" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction.name =</span> <span class="st">"umap.unintegrated"</span>) <span class="co"># name to store dimensional reduction in the Seurat object</span></span>
+<span id="cb46-100"><a href="#cb46-100" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb46-101"><a href="#cb46-101" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-102"><a href="#cb46-102" aria-hidden="true" tabindex="-1"></a>We can now visualize the results of a standard analysis without integration. Note that cells are grouping both by **cell type** and by underlying **method**. While a UMAP analysis is just a visualization of this, clustering this dataset would return predominantly batch-specific clusters. Especially if previous cell-type annotations were not available, this would make downstream analysis extremely challenging.</span>
+<span id="cb46-102"><a href="#cb46-102" aria-hidden="true" tabindex="-1"></a><span class="fu">## 聚类、可视化</span></span>
 <span id="cb46-103"><a href="#cb46-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-106"><a href="#cb46-106" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-107"><a href="#cb46-107" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
-<span id="cb46-108"><a href="#cb46-108" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(obj, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">reduction =</span> <span class="st">"pca"</span>)</span>
-<span id="cb46-109"><a href="#cb46-109" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(obj, <span class="at">resolution =</span> <span class="dv">2</span>, <span class="at">cluster.name =</span> <span class="st">"unintegrated_clusters"</span>)</span>
-<span id="cb46-110"><a href="#cb46-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-111"><a href="#cb46-111" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(obj, </span>
-<span id="cb46-112"><a href="#cb46-112" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap.unintegrated"</span>, </span>
-<span id="cb46-113"><a href="#cb46-113" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="fu">c</span>(<span class="st">"Method"</span>, <span class="st">"CellType"</span>))</span>
-<span id="cb46-114"><a href="#cb46-114" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-115"><a href="#cb46-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-116"><a href="#cb46-116" aria-hidden="true" tabindex="-1"></a>可以看到，不同的测序技术间的细胞类型差异较大。因此需要对数据进行整合。</span>
+<span id="cb46-104"><a href="#cb46-104" aria-hidden="true" tabindex="-1"></a>We can now visualize the results of a standard analysis without integration. Note that cells are grouping both by **cell type** and by underlying **method**. While a UMAP analysis is just a visualization of this, clustering this dataset would return predominantly batch-specific clusters. Especially if previous cell-type annotations were not available, this would make downstream analysis extremely challenging.</span>
+<span id="cb46-105"><a href="#cb46-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-108"><a href="#cb46-108" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-109"><a href="#cb46-109" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb46-110"><a href="#cb46-110" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(obj, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">reduction =</span> <span class="st">"pca"</span>)</span>
+<span id="cb46-111"><a href="#cb46-111" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(obj, <span class="at">resolution =</span> <span class="dv">2</span>, <span class="at">cluster.name =</span> <span class="st">"unintegrated_clusters"</span>)</span>
+<span id="cb46-112"><a href="#cb46-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-113"><a href="#cb46-113" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(obj, </span>
+<span id="cb46-114"><a href="#cb46-114" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap.unintegrated"</span>, </span>
+<span id="cb46-115"><a href="#cb46-115" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="fu">c</span>(<span class="st">"Method"</span>, <span class="st">"CellType"</span>))</span>
+<span id="cb46-116"><a href="#cb46-116" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb46-117"><a href="#cb46-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-118"><a href="#cb46-118" aria-hidden="true" tabindex="-1"></a><span class="fu">## 数据整合 {#sec-sc_integration}</span></span>
+<span id="cb46-118"><a href="#cb46-118" aria-hidden="true" tabindex="-1"></a>可以看到，不同的测序技术间的细胞类型差异较大。因此需要对数据进行整合。</span>
 <span id="cb46-119"><a href="#cb46-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-120"><a href="#cb46-120" aria-hidden="true" tabindex="-1"></a>Seurat v5 enables streamlined integrative analysis using the&nbsp;<span class="in">`IntegrateLayers`</span>&nbsp;function. The method currently supports **five integration methods**. Each of these methods performs integration in low-dimensional space, and **returns a dimensional reduction** (i.e.&nbsp;<span class="in">`integrated.rpca`</span>) that aims to co-embed shared cell types across batches:</span>
+<span id="cb46-120"><a href="#cb46-120" aria-hidden="true" tabindex="-1"></a><span class="fu"># 数据整合 {#sec-sc_integration}</span></span>
 <span id="cb46-121"><a href="#cb46-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-122"><a href="#cb46-122" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Anchor-based CCA integration** (<span class="in">`method=CCAIntegration`</span>)</span>
+<span id="cb46-122"><a href="#cb46-122" aria-hidden="true" tabindex="-1"></a>Seurat v5 enables streamlined integrative analysis using the&nbsp;<span class="in">`IntegrateLayers`</span>&nbsp;function. The method currently supports **five integration methods**. Each of these methods performs integration in low-dimensional space, and **returns a dimensional reduction** (i.e.&nbsp;<span class="in">`integrated.rpca`</span>) that aims to co-embed shared cell types across batches:</span>
 <span id="cb46-123"><a href="#cb46-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-124"><a href="#cb46-124" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Anchor-based RPCA integration** (<span class="in">`method=RPCAIntegration`</span>)</span>
+<span id="cb46-124"><a href="#cb46-124" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Anchor-based CCA integration** (<span class="in">`method=CCAIntegration`</span>)</span>
 <span id="cb46-125"><a href="#cb46-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-126"><a href="#cb46-126" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Harmony** (<span class="in">`method=HarmonyIntegration`</span>)</span>
+<span id="cb46-126"><a href="#cb46-126" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Anchor-based RPCA integration** (<span class="in">`method=RPCAIntegration`</span>)</span>
 <span id="cb46-127"><a href="#cb46-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-128"><a href="#cb46-128" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**FastMNN** (<span class="in">`method= FastMNNIntegration`</span>)</span>
+<span id="cb46-128"><a href="#cb46-128" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**Harmony** (<span class="in">`method=HarmonyIntegration`</span>)</span>
 <span id="cb46-129"><a href="#cb46-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-130"><a href="#cb46-130" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**scVI** (<span class="in">`method=scVIIntegration`</span>)</span>
+<span id="cb46-130"><a href="#cb46-130" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**FastMNN** (<span class="in">`method= FastMNNIntegration`</span>)</span>
 <span id="cb46-131"><a href="#cb46-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-132"><a href="#cb46-132" aria-hidden="true" tabindex="-1"></a>Note that our anchor-based RPCA integration represents a faster and more conservative (less correction) method for integration. For interested users, we discuss this method in more detail in our&nbsp;<span class="co">[</span><span class="ot">previous RPCA vignette</span><span class="co">](https://satijalab.org/seurat/articles/integration_rpca)</span>.</span>
+<span id="cb46-132"><a href="#cb46-132" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**scVI** (<span class="in">`method=scVIIntegration`</span>)</span>
 <span id="cb46-133"><a href="#cb46-133" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-134"><a href="#cb46-134" aria-hidden="true" tabindex="-1"></a>You can find more detail on each method, and any installation prerequisites, in Seurat's documentation (for example,&nbsp;<span class="in">`?HarmonyIntegration`</span>). For example, harmony整合需要先安装<span class="co">[</span><span class="ot">`harmony`</span><span class="co">](https://cran.r-project.org/web/packages/harmony/index.html)</span>包（<span class="in">`install.packages("harmony")`</span>）；scVI integration requires&nbsp;<span class="in">`reticulate`</span>&nbsp;which can be installed from CRAN (<span class="in">`install.packages("reticulate")`</span>) as well as&nbsp;<span class="in">`scvi-tools`</span>&nbsp;and its dependencies installed in a conda environment. Please see scVI installation instructions&nbsp;<span class="co">[</span><span class="ot">here</span><span class="co">](https://docs.scvi-tools.org/en/stable/installation.html)</span>.</span>
+<span id="cb46-134"><a href="#cb46-134" aria-hidden="true" tabindex="-1"></a>Note that our anchor-based RPCA integration represents a **faster** and more **conservative** (less correction) method for integration. For interested users, we discuss this method in more detail in our&nbsp;<span class="co">[</span><span class="ot">previous RPCA vignette</span><span class="co">](https://satijalab.org/seurat/articles/integration_rpca)</span>.</span>
 <span id="cb46-135"><a href="#cb46-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-136"><a href="#cb46-136" aria-hidden="true" tabindex="-1"></a>Each of the following lines perform a new integration using a single line of code:</span>
-<span id="cb46-137"><a href="#cb46-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-138"><a href="#cb46-138" aria-hidden="true" tabindex="-1"></a>（这里我们选择其中的<span class="in">`CCAIntegration`</span>和<span class="in">`HarmonyIntegration`</span>两种方式分别对数据进行整合，整合后后的降维信息分别储存在"integrated.cca"和"harmony"中）</span>
-<span id="cb46-139"><a href="#cb46-139" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-142"><a href="#cb46-142" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-143"><a href="#cb46-143" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
-<span id="cb46-144"><a href="#cb46-144" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> obj,</span>
-<span id="cb46-145"><a href="#cb46-145" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> CCAIntegration,</span>
-<span id="cb46-146"><a href="#cb46-146" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb46-147"><a href="#cb46-147" aria-hidden="true" tabindex="-1"></a>  <span class="at">new.reduction =</span> <span class="st">"integrated.cca"</span>,</span>
-<span id="cb46-148"><a href="#cb46-148" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
-<span id="cb46-149"><a href="#cb46-149" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb46-150"><a href="#cb46-150" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(obj<span class="sc">@</span>reductions)</span>
-<span id="cb46-151"><a href="#cb46-151" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-152"><a href="#cb46-152" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-155"><a href="#cb46-155" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-156"><a href="#cb46-156" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-157"><a href="#cb46-157" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
-<span id="cb46-158"><a href="#cb46-158" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
-<span id="cb46-159"><a href="#cb46-159" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> obj, </span>
-<span id="cb46-160"><a href="#cb46-160" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> RPCAIntegration,</span>
-<span id="cb46-161"><a href="#cb46-161" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>, </span>
-<span id="cb46-162"><a href="#cb46-162" aria-hidden="true" tabindex="-1"></a>  <span class="at">new.reduction =</span> <span class="st">"integrated.rpca"</span>,</span>
-<span id="cb46-163"><a href="#cb46-163" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
-<span id="cb46-164"><a href="#cb46-164" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb46-165"><a href="#cb46-165" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(obj<span class="sc">@</span>reductions)</span>
-<span id="cb46-166"><a href="#cb46-166" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-167"><a href="#cb46-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-170"><a href="#cb46-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-171"><a href="#cb46-171" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
-<span id="cb46-172"><a href="#cb46-172" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> obj, </span>
-<span id="cb46-173"><a href="#cb46-173" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> HarmonyIntegration,</span>
-<span id="cb46-174"><a href="#cb46-174" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>, </span>
-<span id="cb46-175"><a href="#cb46-175" aria-hidden="true" tabindex="-1"></a>  <span class="at">new.reduction =</span> <span class="st">"harmony"</span>,</span>
-<span id="cb46-176"><a href="#cb46-176" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
-<span id="cb46-177"><a href="#cb46-177" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb46-178"><a href="#cb46-178" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(obj<span class="sc">@</span>reductions)</span>
-<span id="cb46-179"><a href="#cb46-179" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-180"><a href="#cb46-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-183"><a href="#cb46-183" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-184"><a href="#cb46-184" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-185"><a href="#cb46-185" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
-<span id="cb46-186"><a href="#cb46-186" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
-<span id="cb46-187"><a href="#cb46-187" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> obj, </span>
-<span id="cb46-188"><a href="#cb46-188" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> FastMNNIntegration,</span>
-<span id="cb46-189"><a href="#cb46-189" aria-hidden="true" tabindex="-1"></a>  <span class="at">new.reduction =</span> <span class="st">"integrated.mnn"</span>,</span>
-<span id="cb46-190"><a href="#cb46-190" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
-<span id="cb46-191"><a href="#cb46-191" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb46-192"><a href="#cb46-192" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(obj<span class="sc">@</span>reductions)</span>
-<span id="cb46-193"><a href="#cb46-193" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-194"><a href="#cb46-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-197"><a href="#cb46-197" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-198"><a href="#cb46-198" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb46-199"><a href="#cb46-199" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
-<span id="cb46-200"><a href="#cb46-200" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
-<span id="cb46-201"><a href="#cb46-201" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> obj, </span>
-<span id="cb46-202"><a href="#cb46-202" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> scVIIntegration,</span>
-<span id="cb46-203"><a href="#cb46-203" aria-hidden="true" tabindex="-1"></a>  <span class="at">new.reduction =</span> <span class="st">"integrated.scvi"</span>,</span>
-<span id="cb46-204"><a href="#cb46-204" aria-hidden="true" tabindex="-1"></a>  <span class="at">conda_env =</span> <span class="st">"../miniconda3/envs/scvi-env"</span>, </span>
-<span id="cb46-205"><a href="#cb46-205" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
-<span id="cb46-206"><a href="#cb46-206" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb46-207"><a href="#cb46-207" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(obj<span class="sc">@</span>reductions)</span>
-<span id="cb46-208"><a href="#cb46-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-209"><a href="#cb46-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-210"><a href="#cb46-210" aria-hidden="true" tabindex="-1"></a><span class="fu">## 重新降维、聚类、可视化</span></span>
-<span id="cb46-211"><a href="#cb46-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-212"><a href="#cb46-212" aria-hidden="true" tabindex="-1"></a><span class="in">`CCAIntegration`</span>：</span>
-<span id="cb46-213"><a href="#cb46-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-216"><a href="#cb46-216" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-217"><a href="#cb46-217" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(obj, </span>
-<span id="cb46-218"><a href="#cb46-218" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>, </span>
-<span id="cb46-219"><a href="#cb46-219" aria-hidden="true" tabindex="-1"></a>               <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, </span>
-<span id="cb46-220"><a href="#cb46-220" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction.name =</span> <span class="st">"umap.cca"</span>)</span>
-<span id="cb46-221"><a href="#cb46-221" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(obj, <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb46-222"><a href="#cb46-222" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(obj, <span class="at">resolution =</span> <span class="dv">2</span>, <span class="at">cluster.name =</span> <span class="st">"cca_clusters"</span>)</span>
-<span id="cb46-223"><a href="#cb46-223" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(obj<span class="sc">@</span>meta.data)</span>
-<span id="cb46-224"><a href="#cb46-224" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(obj,</span>
-<span id="cb46-225"><a href="#cb46-225" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"umap.cca"</span>,</span>
-<span id="cb46-226"><a href="#cb46-226" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by =</span> <span class="fu">c</span>(<span class="st">"Method"</span>, <span class="st">"CellType"</span>, <span class="st">"cca_clusters"</span>),</span>
-<span id="cb46-227"><a href="#cb46-227" aria-hidden="true" tabindex="-1"></a>              <span class="at">combine =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb46-228"><a href="#cb46-228" aria-hidden="true" tabindex="-1"></a>              <span class="at">label.size =</span> <span class="dv">2</span>)</span>
-<span id="cb46-229"><a href="#cb46-229" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-230"><a href="#cb46-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-231"><a href="#cb46-231" aria-hidden="true" tabindex="-1"></a><span class="in">`HarmonyIntegration`</span>：</span>
-<span id="cb46-232"><a href="#cb46-232" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-235"><a href="#cb46-235" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-236"><a href="#cb46-236" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(obj, </span>
-<span id="cb46-237"><a href="#cb46-237" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction =</span> <span class="st">"harmony"</span>, </span>
-<span id="cb46-238"><a href="#cb46-238" aria-hidden="true" tabindex="-1"></a>               <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, </span>
-<span id="cb46-239"><a href="#cb46-239" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction.name =</span> <span class="st">"umap.harmony"</span>)</span>
-<span id="cb46-240"><a href="#cb46-240" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(obj, <span class="at">reduction =</span> <span class="st">"harmony"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
-<span id="cb46-241"><a href="#cb46-241" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(obj, <span class="at">resolution =</span> <span class="dv">2</span>, <span class="at">cluster.name =</span> <span class="st">"harmony_clusters"</span>)</span>
-<span id="cb46-242"><a href="#cb46-242" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(obj<span class="sc">@</span>meta.data)</span>
-<span id="cb46-243"><a href="#cb46-243" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(obj,</span>
-<span id="cb46-244"><a href="#cb46-244" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"umap.harmony"</span>,</span>
-<span id="cb46-245"><a href="#cb46-245" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by =</span> <span class="fu">c</span>(<span class="st">"Method"</span>, <span class="st">"CellType"</span>, <span class="st">"harmony_clusters"</span>),</span>
-<span id="cb46-246"><a href="#cb46-246" aria-hidden="true" tabindex="-1"></a>              <span class="at">combine =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb46-247"><a href="#cb46-247" aria-hidden="true" tabindex="-1"></a>              <span class="at">label.size =</span> <span class="dv">2</span>)</span>
-<span id="cb46-248"><a href="#cb46-248" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-249"><a href="#cb46-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-250"><a href="#cb46-250" aria-hidden="true" tabindex="-1"></a>合并UMAP图：</span>
-<span id="cb46-251"><a href="#cb46-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-254"><a href="#cb46-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-255"><a href="#cb46-255" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 13</span></span>
-<span id="cb46-256"><a href="#cb46-256" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 13</span></span>
-<span id="cb46-257"><a href="#cb46-257" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb46-258"><a href="#cb46-258" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(<span class="fu">c</span>(p1, p2), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> F)</span>
-<span id="cb46-259"><a href="#cb46-259" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-260"><a href="#cb46-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-261"><a href="#cb46-261" aria-hidden="true" tabindex="-1"></a><span class="fu">## 检验细胞类型marker基因的表达</span></span>
-<span id="cb46-262"><a href="#cb46-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-263"><a href="#cb46-263" aria-hidden="true" tabindex="-1"></a>We hope that by simplifying the process of performing integrative analysis, users can more carefully evaluate the biological information retained in the integrated dataset. For example, users can compare the expression of biological markers based on different clustering solutions, or visualize one method's clustering solution on different UMAP visualizations.</span>
-<span id="cb46-264"><a href="#cb46-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-267"><a href="#cb46-267" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-268"><a href="#cb46-268" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 15</span></span>
-<span id="cb46-269"><a href="#cb46-269" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb46-270"><a href="#cb46-270" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">VlnPlot</span>(obj,</span>
-<span id="cb46-271"><a href="#cb46-271" aria-hidden="true" tabindex="-1"></a>              <span class="at">features =</span> <span class="st">"rna_CD8A"</span>, </span>
-<span id="cb46-272"><a href="#cb46-272" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by =</span> <span class="st">"unintegrated_clusters"</span>,</span>
-<span id="cb46-273"><a href="#cb46-273" aria-hidden="true" tabindex="-1"></a>              <span class="at">pt.size =</span> <span class="dv">0</span>) <span class="sc">+</span> </span>
-<span id="cb46-274"><a href="#cb46-274" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NoLegend</span>() <span class="sc">+</span> </span>
-<span id="cb46-275"><a href="#cb46-275" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"CD8A - Unintegrated Clusters"</span>)</span>
-<span id="cb46-276"><a href="#cb46-276" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">VlnPlot</span>(obj, </span>
-<span id="cb46-277"><a href="#cb46-277" aria-hidden="true" tabindex="-1"></a>              <span class="st">"rna_CD8A"</span>,</span>
-<span id="cb46-278"><a href="#cb46-278" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by =</span> <span class="st">"cca_clusters"</span>,</span>
-<span id="cb46-279"><a href="#cb46-279" aria-hidden="true" tabindex="-1"></a>              <span class="at">pt.size =</span> <span class="dv">0</span>) <span class="sc">+</span> </span>
-<span id="cb46-280"><a href="#cb46-280" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NoLegend</span>() <span class="sc">+</span> </span>
-<span id="cb46-281"><a href="#cb46-281" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"CD8A - CCA Clusters"</span>)</span>
-<span id="cb46-282"><a href="#cb46-282" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">VlnPlot</span>(obj, </span>
-<span id="cb46-283"><a href="#cb46-283" aria-hidden="true" tabindex="-1"></a>              <span class="st">"rna_CD8A"</span>,</span>
-<span id="cb46-284"><a href="#cb46-284" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by =</span> <span class="st">"harmony_clusters"</span>,</span>
+<span id="cb46-136"><a href="#cb46-136" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
+<span id="cb46-137"><a href="#cb46-137" aria-hidden="true" tabindex="-1"></a>当存在以下情况之一时，最好使用RPCA进行整合：</span>
+<span id="cb46-138"><a href="#cb46-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-139"><a href="#cb46-139" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>一个数据集中的很大一部分细胞在另一个数据集中没有匹配类型；</span>
+<span id="cb46-140"><a href="#cb46-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-141"><a href="#cb46-141" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>数据集来自同一平台（即10x的多个通道）；</span>
+<span id="cb46-142"><a href="#cb46-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-143"><a href="#cb46-143" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>有大量的数据集或细胞要整合。</span>
+<span id="cb46-144"><a href="#cb46-144" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb46-145"><a href="#cb46-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-146"><a href="#cb46-146" aria-hidden="true" tabindex="-1"></a>You can find more detail on each method, and any installation prerequisites, in Seurat's documentation (for example,&nbsp;<span class="in">`?HarmonyIntegration`</span>). For example, harmony整合需要先安装<span class="co">[</span><span class="ot">`harmony`</span><span class="co">](https://cran.r-project.org/web/packages/harmony/index.html)</span>包（<span class="in">`install.packages("harmony")`</span>）；scVI integration requires&nbsp;<span class="in">`reticulate`</span>&nbsp;which can be installed from CRAN (<span class="in">`install.packages("reticulate")`</span>) as well as&nbsp;<span class="in">`scvi-tools`</span>&nbsp;and its dependencies installed in a conda environment. Please see scVI installation instructions&nbsp;<span class="co">[</span><span class="ot">here</span><span class="co">](https://docs.scvi-tools.org/en/stable/installation.html)</span>.</span>
+<span id="cb46-147"><a href="#cb46-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-148"><a href="#cb46-148" aria-hidden="true" tabindex="-1"></a>Each of the following lines perform a new integration using a single line of code:</span>
+<span id="cb46-149"><a href="#cb46-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-150"><a href="#cb46-150" aria-hidden="true" tabindex="-1"></a>（这里我们选择其中的<span class="in">`CCAIntegration`</span>和<span class="in">`HarmonyIntegration`</span>两种方式分别对数据进行整合，整合后后的降维信息分别储存在"integrated.cca"和"harmony"中）</span>
+<span id="cb46-151"><a href="#cb46-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-154"><a href="#cb46-154" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-155"><a href="#cb46-155" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
+<span id="cb46-156"><a href="#cb46-156" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> obj,</span>
+<span id="cb46-157"><a href="#cb46-157" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> CCAIntegration,</span>
+<span id="cb46-158"><a href="#cb46-158" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>,</span>
+<span id="cb46-159"><a href="#cb46-159" aria-hidden="true" tabindex="-1"></a>  <span class="at">new.reduction =</span> <span class="st">"integrated.cca"</span>,</span>
+<span id="cb46-160"><a href="#cb46-160" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb46-161"><a href="#cb46-161" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb46-162"><a href="#cb46-162" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(obj<span class="sc">@</span>reductions)</span>
+<span id="cb46-163"><a href="#cb46-163" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-164"><a href="#cb46-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-167"><a href="#cb46-167" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-168"><a href="#cb46-168" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-169"><a href="#cb46-169" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
+<span id="cb46-170"><a href="#cb46-170" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
+<span id="cb46-171"><a href="#cb46-171" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> obj, </span>
+<span id="cb46-172"><a href="#cb46-172" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> RPCAIntegration,</span>
+<span id="cb46-173"><a href="#cb46-173" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>, </span>
+<span id="cb46-174"><a href="#cb46-174" aria-hidden="true" tabindex="-1"></a>  <span class="at">new.reduction =</span> <span class="st">"integrated.rpca"</span>,</span>
+<span id="cb46-175"><a href="#cb46-175" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb46-176"><a href="#cb46-176" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb46-177"><a href="#cb46-177" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(obj<span class="sc">@</span>reductions)</span>
+<span id="cb46-178"><a href="#cb46-178" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-179"><a href="#cb46-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-182"><a href="#cb46-182" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-183"><a href="#cb46-183" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
+<span id="cb46-184"><a href="#cb46-184" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> obj, </span>
+<span id="cb46-185"><a href="#cb46-185" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> HarmonyIntegration,</span>
+<span id="cb46-186"><a href="#cb46-186" aria-hidden="true" tabindex="-1"></a>  <span class="at">orig.reduction =</span> <span class="st">"pca"</span>, </span>
+<span id="cb46-187"><a href="#cb46-187" aria-hidden="true" tabindex="-1"></a>  <span class="at">new.reduction =</span> <span class="st">"harmony"</span>,</span>
+<span id="cb46-188"><a href="#cb46-188" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb46-189"><a href="#cb46-189" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb46-190"><a href="#cb46-190" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(obj<span class="sc">@</span>reductions)</span>
+<span id="cb46-191"><a href="#cb46-191" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-192"><a href="#cb46-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-195"><a href="#cb46-195" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-196"><a href="#cb46-196" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-197"><a href="#cb46-197" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
+<span id="cb46-198"><a href="#cb46-198" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
+<span id="cb46-199"><a href="#cb46-199" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> obj, </span>
+<span id="cb46-200"><a href="#cb46-200" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> FastMNNIntegration,</span>
+<span id="cb46-201"><a href="#cb46-201" aria-hidden="true" tabindex="-1"></a>  <span class="at">new.reduction =</span> <span class="st">"integrated.mnn"</span>,</span>
+<span id="cb46-202"><a href="#cb46-202" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb46-203"><a href="#cb46-203" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb46-204"><a href="#cb46-204" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(obj<span class="sc">@</span>reductions)</span>
+<span id="cb46-205"><a href="#cb46-205" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-206"><a href="#cb46-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-209"><a href="#cb46-209" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-210"><a href="#cb46-210" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb46-211"><a href="#cb46-211" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
+<span id="cb46-212"><a href="#cb46-212" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(</span>
+<span id="cb46-213"><a href="#cb46-213" aria-hidden="true" tabindex="-1"></a>  <span class="at">object =</span> obj, </span>
+<span id="cb46-214"><a href="#cb46-214" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> scVIIntegration,</span>
+<span id="cb46-215"><a href="#cb46-215" aria-hidden="true" tabindex="-1"></a>  <span class="at">new.reduction =</span> <span class="st">"integrated.scvi"</span>,</span>
+<span id="cb46-216"><a href="#cb46-216" aria-hidden="true" tabindex="-1"></a>  <span class="at">conda_env =</span> <span class="st">"../miniconda3/envs/scvi-env"</span>, </span>
+<span id="cb46-217"><a href="#cb46-217" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb46-218"><a href="#cb46-218" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb46-219"><a href="#cb46-219" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(obj<span class="sc">@</span>reductions)</span>
+<span id="cb46-220"><a href="#cb46-220" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-221"><a href="#cb46-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-222"><a href="#cb46-222" aria-hidden="true" tabindex="-1"></a><span class="fu"># 重新降维、聚类、可视化</span></span>
+<span id="cb46-223"><a href="#cb46-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-224"><a href="#cb46-224" aria-hidden="true" tabindex="-1"></a><span class="in">`CCAIntegration`</span>：</span>
+<span id="cb46-225"><a href="#cb46-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-228"><a href="#cb46-228" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-229"><a href="#cb46-229" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(obj, </span>
+<span id="cb46-230"><a href="#cb46-230" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>, </span>
+<span id="cb46-231"><a href="#cb46-231" aria-hidden="true" tabindex="-1"></a>               <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, </span>
+<span id="cb46-232"><a href="#cb46-232" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction.name =</span> <span class="st">"umap.cca"</span>)</span>
+<span id="cb46-233"><a href="#cb46-233" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(obj, <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb46-234"><a href="#cb46-234" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(obj, <span class="at">resolution =</span> <span class="dv">2</span>, <span class="at">cluster.name =</span> <span class="st">"cca_clusters"</span>)</span>
+<span id="cb46-235"><a href="#cb46-235" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(obj<span class="sc">@</span>meta.data)</span>
+<span id="cb46-236"><a href="#cb46-236" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(obj,</span>
+<span id="cb46-237"><a href="#cb46-237" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"umap.cca"</span>,</span>
+<span id="cb46-238"><a href="#cb46-238" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by =</span> <span class="fu">c</span>(<span class="st">"Method"</span>, <span class="st">"CellType"</span>, <span class="st">"cca_clusters"</span>),</span>
+<span id="cb46-239"><a href="#cb46-239" aria-hidden="true" tabindex="-1"></a>              <span class="at">combine =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb46-240"><a href="#cb46-240" aria-hidden="true" tabindex="-1"></a>              <span class="at">label.size =</span> <span class="dv">2</span>)</span>
+<span id="cb46-241"><a href="#cb46-241" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-242"><a href="#cb46-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-243"><a href="#cb46-243" aria-hidden="true" tabindex="-1"></a><span class="in">`HarmonyIntegration`</span>：</span>
+<span id="cb46-244"><a href="#cb46-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-247"><a href="#cb46-247" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-248"><a href="#cb46-248" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(obj, </span>
+<span id="cb46-249"><a href="#cb46-249" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction =</span> <span class="st">"harmony"</span>, </span>
+<span id="cb46-250"><a href="#cb46-250" aria-hidden="true" tabindex="-1"></a>               <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, </span>
+<span id="cb46-251"><a href="#cb46-251" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction.name =</span> <span class="st">"umap.harmony"</span>)</span>
+<span id="cb46-252"><a href="#cb46-252" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(obj, <span class="at">reduction =</span> <span class="st">"harmony"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>)</span>
+<span id="cb46-253"><a href="#cb46-253" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(obj, <span class="at">resolution =</span> <span class="dv">2</span>, <span class="at">cluster.name =</span> <span class="st">"harmony_clusters"</span>)</span>
+<span id="cb46-254"><a href="#cb46-254" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(obj<span class="sc">@</span>meta.data)</span>
+<span id="cb46-255"><a href="#cb46-255" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(obj,</span>
+<span id="cb46-256"><a href="#cb46-256" aria-hidden="true" tabindex="-1"></a>              <span class="at">reduction =</span> <span class="st">"umap.harmony"</span>,</span>
+<span id="cb46-257"><a href="#cb46-257" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by =</span> <span class="fu">c</span>(<span class="st">"Method"</span>, <span class="st">"CellType"</span>, <span class="st">"harmony_clusters"</span>),</span>
+<span id="cb46-258"><a href="#cb46-258" aria-hidden="true" tabindex="-1"></a>              <span class="at">combine =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb46-259"><a href="#cb46-259" aria-hidden="true" tabindex="-1"></a>              <span class="at">label.size =</span> <span class="dv">2</span>)</span>
+<span id="cb46-260"><a href="#cb46-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-261"><a href="#cb46-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-262"><a href="#cb46-262" aria-hidden="true" tabindex="-1"></a>合并UMAP图：</span>
+<span id="cb46-263"><a href="#cb46-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-266"><a href="#cb46-266" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-267"><a href="#cb46-267" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 13</span></span>
+<span id="cb46-268"><a href="#cb46-268" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 13</span></span>
+<span id="cb46-269"><a href="#cb46-269" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb46-270"><a href="#cb46-270" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_plots</span>(<span class="fu">c</span>(p1, p2), <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> F)</span>
+<span id="cb46-271"><a href="#cb46-271" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-272"><a href="#cb46-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-273"><a href="#cb46-273" aria-hidden="true" tabindex="-1"></a><span class="fu"># 检验细胞类型marker基因的表达</span></span>
+<span id="cb46-274"><a href="#cb46-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-275"><a href="#cb46-275" aria-hidden="true" tabindex="-1"></a>We hope that by simplifying the process of performing integrative analysis, users can more carefully evaluate the biological information retained in the integrated dataset. For example, users can compare the expression of biological markers based on different clustering solutions, or visualize one method's clustering solution on different UMAP visualizations.</span>
+<span id="cb46-276"><a href="#cb46-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-279"><a href="#cb46-279" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-280"><a href="#cb46-280" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 15</span></span>
+<span id="cb46-281"><a href="#cb46-281" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb46-282"><a href="#cb46-282" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">VlnPlot</span>(obj,</span>
+<span id="cb46-283"><a href="#cb46-283" aria-hidden="true" tabindex="-1"></a>              <span class="at">features =</span> <span class="st">"rna_CD8A"</span>, </span>
+<span id="cb46-284"><a href="#cb46-284" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by =</span> <span class="st">"unintegrated_clusters"</span>,</span>
 <span id="cb46-285"><a href="#cb46-285" aria-hidden="true" tabindex="-1"></a>              <span class="at">pt.size =</span> <span class="dv">0</span>) <span class="sc">+</span> </span>
 <span id="cb46-286"><a href="#cb46-286" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NoLegend</span>() <span class="sc">+</span> </span>
-<span id="cb46-287"><a href="#cb46-287" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"CD8A - harmony Clusters"</span>)</span>
-<span id="cb46-288"><a href="#cb46-288" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2 <span class="sc">|</span> p3</span>
-<span id="cb46-289"><a href="#cb46-289" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-290"><a href="#cb46-290" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-291"><a href="#cb46-291" aria-hidden="true" tabindex="-1"></a><span class="fu">## 重新合并layers</span></span>
-<span id="cb46-292"><a href="#cb46-292" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-293"><a href="#cb46-293" aria-hidden="true" tabindex="-1"></a>Once integrative analysis is complete, you can rejoin the layers - which collapses the individual datasets together and recreates the original&nbsp;<span class="in">`counts`</span>&nbsp;and&nbsp;<span class="in">`data`</span>&nbsp;layers. **You will need to do this before performing any differential expression analysis**. However, you can always resplit the layers in case you would like to reperform integrative analysis.</span>
-<span id="cb46-294"><a href="#cb46-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-297"><a href="#cb46-297" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-298"><a href="#cb46-298" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(obj)</span>
-<span id="cb46-299"><a href="#cb46-299" aria-hidden="true" tabindex="-1"></a>obj</span>
-<span id="cb46-300"><a href="#cb46-300" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-301"><a href="#cb46-301" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-302"><a href="#cb46-302" aria-hidden="true" tabindex="-1"></a><span class="fu">## 对`SCTransform`处理后的数据的整合</span></span>
-<span id="cb46-303"><a href="#cb46-303" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-304"><a href="#cb46-304" aria-hidden="true" tabindex="-1"></a>Users can also perform integration using sctransform-normalized data (see @sec-sctransform for more information), by first running <span class="in">`SCTransform`</span> normalization, and then s**etting the&nbsp;`normalization.method`&nbsp;argument in&nbsp;`IntegrateLayers`**（和 @sec-integration_after_sct 中一样）。</span>
-<span id="cb46-305"><a href="#cb46-305" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-308"><a href="#cb46-308" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-309"><a href="#cb46-309" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
-<span id="cb46-310"><a href="#cb46-310" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
-<span id="cb46-311"><a href="#cb46-311" aria-hidden="true" tabindex="-1"></a><span class="co">#重新载入数据、质控、分割</span></span>
-<span id="cb46-312"><a href="#cb46-312" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seurat_official/pbmcsca.rds"</span>)</span>
-<span id="cb46-313"><a href="#cb46-313" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">subset</span>(obj, nFeature_RNA <span class="sc">&gt;</span> <span class="dv">1000</span>)</span>
-<span id="cb46-314"><a href="#cb46-314" aria-hidden="true" tabindex="-1"></a>obj[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">split</span>(obj[[<span class="st">"RNA"</span>]], <span class="at">f =</span> obj<span class="sc">$</span>Method)</span>
-<span id="cb46-315"><a href="#cb46-315" aria-hidden="true" tabindex="-1"></a><span class="co"># 执行SCTransform</span></span>
-<span id="cb46-316"><a href="#cb46-316" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(obj)</span>
-<span id="cb46-317"><a href="#cb46-317" aria-hidden="true" tabindex="-1"></a><span class="co"># 降维</span></span>
-<span id="cb46-318"><a href="#cb46-318" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(obj, <span class="at">npcs =</span> <span class="dv">30</span>, <span class="at">verbose =</span> F)</span>
-<span id="cb46-319"><a href="#cb46-319" aria-hidden="true" tabindex="-1"></a><span class="co"># 整合</span></span>
-<span id="cb46-320"><a href="#cb46-320" aria-hidden="true" tabindex="-1"></a><span class="co">#options(future.globals.maxSize = 3e+09)</span></span>
-<span id="cb46-321"><a href="#cb46-321" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(<span class="at">object =</span> obj,</span>
-<span id="cb46-322"><a href="#cb46-322" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> CCAIntegration,</span>
-<span id="cb46-323"><a href="#cb46-323" aria-hidden="true" tabindex="-1"></a>                       <span class="at">normalization.method =</span> <span class="st">"SCT"</span>,</span>
-<span id="cb46-324"><a href="#cb46-324" aria-hidden="true" tabindex="-1"></a>                       <span class="at">orig.reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb46-325"><a href="#cb46-325" aria-hidden="true" tabindex="-1"></a>                       <span class="at">new.reduction =</span> <span class="st">"integrated.cca"</span>,</span>
-<span id="cb46-326"><a href="#cb46-326" aria-hidden="true" tabindex="-1"></a>                       <span class="at">verbose =</span> F)</span>
-<span id="cb46-327"><a href="#cb46-327" aria-hidden="true" tabindex="-1"></a><span class="co"># 重新降维、聚类、可视化</span></span>
-<span id="cb46-328"><a href="#cb46-328" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(obj, </span>
-<span id="cb46-329"><a href="#cb46-329" aria-hidden="true" tabindex="-1"></a>               <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, </span>
-<span id="cb46-330"><a href="#cb46-330" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>, </span>
-<span id="cb46-331"><a href="#cb46-331" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction.name =</span> <span class="st">"umap.cca"</span>)</span>
-<span id="cb46-332"><a href="#cb46-332" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(obj, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>)</span>
-<span id="cb46-333"><a href="#cb46-333" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(obj, <span class="at">resolution =</span> <span class="dv">2</span>, <span class="at">cluster.name =</span> <span class="st">"cca_clusters"</span>)</span>
-<span id="cb46-334"><a href="#cb46-334" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(obj,</span>
-<span id="cb46-335"><a href="#cb46-335" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap.cca"</span>,</span>
-<span id="cb46-336"><a href="#cb46-336" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="fu">c</span>(<span class="st">"Method"</span>, <span class="st">"cca_clusters"</span>),</span>
-<span id="cb46-337"><a href="#cb46-337" aria-hidden="true" tabindex="-1"></a>        <span class="at">label.size =</span> <span class="dv">1</span>)</span>
-<span id="cb46-338"><a href="#cb46-338" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-339"><a href="#cb46-339" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-340"><a href="#cb46-340" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb46-341"><a href="#cb46-341" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-342"><a href="#cb46-342" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb46-343"><a href="#cb46-343" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
-<span id="cb46-344"><a href="#cb46-344" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-347"><a href="#cb46-347" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb46-348"><a href="#cb46-348" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb46-349"><a href="#cb46-349" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb46-287"><a href="#cb46-287" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"CD8A - Unintegrated Clusters"</span>)</span>
+<span id="cb46-288"><a href="#cb46-288" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">VlnPlot</span>(obj, </span>
+<span id="cb46-289"><a href="#cb46-289" aria-hidden="true" tabindex="-1"></a>              <span class="st">"rna_CD8A"</span>,</span>
+<span id="cb46-290"><a href="#cb46-290" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by =</span> <span class="st">"cca_clusters"</span>,</span>
+<span id="cb46-291"><a href="#cb46-291" aria-hidden="true" tabindex="-1"></a>              <span class="at">pt.size =</span> <span class="dv">0</span>) <span class="sc">+</span> </span>
+<span id="cb46-292"><a href="#cb46-292" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NoLegend</span>() <span class="sc">+</span> </span>
+<span id="cb46-293"><a href="#cb46-293" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"CD8A - CCA Clusters"</span>)</span>
+<span id="cb46-294"><a href="#cb46-294" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">VlnPlot</span>(obj, </span>
+<span id="cb46-295"><a href="#cb46-295" aria-hidden="true" tabindex="-1"></a>              <span class="st">"rna_CD8A"</span>,</span>
+<span id="cb46-296"><a href="#cb46-296" aria-hidden="true" tabindex="-1"></a>              <span class="at">group.by =</span> <span class="st">"harmony_clusters"</span>,</span>
+<span id="cb46-297"><a href="#cb46-297" aria-hidden="true" tabindex="-1"></a>              <span class="at">pt.size =</span> <span class="dv">0</span>) <span class="sc">+</span> </span>
+<span id="cb46-298"><a href="#cb46-298" aria-hidden="true" tabindex="-1"></a>  <span class="fu">NoLegend</span>() <span class="sc">+</span> </span>
+<span id="cb46-299"><a href="#cb46-299" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"CD8A - harmony Clusters"</span>)</span>
+<span id="cb46-300"><a href="#cb46-300" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">|</span> p2 <span class="sc">|</span> p3</span>
+<span id="cb46-301"><a href="#cb46-301" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-302"><a href="#cb46-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-303"><a href="#cb46-303" aria-hidden="true" tabindex="-1"></a><span class="fu"># 重新合并layers</span></span>
+<span id="cb46-304"><a href="#cb46-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-305"><a href="#cb46-305" aria-hidden="true" tabindex="-1"></a>Once integrative analysis is complete, you can rejoin the layers - which collapses the individual datasets together and recreates the original&nbsp;<span class="in">`counts`</span>&nbsp;and&nbsp;<span class="in">`data`</span>&nbsp;layers. **You will need to do this before performing any differential expression analysis**. However, you can always resplit the layers in case you would like to reperform integrative analysis.</span>
+<span id="cb46-306"><a href="#cb46-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-309"><a href="#cb46-309" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-310"><a href="#cb46-310" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">JoinLayers</span>(obj)</span>
+<span id="cb46-311"><a href="#cb46-311" aria-hidden="true" tabindex="-1"></a>obj</span>
+<span id="cb46-312"><a href="#cb46-312" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-313"><a href="#cb46-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-314"><a href="#cb46-314" aria-hidden="true" tabindex="-1"></a><span class="fu"># 对`SCTransform`处理后的数据的整合</span></span>
+<span id="cb46-315"><a href="#cb46-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-316"><a href="#cb46-316" aria-hidden="true" tabindex="-1"></a>Users can also perform integration using sctransform-normalized data (see 基<span class="co">[</span><span class="ot">于SCTransform的单细胞数据标准化</span><span class="co">](/single_cell/seurat/sctransform.qmd)</span> for more information), by first running <span class="in">`SCTransform`</span> normalization, and then s**etting the&nbsp;`normalization.method`&nbsp;argument in&nbsp;`IntegrateLayers`**（和<span class="co">[</span><span class="ot">执行`SCTransform`标准化流程之后的整合</span><span class="co">](/single_cell/seurat/integration.qmd#sec-integration_after_sct)</span>中一样）。</span>
+<span id="cb46-317"><a href="#cb46-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-320"><a href="#cb46-320" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-321"><a href="#cb46-321" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 10</span></span>
+<span id="cb46-322"><a href="#cb46-322" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span>
+<span id="cb46-323"><a href="#cb46-323" aria-hidden="true" tabindex="-1"></a><span class="co">#重新载入数据、质控、分割</span></span>
+<span id="cb46-324"><a href="#cb46-324" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/seurat_official/pbmcsca.rds"</span>)</span>
+<span id="cb46-325"><a href="#cb46-325" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">subset</span>(obj, nFeature_RNA <span class="sc">&gt;</span> <span class="dv">1000</span>)</span>
+<span id="cb46-326"><a href="#cb46-326" aria-hidden="true" tabindex="-1"></a>obj[[<span class="st">"RNA"</span>]] <span class="ot">&lt;-</span> <span class="fu">split</span>(obj[[<span class="st">"RNA"</span>]], <span class="at">f =</span> obj<span class="sc">$</span>Method)</span>
+<span id="cb46-327"><a href="#cb46-327" aria-hidden="true" tabindex="-1"></a><span class="co"># 执行SCTransform</span></span>
+<span id="cb46-328"><a href="#cb46-328" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">SCTransform</span>(obj)</span>
+<span id="cb46-329"><a href="#cb46-329" aria-hidden="true" tabindex="-1"></a><span class="co"># 降维</span></span>
+<span id="cb46-330"><a href="#cb46-330" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(obj, <span class="at">npcs =</span> <span class="dv">30</span>, <span class="at">verbose =</span> F)</span>
+<span id="cb46-331"><a href="#cb46-331" aria-hidden="true" tabindex="-1"></a><span class="co"># 整合</span></span>
+<span id="cb46-332"><a href="#cb46-332" aria-hidden="true" tabindex="-1"></a><span class="co">#options(future.globals.maxSize = 3e+09)</span></span>
+<span id="cb46-333"><a href="#cb46-333" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">IntegrateLayers</span>(<span class="at">object =</span> obj,</span>
+<span id="cb46-334"><a href="#cb46-334" aria-hidden="true" tabindex="-1"></a>                       <span class="at">method =</span> CCAIntegration,</span>
+<span id="cb46-335"><a href="#cb46-335" aria-hidden="true" tabindex="-1"></a>                       <span class="at">normalization.method =</span> <span class="st">"SCT"</span>,</span>
+<span id="cb46-336"><a href="#cb46-336" aria-hidden="true" tabindex="-1"></a>                       <span class="at">orig.reduction =</span> <span class="st">"pca"</span>,</span>
+<span id="cb46-337"><a href="#cb46-337" aria-hidden="true" tabindex="-1"></a>                       <span class="at">new.reduction =</span> <span class="st">"integrated.cca"</span>,</span>
+<span id="cb46-338"><a href="#cb46-338" aria-hidden="true" tabindex="-1"></a>                       <span class="at">verbose =</span> F)</span>
+<span id="cb46-339"><a href="#cb46-339" aria-hidden="true" tabindex="-1"></a><span class="co"># 重新降维、聚类、可视化</span></span>
+<span id="cb46-340"><a href="#cb46-340" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">RunUMAP</span>(obj, </span>
+<span id="cb46-341"><a href="#cb46-341" aria-hidden="true" tabindex="-1"></a>               <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, </span>
+<span id="cb46-342"><a href="#cb46-342" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>, </span>
+<span id="cb46-343"><a href="#cb46-343" aria-hidden="true" tabindex="-1"></a>               <span class="at">reduction.name =</span> <span class="st">"umap.cca"</span>)</span>
+<span id="cb46-344"><a href="#cb46-344" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindNeighbors</span>(obj, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>, <span class="at">reduction =</span> <span class="st">"integrated.cca"</span>)</span>
+<span id="cb46-345"><a href="#cb46-345" aria-hidden="true" tabindex="-1"></a>obj <span class="ot">&lt;-</span> <span class="fu">FindClusters</span>(obj, <span class="at">resolution =</span> <span class="dv">2</span>, <span class="at">cluster.name =</span> <span class="st">"cca_clusters"</span>)</span>
+<span id="cb46-346"><a href="#cb46-346" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(obj,</span>
+<span id="cb46-347"><a href="#cb46-347" aria-hidden="true" tabindex="-1"></a>        <span class="at">reduction =</span> <span class="st">"umap.cca"</span>,</span>
+<span id="cb46-348"><a href="#cb46-348" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="fu">c</span>(<span class="st">"Method"</span>, <span class="st">"cca_clusters"</span>),</span>
+<span id="cb46-349"><a href="#cb46-349" aria-hidden="true" tabindex="-1"></a>        <span class="at">label.size =</span> <span class="dv">1</span>)</span>
 <span id="cb46-350"><a href="#cb46-350" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb46-351"><a href="#cb46-351" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb46-351"><a href="#cb46-351" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-352"><a href="#cb46-352" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb46-353"><a href="#cb46-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-354"><a href="#cb46-354" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb46-355"><a href="#cb46-355" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb46-356"><a href="#cb46-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-359"><a href="#cb46-359" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb46-360"><a href="#cb46-360" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb46-361"><a href="#cb46-361" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb46-362"><a href="#cb46-362" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb46-363"><a href="#cb46-363" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb46-364"><a href="#cb46-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-365"><a href="#cb46-365" aria-hidden="true" tabindex="-1"></a><span class="fu"># References {.unnumbered}</span></span>
+<span id="cb46-366"><a href="#cb46-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-367"><a href="#cb46-367" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb46-368"><a href="#cb46-368" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
@@ -1856,11 +1872,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
 <li class="nav-item">
- This book was built with Quarto
+ This website was built with Quarto
   </li>  
 </ul>
 </div>   
-    <div class="nav-footer-center">Copyright 2023, Du Junhong</div>
+    <div class="nav-footer-center">Copyright 2024, Du Junhong</div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
 <li class="nav-item compact">

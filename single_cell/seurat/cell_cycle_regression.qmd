@@ -1,4 +1,6 @@
-# 消除细胞周期的影响 {#sec-Elimination_of_cell_cycle_effects}
+---
+title: "消除细胞周期的影响"
+---
 
 > 原文：[*Cell-Cycle Scoring and Regression*](https://satijalab.org/seurat/articles/cell_cycle_vignette)
 >
@@ -76,7 +78,7 @@ First, we assign each cell a score, **based on its expression of G2/M and S phas
 -   **M:** M phase is the nuclear division of the cell (consisting of prophase, metaphase, anaphase and telophase).
 
 |   状态   |   阶段   |   缩写   |                                                            描述                                                            |
-|:-------:|:-------:|:-------:|:--------------------------------------------:|
+|:--------:|:--------:|:--------:|:--------------------------------------------------------------------------------------------------------------------------:|
 |   休息   |  G~0~期  | **G~0~** |                                               细胞离开周期并停止分裂的阶段。                                               |
 |   间期   |  G~1~期  |  **G1**  |                                       G~1~检查点控制机制确保一切准备好进行DNA合成。                                        |
 |   合成   |    S     |  **S**   |                                                  DNA复制发生在这个阶段。                                                   |
@@ -127,7 +129,7 @@ DimPlot(marrow) +
   guides(colour = guide_legend(override.aes = list(size = 10)))
 ```
 
-### 回归（regress out）细胞周期评分
+### 回归（regress out）细胞周期评分 {#sec-regress-out}
 
 We now attempt to subtract ('regress out') this source of heterogeneity from the data. For users of Seurat v1.4, this was implemented in `RegressOut`. However, as the results of this procedure are stored in the scaled data slot (therefore overwriting the output of `ScaleData()`), we now merge this functionality into the `ScaleData()` function itself.
 
@@ -194,4 +196,9 @@ DimPlot(marrow)
 #| echo: false
 sessionInfo()
 ```
+:::
+
+# References {.unnumbered}
+
+::: {#refs}
 :::

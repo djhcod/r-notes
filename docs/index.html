@@ -8,7 +8,7 @@
 
 <meta name="author" content="杜俊宏">
 
-<title>R语言学习笔记</title>
+<title>R语言学习笔记：从数据清洗到高级统计学和生物信息学</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,7 +31,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./intro.html" rel="next">
+<link href="./r_basic/r_basics.html" rel="next">
 <link href="./images/logo.jpg" rel="icon" type="image/jpeg">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -48,7 +48,7 @@ ul.task-list li input[type="checkbox"] {
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "end",
-  "type": "overlay",
+  "type": "textbox",
   "limit": 20,
   "language": {
     "search-no-results-text": "No results",
@@ -63,6 +63,15 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G2HZEXHNCE"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
+</script>
 <script type="application/json" class="js-hypothesis-config">
 {
   "theme": "classic",
@@ -74,8 +83,12 @@ ul.task-list li input[type="checkbox"] {
 <script async="" src="https://hypothes.is/embed.js"></script>
 
 
-<meta name="twitter:title" content="R语言学习笔记">
-<meta name="twitter:description" content="从数据清洗到高级统计学和生物信息学">
+<meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://djhcod.github.io/r-notes/images/book_cover.jpg">
+<meta property="og:site-name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
+<meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
+<meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://djhcod.github.io/r-notes/images/book_cover.jpg">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -105,20 +118,20 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./intro.html" rel="" target="">
- <span class="menu-text">Introduction</span></a>
+    <a class="nav-link" href="./r_basic/r_basics.html" rel="" target="">
+ <span class="menu-text">R语言基础</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parts" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
- <span class="menu-text">Parts</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">单细胞数据分析</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-parts">    
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">    
         <li>
-    <a class="dropdown-item" href="./r_basic/r_basics.html" rel="" target="">
- <span class="dropdown-text">R语言基础</span></a>
+    <a class="dropdown-item" href="./single_cell/single_cell_intro.html" rel="" target="">
+ <span class="dropdown-text">单细胞数据分析介绍</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./single_cell/seurat/seurat.html" rel="" target="">
+    <a class="dropdown-item" href="./single_cell/seurat/seurat_intro.html" rel="" target="">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
@@ -129,15 +142,11 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
  <span class="dropdown-text">单细胞补充内容</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="./quarto_foundation/quarto_foundation.html" rel="" target="">
- <span class="dropdown-text">Quarto基础</span></a>
-  </li>  
     </ul>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="./references.html" rel="" target="">
- <span class="menu-text">References</span></a>
+    <a class="nav-link" href="./quarto_foundation/quarto_foundation.html" rel="" target="">
+ <span class="menu-text">Quarto基础</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -148,25 +157,13 @@ ul.task-list li input[type="checkbox"] {
   </li>  
 </ul>
             <div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/djhcod/r-notes" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <div class="dropdown">
-      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
-          <li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=|url|">
-              <i class="bi bi-bi-twitter pe-1"></i>
-            Twitter
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
-              <i class="bi bi-bi-facebook pe-1"></i>
-            Facebook
-            </a>
-          </li>
-      </ul>
-    </div>
+    <a href="https://github.com/djhcod/r-notes" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -178,13 +175,13 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<div class="quarto-about-jolla column-page">
-  <img src="images/book_cover.jpg" class="about-image
-  round " style="height: 15em; width: 15em;" title="Du Junhong created with DALL·E 3">
- <header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-about-trestles column-page">
+  <div class="about-entity">
+    <img src="images/book_cover.jpg" class="about-image
+  round " style="height: 20em; width: 20em;" title="Du Junhong created with DALL·E 3">
+<header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">R语言学习笔记</h1>
-<p class="subtitle lead">从数据清洗到高级统计学和生物信息学</p>
+<h1 class="title">R语言学习笔记：从数据清洗到高级统计学和生物信息学</h1>
 </div>
 <div class="quarto-title-meta">
     <div>
@@ -196,16 +193,12 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">发布日期</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2024年1月19日 14:34</p>
+      <p class="date">2024年1月26日 16:59</p>
     </div>
   </div>
   </div>
-</header><main class="content column-page" id="quarto-document-content">
-
-
-</main> 
-  <hr class="about-sep">
-   <div class="about-links">
+</header>
+    <div class="about-links">
   <a href="https://bookdown.org" class="about-link" rel="" target="">
     <i class="bi bi-book-fill"></i>
      <span class="about-link-text">Bookdown</span>
@@ -219,6 +212,63 @@ ul.task-list li input[type="checkbox"] {
      <span class="about-link-text">Email</span>
   </a>
 </div>
+  </div>
+  <div class="about-contents"><main class="content column-page" id="quarto-document-content">
+<p>制作这本学习笔记的初衷是归纳整理在医学科研领域利用R语言进行基本数据分析的技巧。计划涵盖包括数据清洗、基本统计分析、高级统计分析在内的内容。并进一步对涉及生物信息学的内容进行总结，汇总<a href="https://www.ncbi.nlm.nih.gov/geo/">Gene Expression Omnibus（GEO</a>）、<a href="https://www.cancer.gov/ccg/research/genome-sequencing/tcga">The Cancer Genome Atlas Program（TCGA）</a>数据库挖掘的代码，并扩展到以<a href="https://satijalab.org/seurat/">Seurat</a>包为基础的单细胞分析流程。此外，也会对<a href="https://quarto.org">Quarto文档</a>——由Posit开发的面相多编程语言的下一代R Markdown——的编写和发布进行简单总结。目前该项目处于最开始的阶段，这本书也处于刚刚搭建好框架的阶段，后续会不断更新和完善，最终实现上述的目标。敬请批评指正！</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>由于GitHub对文件大小的限制，本书涉及的原始数据文件（data）可通过<a href="https://www.123pan.com/s/v7Vmjv-4gPLh.html">此链接</a>获取。</p>
+</div>
+</div>
+<hr>
+<section id="r学习资源推荐" class="level2">
+<h2 data-anchor-id="r学习资源推荐">R学习资源推荐</h2>
+<section id="在线书籍" class="level3">
+<h3 data-anchor-id="在线书籍">在线书籍：</h3>
+<ul>
+<li><p>R Graphics Cookbook, 2nd edition：<a href="https://r-graphics.org" class="uri">https://r-graphics.org</a></p></li>
+<li><p>R for Data Science (2e)：<a href="https://r4ds.hadley.nz" class="uri">https://r4ds.hadley.nz</a></p></li>
+<li><p>Quarto Guide：<a href="https://quarto.org/docs/guide/" class="uri">https://quarto.org/docs/guide/</a></p></li>
+<li><p>Happy Git and GitHub for the useR：<a href="https://happygitwithr.com" class="uri">https://happygitwithr.com</a></p></li>
+<li><p>Bookdown：<a href="https://bookdown.org" class="uri">https://bookdown.org</a></p></li>
+</ul>
+</section>
+<section id="论坛网站" class="level3">
+<h3 data-anchor-id="论坛网站">论坛/网站：</h3>
+<ul>
+<li><p>交互式R语言学习网站：<a href="https://www.codecademy.com/learn/learn-r" class="uri">https://www.codecademy.com/learn/learn-r</a></p></li>
+<li><p>R CODER：<a href="https://r-coder.com" class="uri">https://r-coder.com</a></p></li>
+<li><p>Stack Overflow：<a href="https://stackoverflow.com" class="uri">https://stackoverflow.com</a></p></li>
+<li><p>R-Bloggers：<a href="https://www.r-bloggers.com" class="uri">https://www.r-bloggers.com</a></p></li>
+<li><p>Posit Cheatsheets：<a href="https://posit.co/resources/cheatsheets/" class="uri">https://posit.co/resources/cheatsheets/</a></p></li>
+<li><p>Kaggle：<a href="https://www.kaggle.com/code?language=R" class="uri">https://www.kaggle.com/code?language=R</a></p></li>
+<li><p>The R Graph Gallery：<a href="https://r-graph-gallery.com" class="uri">https://r-graph-gallery.com</a></p></li>
+<li><p>Posit Community：<a href="https://community.rstudio.com" class="uri">https://community.rstudio.com</a></p></li>
+</ul>
+
+
+</section>
+</section>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{2024,
+  author = {, 杜俊宏},
+  title = {R语言学习笔记：从数据清洗到高级统计学和生物信息学},
+  date = {2024-01-26},
+  url = {https://djhcod.github.io/r-notes/},
+  langid = {en}
+}
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-2024" class="csl-entry quarto-appendix-citeas" role="listitem">
+杜俊宏. 2024.
+<span>“R语言学习笔记：从数据清洗到高级统计学和生物信息学.”</span>
+January 26, 2024. <a href="https://djhcod.github.io/r-notes/">https://djhcod.github.io/r-notes/</a>.
+</div></div></section></div></main></div>
 </div>
  <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -576,14 +626,14 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
 });
 </script>
-<script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+<script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script>
 <nav class="page-navigation column-page">
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./intro.html" class="pagination-link">
-        <span class="nav-page-text">前言</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./r_basic/r_basics.html" class="pagination-link">
+        <span class="nav-page-text">R语言基础</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -593,11 +643,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
- This book was built with Quarto
+ This website was built with Quarto
   </li>  
 </ul>
     </div>   
-    <div class="nav-footer-center">Copyright 2023, Du Junhong<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/index.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/index.qmd" class="toc-action">Edit this page</a></p></div></div></div>
+    <div class="nav-footer-center">Copyright 2024, Du Junhong<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/index.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item compact">

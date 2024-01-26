@@ -1,4 +1,6 @@
-# Seurat v5单细胞数据整合分析 {#sec-Integrated_analysis_of_seurat-v5}
+---
+title: "Seurat v5单细胞数据整合分析"
+---
 
 > 原文：[*Integrative analysis in Seurat v5*](https://satijalab.org/seurat/articles/seurat5_integration)
 >
@@ -14,7 +16,7 @@ For this vignette, we use a dataset of human PBMC profiled with **seven differe
 
 ![](images/截屏2023-11-28%2021.02.46.png){width="526"}
 
-## 加载数据
+# 加载数据
 
 ::: {.callout-note collapse="true" appearance="minimal" icon="false"}
 ###### 在线读取（可能需要全局代理）
@@ -43,7 +45,7 @@ table(obj$Method)
 
 The object contains data from **nine different batches** (stored in the `Method` column in the object metadata), representing **seven different technologies**. We will aim to integrate the different batches together.
 
-## 数据质控
+# 数据质控
 
 过滤低质量细胞：
 
@@ -57,7 +59,7 @@ obj <- subset(obj, nFeature_RNA > 1000)
 table(obj$CellType)
 ```
 
-## 分割数据
+# 分割数据
 
 In previous versions of Seurat, if we want to integrate this data, we would require the data to be represented as nine different Seurat objects. When using Seurat v5 assays, we can instead keep all the data in one object, but simply split the layers:
 
@@ -68,9 +70,9 @@ obj
 
 After splitting, there are now **18 layers** (**a `counts` and `data` layer for each batch**).
 
-## 未整合情况下的标准scRNA-seq分析流程
+# 未整合情况下的标准scRNA-seq分析流程
 
-### 标准化、找高变基因、归一化、降维
+## 标准化、找高变基因、归一化、降维
 
 We can now run a standard scRNA-seq analysis (i.e. without integration). Note that since the data is split into layers, normalization and variable feature identification is performed for each batch independently (a consensus set of variable features is automatically identified).
 
@@ -85,7 +87,7 @@ obj <- RunUMAP(obj,
                reduction.name = "umap.unintegrated") # name to store dimensional reduction in the Seurat object
 ```
 
-### 聚类、可视化
+## 聚类、可视化
 
 We can now visualize the results of a standard analysis without integration. Note that cells are grouping both by **cell type** and by underlying **method**. While a UMAP analysis is just a visualization of this, clustering this dataset would return predominantly batch-specific clusters. Especially if previous cell-type annotations were not available, this would make downstream analysis extremely challenging.
 
@@ -101,7 +103,7 @@ DimPlot(obj,
 
 可以看到，不同的测序技术间的细胞类型差异较大。因此需要对数据进行整合。
 
-## 数据整合 {#sec-sc_integration}
+# 数据整合 {#sec-sc_integration}
 
 Seurat v5 enables streamlined integrative analysis using the `IntegrateLayers` function. The method currently supports **five integration methods**. Each of these methods performs integration in low-dimensional space, and **returns a dimensional reduction** (i.e. `integrated.rpca`) that aims to co-embed shared cell types across batches:
 
@@ -115,7 +117,17 @@ Seurat v5 enables streamlined integrative analysis using the `IntegrateLayers`�
 
 -   **scVI** (`method=scVIIntegration`)
 
-Note that our anchor-based RPCA integration represents a faster and more conservative (less correction) method for integration. For interested users, we discuss this method in more detail in our [previous RPCA vignette](https://satijalab.org/seurat/articles/integration_rpca).
+Note that our anchor-based RPCA integration represents a **faster** and more **conservative** (less correction) method for integration. For interested users, we discuss this method in more detail in our [previous RPCA vignette](https://satijalab.org/seurat/articles/integration_rpca).
+
+::: callout-tip
+当存在以下情况之一时，最好使用RPCA进行整合：
+
+1.  一个数据集中的很大一部分细胞在另一个数据集中没有匹配类型；
+
+2.  数据集来自同一平台（即10x的多个通道）；
+
+3.  有大量的数据集或细胞要整合。
+:::
 
 You can find more detail on each method, and any installation prerequisites, in Seurat's documentation (for example, `?HarmonyIntegration`). For example, harmony整合需要先安装[`harmony`](https://cran.r-project.org/web/packages/harmony/index.html)包（`install.packages("harmony")`）；scVI integration requires `reticulate` which can be installed from CRAN (`install.packages("reticulate")`) as well as `scvi-tools` and its dependencies installed in a conda environment. Please see scVI installation instructions [here](https://docs.scvi-tools.org/en/stable/installation.html).
 
@@ -183,7 +195,7 @@ obj <- IntegrateLayers(
 names(obj@reductions)
 ```
 
-## 重新降维、聚类、可视化
+# 重新降维、聚类、可视化
 
 `CCAIntegration`：
 
@@ -228,7 +240,7 @@ library(patchwork)
 wrap_plots(c(p1, p2), ncol = 2, byrow = F)
 ```
 
-## 检验细胞类型marker基因的表达
+# 检验细胞类型marker基因的表达
 
 We hope that by simplifying the process of performing integrative analysis, users can more carefully evaluate the biological information retained in the integrated dataset. For example, users can compare the expression of biological markers based on different clustering solutions, or visualize one method's clustering solution on different UMAP visualizations.
 
@@ -256,7 +268,7 @@ p3 <- VlnPlot(obj,
 p1 | p2 | p3
 ```
 
-## 重新合并layers
+# 重新合并layers
 
 Once integrative analysis is complete, you can rejoin the layers - which collapses the individual datasets together and recreates the original `counts` and `data` layers. **You will need to do this before performing any differential expression analysis**. However, you can always resplit the layers in case you would like to reperform integrative analysis.
 
@@ -265,9 +277,9 @@ obj <- JoinLayers(obj)
 obj
 ```
 
-## 对`SCTransform`处理后的数据的整合
+# 对`SCTransform`处理后的数据的整合
 
-Users can also perform integration using sctransform-normalized data (see @sec-sctransform for more information), by first running `SCTransform` normalization, and then s**etting the `normalization.method` argument in `IntegrateLayers`**（和 @sec-integration_after_sct 中一样）。
+Users can also perform integration using sctransform-normalized data (see 基[于SCTransform的单细胞数据标准化](/single_cell/seurat/sctransform.qmd) for more information), by first running `SCTransform` normalization, and then s**etting the `normalization.method` argument in `IntegrateLayers`**（和[执行`SCTransform`标准化流程之后的整合](/single_cell/seurat/integration.qmd#sec-integration_after_sct)中一样）。
 
 ```{r}
 #| fig-width: 10
@@ -310,4 +322,9 @@ DimPlot(obj,
 #| echo: false
 sessionInfo()
 ```
+:::
+
+# References {.unnumbered}
+
+::: {#refs}
 :::

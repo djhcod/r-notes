@@ -1,8 +1,6 @@
 ---
-bibliography: references.bib
+title: "数据导入与Seurat对象构建"
 ---
-
-# 数据导入与Seurat对象构建 {#sec-SC_quality_control_setup}
 
 ![](images/sc_workflow_2022.jpg){width="580"}
 
@@ -10,23 +8,23 @@ After quantifying gene expression we need to bring this data into R to generate 
 
 ------------------------------------------------------------------------
 
-## Exploring the example dataset
+# Exploring the example dataset
 
-For this workshop we will be working with a single-cell RNA-seq dataset which is part of a larger study from [@kang2017a]. In this paper, the authors present a computational algorithm that harnesses genetic variation (eQTL) to determine the genetic identity of each droplet containing a single cell (singlet) and identify droplets containing two cells from different individuals (doublets).
+For this workshop we will be working with a single-cell RNA-seq dataset which is part of a larger study from [@kang2017]. In this paper, the authors present a computational algorithm that harnesses genetic variation (eQTL) to determine the genetic identity of each droplet containing a single cell (singlet) and identify droplets containing two cells from different individuals (doublets).
 
 The data used to test their algorithm is comprised of pooled Peripheral Blood Mononuclear Cells (PBMCs) taken from eight lupus patients, split into **control** and **interferon beta-treated (stimulated)** conditions.
 
 ![](images/kangetal_image.png)
 
-> Image credit: [*Kang et al, 2017*](https://www.nature.com/articles/nbt.4042)
+> Image credit: [@kang2017]
 
-### Raw data
+## Raw data
 
 This dataset is available on GEO ([GSE96583](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96583)), however the available counts matrix lacked mitochondrial reads, so we downloaded the BAM files from the SRA ([SRP102802](https://www-ncbi-nlm-nih-gov.ezp-prod1.hul.harvard.edu/sra?term=SRP102802)). These BAM files were converted back to FASTQ files, then run through [Cell Ranger](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/what-is-cell-ranger) to obtain the count data that we will be using.
 
 > **NOTE:** The count data for this dataset is also freely available from 10X Genomics and is used in the [Seurat tutorial](https://satijalab.org/seurat/v3.0/immune_alignment.html).
 
-### Metadata
+## Metadata
 
 In addition to the raw data, we also need to collect **information about the data**; this is known as **metadata**. There is often a temptation to just start exploring the data, but it is not very meaningful if we know nothing about the samples that this data originated from.
 
@@ -57,7 +55,7 @@ Some relevant metadata for our dataset is provided below:
 
 None of the above cell types are expected to be low complexity or anticipated to have high mitochondrial content.
 
-## Loading single-cell RNA-seq count data
+# Loading single-cell RNA-seq count data
 
 After processing 10X data using its proprietary software Cell Ranger, you will have an `outs` directory (always). Within this directory you will find a number of different files including the files listed below:
 
@@ -111,7 +109,7 @@ Different methods for reading in data include:
 1.  **`readMM()`**: This function is from the `Matrix` package and will convert our standard matrix into a sparse matrix. The `features.tsv` file and `barcodes.tsv` must first be individually loaded into R and then they can be combined. For specific code and instructions on how to do this please see [these additional material](https://github.com/hbctraining/scRNA-seq_online/blob/master/lessons/readMM_loadData.md).
 2.  **`Read10X()`**: This function is from the `Seurat` package and will use the Cell Ranger output directory as input, directly. With this method individual files do not need to be loaded in, instead the function will load and combine them into a sparse matrix. We will be using this function to load in our data!
 
-### 首先尝试读取单个样本
+## 首先尝试读取单个样本
 
 If we had a single sample, we could generate the count matrix and then subsequently create a Seurat object:
 
@@ -144,7 +142,7 @@ What do the columns of metadata mean?
 -   `nCount_RNA`: number of **UMIs** per cell
 -   `nFeature_RNA`: number of **genes** detected per cell
 
-### 读取所有样本
+## 读取所有样本
 
 1.  首先通过`list.dirs()`函数列出数据文件夹“original_10x”下所有子文件夹的相对路径，并形成一个包含了所有子文件夹相对路径的字符向量“files”
 
@@ -155,7 +153,7 @@ What do the columns of metadata mean?
 ::: callout-caution
 这里利用了`Read10X`函数支持批量读取多个文件夹的特性，直接创建一个合并后的Seurat对象“merged_seurat”。但是，这只适用于读取以标准10X格式保存的数据，即**每个样本为一个文件夹**，每个文件夹内有三个文件，文件名为：**“barcodes.tsv.gz”、"features.tsv.gz"、"matrix.mtx.gz"。**
 
-另外一种更通用的方法是通过循环依次读取每个文件夹内的3个10X文件，得到一个Seurat对象列表，然后通过`merge()`函数合并这些Seurat对象，详见： @sec-Read_non-standard_10x_files 。
+另外一种更通用的方法是通过循环依次读取每个文件夹内的3个10X文件，得到一个Seurat对象列表，然后通过`merge()`函数合并这些Seurat对象，详见：[读取非标准10X格式文件](/single_cell/sc_supplementary/read_sc_data.qmd#Read_non-standard_10x_files)。
 :::
 
 ```{r}
@@ -201,7 +199,7 @@ head(merged_seurat)
 table(merged_seurat$sample)
 ```
 
-## 保存Seurat对象
+# 保存Seurat对象
 
 ```{r}
 # 保存
@@ -217,4 +215,9 @@ saveRDS(merged_seurat, file = "output/scRNA-seq_online/merged_seurat.rds")
 #| echo: false
 sessionInfo()
 ```
+:::
+
+# References {.unnumbered}
+
+::: {#refs}
 :::

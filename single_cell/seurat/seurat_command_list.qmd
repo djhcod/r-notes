@@ -1,10 +1,12 @@
-# Seurat常用函数清单 {#sec-seurat_command_list}
+---
+title: "Seurat常用函数清单"
+---
 
 > 原文：[*Seurat Command List*](https://satijalab.org/seurat/articles/essential_commands)
 >
 > 原文发布日期：2023年10月31日
 
-为了演示各函数的效果，这里的案例数据选取了在 @sec-seurat_cell_clustering_official_tutorial 中用到的包含了2700个细胞的外周血单核细胞数据（`pbmc`）。数据可在[此链接](https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz)下载。
+为了演示各函数的效果，这里的案例数据选取了在[Seurat细胞分群官方教程](/single_cell/seurat/seurat_tutorial.qmd)中用到的包含了2700个细胞的外周血单核细胞数据（`pbmc`）。数据可在[此链接](https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz)下载。
 
 ```{r}
 library(Seurat)
@@ -23,7 +25,7 @@ pbmc
 
 ## 标准Seurat流程基本函数
 
-见 @sec-seurat_cell_clustering_official_tutorial 。
+见[Seurat细胞分群官方教程](/single_cell/seurat/seurat_tutorial.qmd)。
 
 ```{r}
 #| eval: false
@@ -39,7 +41,7 @@ DimPlot(object = pbmc, reduction = "umap")
 
 ### 采用`SCtransform`标准化时的流程：
 
-见 @sec-sctransform 。
+详见[基于SCTransform的单细胞数据标准化](/single_cell/seurat/sctransform.qmd)。
 
 ```{r}
 pbmc <- SCTransform(object = pbmc, verbose = F)
@@ -110,7 +112,7 @@ nrow(pbmc) # 基因（feature）数量
 
 #### 获取高变基因列表
 
-详见 @sec-highly_variable_features 。
+详见[识别高变基因（highly variable features）](/single_cell/seurat/seurat_tutorial.qmd#sec-highly_variable_features)。
 
 ```{r}
 VariableFeatures(pbmc)[1:10]
@@ -127,7 +129,7 @@ Layers(pbmc)
 
 列出所有的assay，如"RNA" assay、运行`SCTransform`之后的"SCT" assay。一个Seurat对象可以包括多个assay对象，但是在某个时刻，只有一个assay对象是默认激活的。
 
-实际应用场景见 @sec-findmarkers_function 。
+实际应用场景见[此章节](/single_cell/seurat/marker_gene_identification.qmd#sec-findmarkers_function)。
 
 ```{r}
 # 列出所有的assay
@@ -150,7 +152,7 @@ DefaultAssay(pbmc) <- "SCT"
 pbmc@version
 ```
 
-这里我们导入在 @sec-Load_case_data 中用到的案例数据，这个Seurat对象是使用V4版本的`Seurat`包创建的。
+这里我们导入在[后续章节](/single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.qmd#sec-Load_case_data)中用到的案例数据，这个Seurat对象是使用V4版本的`Seurat`包创建的。
 
 ```{r}
 #| cache-lazy: false
@@ -205,7 +207,7 @@ levels(pbmc)
 
 #### 设定细胞identities：
 
-实际应用场景见 @sec-findmarkers_function 。
+实际应用场景见[后续章节](/single_cell/seurat/marker_gene_identification.qmd#sec-findmarkers_function)。
 
 ```{r}
 # 将meta.data中的"seurat_clusters"列设置为cell identities
@@ -274,7 +276,7 @@ LayerData(pbmc, assay = "RNA", layer = "counts") <- new.data
 
 ### 获取PCA降维信息
 
-实际应用场景见 @sec-Effect_of_pcs_clustering 。
+实际应用场景见[分析主成分（PCs）对细胞分群的影响](/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd#sec-Effect_of_pcs_clustering)。
 
 ```{r}
 # 获取细胞在所有主成分上的评分（坐标）
@@ -303,7 +305,7 @@ pbmc[["custom_pca"]] <- new_reduction
 
 ### 通过`FetchData`从Seurat对象中获取任意信息
 
-`FetchData` can access anything from expression matrices, cell embeddings, or metadata use the previously listed commands to access entire matrices。通过FetchData可以提取包括表达量数据、PCA分数以及meta.data内的任何变量并形成一个数据框。实际应用场景见 @sec-Effect_of_pcs_clustering 。
+`FetchData` can access anything from expression matrices, cell embeddings, or metadata use the previously listed commands to access entire matrices。通过FetchData可以提取包括表达量数据、PCA分数以及meta.data内的任何变量并形成一个数据框。实际应用场景见[分析主成分（PCs）对细胞分群的影响](/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd#sec-Effect_of_pcs_clustering)。
 
 ```{r}
 FetchData(object = pbmc, 
@@ -317,7 +319,7 @@ FetchData(object = pbmc,
 
 ### 取子集 {#sec-subset_seurat}
 
-实际应用见 @sec-filtering 。
+实际应用见[过滤细胞](/single_cell/seurat/seurat_tutorial.qmd#过滤细胞)。
 
 ```{r}
 # 根据meta data中的信息取子集
@@ -341,7 +343,7 @@ subset(x = pbmc, downsample = 100)
 
 ### 分割layers
 
-In Seurat v5, users can now split in object directly into different layers keeps expression data in one object, but splits multiple samples into layers can proceed directly to integration workflow after splitting layers。实际应用场景见 @sec-Single-cell_data_integration 。
+In Seurat v5, users can now split in object directly into different layers keeps expression data in one object, but splits multiple samples into layers can proceed directly to integration workflow after splitting layers。实际应用场景见[数据整合](/single_cell/seurat/integration.qmd)。
 
 ```{r}
 DefaultAssay(pbmc) <- "RNA"
@@ -370,7 +372,7 @@ seurat_list
 
 ### Merge objects (without integration)
 
-In Seurat v5, merging creates a single object, but **keeps the expression information split into different layers** for integration. If not proceeding with integration, rejoin the layers after merging. 实际应用场景，见[此链接](https://hbctraining.github.io/scRNA-seq_online/lessons/03_SC_quality_control-setup.html)。
+In Seurat v5, merging creates a single object, but **keeps the expression information split into different layers** for integration. If not proceeding with integration, rejoin the layers after merging. 实际应用场景，见[后续章节](/single_cell/sc_supplementary/read_sc_data.qmd)。
 
 ```{r}
 # Merge two Seurat objects
@@ -389,7 +391,7 @@ merge(x = pbmc1,
 
 ### Merge objects (with integration)
 
-关于单细胞数据的整合，参考： @sec-Single-cell_data_integration 。
+关于单细胞数据的整合，参考[后续章节](/single_cell/seurat/integration.qmd)。
 
 ```{r}
 merged_pbmc <- NormalizeData(merged_pbmc, verbose = F)

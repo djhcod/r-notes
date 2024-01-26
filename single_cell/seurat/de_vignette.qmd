@@ -1,14 +1,16 @@
-# 寻找不同样本类型间同一细胞类型内的差异基因 {#sec-differential_expression}
+---
+title: "寻找不同样本类型间同一细胞类型内的差异基因"
+---
 
 > 参考原文：[*Introduction to scRNA-seq integration*](https://satijalab.org/seurat/articles/integration_introduction#identify-differential-expressed-genes-across-conditions) *和 [Differential expression testing](https://satijalab.org/seurat/articles/de_vignette)*
 >
 > 原文发布日期：2023年10月31日
 
-## 直接通过`FindMarkers`寻找差异基因 {#sec-degs_within_the_same_cell_type_between_different_sample_types}
+# 直接通过`FindMarkers`寻找差异基因 {#sec-degs_within_the_same_cell_type_between_different_sample_types}
 
-### 数据导入
+## 数据导入
 
-导入我们在 @sec-Single-cell_data_integration 中完成`SCTransform`和整合的单细胞数据。这里的meta.data已经提前注释好了细胞类型（储存在"seurat_annotations"列中）。
+导入我们在[整合（integration）](/single_cell/seurat/integration.qmd)中完成`SCTransform`和整合的单细胞数据。这里的meta.data已经提前注释好了细胞类型（储存在"seurat_annotations"列中）。
 
 ```{r}
 library(Seurat)
@@ -17,7 +19,7 @@ ifnb_integrated
 head(ifnb_integrated, 3)
 ```
 
-### 运行`PrepSCTFindMarkers()`，预处理SCT assay
+## 运行`PrepSCTFindMarkers()`，预处理SCT assay
 
 ```{r}
 ifnb_integrated <- PrepSCTFindMarkers(ifnb_integrated)
@@ -29,7 +31,7 @@ ifnb_integrated <- PrepSCTFindMarkers(ifnb_integrated)
 如果是基于`NormalizeData`标准化的单细胞数据，需要使用"RNA" assay进行差异分析（见下面的[数据读取和预处理](#数据读取和预处理)），如果不是，需要通过`DefaultAssay(ifnb) <- "RNA"`进行设定。Note that the raw and normalized counts are stored in the `counts` and `data` layers of `RNA` assay. By default, the functions for finding markers will use normalized `data`. 关于`FindMarkers`为什么要使用"RNA" assay，参阅：<https://github.com/hbctraining/scRNA-seq_online/issues/58>
 :::
 
-### 准备差异表达分析所需变量 {#准备差异表达分析所需变量}
+## 准备差异表达分析所需变量 {#准备差异表达分析所需变量}
 
 We create a column in the `meta.data` slot to hold both the cell type and treatment information and switch the current `Idents` to that column.
 
@@ -41,7 +43,7 @@ unique(ifnb_integrated$celltype.stim)
 Idents(ifnb_integrated) <- "celltype.stim"
 ```
 
-### 执行差异表达分析
+## 执行差异表达分析
 
 Then we use `FindMarkers()` to find the genes that are different between control and stimulated B cells.
 
@@ -56,14 +58,14 @@ head(b.interferon.response, n = 15)
 ```
 
 ::: callout-warning
-Please note that p-values obtained from this analysis should be interpreted with caution, as **these tests treat each cell as an independent replicate, and ignore inherent correlations between cells originating from the same sample**. Such analyses have been shown to find a large number of **false positive associations**, as has been demonstrated by [@squair2021], [@zimmerman2021], [@junttila2022], and others. As discussed here [@crowell2020a], DE tests across multiple conditions should expressly utilize multiple samples/replicates, and can be performed after aggregating (‘pseudobulking’) cells from the same sample and subpopulation together. Below, we show how **pseudobulking** can be used to account for such within-sample correlation.
+Please note that p-values obtained from this analysis should be interpreted with caution, as **these tests treat each cell as an independent replicate, and ignore inherent correlations between cells originating from the same sample**. Such analyses have been shown to find a large number of **false positive associations**, as has been demonstrated by [@squair2021], [@zimmerman2021], [@junttila2022], and others. As discussed here [@crowell2020], DE tests across multiple conditions should expressly utilize multiple samples/replicates, and can be performed after aggregating (‘pseudobulking’) cells from the same sample and subpopulation together. Below, we show how **pseudobulking** can be used to account for such within-sample correlation.
 :::
 
 ::: callout-warning
 这里没有使用进行pseudobulking的原因是，本例中“ctrl”和“sim”组都分别只有一个重复：We do not perform this analysis here, as there is a single replicate in the data.
 :::
 
-### 可视化差异基因表达
+## 可视化差异基因表达
 
 Another useful way to visualize these changes in gene expression is with the `split.by` option to the [`FeaturePlot()`](https://satijalab.org/seurat/reference/FeaturePlot.html) or [`VlnPlot()`](https://satijalab.org/seurat/reference/VlnPlot.html) function. This will display FeaturePlots of the list of given genes, split by a grouping variable (stimulation condition here).
 
@@ -103,11 +105,11 @@ wrap_plots(plots = plots, ncol = 2) # 将plots列表组合成组图
 
 ------------------------------------------------------------------------
 
-## pseudobulking后的差异分析
+# pseudobulking后的差异分析
 
 这一节为了演示pseudobulking，采用的仍然是“ifnb”数据集，仍然包括了“ctrl”和“stim”两个conditions，但是每个条件下都有多个重复，即多个来自不同患者的样本。同时，为了和[Seurat官方教程](https://satijalab.org/seurat/articles/de_vignette)一致，采用了`NormalizeData`对数据进行标准化。
 
-### 数据读取和预处理 {#数据读取和预处理}
+## 数据读取和预处理 {#数据读取和预处理}
 
 For demonstration purposes, we will be using the interferon-beta stimulated human PBMCs dataset [@kang2017] that is available via the `SeuratData` package.
 
@@ -140,7 +142,7 @@ ifnb <- NormalizeData(ifnb)
 DefaultAssay(ifnb)
 ```
 
-### 直接通过`FindMarkers`寻找差异基因
+## 直接通过`FindMarkers`寻找差异基因
 
 为了和pseudobulking后的差异分析结果进行比价，这里仍然先进行基于`FindMarkers`的简单差异表达分析，**寻找ctrl和stim之间在CD14单核细胞中的差异基因**。基本步骤和上面的[准备差异表达分析所需变量](#准备差异表达分析所需变量)一致。
 
@@ -157,7 +159,7 @@ nrow(mono.de)
 head(mono.de, n = 10)
 ```
 
-### 执行pseudobulking
+## 执行pseudobulking
 
 To pseudobulk, we will use `AggregateExpression()` to sum together **gene counts of all the cells from the same sample** for each cell type. This results in **one gene expression profile per sample** **and cell type**. We can then perform DE analysis using [`DESeq2`](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) **on the sample level**. This treats the samples, rather than the individual cells, as independent observations.
 
@@ -233,7 +235,7 @@ pseudo_ifnb$celltype.stim <- paste(pseudo_ifnb$seurat_annotations,
 unique(pseudo_ifnb$celltype.stim)
 ```
 
-### 执行差异分析 {#sec-perform_de_analysis}
+## 执行差异分析 {#sec-perform_de_analysis}
 
 Next, we perform DE testing on the pseudobulk level for CD14 monocytes, and compare it against the previous single-cell-level DE results.
 
@@ -248,7 +250,7 @@ Next, we perform DE testing on the pseudobulk level for CD14 monocytes, and comp
 BiocManager::install("DESeq2")
 ```
 
-注意，如果是用FindMarkers来寻找细胞类型的marker基因，则一般采用默认的Wilcoxon Rank Sum Test方法，这时需要调用的是[`presto`](https://github.com/immunogenomics/presto) 包（见 @sec-findmarkers_function ）。
+注意，如果是用`FindMarkers`来寻找细胞类型的marker基因，则一般采用默认的Wilcoxon Rank Sum Test方法，这时需要调用的是[`presto`](https://github.com/immunogenomics/presto) 包（见[FindMarkers-在特定cluster之间寻找marker基因](/single_cell/seurat/marker_gene_identification.qmd#sec-findmarkers_function)）。
 :::
 
 ```{r}
@@ -299,7 +301,7 @@ head(FindMarkers(ifnb,
 
 ------------------------------------------------------------------------
 
-### 比较单细胞水平和pseudobulk水平的差异表达分析
+## 比较单细胞水平和pseudobulk水平的差异表达分析
 
 接下来，我们可以比较一下单细胞水平的差异表达分析的P值和pseudobulk水平的P值：
 
@@ -398,4 +400,9 @@ VlnPlot(ifnb,
 #| echo: false
 sessionInfo()
 ```
+:::
+
+# References {.unnumbered}
+
+::: {#refs}
 :::

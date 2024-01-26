@@ -1,4 +1,6 @@
-# 基于SCTransform的单细胞数据标准化 {#sec-sctransform}
+---
+title: "基于SCTransform的单细胞数据标准化"
+---
 
 > 原文：[*Using sctransform in Seurat*](https://satijalab.org/seurat/articles/sctransform_vignette)
 >
@@ -8,9 +10,9 @@
 
 In our manuscript we introduce a modeling framework for the normalization and variance stabilization of molecular count data from scRNA-seq experiments. This procedure **omits the need for heuristic steps** including pseudocount addition or log-transformation and **improves common downstream analytical tasks** such as variable gene selection, dimensional reduction, and differential expression. We named this method`sctransform`.
 
-Inspired by important and rigorous work from Lause et al [@lause2021], we released an updated manuscript [@choudhary2022b] and updated the sctransform software to a v2 version, which is now the default in Seurat v5.
+Inspired by important and rigorous work from Lause et al [@lause2021], we released an updated manuscript [@choudhary2022] and updated the sctransform software to a v2 version, which is now the default in Seurat v5.
 
-## 载入数据
+# 载入数据
 
 ```{r}
 library(Seurat)
@@ -19,7 +21,7 @@ pbmc <- CreateSeuratObject(counts = pbmc_data)
 pbmc
 ```
 
-## 质控
+# 质控
 
 这里的质控步骤只简单的计算了线粒体基因的比例。
 
@@ -28,11 +30,11 @@ pbmc <- PercentageFeatureSet(pbmc, pattern = "^MT-", col.name = "percent.mt")
 head(pbmc@meta.data, 5)
 ```
 
-## 运行`SCTransform` {#sec-perform_sctransform}
+# 运行`SCTransform` {#sec-perform_sctransform}
 
 -   `SCTransform()`替代了传统单细胞数据分析流程中的`NormalizeData()`、`ScaleData()`和`FindVariableFeatures()`函数的功能，因此不再需要运行这些函数。
 
--   During normalization, we can also remove confounding sources of variation, for example, mitochondrial mapping percentage。`SCTransform`也可以移除一些非期望变异来源，如线粒体基因的比例。这在传统的单细胞数据分析流程中由`ScaleData`来完成（ @sec-scaledata ）。
+-   During normalization, we can also remove confounding sources of variation, for example, mitochondrial mapping percentage。`SCTransform`也可以移除一些非期望变异来源，如线粒体基因的比例。这在传统的单细胞数据分析流程中由`ScaleData`来完成（见[Seurat细胞分群官方教程](/single_cell/seurat/seurat_tutorial.qmd#sec-scaledata)）。
 
 -   In Seurat v5, SCT v2 is applied by default. You can revert to v1 by setting `vst.flavor = 'v1'`
 
@@ -55,7 +57,7 @@ Transformed data will be available in the `SCT assay`, which is set as the defau
 
 -   The 'corrected' UMI counts are stored in `pbmc[["SCT"]]$counts`. We store log-normalized versions of these corrected counts in `pbmc[["SCT"]]$data`, which are very helpful for visualization.
 
-## 降维
+# 降维
 
 ```{r}
 pbmc <- RunPCA(pbmc, verbose = FALSE)
@@ -71,7 +73,7 @@ DimHeatmap(pbmc, dims = 1:15, cells = 1000, balanced = TRUE)
 ElbowPlot(pbmc)
 ```
 
-## 聚类 {#sec-clustering}
+# 聚类 {#sec-clustering}
 
 ```{r}
 pbmc <- FindNeighbors(pbmc, dims = 1:30, verbose = FALSE)
@@ -79,21 +81,21 @@ pbmc <- FindClusters(pbmc, verbose = FALSE)
 DimPlot(pbmc, label = TRUE)
 ```
 
-根据Seurat细胞分群官方教程（ @sec-Determine_pcs_for_subsequent_analyses ），这个数据集"we can observe an 'elbow' around PC9-10, suggesting that the majority of true signal is captured in the first 10 PCs"。因此在`FindNeighbors`函数中指定了`dims = 1:10`。但是这里的`FindNeighbors`函数指定了更多的主成分（`dims = 1:30`）。下面的内容对此作出了解释：
+根据[Seurat细胞分群官方教程](/single_cell/seurat/seurat_tutorial.qmd#sec-Determine_pcs_for_subsequent_analyses)，这个数据集"we can observe an 'elbow' around PC9-10, suggesting that the majority of true signal is captured in the first 10 PCs"。因此在`FindNeighbors`函数中指定了`dims = 1:10`。但是这里的`FindNeighbors`函数指定了更多的主成分（`dims = 1:30`）。下面的内容对此作出了解释：
 
 ::: {.callout-tip collapse="true"}
-## Why can we choose more PCs when using sctransform?
+###### Why can we choose more PCs when using sctransform?
 
-In the @sec-seurat_cell_clustering_official_tutorial ，we focus on **10 PCs** for this dataset, though we highlight that **the results are similar with higher settings for this parameter**. Interestingly, we've found that when using `SCTransform`, we often **benefit by pushing this parameter even higher**. We believe this is because the `SCTransform` workflow performs more effective normalization, strongly removing technical effects from the data.
+In the [Seurat细胞分群官方教程](/single_cell/seurat/seurat_tutorial.qmd#sec-Determine_pcs_for_subsequent_analyses)，we focus on **10 PCs** for this dataset, though we highlight that **the results are similar with higher settings for this parameter**. Interestingly, we've found that when using `SCTransform`, we often **benefit by pushing this parameter even higher**. We believe this is because the `SCTransform` workflow performs more effective normalization, strongly removing technical effects from the data.
 
 Even after standard log-normalization, variation in sequencing depth is still a confounding factor (see [Figure 1](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1)), and this effect can subtly influence higher PCs. In `SCTransform`, this effect is substantially mitigated (see [Figure 3](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1874-1)). This means that **higher PCs are more likely to represent subtle, but biologically relevant, sources of heterogeneity** -- so including them may improve downstream analysis.
 
 In addition, `SCTransform` **returns 3,000 variable features by default, instead of 2,000**. The rationale is similar, the additional variable features are less likely to be driven by technical differences across cells, and instead may represent more subtle biological fluctuations. In general, we find that results produced with `SCTransform` are less dependent on these parameters (indeed, we achieve nearly identical results when using all genes in the transcriptome, though this does reduce computational efficiency). This can help users generate more robust results, and in addition, enables the application of standard analysis pipelines with identical parameter settings that can quickly be applied to new datasets.
 :::
 
-## Marker基因可视化
+# Marker基因可视化
 
-Users can individually annotate clusters based on canonical markers. However, the `SCTransform` normalization reveals **sharper biological distinctions** compared to the standard Seurat workflow（ @sec-seurat_cell_clustering_official_tutorial ）, in a few ways:
+Users can individually annotate clusters based on canonical markers. However, the `SCTransform` normalization reveals **sharper biological distinctions** compared to the [standard Seurat workflow](/single_cell/seurat/seurat_tutorial.qmd#可视化marker基因的表达), in a few ways:
 
 -   Clear separation of at least **3 CD8 T cell populations (naive, memory, effector)**, based on **CD8A, GZMK, CCL5, CCR7** expression
 
@@ -103,7 +105,7 @@ Users can individually annotate clusters based on canonical markers. However, th
 
 -   Additional separation of NK cells into CD56dim vs. bright clusters, based on XCL1 and FCGR3A
 
-### 小提琴图：
+## 小提琴图：
 
 ```{r}
 #| fig-width: 10
@@ -113,7 +115,7 @@ VlnPlot(pbmc,
     ncol = 4)
 ```
 
-### UMAP图：
+## UMAP图：
 
 ```{r}
 #| fig-height: 8
@@ -141,4 +143,9 @@ FeaturePlot(pbmc,
 ```{r}
 sessionInfo()
 ```
+:::
+
+# References {.unnumbered}
+
+::: {#refs}
 :::

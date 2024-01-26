@@ -1,15 +1,14 @@
 ---
+title: "Seurat细胞分群官方教程"
 editor_options: 
   chunk_output_type: console
 ---
-
-# Seurat细胞分群官方教程 {#sec-seurat_cell_clustering_official_tutorial}
 
 > 原文：[*Seurat - Guided Clustering Tutorial*](https://satijalab.org/seurat/articles/pbmc3k_tutorial)
 >
 > 原文发布日期：2023年10月31日
 
-## Seurat对象构建
+# Seurat对象构建
 
 数据源是来自10X Genomics的**外周血单核细胞（peripheral blood mononuclear cells，PBMC）数据集**。该数据集基于Illumina NextSeq 500平台对2700个单细胞进行了测序。数据可在[此链接](https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz)下载。
 
@@ -44,7 +43,7 @@ pbmc
 有的cellranger处理数据以[h5文件格式](https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/h5_matrices)输出，需要使用seurat中的[`Read10X_h5()`](https://satijalab.org/seurat/reference/read10x_h5)函数读取该格式。
 :::
 
-## 质控
+# 质控
 
 在 [@ilicic2016] 中概括了目前常用的单细胞数据分析中识别低质量细胞的标准，包括：
 
@@ -64,7 +63,7 @@ pbmc
 
     -   We use the set of all genes starting with `MT-` as a set of mitochondrial genes
 
-### 计算线粒体基因比例
+## 计算线粒体基因比例
 
 通过`PercentageFeatureSet()`函数计算每个细胞中线粒体基因的比例，并将其返回到Seurat对象的`meta.data`中，形成一个新列"percent.mt"。
 
@@ -74,7 +73,7 @@ pbmc[["percent.mt"]] <- PercentageFeatureSet(pbmc, pattern = "^MT-")
 head(pbmc@meta.data, 5)
 ```
 
-### 可视化质控指标
+## 可视化质控指标
 
 通过`VlnPlot`函数绘制小提琴图展示每个细胞中UMI（nCount_RNA）、基因（percent.mt）和线粒体基因（percent.mt）的数量。
 
@@ -97,7 +96,7 @@ plot2 <- FeatureScatter(pbmc,
 plot1 + plot2
 ```
 
-### 过滤细胞
+## 过滤细胞
 
 在本案例中使用的质控标准：
 
@@ -111,7 +110,7 @@ pbmc <- subset(pbmc,
 pbmc
 ```
 
-## 标准化（Normalizing）
+# 标准化（Normalizing）
 
 After removing unwanted cells from the dataset, the next step is to normalize the data. By default, we employ a **global-scaling normalization method "LogNormalize"** that normalizes the feature expression measurements for each cell by the total expression, multiplies this by a **scale factor** (10,000 by default), and log-transforms the result. 标准化的方法是每个细胞中的基因表达量除以该细胞的基因总表达量，然后乘以比例因子（通常是1000），最后将这个结果取对数。
 
@@ -128,10 +127,10 @@ In Seurat v5, Normalized values are stored in `pbmc[["RNA"]]$data`：
 ::: callout-tip
 While this method of normalization is standard and widely used in scRNA-seq analysis, global-scaling relies on an **assumption that each cell originally contains the same number of RNA molecules**. We and others have developed alternative workflows for the single cell preprocessing that do not make these assumptions.
 
-SCTransform() normalization workflow 就是这样的一种工作流. 针对这一方法的原始文献：[@choudhary2022] 。基于`SCTransform`的数据标准化流程中，无需使用上面的`NormalizeData`, 和下面的`FindVariableFeatures`和`ScaleData`函数。详见后面的章节（ @sec-sctransform ）。
+SCTransform() normalization workflow 就是这样的一种工作流. 针对这一方法的原始文献：[@choudhary2022] 。基于`SCTransform`的数据标准化流程中，无需使用上面的`NormalizeData`, 和下面的`FindVariableFeatures`和`ScaleData`函数。详见[后面的章节](/single_cell/seurat/sctransform.qmd)。
 :::
 
-## 识别高变基因（highly variable features） {#sec-highly_variable_features}
+# 识别高变基因（highly variable features） {#sec-highly_variable_features}
 
 We next calculate a subset of features that exhibit **high cell-to-cell variation** in the dataset (i.e, they are highly expressed in some cells, and lowly expressed in others). We and others [@brennecke2013] have found that focusing on these genes in downstream analysis helps to **highlight biological signal** in single-cell datasets.
 
@@ -157,7 +156,7 @@ plot1
 LabelPoints(plot = plot1, points = top10, repel = TRUE)
 ```
 
-## 归一化（Scaling） {#sec-scaledata}
+# 归一化（Scaling） {#sec-scaledata}
 
 Next, we apply a **linear transformation** ('scaling') that is a standard pre-processing step **prior to dimensional reduction** techniques like PCA. The `ScaleData()` function:
 
@@ -183,18 +182,18 @@ pbmc <- ScaleData(pbmc, features = all.genes)
 ```
 
 ::: callout-tip
-## 去除单细胞数据中的非期望变异来源
+###### 去除单细胞数据中的非期望变异来源
 
-In Seurat, we also use the `ScaleData()` function to remove unwanted sources of variation from a single-cell dataset. For example, we could 'regress out' heterogeneity associated with (for example) cell cycle stage ( @sec-Elimination_of_cell_cycle_effects ), or mitochondrial contamination i.e.:
+In Seurat, we also use the `ScaleData()` function to remove unwanted sources of variation from a single-cell dataset. For example, we could 'regress out' heterogeneity associated with (for example) cell cycle stage (见[消除细胞周期的影响](/single_cell/seurat/cell_cycle_regression.qmd)), or mitochondrial contamination i.e.:
 
 ```{r}
 pbmc <- ScaleData(pbmc, vars.to.regress = "percent.mt")
 ```
 
-However, particularly for advanced users who would like to use this functionality, **we strongly recommend the use of our new normalization workflow, `SCTransform()`**. The method is described in our paper [@choudhary2022a]. As with `ScaleData()`, the function `SCTransform()` also includes a `vars.to.regress` parameter ( @sec-perform_sctransform ). 
+However, particularly for advanced users who would like to use this functionality, **we strongly recommend the use of our new normalization workflow, `SCTransform()`**. The method is described in our paper [@choudhary2022]. As with `ScaleData()`, the function `SCTransform()` also includes a `vars.to.regress` parameter (见[运行`SCTransform`](/single_cell/seurat/sctransform.qmd#sec-perform_sctransform)). 
 :::
 
-## 线性降维
+# 线性降维
 
 Next we perform PCA on the scaled data. By default, **only the previously determined variable features are used as input,** but can be defined using `features` argument if you wish to choose a different subset (if you do want to use a custom subset of features, make sure you pass these to `ScaleData` first).
 
@@ -219,7 +218,7 @@ For the first principal components, Seurat outputs a list of genes with the most
 
 ![](images/截屏2023-11-21%2015.04.58.png)
 
-### 降维可视化
+## 降维可视化
 
 Seurat provides several useful ways of visualizing both cells and features that define the PCA, including `VizDimReduction()`, `DimPlot()`, and `DimHeatmap()` .
 
@@ -245,7 +244,7 @@ DimHeatmap(pbmc, dims = 1, cells = 1000, balanced = TRUE)
 DimHeatmap(pbmc, dims = 1:15, cells = 1000, balanced = TRUE)
 ```
 
-### 决定后续分析的主成分 {#sec-Determine_pcs_for_subsequent_analyses}
+# 决定后续分析的主成分 {#sec-Determine_pcs_for_subsequent_analyses}
 
 To overcome the extensive technical noise in any single feature for scRNA-seq data, **Seurat clusters cells based on their PCA scores**, with each PC essentially representing a 'metafeature' that combines information across a correlated feature set. The top principal components therefore represent a robust compression of the dataset. However, how many components should we choose to include? 10? 20? 100?
 
@@ -258,7 +257,7 @@ ElbowPlot(pbmc)
 ```
 
 ::: {.callout-tip collapse="true"}
-## Identifying the true dimensionality of a dataset
+###### Identifying the true dimensionality of a dataset
 
 **Identifying the true dimensionality of a dataset can be challenging/uncertain for the user.** We therefore suggest these multiple approaches for users. The first is more supervised, exploring PCs to determine relevant sources of heterogeneity, and could be used in conjunction with GSEA for example. The second (`ElbowPlot`). The third is a heuristic that is commonly used, and can be calculated instantly. In this example, we might have been justified in choosing anything between PC 7-12 as a cutoff.
 
@@ -271,9 +270,9 @@ We chose 10 here, but encourage users to consider the following:
 -   We advise users to **err on the higher side when choosing this parameter（建议选择偏高的主成分数量）**. For example, performing downstream analyses with only 5 PCs does significantly and adversely affect results.
 :::
 
-## 细胞聚类（cluster） {#sec-clustering_seurat}
+# 细胞聚类（cluster） {#sec-clustering_seurat}
 
-Seurat applies a **graph-based clustering approach**, building upon initial strategies in Macosko *et al* [@macosko2015a]. Importantly, the *distance metric* which drives the clustering analysis (based on previously identified PCs) remains the same. However, our approach to partitioning the cellular distance matrix into clusters has dramatically improved. Our approach was heavily inspired by recent manuscripts which applied graph-based clustering approaches to scRNA-seq data and CyTOF data [@levine2015]. Briefly, these methods embed cells in a graph structure - for example a **K-nearest neighbor (KNN) graph**, with edges drawn between cells with similar feature expression patterns, and then attempt to partition this graph into highly interconnected 'quasi-cliques' or 'communities'.
+Seurat applies a **graph-based clustering approach**, building upon initial strategies in Macosko *et al* [@macosko2015]. Importantly, the *distance metric* which drives the clustering analysis (based on previously identified PCs) remains the same. However, our approach to partitioning the cellular distance matrix into clusters has dramatically improved. Our approach was heavily inspired by recent manuscripts which applied graph-based clustering approaches to scRNA-seq data and CyTOF data [@levine2015]. Briefly, these methods embed cells in a graph structure - for example a **K-nearest neighbor (KNN) graph**, with edges drawn between cells with similar feature expression patterns, and then attempt to partition this graph into highly interconnected 'quasi-cliques' or 'communities'.
 
 As in PhenoGraph, we first construct a KNN graph based on the euclidean distance in PCA space, and refine the edge weights between any two cells based on the shared overlap in their local neighborhoods (Jaccard similarity). This step is performed using the **`FindNeighbors()`** function, and takes as input the **previously defined dimensionality of the dataset** (first 10 PCs).
 
@@ -299,7 +298,7 @@ head(Idents(pbmc), 5)
 head(pbmc@meta.data)
 ```
 
-## 非线性降维
+# 非线性降维
 
 Seurat offers several non-linear dimensional reduction techniques, such as **tSNE** and **UMAP**, to visualize and explore these datasets. The goal of these algorithms is to learn underlying structure in the dataset, in order to **place similar cells together** in low-dimensional space. Therefore, cells that are grouped together within graph-based clusters determined above should co-localize on these dimension reduction plots.
 
@@ -317,7 +316,7 @@ pbmc <- RunUMAP(pbmc, reduction = "pca", dims = 1:10)
 
 ![](images/截屏2023-11-21%2015.14.18.png)
 
-### 非线性降维可视化
+## 非线性降维可视化
 
 ```{r}
 DimPlot(pbmc, reduction = "umap")
@@ -330,7 +329,7 @@ You can save the object at this point so that it can easily be loaded back in wi
 saveRDS(pbmc, file = "output/seurat_official/pbmc_tutorial.rds")
 ```
 
-## 寻找细胞群间的差异表达基因（cluster biomarkers） {#sec-seurat_cluster_biomarkers}
+# 寻找细胞群间的差异表达基因（cluster biomarkers） {#sec-seurat_cluster_biomarkers}
 
 Seurat can help you find markers that define clusters via **differential expression (DE)**. By default, it identifies positive and negative markers of a single cluster (**specified in `ident.1`**), **compared to all other cells**. `FindAllMarkers()` automates this process for all clusters, but you can also test groups of clusters vs. each other, or against all cells.
 
@@ -369,7 +368,7 @@ pbmc.markers %>%
     filter(avg_log2FC > 1)
 ```
 
-Seurat has several tests for differential expression which can be set with the `test.use` parameter (see @sec-perform_de_analysis for details). 默认是用的"wilcox"方法。For example, the ROC test（`test.use = "roc"`） returns the 'classification power' for any individual marker (ranging from 0 - random, to 1 - perfect)：
+Seurat has several tests for differential expression which can be set with the `test.use` parameter (see [执行差异分析](/single_cell/seurat/de_vignette.qmd#sec-perform_de_analysis) for details). 默认是用的"wilcox"方法。For example, the ROC test（`test.use = "roc"`） returns the 'classification power' for any individual marker (ranging from 0 - random, to 1 - perfect)：
 
 ```{r}
 cluster0.markers <- FindMarkers(pbmc, 
@@ -380,11 +379,11 @@ cluster0.markers <- FindMarkers(pbmc,
 head(cluster0.markers)
 ```
 
-## 可视化marker基因的表达
+# 可视化marker基因的表达
 
 We include several tools for visualizing marker expression. `VlnPlot()` (shows expression probability distributions across clusters), and `FeaturePlot()` (visualizes feature expression on a tSNE or PCA plot) are our most commonly used visualizations. We also suggest exploring `RidgePlot()`, `CellScatter()`, and `DotPlot()` as additional methods to view your dataset.
 
-### 小提琴图：
+## 小提琴图：
 
 ```{r}
 VlnPlot(pbmc, features = c("MS4A1", "CD79A"))
@@ -399,7 +398,7 @@ VlnPlot(pbmc,
         log = TRUE)
 ```
 
-### UMAP图：
+## UMAP图：
 
 ```{r}
 FeaturePlot(pbmc,
@@ -407,7 +406,7 @@ FeaturePlot(pbmc,
                          "PPBP", "CD8A"))
 ```
 
-### 热图：
+## 热图：
 
 `DoHeatmap()` generates an expression heatmap for given cells and features. In this case, we are plotting the top 20 markers (or all markers if less than 20) for each cluster.
 
@@ -420,7 +419,7 @@ pbmc.markers %>%
 DoHeatmap(pbmc, features = top10$gene) + NoLegend()
 ```
 
-## 细胞注释
+# 细胞注释
 
 本案例使用的细胞注释：
 
@@ -491,4 +490,9 @@ saveRDS(pbmc, file = "output/seurat_official/pbmc3k_final.rds")
 ```{r}
 sessionInfo()
 ```
+:::
+
+# References {.unnumbered}
+
+::: {#refs}
 :::

@@ -1,4 +1,6 @@
-# 字符的处理
+---
+title: "字符的处理"
+---
 
 ## 字符串的截取
 
@@ -10,7 +12,7 @@ substr(" A BC",
 substring(" A BC", 1, 3)
 ```
 
-`substr()`对含有空格和特殊字符如下划线的支持不好，这种情况可采用stringr包内的字符分割函数str_split()来实现。下面实现从"A_B_C"中截取"B"：
+`substr()`对含有空格和特殊字符如下划线的支持不好，这种情况可采用`stringr`包内的字符分割函数`str_split()`来实现。下面实现从"A_B_C"中截取"B"：
 
 ```{r}
 library(stringr)
@@ -22,7 +24,7 @@ str_sub("A_B_C",
         2)
 ```
 
-## 字符串的替换（gsub函数）
+## 字符串的替换（`gsub`函数）
 
 ```{r}
 gsub("B",#需要替换的原字符
@@ -68,7 +70,7 @@ paste("hello", "world", "!", sep = " ")
 paste("x",1:3,sep="M")
 ```
 
-### unite()函数的使用
+### `unite()`函数的使用
 
 构建案例数据
 
@@ -117,10 +119,10 @@ A2
 它会把每个字符串当成判断的最小单位，所以不能用来判断/查找"长字符串中是否含有特定的短字符串"
 
 ```{r}
-y <- c("中国四川","中国北京","中国安徽","北京天安门")
-y
-"中国四川" %in% y
-"中国" %in% y
+places <- c("中国四川","中国北京","中国安徽","北京天安门")
+places
+"中国四川" %in% places
+"中国" %in% places
 ```
 
 ### **`grep()`函数**
@@ -128,17 +130,19 @@ y
 grep的全称是global search regular expression and print out the line,可以通过正则表达式搜索文本，并把匹配的行打印出来。所谓正则表达式，就是用某种模式去匹配一类字符串的一个公式，很多文本编辑器或者程序语言都支持该方式进行字符串的操作。下面我们用该函数首先查找y中是否有包含"北京"字样的条目，并返回其所在位置：
 
 ```{r}
-grep("北京", #需要找找的字符
-     y,#从哪里查找
-     ignore.case=F,#是否忽略大小写，默认为FALSE
-     value=F,#默认为FALSE，表示返回匹配到的字符所在的位置；TRUE则返回查找到的值
-     invert=F)#如果为TRUE，则返回未匹配到的字符的值或位置。
+grep(
+  pattern = "北京", # 需要找找的字符
+  x = places, # 从哪里查找
+  ignore.case = F, # 是否忽略大小写，默认为FALSE
+  value = F, # 默认为FALSE，表示返回匹配到的字符所在的位置；TRUE则返回查找到的值
+  invert = F # 如果为TRUE，则返回未匹配到的字符的值或位置
+) 
 ```
 
 查找y中包含"北京"的条目有哪些：
 
 ```{r}
-grep("北京", y, ignore.case = F, value = T, invert = F)
+grep("北京", places, ignore.case = F, value = T, invert = F)
 ```
 
 从framdata数据集中，提取NAME包含了"TR"的个案，形成新的TR_data数据集。
@@ -168,11 +172,39 @@ TR_data
 
 ### **`grepl()`函数**
 
-`grep()`和`grepl()`这两个函数最大的区别在于`grep()`返回找到的位置，`grepl`返回【是否】包含要查找的内容的逻辑向量。
+`grep()`和`grepl()`这两个函数最大的区别在于`grep()`返回找到的位置，`grepl`返回【是否】包含查找内容的逻辑向量。
 
 ```{r}
-grepl("北京", y)
-any(grepl("北京", y))#只要y中有包含了“北京”的项目就返回一个"TRUE"
+grepl("北京", places)
+any(grepl("北京", places))#只要places中有包含了“北京”的项目就返回一个"TRUE"
 ```
 
-### 
+### **`startsWith()`和`endsWith()`**
+
+用于查找开头或结尾的字符
+
+```{r}
+# 从“places”中查找以“中国”开头的对象
+startsWith(
+  x = places, # 从哪里查找
+  prefix = "中国" # 查找内容
+  )
+# 用grepl()的方式：
+grepl(pattern = "^中国", places)
+
+# 从“places”中查找以“北京”结尾的对象
+endsWith(x = places, "北京")
+# 用grepl()的方式：
+grepl(pattern = "北京$", places)
+```
+
+------------------------------------------------------------------------
+
+::: {.callout-note collapse="true" icon="false"}
+## Session Info
+
+```{r}
+#| echo: false
+sessionInfo()
+```
+:::

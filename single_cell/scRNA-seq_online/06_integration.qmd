@@ -1,4 +1,6 @@
-# 单细胞数据整合（Integration） {#sec-sc_integration}
+---
+title: "单细胞数据整合（Integration）"
+---
 
 ::: callout-note
 ###### Learning Objectives:
@@ -25,13 +27,13 @@
 
 ------------------------------------------------------------------------
 
-## 不进行整合时检验细胞分群情况
+# 不进行整合时检验细胞分群情况
 
 Generally, we always look at our clustering **without integration** before deciding whether we need to perform any alignment. **Do not just always perform integration because you think there might be differences - explore the data.** If we had performed the normalization on both conditions together in a Seurat object and visualized the similarity between cells, we would have seen condition-specific clustering.
 
-### 数据导入
+## 数据导入
 
-We use the `split_seurat` object from the previous lesson ( @sec-normalization-and-regressing-out-unwanted-variation ).
+We use the `split_seurat` object from the [previous lesson](/single_cell/scRNA-seq_online/06_SC_SCT_normalization.qmd).
 
 ```{r}
 library(Seurat)
@@ -51,7 +53,7 @@ names(split_seurat@reductions)
 
 ![](images/截屏2023-12-19%2010.46.18.png)
 
-### 降维、分群
+## 降维、分群
 
 ```{r}
 #| fig-cap: 整合前的细胞分群情况
@@ -82,7 +84,7 @@ plot_grid(p1, p2, ncol = 2, labels = "AUTO")
 可以看到，如果不进行整合，不同样本（ctrl vs. stim）间的细胞类型差异很大。The resulting clusters are defined **both by cell type** **and stimulation condition**, which creates challenges for downstream analysis. Condition-specific clustering of the cells indicates that we need to integrate the cells across conditions to ensure that cells of the same cell type cluster together.
 
 ::: callout-tip
-关于`FindNeighbors()`和`FindClusters()`的详细说明见下一节 @sec-clustering_analysis 。
+关于`FindNeighbors()`和`FindClusters()`的详细说明见[下一节](/single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.qmd)。
 :::
 
 ::: callout-note
@@ -91,15 +93,15 @@ plot_grid(p1, p2, ncol = 2, labels = "AUTO")
 We want to identify **cell types which are present in all samples/conditions/modalities** within our dataset, and therefore would like to observe a representation of cells from both samples/conditions/modalities in every cluster. This will enable more interpretable results downstream (i.e. DE analysis, ligand-receptor analysis, differential abundance analysis...).
 :::
 
-In this lesson, we will cover the integration of our samples across conditions, which is adapted from @sec-Single-cell_data_integration .
+In this lesson, we will cover the integration of our samples across conditions, which is adapted from [Seurat-整合](/single_cell/seurat/integration.qmd).
 
 ::: callout-note
-在此前的 @sec-sctransform 中我们学习了how to run through the workflow from normalization to clustering without integration. Other steps in the workflow remain fairly similar, but the **samples would not necessarily be split** in the beginning and integration would not be performed.
+在此前的[Seurat-基于SCTransform](/single_cell/seurat/sctransform.qmd)中我们学习了how to run through the workflow from normalization to clustering without integration. Other steps in the workflow remain fairly similar, but the **samples would not necessarily be split** in the beginning and integration would not be performed.
 
 It can help to first run conditions individually if unsure what clusters to expect or expecting some different cell types between conditions (e.g. tumor and control samples), then run them together to see whether there are condition-specific clusters for cell types present in both conditions. Oftentimes, when clustering cells from multiple conditions there are condition-specific clusters and integration can help ensure the same cell types cluster together.
 :::
 
-## **整合**
+# **整合**
 
 **If cells cluster by sample, condition, batch, dataset, modality, this integration step can greatly improve the clustering and the downstream analyses**.
 
@@ -121,7 +123,7 @@ To integrate, we will use the shared highly variable genes (identified using `SC
 
 The goal of integration is to ensure that the cell types of one condition/dataset align with the same celltypes of the other conditions/datasets (e.g. control macrophages align with stimulated macrophages).
 
-### Integration using CCA
+## Integration using CCA
 
 Seurat v5 enables streamlined integrative analysis using the `IntegrateLayers` function. The method currently supports **five integration methods**. Each of these methods performs integration in low-dimensional space, and **returns a dimensional reduction** (i.e. `integrated.rpca`) that aims to co-embed shared cell types across batches:
 
@@ -129,7 +131,7 @@ The **anchor-based CCA integration** (`method=CCAIntegration`) utilizes the can
 
 ![](images/integration.png)
 
-> Image credit: Stuart T and Butler A, et al. Comprehensive integration of single cell data, bioRxiv 2018 (<https://doi.org/10.1101/460147)_>
+> Image credit: [@stuart2019]
 
 The different steps applied are as follows:
 
@@ -150,7 +152,7 @@ The different steps applied are as follows:
     -   The cell's closest neighbor in the other condition is identified based on gene expression values - its 'best buddy'.
     -   The reciprocal analysis is performed, and if the two cells are 'best buddies' in both directions, then those cells will be marked as **anchors** to 'anchor' the two datasets together.
 
-    > "The difference in expression values between cells in an MNN pair provides an estimate of the batch effect, which is made more precise by averaging across many such pairs. A correction vector is obtained and applied to the expression values to perform batch correction." ([Stuart et al. 2019](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-stuart2019a))
+    > "The difference in expression values between cells in an MNN pair provides an estimate of the batch effect, which is made more precise by averaging across many such pairs. A correction vector is obtained and applied to the expression values to perform batch correction." [@stuart2019]
 
 3.  **Filter anchors** to remove incorrect anchors:
 
@@ -189,10 +191,10 @@ names(seurat_integrated@reductions)
 ```
 
 ::: callout-tip
-如何调用Seurat嵌入的其他整合算法进行整合，参考：@sec-Integrated_analysis_of_seurat-v5 。
+如何调用Seurat嵌入的其他整合算法进行整合，参考：[Seurat v5单细胞数据整合分析](/single_cell/seurat/integrative_analysis_in_seurat_v5.qmd)。
 :::
 
-## 整合后检验细胞分群情况
+# 整合后检验细胞分群情况
 
 After integration, to visualize the integrated data we can use dimensionality reduction techniques, such as PCA and Uniform Manifold Approximation and Projection (UMAP). While PCA will determine all PCs, we can only plot two at a time. In contrast, UMAP will take the information from any number of top PCs to arrange the cells in this multidimensional space. It will take those distances in multidimensional space and plot them in two dimensions working to preserve local and global structure. In this way, the distances between cells represent similarity in expression. If you wish to explore UMAP in more detail, [this post](https://pair-code.github.io/understanding-umap/) is a nice introduction to UMAP theory.
 
@@ -232,22 +234,22 @@ plot_grid(p1, p2, p3, p4,
 
 > When we compare the similarity between the ctrl and stim clusters in the above plot with what we see using the the unintegrated dataset, **it is clear that this dataset benefitted from the integration!**
 
-### Save the "integrated" object!
+## Save the "integrated" object!
 
 ```{r}
 # Save integrated seurat object
 saveRDS(seurat_integrated, "output/scRNA-seq_online/integrated_seurat.rds")
 ```
 
-## Complex Integration Tasks
+# Complex Integration Tasks
 
-In the section above, we've presented the `Seurat` integration workflow, which uses canonical correlation analysis (CCA) and multiple nearest neighbors (MNN) to find "anchors" and integrate across samples, conditions, modalities, etc. While the `Seurat` integration approach is widely used and several benchmarking studies support its great performance in many cases, it is important to recognize that **alternative integration algorithms exist and may work better for more complex integration tasks** (see [Luecken et al. 2021](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-luecken2021) for a comprehensive review).
+In the section above, we've presented the `Seurat` integration workflow, which uses canonical correlation analysis (CCA) and multiple nearest neighbors (MNN) to find "anchors" and integrate across samples, conditions, modalities, etc. While the `Seurat` integration approach is widely used and several benchmarking studies support its great performance in many cases, it is important to recognize that **alternative integration algorithms exist and may work better for more complex integration tasks** (see [@luecken2021] for a comprehensive review).
 
 Not all integration algorithms rely on the same methodology, and they do not always provide the same type of corrected output (embeddings, count matrix...). Their performance is also affected by preliminary data processing steps, including which normalization method was used and how highly variable genes (HVGs) were determined. All those considerations are important to keep in mind when selecting a data integration approach for your study.
 
 **What do we mean by a "complex" integration task?**
 
-In their benchmarking study ([Luecken et al. 2021](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-luecken2021)) compared the performance of different scRNA-seq integration tools when confronted to different "complex" tasks. The "complexity" of integrating a dataset may relate to the number of samples (perhaps generated using different protocols) but also to the biological question the study seeks to address (e.g. comparing cell types across tissues, species...). In these contexts, you may **need to integrate across multiple confounding factors before you can start exploring the biology of your system.**
+In their benchmarking study [@luecken2021] compared the performance of different scRNA-seq integration tools when confronted to different "complex" tasks. The "complexity" of integrating a dataset may relate to the number of samples (perhaps generated using different protocols) but also to the biological question the study seeks to address (e.g. comparing cell types across tissues, species...). In these contexts, you may **need to integrate across multiple confounding factors before you can start exploring the biology of your system.**
 
 ![](images/complex_integration.png){width="597"}
 
@@ -262,11 +264,11 @@ In these more complex scenarios, you want to select a data integration approach 
 
 Not all tools may perform as well on every task, and complex datasets may require testing several data integration approaches. You might want to analyze independently each of the batches you consider to integrate across, in order to define cell identities at this level before integrating and checking that the initially annotated cell types are mixed as expected.
 
-### Harmonizing as a method of integration
+## Harmonizing as a method of integration
 
-Harmony ([Korsunsky et al. 2019](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019)) was devleoped in 2019, and is an example of **a tool that can work with complex integration tasks**. It is available as an [GitHub](#0) and [CRAN](#0), and it has functions for standalone and Seurat pipeline analyses. It has been shown to perform incredibly well from recent benchmarking studies ([Tran et al. 2020](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020)).
+Harmony [@korsunsky2019] was devleoped in 2019, and is an example of **a tool that can work with complex integration tasks**. It is available as an [GitHub](#0) and [CRAN](#0), and it has functions for standalone and Seurat pipeline analyses. It has been shown to perform incredibly well from recent benchmarking studies [@tran2020].
 
-在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用`Harmony`包（available on [GitHub](https://github.com/immunogenomics/harmony) and [CRAN](https://cran.r-project.org/web/packages/harmony/index.html)），详见[该教程](https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html)。同时，Seurat V5中的`IntegrateLayers`函数集成了Harmony整合算法，可以直接调用，详见：@sec-Integrated_analysis_of_seurat-v5 。Compared to other algorithms, `Harmony` notably presents the following advantages ([Korsunsky et al. 2019](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-korsunsky2019), [Tran et al. 2020](https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/06_integration.html#ref-tran2020)):
+在Seurat工作流的基础上实现基于Harmony的单细胞数据整合，可以使用`Harmony`包（available on [GitHub](https://github.com/immunogenomics/harmony) and [CRAN](https://cran.r-project.org/web/packages/harmony/index.html)），详见[该教程](https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html)。同时，Seurat V5中的`IntegrateLayers`函数集成了Harmony整合算法，可以直接调用，详见：[Seurat v5单细胞数据整合分析](/single_cell/seurat/integrative_analysis_in_seurat_v5.qmd#sec-sc_integration)。Compared to other algorithms, `Harmony` notably presents the following advantages [@korsunsky2019] [@tran2020]:
 
 1.  Possibility to integrate data across several variables (for example, by experimental batch and by condition)
 
@@ -283,4 +285,9 @@ Harmony ([Korsunsky et al. 2019](https://djhcod.github.io/r-notes/single_cell/sc
 #| echo: false
 sessionInfo()
 ```
+:::
+
+# References {.unnumbered}
+
+::: {#refs}
 :::

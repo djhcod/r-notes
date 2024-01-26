@@ -1,4 +1,6 @@
-# 细胞分群质量评估 {#sec-cluster_qc}
+---
+title: "细胞分群质量评估"
+---
 
 ::: callout-note
 ###### Learning Objectives:
@@ -86,7 +88,7 @@ Generally, we expect to see the majority of the cell type clusters to be present
 
 ## 分析细胞周期是否影响细胞分群
 
-Next, we can explore whether the **cells cluster influenced by the different cell cycle phases**. We did not regress out variation due to cell cycle phase when we performed the `SCTransform` normalization ( @sec-evaluating_effects_of_cell_cycle ). **If our cell clusters showed large differences in cell cycle expression, this would be an indication we would want to re-run the `SCTransform` and add the `S.Score` and `G2M.Score` to our variables to regress, then re-run the rest of the steps.**
+Next, we can explore whether the **cells cluster influenced by the different cell cycle phases**. We did not regress out variation due to cell cycle phase when we performed the `SCTransform` normalization (见[Normalization and regressing out unwanted variation](/single_cell/scRNA-seq_online/06_SC_SCT_normalization.qmd#sec-evaluating_effects_of_cell_cycle)). **If our cell clusters showed large differences in cell cycle expression, this would be an indication we would want to re-run the `SCTransform` and add the `S.Score` and `G2M.Score` to our variables to regress, then re-run the rest of the steps.**
 
 ```{r}
 #| fig-width: 10
@@ -143,7 +145,7 @@ head(pc_data, 3)
 ```
 
 ::: callout-tip
-How did we know in the `FetchData()` function to include `UMAP_1` to obtain the UMAP coordinates? @sec-seurat_command_list describes the function as being able to pull any data from the expression matrices, cell embeddings, or metadata.
+How did we know in the `FetchData()` function to include `UMAP_1` to obtain the UMAP coordinates? [Seurat常用函数清单](/single_cell/seurat/seurat_command_list.qmd) describes the function as being able to pull any data from the expression matrices, cell embeddings, or metadata.
 
 For instance, if you explore the `seurat_clustered@reductions` list object, the first component is for PCA, and includes a slot for `cell.embeddings` (坐标数据). We can use the column names (`PC_1`, `PC_2`, `PC_3`, etc.) to pull out the coordinates or PC scores corresponding to each cell for each of the PCs (提取每个细胞在指定主成分上的坐标).
 
@@ -254,11 +256,11 @@ With the cells clustered, we can explore the cell type identities by looking for
 The `FeaturePlot()` function from Seurat makes it easy to visualize a handful of genes using the gene IDs stored in the Seurat object. We can easily explore the expression of known gene markers on top of our UMAP visualizations. Let's go through and determine the identities of the clusters.
 
 ::: callout-caution
-The `SCTransform` normalization was performed only on the **3000** most variable genes, so many of our genes of interest may not be present in this data ( @sec-perform_sctranform ).
+The `SCTransform` normalization was performed only on the **3000** most variable genes, so many of our genes of interest may not be present in this data (见[Seurat-运行`SCTransform`](/single_cell/seurat/sctransform.qmd#sec-perform_sctransform)).
 :::
 
 ::: callout-warning
-在[原教程](https://hbctraining.github.io/scRNA-seq_online/lessons/08_SC_clustering_quality_control.html)中，由于采用了Seurat V5之前的工作流（如 @sec-Load_case_data 所述），所以为了准确可视化marker基因的表达情况，将默认的assay改回了“RNA”，然后运行`NormalizeData`：
+在[原教程](https://hbctraining.github.io/scRNA-seq_online/lessons/08_SC_clustering_quality_control.html)中，由于采用了Seurat V5之前的工作流（如[此前章节](/single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.qmd#sec-Load_case_data)所述），所以为了准确可视化marker基因的表达情况，将默认的assay改回了“RNA”，然后运行`NormalizeData`：
 
 ```{r}
 #| cache-lazy: false
@@ -273,7 +275,7 @@ seurat_clustered <- NormalizeData(seurat_clustered, verbose = FALSE)
 
 *Assay is a slot defined in the Seurat object, it has multiple slots within it. In a given assay, the `counts` slot stores non-normalized raw counts, and the `data` slot stores normalized expression data. Therefore, when we run the `NormalizeData()` function in the above code, the normalized data will be stored in the `data` slot of the RNA assay while the `counts` slot will remain unaltered.*
 
-而在Seurat V5的官方教程中（ @sec-sctransform ），经过了`SCTransform`之后绘制marker基因的表达情况时，并没有执行这一步，默认的assay仍然是“SCT”。这里为了和原教程的图像一致，所以也进行这一步。而对于以后的Seurat V5工作流考虑按照官方教程的做法。
+而在[Seurat V5的官方教程](/single_cell/seurat/sctransform.qmd)中，经过了`SCTransform`之后绘制marker基因的表达情况时，并没有执行这一步，默认的assay仍然是“SCT”。这里为了和原教程的图像一致，所以也进行这一步。而对于以后的Seurat V5工作流考虑按照官方教程的做法。
 :::
 
 Depending on our markers of interest, they could be positive or negative markers for a particular cell type. The combined expression of our chosen handful of markers should give us an idea on whether a cluster corresponds to that particular cell type.

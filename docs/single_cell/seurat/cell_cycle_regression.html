@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.3.450">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>R语言学习笔记 - 11&nbsp; 消除细胞周期的影响</title>
+<title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 消除细胞周期的影响</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -97,7 +97,7 @@ div.csl-indent {
   "copy-button": false,
   "collapse-after": 3,
   "panel-placement": "end",
-  "type": "overlay",
+  "type": "textbox",
   "limit": 20,
   "language": {
     "search-no-results-text": "No results",
@@ -111,7 +111,13 @@ div.csl-indent {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><script type="application/json" class="js-hypothesis-config">
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G2HZEXHNCE"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
+</script><script type="application/json" class="js-hypothesis-config">
 {
   "theme": "classic",
   "openSidebar": false,
@@ -119,7 +125,13 @@ div.csl-indent {
   "enableExperimentalNewNoteButton": true
 }
 </script><script async="" src="https://hypothes.is/embed.js"></script>
-<meta name="twitter:title" content="R语言学习笔记 - 11&nbsp; 消除细胞周期的影响">
+<meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 消除细胞周期的影响">
+<meta property="og:description" content="">
+<meta property="og:image" content="https://djhcod.github.io/r-notes/single_cell/seurat/cell_cycle_regression_files/figure-html/unnamed-chunk-3-1.png">
+<meta property="og:site-name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
+<meta property="og:image:height" content="960">
+<meta property="og:image:width" content="1344">
+<meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 消除细胞周期的影响">
 <meta name="twitter:description" content="">
 <meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/seurat/cell_cycle_regression_files/figure-html/unnamed-chunk-3-1.png">
 <meta name="twitter:image-height" content="960">
@@ -148,20 +160,20 @@ div.csl-indent {
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../intro.html" rel="" target="">
- <span class="menu-text">Introduction</span></a>
+    <a class="nav-link" href="../../r_basic/r_basics.html" rel="" target="">
+ <span class="menu-text">R语言基础</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-parts" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
- <span class="menu-text">Parts</span>
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">单细胞数据分析</span>
     </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-parts">
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">
 <li>
-    <a class="dropdown-item" href="../../r_basic/r_basics.html" rel="" target="">
- <span class="dropdown-text">R语言基础</span></a>
+    <a class="dropdown-item" href="../../single_cell/single_cell_intro.html" rel="" target="">
+ <span class="dropdown-text">单细胞数据分析介绍</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/seurat/seurat.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/seurat/seurat_intro.html" rel="" target="">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
@@ -172,15 +184,11 @@ div.csl-indent {
     <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
  <span class="dropdown-text">单细胞补充内容</span></a>
   </li>  
-        <li>
-    <a class="dropdown-item" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
- <span class="dropdown-text">Quarto基础</span></a>
-  </li>  
     </ul>
 </li>
   <li class="nav-item">
-    <a class="nav-link" href="../../references.html" rel="" target="">
- <span class="menu-text">References</span></a>
+    <a class="nav-link" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
+ <span class="menu-text">Quarto基础</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -191,25 +199,13 @@ div.csl-indent {
   </li>  
 </ul>
 <div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/djhcod/r-notes" rel="" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
-    <div class="dropdown">
-      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
-<li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://twitter.com/intent/tweet?url=%7Curl%7C">
-              <i class="bi bi-bi-twitter pe-1"></i>
-            Twitter
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item quarto-navbar-tools-item" href="https://www.facebook.com/sharer/sharer.php?u=%7Curl%7C">
-              <i class="bi bi-bi-facebook pe-1"></i>
-            Facebook
-            </a>
-          </li>
-      </ul>
-</div>
+    <a href="https://github.com/djhcod/r-notes" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
 </div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -217,35 +213,20 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/cell_cycle_regression.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat_intro.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/cell_cycle_regression.html">消除细胞周期的影响</a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">主页</span></span></a>
+ <span class="menu-text">主页</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">前言</span></a>
-  </div>
-</li>
-        <li class="px-0"><hr class="sidebar-divider hi "></li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
@@ -258,39 +239,39 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Rstudio环境配置</span></span></a>
+ <span class="menu-text">Rstudio环境配置</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/data_input_output.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">数据的读取与输出</span></span></a>
+ <span class="menu-text">数据的读取与输出</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/basic_data_function.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据处理基本函数</span></span></a>
+ <span class="menu-text">数据处理基本函数</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/character.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">字符的处理</span></span></a>
+ <span class="menu-text">字符的处理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/loop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">循环</span></span></a>
+ <span class="menu-text">循环</span></a>
   </div>
 </li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../single_cell/seurat/seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Seurat v5官方文档</span></a>
+            <a href="../../single_cell/single_cell_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞数据分析</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -298,181 +279,192 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../../single_cell/scRNA-seq_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞测序技术介绍</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../single_cell/generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞RNA测序—从raw data到count matrix</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../single_cell/seurat/seurat_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat v5官方文档</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_command_list.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Seurat常用函数清单</span></span></a>
+ <span class="menu-text">Seurat常用函数清单</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Seurat细胞分群官方教程</span></span></a>
+ <span class="menu-text">Seurat细胞分群官方教程</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Seurat中的数据可视化方法</span></span></a>
+ <span class="menu-text">Seurat中的数据可视化方法</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/sctransform.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span></a>
+ <span class="menu-text">基于SCTransform的单细胞数据标准化</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></a>
+ <span class="menu-text">消除细胞周期的影响</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">整合（integration）</span></span></a>
+ <span class="menu-text">整合（integration）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Seurat v5单细胞数据整合分析</span></span></a>
+ <span class="menu-text">Seurat v5单细胞数据整合分析</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/marker_gene_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">寻找marker gene</span></span></a>
+ <span class="menu-text">寻找marker gene</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">寻找不同样本类型间同一细胞类型内的差异基因</span></span></a>
+ <span class="menu-text">寻找不同样本类型间同一细胞类型内的差异基因</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">基于参考集的细胞注释</span></span></a>
+ <span class="menu-text">基于参考集的细胞注释</span></a>
   </div>
 </li>
       </ul>
 </li>
-        <li class="sidebar-item sidebar-item-section">
+          <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../single_cell/scRNA-seq_online/00_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">scRNA-seq_online学习材料</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../single_cell/scRNA-seq_online/01_intro_to_scRNA-seq.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">单细胞测序技术介绍</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../single_cell/scRNA-seq_online/02_SC_generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">单细胞RNA测序—从raw data到count matrix</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">数据导入与Seurat对象构建</span></span></a>
+ <span class="menu-text">数据导入与Seurat对象构建</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">质控</span></span></a>
+ <span class="menu-text">质控</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Single-cell RNA-seq Clustering Workflow</span></span></a>
+ <span class="menu-text">Single-cell RNA-seq Clustering Workflow</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">PCA原理</span></span></a>
+ <span class="menu-text">PCA原理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Normalization and regressing out unwanted variation</span></span></a>
+ <span class="menu-text">Normalization and regressing out unwanted variation</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">单细胞数据整合（Integration）</span></span></a>
+ <span class="menu-text">单细胞数据整合（Integration）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">细胞聚类（clustering analysis）</span></span></a>
+ <span class="menu-text">细胞聚类（clustering analysis）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">细胞分群质量评估</span></span></a>
+ <span class="menu-text">细胞分群质量评估</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">寻找marker基因+细胞注释</span></span></a>
+ <span class="menu-text">寻找marker基因+细胞注释</span></a>
   </div>
 </li>
       </ul>
 </li>
-        <li class="sidebar-item sidebar-item-section">
+          <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">单细胞补充内容</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/read_sc_data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">读取非标准格式的单细胞数据</span></span></a>
+ <span class="menu-text">读取非标准格式的单细胞数据</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/universal_marker.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">细胞分群通用marker</span></span></a>
+ <span class="menu-text">细胞分群通用marker</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（上）</span></span></a>
+ <span class="menu-text">多个单细胞数据集整合分析（上）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">多个单细胞数据集整合分析（下）</span></span></a>
+ <span class="menu-text">多个单细胞数据集整合分析（下）</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../single_cell/sc_supplementary/DecontX.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">预测和去除单细胞转录组的环境游离RNA污染</span></span></a>
+ <span class="menu-text">预测和去除单细胞转录组的环境游离RNA污染</span></a>
   </div>
+</li>
+      </ul>
 </li>
       </ul>
 </li>
@@ -480,60 +472,6 @@ div.csl-indent {
       <div class="sidebar-item-container"> 
             <a href="../../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quarto基础</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">
-<li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">YAML设置</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">图片设置</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">交叉引用</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">插入其他内容</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">在Quarto中嵌入Shiny应用程序</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Quarto Books</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">39</span>&nbsp; <span class="chapter-title">发布到GitHub Pages</span></span></a>
-  </div>
-</li>
-      </ul>
-</li>
-        <li class="px-0"><hr class="sidebar-divider hi "></li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false">
- <span class="menu-text">参考文献</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -541,8 +479,44 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">References</span></a>
+  <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">YAML设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">图片设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">交叉引用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">插入其他内容</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">在Quarto中嵌入Shiny应用程序</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto Books</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">发布到GitHub Pages</span></a>
   </div>
 </li>
       </ul>
@@ -552,11 +526,11 @@ div.csl-indent {
 </nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">Table of contents</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">On this page</h2>
    
   <ul>
 <li>
-<a href="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E5%92%8C%E9%A2%84%E5%A4%84%E7%90%86" id="toc-数据读取和预处理" class="nav-link active" data-scroll-target="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E5%92%8C%E9%A2%84%E5%A4%84%E7%90%86"><span class="header-section-number">11.1</span> 数据读取和预处理</a>
+<a href="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E5%92%8C%E9%A2%84%E5%A4%84%E7%90%86" id="toc-数据读取和预处理" class="nav-link active" data-scroll-target="#%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96%E5%92%8C%E9%A2%84%E5%A4%84%E7%90%86"><span class="header-section-number">0.1</span> 数据读取和预处理</a>
   <ul class="collapse">
 <li><a href="#%E5%88%9B%E5%BB%BAseurat%E5%AF%B9%E8%B1%A1" id="toc-创建seurat对象" class="nav-link" data-scroll-target="#%E5%88%9B%E5%BB%BAseurat%E5%AF%B9%E8%B1%A1">创建Seurat对象</a></li>
   <li><a href="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E5%91%A8%E6%9C%9Fmarker%E5%9F%BA%E5%9B%A0%E5%88%97%E8%A1%A8" id="toc-获取细胞周期marker基因列表" class="nav-link" data-scroll-target="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E5%91%A8%E6%9C%9Fmarker%E5%9F%BA%E5%9B%A0%E5%88%97%E8%A1%A8">获取细胞周期marker基因列表</a></li>
@@ -564,18 +538,19 @@ div.csl-indent {
   </ul>
 </li>
   <li>
-<a href="#%E6%B6%88%E9%99%A4%E7%BB%86%E8%83%9E%E5%91%A8%E6%9C%9F%E7%9A%84%E5%BD%B1%E5%93%8D" id="toc-消除细胞周期的影响" class="nav-link" data-scroll-target="#%E6%B6%88%E9%99%A4%E7%BB%86%E8%83%9E%E5%91%A8%E6%9C%9F%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="header-section-number">11.2</span> 消除细胞周期的影响</a>
+<a href="#%E6%B6%88%E9%99%A4%E7%BB%86%E8%83%9E%E5%91%A8%E6%9C%9F%E7%9A%84%E5%BD%B1%E5%93%8D" id="toc-消除细胞周期的影响" class="nav-link" data-scroll-target="#%E6%B6%88%E9%99%A4%E7%BB%86%E8%83%9E%E5%91%A8%E6%9C%9F%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="header-section-number">0.2</span> 消除细胞周期的影响</a>
   <ul class="collapse">
 <li><a href="#sec-Calculating_cell_cycle_scores" id="toc-sec-Calculating_cell_cycle_scores" class="nav-link" data-scroll-target="#sec-Calculating_cell_cycle_scores">计算细胞周期评分</a></li>
-  <li><a href="#%E5%9B%9E%E5%BD%92regress-out%E7%BB%86%E8%83%9E%E5%91%A8%E6%9C%9F%E8%AF%84%E5%88%86" id="toc-回归regress-out细胞周期评分" class="nav-link" data-scroll-target="#%E5%9B%9E%E5%BD%92regress-out%E7%BB%86%E8%83%9E%E5%91%A8%E6%9C%9F%E8%AF%84%E5%88%86">回归（regress out）细胞周期评分</a></li>
+  <li><a href="#sec-regress-out" id="toc-sec-regress-out" class="nav-link" data-scroll-target="#sec-regress-out">回归（regress out）细胞周期评分</a></li>
   </ul>
 </li>
-  <li><a href="#%E6%B6%88%E9%99%A4%E7%BB%86%E8%83%9E%E5%91%A8%E6%9C%9F%E7%9A%84%E5%BD%B1%E5%93%8D%E5%90%8C%E6%97%B6%E4%BF%9D%E7%95%99%E5%A2%9E%E6%AE%96%E7%BB%86%E8%83%9E%E4%B8%8E%E9%9D%99%E6%AD%A2%E7%BB%86%E8%83%9E%E7%9A%84%E5%8C%BA%E5%88%86" id="toc-消除细胞周期的影响同时保留增殖细胞与静止细胞的区分" class="nav-link" data-scroll-target="#%E6%B6%88%E9%99%A4%E7%BB%86%E8%83%9E%E5%91%A8%E6%9C%9F%E7%9A%84%E5%BD%B1%E5%93%8D%E5%90%8C%E6%97%B6%E4%BF%9D%E7%95%99%E5%A2%9E%E6%AE%96%E7%BB%86%E8%83%9E%E4%B8%8E%E9%9D%99%E6%AD%A2%E7%BB%86%E8%83%9E%E7%9A%84%E5%8C%BA%E5%88%86"><span class="header-section-number">11.3</span> 消除细胞周期的影响同时保留增殖细胞与静止细胞的区分</a></li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/seurat/cell_cycle_regression.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/djhcod/r-notes/edit/main/single_cell/seurat/cell_cycle_regression.qmd" class="toc-action">Edit this page</a></p></div></div></nav>
+  <li><a href="#%E6%B6%88%E9%99%A4%E7%BB%86%E8%83%9E%E5%91%A8%E6%9C%9F%E7%9A%84%E5%BD%B1%E5%93%8D%E5%90%8C%E6%97%B6%E4%BF%9D%E7%95%99%E5%A2%9E%E6%AE%96%E7%BB%86%E8%83%9E%E4%B8%8E%E9%9D%99%E6%AD%A2%E7%BB%86%E8%83%9E%E7%9A%84%E5%8C%BA%E5%88%86" id="toc-消除细胞周期的影响同时保留增殖细胞与静止细胞的区分" class="nav-link" data-scroll-target="#%E6%B6%88%E9%99%A4%E7%BB%86%E8%83%9E%E5%91%A8%E6%9C%9F%E7%9A%84%E5%BD%B1%E5%93%8D%E5%90%8C%E6%97%B6%E4%BF%9D%E7%95%99%E5%A2%9E%E6%AE%96%E7%BB%86%E8%83%9E%E4%B8%8E%E9%9D%99%E6%AD%A2%E7%BB%86%E8%83%9E%E7%9A%84%E5%8C%BA%E5%88%86"><span class="header-section-number">0.3</span> 消除细胞周期的影响同时保留增殖细胞与静止细胞的区分</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/seurat/cell_cycle_regression.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span id="sec-Elimination_of_cell_cycle_effects" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">消除细胞周期的影响</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">消除细胞周期的影响</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -592,9 +567,9 @@ div.csl-indent {
 <p>原文：<a href="https://satijalab.org/seurat/articles/cell_cycle_vignette"><em>Cell-Cycle Scoring and Regression</em></a></p>
 <p>原文发布日期：2023年10月31日</p>
 </blockquote>
-<p>We demonstrate how to mitigate the effects of cell cycle heterogeneity in scRNA-seq data by calculating <strong>cell cycle phase scores</strong> based on canonical markers, and regressing these out of the data during pre-processing. We demonstrate this on a dataset of murine hematopoietic progenitors <span class="citation" data-cites="nestorowa2016">(<a href="../../references.html#ref-nestorowa2016" role="doc-biblioref">Nestorowa et al. 2016</a>)</span>.You can download the files needed to run this vignette&nbsp;<a href="https://www.dropbox.com/s/3dby3bjsaf5arrw/cell_cycle_vignette_files.zip?dl=1">here</a>.</p>
-<section id="数据读取和预处理" class="level2" data-number="11.1"><h2 data-number="11.1" class="anchored" data-anchor-id="数据读取和预处理">
-<span class="header-section-number">11.1</span> 数据读取和预处理</h2>
+<p>We demonstrate how to mitigate the effects of cell cycle heterogeneity in scRNA-seq data by calculating <strong>cell cycle phase scores</strong> based on canonical markers, and regressing these out of the data during pre-processing. We demonstrate this on a dataset of murine hematopoietic progenitors <span class="citation" data-cites="nestorowa2016">(<a href="#ref-nestorowa2016" role="doc-biblioref">Nestorowa et al. 2016</a>)</span>.You can download the files needed to run this vignette&nbsp;<a href="https://www.dropbox.com/s/3dby3bjsaf5arrw/cell_cycle_vignette_files.zip?dl=1">here</a>.</p>
+<section id="数据读取和预处理" class="level2" data-number="0.1"><h2 data-number="0.1" class="anchored" data-anchor-id="数据读取和预处理">
+<span class="header-section-number">0.1</span> 数据读取和预处理</h2>
 <section id="创建seurat对象" class="level3"><h3 class="anchored" data-anchor-id="创建seurat对象">创建Seurat对象</h3>
 <div class="cell" data-hash="cell_cycle_regression_cache/html/unnamed-chunk-1_8dd79b55dd7c829d5927f38dd6f23502">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Read in the expression matrix </span></span>
@@ -644,8 +619,8 @@ Prog_008       Prog    4079891        10540</code></pre>
 <p><img src="cell_cycle_regression_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</section></section><section id="消除细胞周期的影响" class="level2" data-number="11.2"><h2 data-number="11.2" class="anchored" data-anchor-id="消除细胞周期的影响">
-<span class="header-section-number">11.2</span> 消除细胞周期的影响</h2>
+</section></section><section id="消除细胞周期的影响" class="level2" data-number="0.2"><h2 data-number="0.2" class="anchored" data-anchor-id="消除细胞周期的影响">
+<span class="header-section-number">0.2</span> 消除细胞周期的影响</h2>
 <section id="sec-Calculating_cell_cycle_scores" class="level3"><h3 class="anchored" data-anchor-id="sec-Calculating_cell_cycle_scores">计算细胞周期评分</h3>
 <p>First, we assign each cell a score, <strong>based on its expression of G2/M and S phase markers</strong>. These marker sets should be <strong>anticorrelated</strong> in their expression levels, and <strong>cells expressing neither are likely not cycling and in G1 phase</strong>.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -680,10 +655,10 @@ Prog_008       Prog    4079891        10540</code></pre>
 </ul>
 <table class="table">
 <colgroup>
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 63%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 6%">
+<col style="width: 80%">
 </colgroup>
 <thead><tr class="header">
 <th style="text-align: center;">状态</th>
@@ -729,7 +704,7 @@ Prog_008       Prog    4079891        10540</code></pre>
 </div>
 </div>
 <p>We assign scores in the&nbsp;<code><a href="https://satijalab.org/seurat/reference/CellCycleScoring.html">CellCycleScoring()</a></code>&nbsp;function, which stores S and G2/M scores in object meta data, along with the <strong>predicted classification of each cell in either G2M, S or G1 phase</strong>.&nbsp;<code><a href="https://satijalab.org/seurat/reference/CellCycleScoring.html">CellCycleScoring()</a></code>&nbsp;can also set the identity of the Seurat object to the cell-cycle phase by passing&nbsp;<code>set.ident = TRUE</code>&nbsp;(the original identities are stored as&nbsp;<code>old.ident</code>). Please note that Seurat does not use the discrete classifications (G2M/G1/S) in downstream cell cycle regression. Instead, it uses the <strong>quantitative scores for G2M and S phase</strong>. However, we provide our predicted classifications in case they are of interest.</p>
-<p>We score single cells based on the scoring strategy described in&nbsp;<span class="citation" data-cites="tirosh2016">(<a href="../../references.html#ref-tirosh2016" role="doc-biblioref">Tirosh et al. 2016</a>)</span>. See&nbsp;<code>?AddModuleScore()</code>&nbsp;in Seurat for more information, this function can be used to calculate supervised module scores for any gene list.</p>
+<p>We score single cells based on the scoring strategy described in&nbsp;<span class="citation" data-cites="tirosh2016">(<a href="#ref-tirosh2016" role="doc-biblioref">Tirosh et al. 2016</a>)</span>. See&nbsp;<code>?AddModuleScore()</code>&nbsp;in Seurat for more information, this function can be used to calculate supervised module scores for any gene list.</p>
 <div class="cell" data-hash="cell_cycle_regression_cache/html/unnamed-chunk-4_af1d32a7da6e3dc7cebe91e53519acb3">
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">marrow</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/CellCycleScoring.html">CellCycleScoring</a></span><span class="op">(</span><span class="va">marrow</span>, </span>
 <span>                           s.features <span class="op">=</span> <span class="va">s.genes</span>, </span>
@@ -792,7 +767,7 @@ Prog_014      Prog</code></pre>
 <p><img src="cell_cycle_regression_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-</section></section><section id="回归regress-out细胞周期评分" class="level3"><h3 class="anchored" data-anchor-id="回归regress-out细胞周期评分">回归（regress out）细胞周期评分</h3>
+</section></section><section id="sec-regress-out" class="level3"><h3 class="anchored" data-anchor-id="sec-regress-out">回归（regress out）细胞周期评分</h3>
 <p>We now attempt to subtract (‘regress out’) this source of heterogeneity from the data. For users of Seurat v1.4, this was implemented in&nbsp;<code>RegressOut</code>. However, as the results of this procedure are stored in the scaled data slot (therefore overwriting the output of&nbsp;<code><a href="https://satijalab.org/seurat/reference/ScaleData.html">ScaleData()</a></code>), we now merge this functionality into the&nbsp;<code><a href="https://satijalab.org/seurat/reference/ScaleData.html">ScaleData()</a></code>&nbsp;function itself.</p>
 <p>For each gene, Seurat models the relationship between <strong>gene expression</strong> and the <strong>S and G2M cell cycle scores</strong>. The scaled residuals of this model represent a ‘corrected’ expression matrix, that can be used downstream for dimensional reduction.</p>
 <div class="cell" data-hash="cell_cycle_regression_cache/html/unnamed-chunk-8_3dd0aa5dbfffb05faded2086f3331ff4">
@@ -816,8 +791,8 @@ Prog_014      Prog</code></pre>
 </div>
 </div>
 <p>As the best cell cycle markers are extremely well conserved across tissues and species, we have found this procedure to work robustly and reliably on diverse datasets.</p>
-</section></section><section id="消除细胞周期的影响同时保留增殖细胞与静止细胞的区分" class="level2" data-number="11.3"><h2 data-number="11.3" class="anchored" data-anchor-id="消除细胞周期的影响同时保留增殖细胞与静止细胞的区分">
-<span class="header-section-number">11.3</span> 消除细胞周期的影响同时保留增殖细胞与静止细胞的区分</h2>
+</section></section><section id="消除细胞周期的影响同时保留增殖细胞与静止细胞的区分" class="level2" data-number="0.3"><h2 data-number="0.3" class="anchored" data-anchor-id="消除细胞周期的影响同时保留增殖细胞与静止细胞的区分">
+<span class="header-section-number">0.3</span> 消除细胞周期的影响同时保留增殖细胞与静止细胞的区分</h2>
 <p>The procedure above removes all signal associated with cell cycle. In some cases, we’ve found that this can negatively impact downstream analysis, particularly in differentiating processes (like <strong>murine hematopoiesis</strong>), where stem cells are quiescent and differentiated cells are proliferating (or vice versa). <strong>In this case, regressing out all cell cycle effects can blur the distinction between stem and progenitor cells as well</strong>.</p>
 <p>As an alternative, we suggest regressing out the&nbsp;<strong>difference</strong>&nbsp;between the G2/M and S phase scores. This means that signals separating non-cycling cells and cycling cells will be maintained, but differences in cell cycle phase among proliferating cells (which are often uninteresting), will be regressed out of the data</p>
 <div class="cell" data-hash="cell_cycle_regression_cache/html/unnamed-chunk-11_a072778c17be5f996086c3f85b3b9fab">
@@ -857,7 +832,7 @@ Session Info
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.3.2 (2023-10-31)
 Platform: aarch64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.2.1
+Running under: macOS Sonoma 14.3
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
@@ -883,47 +858,45 @@ loaded via a namespace (and not attached):
  [13] reshape2_1.4.4         stringr_1.5.1          pkgconfig_2.0.3       
  [16] fastmap_1.1.1          ellipsis_0.3.2         labeling_0.4.3        
  [19] utf8_1.2.4             promises_1.2.1         rmarkdown_2.25        
- [22] purrr_1.0.2            xfun_0.41              jsonlite_1.8.8        
- [25] goftest_1.2-3          later_1.3.2            spatstat.utils_3.0-4  
- [28] irlba_2.3.5.1          parallel_4.3.2         cluster_2.1.6         
- [31] R6_2.5.1               ica_1.0-3              stringi_1.8.3         
- [34] RColorBrewer_1.1-3     spatstat.data_3.0-4    reticulate_1.34.0     
- [37] parallelly_1.36.0      lmtest_0.9-40          scattermore_1.2       
- [40] Rcpp_1.0.12            knitr_1.45             tensor_1.5            
- [43] future.apply_1.11.1    zoo_1.8-12             sctransform_0.4.1     
- [46] httpuv_1.6.13          Matrix_1.6-5           splines_4.3.2         
- [49] igraph_1.6.0           tidyselect_1.2.0       abind_1.4-5           
- [52] rstudioapi_0.15.0      yaml_2.3.8             spatstat.random_3.2-2 
- [55] codetools_0.2-19       miniUI_0.1.1.1         spatstat.explore_3.2-5
- [58] listenv_0.9.0          lattice_0.22-5         tibble_3.2.1          
- [61] plyr_1.8.9             withr_3.0.0            shiny_1.8.0           
- [64] ROCR_1.0-11            evaluate_0.23          Rtsne_0.17            
- [67] future_1.33.1          fastDummies_1.7.3      survival_3.5-7        
- [70] polyclip_1.10-6        fitdistrplus_1.1-11    pillar_1.9.0          
- [73] KernSmooth_2.23-22     plotly_4.10.4          generics_0.1.3        
- [76] RcppHNSW_0.5.0         munsell_0.5.0          scales_1.3.0          
- [79] globals_0.16.2         xtable_1.8-4           glue_1.7.0            
- [82] lazyeval_0.2.2         tools_4.3.2            data.table_1.14.10    
- [85] RSpectra_0.16-1        RANN_2.6.1             leiden_0.4.3.1        
- [88] dotCall64_1.1-1        cowplot_1.1.2          grid_4.3.2            
- [91] tidyr_1.3.0            colorspace_2.1-0       nlme_3.1-164          
- [94] patchwork_1.2.0        cli_3.6.2              spatstat.sparse_3.0-3 
- [97] spam_2.10-0            fansi_1.0.6            viridisLite_0.4.2     
-[100] dplyr_1.1.4            uwot_0.1.16            gtable_0.3.4          
-[103] digest_0.6.34          progressr_0.14.0       ggrepel_0.9.5         
-[106] farver_2.1.1           htmlwidgets_1.6.4      htmltools_0.5.7       
-[109] lifecycle_1.0.4        httr_1.4.7             mime_0.12             
-[112] MASS_7.3-60.0.1       </code></pre>
+ [22] ggbeeswarm_0.7.2       purrr_1.0.2            xfun_0.41             
+ [25] jsonlite_1.8.8         goftest_1.2-3          later_1.3.2           
+ [28] spatstat.utils_3.0-4   irlba_2.3.5.1          parallel_4.3.2        
+ [31] cluster_2.1.6          R6_2.5.1               ica_1.0-3             
+ [34] stringi_1.8.3          RColorBrewer_1.1-3     spatstat.data_3.0-4   
+ [37] reticulate_1.34.0      parallelly_1.36.0      lmtest_0.9-40         
+ [40] scattermore_1.2        Rcpp_1.0.12            knitr_1.45            
+ [43] tensor_1.5             future.apply_1.11.1    zoo_1.8-12            
+ [46] sctransform_0.4.1      httpuv_1.6.13          Matrix_1.6-5          
+ [49] splines_4.3.2          igraph_1.6.0           tidyselect_1.2.0      
+ [52] abind_1.4-5            rstudioapi_0.15.0      yaml_2.3.8            
+ [55] spatstat.random_3.2-2  codetools_0.2-19       miniUI_0.1.1.1        
+ [58] spatstat.explore_3.2-5 listenv_0.9.0          lattice_0.22-5        
+ [61] tibble_3.2.1           plyr_1.8.9             withr_3.0.0           
+ [64] shiny_1.8.0            ROCR_1.0-11            ggrastr_1.0.2         
+ [67] evaluate_0.23          Rtsne_0.17             future_1.33.1         
+ [70] fastDummies_1.7.3      survival_3.5-7         polyclip_1.10-6       
+ [73] fitdistrplus_1.1-11    pillar_1.9.0           KernSmooth_2.23-22    
+ [76] plotly_4.10.4          generics_0.1.3         RcppHNSW_0.5.0        
+ [79] munsell_0.5.0          scales_1.3.0           globals_0.16.2        
+ [82] xtable_1.8-4           glue_1.7.0             lazyeval_0.2.2        
+ [85] tools_4.3.2            data.table_1.14.10     RSpectra_0.16-1       
+ [88] RANN_2.6.1             leiden_0.4.3.1         dotCall64_1.1-1       
+ [91] cowplot_1.1.2          grid_4.3.2             tidyr_1.3.0           
+ [94] colorspace_2.1-0       nlme_3.1-164           patchwork_1.2.0       
+ [97] beeswarm_0.4.0         vipor_0.4.7            cli_3.6.2             
+[100] spatstat.sparse_3.0-3  spam_2.10-0            fansi_1.0.6           
+[103] viridisLite_0.4.2      dplyr_1.1.4            uwot_0.1.16           
+[106] gtable_0.3.4           digest_0.6.34          progressr_0.14.0      
+[109] ggrepel_0.9.5          farver_2.1.1           htmlwidgets_1.6.4     
+[112] htmltools_0.5.7        lifecycle_1.0.4        httr_1.4.7            
+[115] mime_0.12              MASS_7.3-60.0.1       </code></pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-
-
-<!-- -->
-
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+</section><section id="references" class="level1 unnumbered"><h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-nestorowa2016" class="csl-entry" role="listitem">
 Nestorowa, Sonia, Fiona K. Hamey, Blanca Pijuan Sala, Evangelia Diamanti, Mairi Shepherd, Elisa Laurenti, Nicola K. Wilson, David G. Kent, and Berthold Göttgens. 2016. <span>“A Single-Cell Resolution Map of Mouse Hematopoietic Stem and Progenitor Cell Differentiation.”</span> <em>Blood</em> 128 (8): e20–31. <a href="https://doi.org/10.1182/blood-2016-05-716480">https://doi.org/10.1182/blood-2016-05-716480</a>.
 </div>
@@ -931,6 +904,10 @@ Nestorowa, Sonia, Fiona K. Hamey, Blanca Pijuan Sala, Evangelia Diamanti, Mairi 
 Tirosh, Itay, Benjamin Izar, Sanjay M. Prakadan, Marc H. Wadsworth, Daniel Treacy, John J. Trombetta, Asaf Rotem, et al. 2016. <span>“Dissecting the Multicellular Ecosystem of Metastatic Melanoma by Single-Cell RNA-Seq.”</span> <em>Science</em> 352 (6282): 189–96. <a href="https://doi.org/10.1126/science.aad0501">https://doi.org/10.1126/science.aad0501</a>.
 </div>
 </div>
+
+
+<!-- -->
+
 </section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1343,215 +1320,222 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
 });
-</script><script src="https://utteranc.es/client.js" repo="https://github.com/djhcod/r-notes" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script><script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="../../single_cell/seurat/sctransform.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">基于SCTransform的单细胞数据标准化</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">基于SCTransform的单细胞数据标准化</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="../../single_cell/seurat/integration.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">整合（integration）</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text">整合（integration）</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb22" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 消除细胞周期的影响 {#sec-Elimination_of_cell_cycle_effects}</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文：</span><span class="co">[</span><span class="ot">*Cell-Cycle Scoring and Regression*</span><span class="co">](https://satijalab.org/seurat/articles/cell_cycle_vignette)</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文发布日期：2023年10月31日</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>We demonstrate how to mitigate the effects of cell cycle heterogeneity in scRNA-seq data by calculating **cell cycle phase scores** based on canonical markers, and regressing these out of the data during pre-processing. We demonstrate this on a dataset of murine hematopoietic progenitors <span class="co">[</span><span class="ot">@nestorowa2016</span><span class="co">]</span>.You can download the files needed to run this vignette&nbsp;<span class="co">[</span><span class="ot">here</span><span class="co">](https://www.dropbox.com/s/3dby3bjsaf5arrw/cell_cycle_vignette_files.zip?dl=1)</span>.</span>
+<div class="sourceCode" id="cb22" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "消除细胞周期的影响"</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文：</span><span class="co">[</span><span class="ot">*Cell-Cycle Scoring and Regression*</span><span class="co">](https://satijalab.org/seurat/articles/cell_cycle_vignette)</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文发布日期：2023年10月31日</span></span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## 数据读取和预处理</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>We demonstrate how to mitigate the effects of cell cycle heterogeneity in scRNA-seq data by calculating **cell cycle phase scores** based on canonical markers, and regressing these out of the data during pre-processing. We demonstrate this on a dataset of murine hematopoietic progenitors <span class="co">[</span><span class="ot">@nestorowa2016</span><span class="co">]</span>.You can download the files needed to run this vignette&nbsp;<span class="co">[</span><span class="ot">here</span><span class="co">](https://www.dropbox.com/s/3dby3bjsaf5arrw/cell_cycle_vignette_files.zip?dl=1)</span>.</span>
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="fu">### 创建Seurat对象</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## 数据读取和预处理</span></span>
 <span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in the expression matrix </span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>exp.mat <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"data/seurat_official/cell_cycle_vignette_files/nestorawa_forcellcycle_expressionMatrix.txt"</span>,</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>                      <span class="at">header =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>                      <span class="at">as.is =</span> <span class="cn">TRUE</span>, <span class="co">#保留字符型变量</span></span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>                      <span class="at">row.names =</span> <span class="dv">1</span>)</span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Create our Seurat object and complete the initalization steps</span></span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> Matrix<span class="sc">::</span><span class="fu">Matrix</span>(<span class="fu">as.matrix</span>(exp.mat), </span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>                                                     <span class="at">sparse =</span> T))</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>marrow</span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(marrow<span class="sc">@</span>meta.data, <span class="dv">5</span>)</span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(marrow)</span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(marrow, <span class="at">selection.method =</span> <span class="st">"vst"</span>)</span>
-<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(marrow, <span class="at">features =</span> <span class="fu">rownames</span>(marrow))</span>
-<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a><span class="fu">### 获取细胞周期marker基因列表</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="fu">### 创建Seurat对象</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in the expression matrix </span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>exp.mat <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="st">"data/seurat_official/cell_cycle_vignette_files/nestorawa_forcellcycle_expressionMatrix.txt"</span>,</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>                      <span class="at">header =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>                      <span class="at">as.is =</span> <span class="cn">TRUE</span>, <span class="co">#保留字符型变量</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>                      <span class="at">row.names =</span> <span class="dv">1</span>)</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Create our Seurat object and complete the initalization steps</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Seurat)</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">CreateSeuratObject</span>(<span class="at">counts =</span> Matrix<span class="sc">::</span><span class="fu">Matrix</span>(<span class="fu">as.matrix</span>(exp.mat), </span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>                                                     <span class="at">sparse =</span> T))</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>marrow</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(marrow<span class="sc">@</span>meta.data, <span class="dv">5</span>)</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">NormalizeData</span>(marrow)</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">FindVariableFeatures</span>(marrow, <span class="at">selection.method =</span> <span class="st">"vst"</span>)</span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(marrow, <span class="at">features =</span> <span class="fu">rownames</span>(marrow))</span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>A list of cell cycle markers, from Tirosh et al, 2015, is loaded with Seurat. We can segregate this list into markers of G2/M phase and markers of S phase</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a><span class="fu">### 获取细胞周期marker基因列表</span></span>
 <span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>s.genes <span class="ot">&lt;-</span> cc.genes<span class="sc">$</span>s.genes</span>
-<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>g2m.genes <span class="ot">&lt;-</span> cc.genes<span class="sc">$</span>g2m.genes</span>
-<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a><span class="fu">### 降维</span></span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>A list of cell cycle markers, from Tirosh et al, 2015, is loaded with Seurat. We can segregate this list into markers of G2/M phase and markers of S phase</span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>s.genes <span class="ot">&lt;-</span> cc.genes<span class="sc">$</span>s.genes</span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>g2m.genes <span class="ot">&lt;-</span> cc.genes<span class="sc">$</span>g2m.genes</span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>If we run a PCA on our object, using the variable genes we found in&nbsp;<span class="in">`FindVariableFeatures()`</span>&nbsp;above, we see that while most of the variance can be explained by lineage, **PC8 and PC10 are split on cell-cycle genes** including&nbsp;***TOP2A***&nbsp;and&nbsp;***MKI67***. We will attempt to regress this signal from the data, **so that cell-cycle heterogeneity does not contribute to PCA or downstream analysis**.</span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a><span class="fu">### 降维</span></span>
 <span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(marrow, </span>
-<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>                 <span class="at">features =</span> <span class="fu">VariableFeatures</span>(marrow), </span>
-<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ndims.print =</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">10</span>, </span>
-<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nfeatures.print =</span> <span class="dv">10</span>)</span>
-<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a><span class="fu">DimHeatmap</span>(marrow, <span class="at">dims =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">10</span>))</span>
-<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a><span class="fu">## 消除细胞周期的影响</span></span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>If we run a PCA on our object, using the variable genes we found in&nbsp;<span class="in">`FindVariableFeatures()`</span>&nbsp;above, we see that while most of the variance can be explained by lineage, **PC8 and PC10 are split on cell-cycle genes** including&nbsp;***TOP2A***&nbsp;and&nbsp;***MKI67***. We will attempt to regress this signal from the data, **so that cell-cycle heterogeneity does not contribute to PCA or downstream analysis**.</span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(marrow, </span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>                 <span class="at">features =</span> <span class="fu">VariableFeatures</span>(marrow), </span>
+<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ndims.print =</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">10</span>, </span>
+<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nfeatures.print =</span> <span class="dv">10</span>)</span>
+<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a><span class="fu">DimHeatmap</span>(marrow, <span class="at">dims =</span> <span class="fu">c</span>(<span class="dv">8</span>, <span class="dv">10</span>))</span>
+<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-58"><a href="#cb22-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-59"><a href="#cb22-59" aria-hidden="true" tabindex="-1"></a><span class="fu">### 计算细胞周期评分 {#sec-Calculating_cell_cycle_scores}</span></span>
+<span id="cb22-59"><a href="#cb22-59" aria-hidden="true" tabindex="-1"></a><span class="fu">## 消除细胞周期的影响</span></span>
 <span id="cb22-60"><a href="#cb22-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-61"><a href="#cb22-61" aria-hidden="true" tabindex="-1"></a>First, we assign each cell a score, **based on its expression of G2/M and S phase markers**. These marker sets should be **anticorrelated** in their expression levels, and **cells expressing neither are likely not cycling and in G1 phase**.</span>
+<span id="cb22-61"><a href="#cb22-61" aria-hidden="true" tabindex="-1"></a><span class="fu">### 计算细胞周期评分 {#sec-Calculating_cell_cycle_scores}</span></span>
 <span id="cb22-62"><a href="#cb22-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-63"><a href="#cb22-63" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
-<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a><span class="fu">##### [细胞周期](https://zh.wikipedia.org/zh-cn/細胞週期)</span></span>
-<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-66"><a href="#cb22-66" aria-hidden="true" tabindex="-1"></a>**细胞周期**（cell cycle），是指能持续分裂的真核细胞从一次有丝分裂结束后，再到下一次分裂结束的循环过程（准确来说只要有DNA复制，不管是不是有丝分裂它都有细胞周期。生殖细胞无细胞周期。)。</span>
+<span id="cb22-63"><a href="#cb22-63" aria-hidden="true" tabindex="-1"></a>First, we assign each cell a score, **based on its expression of G2/M and S phase markers**. These marker sets should be **anticorrelated** in their expression levels, and **cells expressing neither are likely not cycling and in G1 phase**.</span>
+<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a>::: {.callout-tip collapse="true"}</span>
+<span id="cb22-66"><a href="#cb22-66" aria-hidden="true" tabindex="-1"></a><span class="fu">##### [细胞周期](https://zh.wikipedia.org/zh-cn/細胞週期)</span></span>
 <span id="cb22-67"><a href="#cb22-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-68"><a href="#cb22-68" aria-hidden="true" tabindex="-1"></a>**细胞周期的划分**</span>
+<span id="cb22-68"><a href="#cb22-68" aria-hidden="true" tabindex="-1"></a>**细胞周期**（cell cycle），是指能持续分裂的真核细胞从一次有丝分裂结束后，再到下一次分裂结束的循环过程（准确来说只要有DNA复制，不管是不是有丝分裂它都有细胞周期。生殖细胞无细胞周期。)。</span>
 <span id="cb22-69"><a href="#cb22-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-70"><a href="#cb22-70" aria-hidden="true" tabindex="-1"></a>总的看来，细胞周期通常可划分为分裂间期（I期）和**分裂期（M期）**，分裂间期是物质准备和积累阶段，分裂期则是细胞增殖的实施过程。整个周期表示为 I期→M期。</span>
+<span id="cb22-70"><a href="#cb22-70" aria-hidden="true" tabindex="-1"></a>**细胞周期的划分**</span>
 <span id="cb22-71"><a href="#cb22-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-72"><a href="#cb22-72" aria-hidden="true" tabindex="-1"></a>其中分裂间期（I期）又常常可以划分为**DNA合成前期（G1）**，**DNA合成期（S）**和**DNA合成后期（G2）**。在此期间的任务主要是完成染色质中的DNA复制和相关蛋白质的合成。将I期细分之后，整个细胞周期可以表示为：G1期→S期→G2期→M期。</span>
+<span id="cb22-72"><a href="#cb22-72" aria-hidden="true" tabindex="-1"></a>总的看来，细胞周期通常可划分为分裂间期（I期）和**分裂期（M期）**，分裂间期是物质准备和积累阶段，分裂期则是细胞增殖的实施过程。整个周期表示为 I期→M期。</span>
 <span id="cb22-73"><a href="#cb22-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-74"><a href="#cb22-74" aria-hidden="true" tabindex="-1"></a>细胞进入G1期可能出现三种情况，其中暂不继续增殖，如骨髓干细胞和处于不利状态下的癌细胞，但在某些刺激下，这些细胞又可以继续生长分裂，因此有人把这种**非增殖状态的G1期细胞称为G0期细胞**。以区别处于增殖状态的G1期细胞。 而分裂期通常分作分裂前期(Prophase)、前中期(Prometaphase)、中期(Metaphase)、后期(Anaphase)和末期(Telophase)5个阶段，在此期间进行细胞物质的平均分配并形成两个新的细胞。</span>
+<span id="cb22-74"><a href="#cb22-74" aria-hidden="true" tabindex="-1"></a>其中分裂间期（I期）又常常可以划分为**DNA合成前期（G1）**，**DNA合成期（S）**和**DNA合成后期（G2）**。在此期间的任务主要是完成染色质中的DNA复制和相关蛋白质的合成。将I期细分之后，整个细胞周期可以表示为：G1期→S期→G2期→M期。</span>
 <span id="cb22-75"><a href="#cb22-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-76"><a href="#cb22-76" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/Cell_Cycle_2-2.svg.png)</span>{width="266"}</span>
+<span id="cb22-76"><a href="#cb22-76" aria-hidden="true" tabindex="-1"></a>细胞进入G1期可能出现三种情况，其中暂不继续增殖，如骨髓干细胞和处于不利状态下的癌细胞，但在某些刺激下，这些细胞又可以继续生长分裂，因此有人把这种**非增殖状态的G1期细胞称为G0期细胞**。以区别处于增殖状态的G1期细胞。 而分裂期通常分作分裂前期(Prophase)、前中期(Prometaphase)、中期(Metaphase)、后期(Anaphase)和末期(Telophase)5个阶段，在此期间进行细胞物质的平均分配并形成两个新的细胞。</span>
 <span id="cb22-77"><a href="#cb22-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-78"><a href="#cb22-78" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**G0:** Quiescence or resting phase. The cell is not actively dividing, which is common for cells that are fully differentiated. Some types of cells enter G0 for long periods of time (many neuronal cells), while **other cell types never enter G0 by continuously dividing (epithelial cells)**.</span>
-<span id="cb22-79"><a href="#cb22-79" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**G1:** Gap 1 phase represents the **beginning of interphase**. During G1 there is growth of the non-chromosomal components of the cells. From this phase, the cell may enter G0 or S phase.</span>
-<span id="cb22-80"><a href="#cb22-80" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**S:** Synthesis phase for the replication of the chromosomes (also part of interphase).</span>
-<span id="cb22-81"><a href="#cb22-81" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**G2:** Gap 2 phase represents the **end of interphase**, prior to entering the mitotic phase. During this phase th cell grows in preparation for mitosis and the spindle forms.</span>
-<span id="cb22-82"><a href="#cb22-82" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**M:** M phase is the nuclear division of the cell (consisting of prophase, metaphase, anaphase and telophase).</span>
-<span id="cb22-83"><a href="#cb22-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-84"><a href="#cb22-84" aria-hidden="true" tabindex="-1"></a>|   状态   |   阶段   |   缩写   |                                                            描述                                                            |</span>
-<span id="cb22-85"><a href="#cb22-85" aria-hidden="true" tabindex="-1"></a>|:-------:|:-------:|:-------:|:--------------------------------------------:|</span>
-<span id="cb22-86"><a href="#cb22-86" aria-hidden="true" tabindex="-1"></a>|   休息   |  G~0~期  | **G~0~** |                                               细胞离开周期并停止分裂的阶段。                                               |</span>
-<span id="cb22-87"><a href="#cb22-87" aria-hidden="true" tabindex="-1"></a>|   间期   |  G~1~期  |  **G1**  |                                       G~1~检查点控制机制确保一切准备好进行DNA合成。                                        |</span>
-<span id="cb22-88"><a href="#cb22-88" aria-hidden="true" tabindex="-1"></a>|   合成   |    S     |  **S**   |                                                  DNA复制发生在这个阶段。                                                   |</span>
-<span id="cb22-89"><a href="#cb22-89" aria-hidden="true" tabindex="-1"></a>|  G~2~期  |   G~2~   |  **G2**  |     在DNA合成和有丝分裂之间的差距期间，细胞将继续增长。&nbsp;G~2~检查点控制机制确保一切准备好进入M（有丝分裂）阶段并分裂。      |</span>
-<span id="cb22-90"><a href="#cb22-90" aria-hidden="true" tabindex="-1"></a>| 细胞分裂 | 有丝分裂 |  **M**   | 细胞生长停止，细胞能量集中在有序地分裂成两个子细胞。有丝分裂中期的检查点（Metaphase Checkpoint）确保细胞可以完成细胞分裂。 |</span>
-<span id="cb22-91"><a href="#cb22-91" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb22-92"><a href="#cb22-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-93"><a href="#cb22-93" aria-hidden="true" tabindex="-1"></a>We assign scores in the&nbsp;<span class="in">`CellCycleScoring()`</span>&nbsp;function, which stores S and G2/M scores in object meta data, along with the **predicted classification of each cell in either G2M, S or G1 phase**.&nbsp;`CellCycleScoring()`&nbsp;can also set the identity of the Seurat object to the cell-cycle phase by passing&nbsp;`set.ident = TRUE`&nbsp;(the original identities are stored as&nbsp;`old.ident`). Please note that Seurat does not use the discrete classifications (G2M/G1/S) in downstream cell cycle regression. Instead, it uses the **quantitative scores for G2M and S phase**. However, we provide our predicted classifications in case they are of interest.</span>
+<span id="cb22-78"><a href="#cb22-78" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/Cell_Cycle_2-2.svg.png)</span>{width="266"}</span>
+<span id="cb22-79"><a href="#cb22-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-80"><a href="#cb22-80" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**G0:** Quiescence or resting phase. The cell is not actively dividing, which is common for cells that are fully differentiated. Some types of cells enter G0 for long periods of time (many neuronal cells), while **other cell types never enter G0 by continuously dividing (epithelial cells)**.</span>
+<span id="cb22-81"><a href="#cb22-81" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**G1:** Gap 1 phase represents the **beginning of interphase**. During G1 there is growth of the non-chromosomal components of the cells. From this phase, the cell may enter G0 or S phase.</span>
+<span id="cb22-82"><a href="#cb22-82" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**S:** Synthesis phase for the replication of the chromosomes (also part of interphase).</span>
+<span id="cb22-83"><a href="#cb22-83" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**G2:** Gap 2 phase represents the **end of interphase**, prior to entering the mitotic phase. During this phase th cell grows in preparation for mitosis and the spindle forms.</span>
+<span id="cb22-84"><a href="#cb22-84" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**M:** M phase is the nuclear division of the cell (consisting of prophase, metaphase, anaphase and telophase).</span>
+<span id="cb22-85"><a href="#cb22-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-86"><a href="#cb22-86" aria-hidden="true" tabindex="-1"></a>|   状态   |   阶段   |   缩写   |                                                            描述                                                            |</span>
+<span id="cb22-87"><a href="#cb22-87" aria-hidden="true" tabindex="-1"></a>|:--------:|:--------:|:--------:|:--------------------------------------------------------------------------------------------------------------------------:|</span>
+<span id="cb22-88"><a href="#cb22-88" aria-hidden="true" tabindex="-1"></a>|   休息   |  G~0~期  | **G~0~** |                                               细胞离开周期并停止分裂的阶段。                                               |</span>
+<span id="cb22-89"><a href="#cb22-89" aria-hidden="true" tabindex="-1"></a>|   间期   |  G~1~期  |  **G1**  |                                       G~1~检查点控制机制确保一切准备好进行DNA合成。                                        |</span>
+<span id="cb22-90"><a href="#cb22-90" aria-hidden="true" tabindex="-1"></a>|   合成   |    S     |  **S**   |                                                  DNA复制发生在这个阶段。                                                   |</span>
+<span id="cb22-91"><a href="#cb22-91" aria-hidden="true" tabindex="-1"></a>|  G~2~期  |   G~2~   |  **G2**  |     在DNA合成和有丝分裂之间的差距期间，细胞将继续增长。&nbsp;G~2~检查点控制机制确保一切准备好进入M（有丝分裂）阶段并分裂。      |</span>
+<span id="cb22-92"><a href="#cb22-92" aria-hidden="true" tabindex="-1"></a>| 细胞分裂 | 有丝分裂 |  **M**   | 细胞生长停止，细胞能量集中在有序地分裂成两个子细胞。有丝分裂中期的检查点（Metaphase Checkpoint）确保细胞可以完成细胞分裂。 |</span>
+<span id="cb22-93"><a href="#cb22-93" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb22-94"><a href="#cb22-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-95"><a href="#cb22-95" aria-hidden="true" tabindex="-1"></a>We score single cells based on the scoring strategy described in&nbsp;<span class="co">[</span><span class="ot">@tirosh2016</span><span class="co">]</span>. See&nbsp;<span class="in">`?AddModuleScore()`</span>&nbsp;in Seurat for more information, this function can be used to calculate supervised module scores for any gene list.</span>
+<span id="cb22-95"><a href="#cb22-95" aria-hidden="true" tabindex="-1"></a>We assign scores in the&nbsp;<span class="in">`CellCycleScoring()`</span>&nbsp;function, which stores S and G2/M scores in object meta data, along with the **predicted classification of each cell in either G2M, S or G1 phase**.&nbsp;`CellCycleScoring()`&nbsp;can also set the identity of the Seurat object to the cell-cycle phase by passing&nbsp;`set.ident = TRUE`&nbsp;(the original identities are stored as&nbsp;`old.ident`). Please note that Seurat does not use the discrete classifications (G2M/G1/S) in downstream cell cycle regression. Instead, it uses the **quantitative scores for G2M and S phase**. However, we provide our predicted classifications in case they are of interest.</span>
 <span id="cb22-96"><a href="#cb22-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-99"><a href="#cb22-99" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-100"><a href="#cb22-100" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">CellCycleScoring</span>(marrow, </span>
-<span id="cb22-101"><a href="#cb22-101" aria-hidden="true" tabindex="-1"></a>                           <span class="at">s.features =</span> s.genes, </span>
-<span id="cb22-102"><a href="#cb22-102" aria-hidden="true" tabindex="-1"></a>                           <span class="at">g2m.features =</span> g2m.genes, </span>
-<span id="cb22-103"><a href="#cb22-103" aria-hidden="true" tabindex="-1"></a>                           <span class="at">set.ident =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb22-104"><a href="#cb22-104" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">Idents</span>(marrow))</span>
-<span id="cb22-105"><a href="#cb22-105" aria-hidden="true" tabindex="-1"></a><span class="co"># view cell cycle scores and phase assignments</span></span>
-<span id="cb22-106"><a href="#cb22-106" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(marrow<span class="sc">@</span>meta.data)</span>
-<span id="cb22-107"><a href="#cb22-107" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-108"><a href="#cb22-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-109"><a href="#cb22-109" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 可视化细胞周期的影响</span></span>
+<span id="cb22-97"><a href="#cb22-97" aria-hidden="true" tabindex="-1"></a>We score single cells based on the scoring strategy described in&nbsp;<span class="co">[</span><span class="ot">@tirosh2016</span><span class="co">]</span>. See&nbsp;<span class="in">`?AddModuleScore()`</span>&nbsp;in Seurat for more information, this function can be used to calculate supervised module scores for any gene list.</span>
+<span id="cb22-98"><a href="#cb22-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-101"><a href="#cb22-101" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-102"><a href="#cb22-102" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">CellCycleScoring</span>(marrow, </span>
+<span id="cb22-103"><a href="#cb22-103" aria-hidden="true" tabindex="-1"></a>                           <span class="at">s.features =</span> s.genes, </span>
+<span id="cb22-104"><a href="#cb22-104" aria-hidden="true" tabindex="-1"></a>                           <span class="at">g2m.features =</span> g2m.genes, </span>
+<span id="cb22-105"><a href="#cb22-105" aria-hidden="true" tabindex="-1"></a>                           <span class="at">set.ident =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb22-106"><a href="#cb22-106" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">Idents</span>(marrow))</span>
+<span id="cb22-107"><a href="#cb22-107" aria-hidden="true" tabindex="-1"></a><span class="co"># view cell cycle scores and phase assignments</span></span>
+<span id="cb22-108"><a href="#cb22-108" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(marrow<span class="sc">@</span>meta.data)</span>
+<span id="cb22-109"><a href="#cb22-109" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-110"><a href="#cb22-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-111"><a href="#cb22-111" aria-hidden="true" tabindex="-1"></a>可视化细胞周期marker的表达分布：</span>
+<span id="cb22-111"><a href="#cb22-111" aria-hidden="true" tabindex="-1"></a><span class="fu">#### 可视化细胞周期的影响</span></span>
 <span id="cb22-112"><a href="#cb22-112" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-115"><a href="#cb22-115" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-116"><a href="#cb22-116" aria-hidden="true" tabindex="-1"></a><span class="fu">RidgePlot</span>(marrow, </span>
-<span id="cb22-117"><a href="#cb22-117" aria-hidden="true" tabindex="-1"></a>          <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"PCNA"</span>, <span class="st">"TOP2A"</span>, <span class="st">"MCM6"</span>, <span class="st">"MKI67"</span>), </span>
-<span id="cb22-118"><a href="#cb22-118" aria-hidden="true" tabindex="-1"></a>          <span class="at">ncol =</span> <span class="dv">2</span>)</span>
-<span id="cb22-119"><a href="#cb22-119" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-120"><a href="#cb22-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-121"><a href="#cb22-121" aria-hidden="true" tabindex="-1"></a>以细胞周期marker为计算依据运行PCA：</span>
+<span id="cb22-113"><a href="#cb22-113" aria-hidden="true" tabindex="-1"></a>可视化细胞周期marker的表达分布：</span>
+<span id="cb22-114"><a href="#cb22-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-117"><a href="#cb22-117" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-118"><a href="#cb22-118" aria-hidden="true" tabindex="-1"></a><span class="fu">RidgePlot</span>(marrow, </span>
+<span id="cb22-119"><a href="#cb22-119" aria-hidden="true" tabindex="-1"></a>          <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"PCNA"</span>, <span class="st">"TOP2A"</span>, <span class="st">"MCM6"</span>, <span class="st">"MKI67"</span>), </span>
+<span id="cb22-120"><a href="#cb22-120" aria-hidden="true" tabindex="-1"></a>          <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb22-121"><a href="#cb22-121" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-122"><a href="#cb22-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-125"><a href="#cb22-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-126"><a href="#cb22-126" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(marrow, <span class="at">features =</span> <span class="fu">c</span>(s.genes, g2m.genes))</span>
-<span id="cb22-127"><a href="#cb22-127" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(marrow)</span>
-<span id="cb22-128"><a href="#cb22-128" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-129"><a href="#cb22-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-130"><a href="#cb22-130" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; The PCA running on cell cycle genes reveals, unsurprisingly, that **cells separate entirely by phase**.</span></span>
+<span id="cb22-123"><a href="#cb22-123" aria-hidden="true" tabindex="-1"></a>以细胞周期marker为计算依据运行PCA：</span>
+<span id="cb22-124"><a href="#cb22-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-127"><a href="#cb22-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-128"><a href="#cb22-128" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(marrow, <span class="at">features =</span> <span class="fu">c</span>(s.genes, g2m.genes))</span>
+<span id="cb22-129"><a href="#cb22-129" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(marrow)</span>
+<span id="cb22-130"><a href="#cb22-130" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-131"><a href="#cb22-131" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-132"><a href="#cb22-132" aria-hidden="true" tabindex="-1"></a>这个PCA图也可以用ggplot2的语法进一步修改：</span>
+<span id="cb22-132"><a href="#cb22-132" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; The PCA running on cell cycle genes reveals, unsurprisingly, that **cells separate entirely by phase**.</span></span>
 <span id="cb22-133"><a href="#cb22-133" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-136"><a href="#cb22-136" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-137"><a href="#cb22-137" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb22-138"><a href="#cb22-138" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(marrow) <span class="sc">+</span> </span>
-<span id="cb22-139"><a href="#cb22-139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>), </span>
-<span id="cb22-140"><a href="#cb22-140" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
-<span id="cb22-141"><a href="#cb22-141" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">colour =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">10</span>)))</span>
-<span id="cb22-142"><a href="#cb22-142" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-143"><a href="#cb22-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-144"><a href="#cb22-144" aria-hidden="true" tabindex="-1"></a><span class="fu">### 回归（regress out）细胞周期评分</span></span>
+<span id="cb22-134"><a href="#cb22-134" aria-hidden="true" tabindex="-1"></a>这个PCA图也可以用ggplot2的语法进一步修改：</span>
+<span id="cb22-135"><a href="#cb22-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-138"><a href="#cb22-138" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-139"><a href="#cb22-139" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb22-140"><a href="#cb22-140" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(marrow) <span class="sc">+</span> </span>
+<span id="cb22-141"><a href="#cb22-141" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>), </span>
+<span id="cb22-142"><a href="#cb22-142" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>)) <span class="sc">+</span></span>
+<span id="cb22-143"><a href="#cb22-143" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">colour =</span> <span class="fu">guide_legend</span>(<span class="at">override.aes =</span> <span class="fu">list</span>(<span class="at">size =</span> <span class="dv">10</span>)))</span>
+<span id="cb22-144"><a href="#cb22-144" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-145"><a href="#cb22-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-146"><a href="#cb22-146" aria-hidden="true" tabindex="-1"></a>We now attempt to subtract ('regress out') this source of heterogeneity from the data. For users of Seurat v1.4, this was implemented in&nbsp;<span class="in">`RegressOut`</span>. However, as the results of this procedure are stored in the scaled data slot (therefore overwriting the output of&nbsp;<span class="in">`ScaleData()`</span>), we now merge this functionality into the&nbsp;<span class="in">`ScaleData()`</span>&nbsp;function itself.</span>
+<span id="cb22-146"><a href="#cb22-146" aria-hidden="true" tabindex="-1"></a><span class="fu">### 回归（regress out）细胞周期评分 {#sec-regress-out}</span></span>
 <span id="cb22-147"><a href="#cb22-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-148"><a href="#cb22-148" aria-hidden="true" tabindex="-1"></a>For each gene, Seurat models the relationship between **gene expression** and the **S and G2M cell cycle scores**. The scaled residuals of this model represent a 'corrected' expression matrix, that can be used downstream for dimensional reduction.</span>
+<span id="cb22-148"><a href="#cb22-148" aria-hidden="true" tabindex="-1"></a>We now attempt to subtract ('regress out') this source of heterogeneity from the data. For users of Seurat v1.4, this was implemented in&nbsp;<span class="in">`RegressOut`</span>. However, as the results of this procedure are stored in the scaled data slot (therefore overwriting the output of&nbsp;<span class="in">`ScaleData()`</span>), we now merge this functionality into the&nbsp;<span class="in">`ScaleData()`</span>&nbsp;function itself.</span>
 <span id="cb22-149"><a href="#cb22-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-152"><a href="#cb22-152" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-153"><a href="#cb22-153" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(marrow, </span>
-<span id="cb22-154"><a href="#cb22-154" aria-hidden="true" tabindex="-1"></a>                    <span class="at">vars.to.regress =</span> <span class="fu">c</span>(<span class="st">"S.Score"</span>, <span class="st">"G2M.Score"</span>), </span>
-<span id="cb22-155"><a href="#cb22-155" aria-hidden="true" tabindex="-1"></a>                    <span class="at">features =</span> <span class="fu">rownames</span>(marrow))</span>
-<span id="cb22-156"><a href="#cb22-156" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-157"><a href="#cb22-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-158"><a href="#cb22-158" aria-hidden="true" tabindex="-1"></a>Now, a PCA on the variable genes no longer returns components associated with cell cycle:</span>
+<span id="cb22-150"><a href="#cb22-150" aria-hidden="true" tabindex="-1"></a>For each gene, Seurat models the relationship between **gene expression** and the **S and G2M cell cycle scores**. The scaled residuals of this model represent a 'corrected' expression matrix, that can be used downstream for dimensional reduction.</span>
+<span id="cb22-151"><a href="#cb22-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-154"><a href="#cb22-154" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-155"><a href="#cb22-155" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(marrow, </span>
+<span id="cb22-156"><a href="#cb22-156" aria-hidden="true" tabindex="-1"></a>                    <span class="at">vars.to.regress =</span> <span class="fu">c</span>(<span class="st">"S.Score"</span>, <span class="st">"G2M.Score"</span>), </span>
+<span id="cb22-157"><a href="#cb22-157" aria-hidden="true" tabindex="-1"></a>                    <span class="at">features =</span> <span class="fu">rownames</span>(marrow))</span>
+<span id="cb22-158"><a href="#cb22-158" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-159"><a href="#cb22-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-162"><a href="#cb22-162" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-163"><a href="#cb22-163" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(marrow, </span>
-<span id="cb22-164"><a href="#cb22-164" aria-hidden="true" tabindex="-1"></a>                 <span class="at">features =</span> <span class="fu">VariableFeatures</span>(marrow), </span>
-<span id="cb22-165"><a href="#cb22-165" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nfeatures.print =</span> <span class="dv">10</span>)</span>
-<span id="cb22-166"><a href="#cb22-166" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-167"><a href="#cb22-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-168"><a href="#cb22-168" aria-hidden="true" tabindex="-1"></a>When running a PCA on only cell cycle genes, cells no longer separate by cell-cycle phase:</span>
+<span id="cb22-160"><a href="#cb22-160" aria-hidden="true" tabindex="-1"></a>Now, a PCA on the variable genes no longer returns components associated with cell cycle:</span>
+<span id="cb22-161"><a href="#cb22-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-164"><a href="#cb22-164" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-165"><a href="#cb22-165" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(marrow, </span>
+<span id="cb22-166"><a href="#cb22-166" aria-hidden="true" tabindex="-1"></a>                 <span class="at">features =</span> <span class="fu">VariableFeatures</span>(marrow), </span>
+<span id="cb22-167"><a href="#cb22-167" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nfeatures.print =</span> <span class="dv">10</span>)</span>
+<span id="cb22-168"><a href="#cb22-168" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-169"><a href="#cb22-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-172"><a href="#cb22-172" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-173"><a href="#cb22-173" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(marrow, </span>
-<span id="cb22-174"><a href="#cb22-174" aria-hidden="true" tabindex="-1"></a>                 <span class="at">features =</span> <span class="fu">c</span>(s.genes, g2m.genes))</span>
-<span id="cb22-175"><a href="#cb22-175" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(marrow)</span>
-<span id="cb22-176"><a href="#cb22-176" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-177"><a href="#cb22-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-178"><a href="#cb22-178" aria-hidden="true" tabindex="-1"></a>As the best cell cycle markers are extremely well conserved across tissues and species, we have found this procedure to work robustly and reliably on diverse datasets.</span>
+<span id="cb22-170"><a href="#cb22-170" aria-hidden="true" tabindex="-1"></a>When running a PCA on only cell cycle genes, cells no longer separate by cell-cycle phase:</span>
+<span id="cb22-171"><a href="#cb22-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-174"><a href="#cb22-174" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-175"><a href="#cb22-175" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(marrow, </span>
+<span id="cb22-176"><a href="#cb22-176" aria-hidden="true" tabindex="-1"></a>                 <span class="at">features =</span> <span class="fu">c</span>(s.genes, g2m.genes))</span>
+<span id="cb22-177"><a href="#cb22-177" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(marrow)</span>
+<span id="cb22-178"><a href="#cb22-178" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-179"><a href="#cb22-179" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-180"><a href="#cb22-180" aria-hidden="true" tabindex="-1"></a><span class="fu">## 消除细胞周期的影响同时保留增殖细胞与静止细胞的区分</span></span>
+<span id="cb22-180"><a href="#cb22-180" aria-hidden="true" tabindex="-1"></a>As the best cell cycle markers are extremely well conserved across tissues and species, we have found this procedure to work robustly and reliably on diverse datasets.</span>
 <span id="cb22-181"><a href="#cb22-181" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-182"><a href="#cb22-182" aria-hidden="true" tabindex="-1"></a>The procedure above removes all signal associated with cell cycle. In some cases, we've found that this can negatively impact downstream analysis, particularly in differentiating processes (like **murine hematopoiesis**), where stem cells are quiescent and differentiated cells are proliferating (or vice versa). **In this case, regressing out all cell cycle effects can blur the distinction between stem and progenitor cells as well**.</span>
+<span id="cb22-182"><a href="#cb22-182" aria-hidden="true" tabindex="-1"></a><span class="fu">## 消除细胞周期的影响同时保留增殖细胞与静止细胞的区分</span></span>
 <span id="cb22-183"><a href="#cb22-183" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-184"><a href="#cb22-184" aria-hidden="true" tabindex="-1"></a>As an alternative, we suggest regressing out the&nbsp;**difference**&nbsp;between the G2/M and S phase scores. This means that signals separating non-cycling cells and cycling cells will be maintained, but differences in cell cycle phase among proliferating cells (which are often uninteresting), will be regressed out of the data</span>
+<span id="cb22-184"><a href="#cb22-184" aria-hidden="true" tabindex="-1"></a>The procedure above removes all signal associated with cell cycle. In some cases, we've found that this can negatively impact downstream analysis, particularly in differentiating processes (like **murine hematopoiesis**), where stem cells are quiescent and differentiated cells are proliferating (or vice versa). **In this case, regressing out all cell cycle effects can blur the distinction between stem and progenitor cells as well**.</span>
 <span id="cb22-185"><a href="#cb22-185" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-188"><a href="#cb22-188" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-189"><a href="#cb22-189" aria-hidden="true" tabindex="-1"></a>marrow<span class="sc">$</span>CC.Difference <span class="ot">&lt;-</span> marrow<span class="sc">$</span>S.Score <span class="sc">-</span> marrow<span class="sc">$</span>G2M.Score</span>
-<span id="cb22-190"><a href="#cb22-190" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(marrow, </span>
-<span id="cb22-191"><a href="#cb22-191" aria-hidden="true" tabindex="-1"></a>                    <span class="at">vars.to.regress =</span> <span class="st">"CC.Difference"</span>, </span>
-<span id="cb22-192"><a href="#cb22-192" aria-hidden="true" tabindex="-1"></a>                    <span class="at">features =</span> <span class="fu">rownames</span>(marrow))</span>
-<span id="cb22-193"><a href="#cb22-193" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-194"><a href="#cb22-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-195"><a href="#cb22-195" aria-hidden="true" tabindex="-1"></a>Cell cycle effects strongly mitigated in PCA：</span>
+<span id="cb22-186"><a href="#cb22-186" aria-hidden="true" tabindex="-1"></a>As an alternative, we suggest regressing out the&nbsp;**difference**&nbsp;between the G2/M and S phase scores. This means that signals separating non-cycling cells and cycling cells will be maintained, but differences in cell cycle phase among proliferating cells (which are often uninteresting), will be regressed out of the data</span>
+<span id="cb22-187"><a href="#cb22-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-190"><a href="#cb22-190" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-191"><a href="#cb22-191" aria-hidden="true" tabindex="-1"></a>marrow<span class="sc">$</span>CC.Difference <span class="ot">&lt;-</span> marrow<span class="sc">$</span>S.Score <span class="sc">-</span> marrow<span class="sc">$</span>G2M.Score</span>
+<span id="cb22-192"><a href="#cb22-192" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(marrow, </span>
+<span id="cb22-193"><a href="#cb22-193" aria-hidden="true" tabindex="-1"></a>                    <span class="at">vars.to.regress =</span> <span class="st">"CC.Difference"</span>, </span>
+<span id="cb22-194"><a href="#cb22-194" aria-hidden="true" tabindex="-1"></a>                    <span class="at">features =</span> <span class="fu">rownames</span>(marrow))</span>
+<span id="cb22-195"><a href="#cb22-195" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-196"><a href="#cb22-196" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-199"><a href="#cb22-199" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-200"><a href="#cb22-200" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(marrow, </span>
-<span id="cb22-201"><a href="#cb22-201" aria-hidden="true" tabindex="-1"></a>                 <span class="at">features =</span> <span class="fu">VariableFeatures</span>(marrow), </span>
-<span id="cb22-202"><a href="#cb22-202" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nfeatures.print =</span> <span class="dv">10</span>)</span>
-<span id="cb22-203"><a href="#cb22-203" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-204"><a href="#cb22-204" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-205"><a href="#cb22-205" aria-hidden="true" tabindex="-1"></a>When running a PCA on cell cycle genes, **actively proliferating cells remain distinct from G1 cells** however, within actively proliferating cells, **G2M and S phase cells group together：**</span>
+<span id="cb22-197"><a href="#cb22-197" aria-hidden="true" tabindex="-1"></a>Cell cycle effects strongly mitigated in PCA：</span>
+<span id="cb22-198"><a href="#cb22-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-201"><a href="#cb22-201" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-202"><a href="#cb22-202" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(marrow, </span>
+<span id="cb22-203"><a href="#cb22-203" aria-hidden="true" tabindex="-1"></a>                 <span class="at">features =</span> <span class="fu">VariableFeatures</span>(marrow), </span>
+<span id="cb22-204"><a href="#cb22-204" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nfeatures.print =</span> <span class="dv">10</span>)</span>
+<span id="cb22-205"><a href="#cb22-205" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-206"><a href="#cb22-206" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-209"><a href="#cb22-209" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-210"><a href="#cb22-210" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(marrow, <span class="at">features =</span> <span class="fu">c</span>(s.genes, g2m.genes))</span>
-<span id="cb22-211"><a href="#cb22-211" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(marrow)</span>
-<span id="cb22-212"><a href="#cb22-212" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-213"><a href="#cb22-213" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-214"><a href="#cb22-214" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb22-207"><a href="#cb22-207" aria-hidden="true" tabindex="-1"></a>When running a PCA on cell cycle genes, **actively proliferating cells remain distinct from G1 cells** however, within actively proliferating cells, **G2M and S phase cells group together：**</span>
+<span id="cb22-208"><a href="#cb22-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-211"><a href="#cb22-211" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-212"><a href="#cb22-212" aria-hidden="true" tabindex="-1"></a>marrow <span class="ot">&lt;-</span> <span class="fu">RunPCA</span>(marrow, <span class="at">features =</span> <span class="fu">c</span>(s.genes, g2m.genes))</span>
+<span id="cb22-213"><a href="#cb22-213" aria-hidden="true" tabindex="-1"></a><span class="fu">DimPlot</span>(marrow)</span>
+<span id="cb22-214"><a href="#cb22-214" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-215"><a href="#cb22-215" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-216"><a href="#cb22-216" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb22-217"><a href="#cb22-217" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
-<span id="cb22-218"><a href="#cb22-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-221"><a href="#cb22-221" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb22-222"><a href="#cb22-222" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb22-223"><a href="#cb22-223" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb22-224"><a href="#cb22-224" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb22-225"><a href="#cb22-225" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb22-216"><a href="#cb22-216" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb22-217"><a href="#cb22-217" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-218"><a href="#cb22-218" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb22-219"><a href="#cb22-219" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb22-220"><a href="#cb22-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-223"><a href="#cb22-223" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb22-224"><a href="#cb22-224" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb22-225"><a href="#cb22-225" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb22-226"><a href="#cb22-226" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb22-227"><a href="#cb22-227" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb22-228"><a href="#cb22-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-229"><a href="#cb22-229" aria-hidden="true" tabindex="-1"></a><span class="fu"># References {.unnumbered}</span></span>
+<span id="cb22-230"><a href="#cb22-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-231"><a href="#cb22-231" aria-hidden="true" tabindex="-1"></a>::: {#refs}</span>
+<span id="cb22-232"><a href="#cb22-232" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
@@ -1559,11 +1543,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
 <li class="nav-item">
- This book was built with Quarto
+ This website was built with Quarto
   </li>  
 </ul>
 </div>   
-    <div class="nav-footer-center">Copyright 2023, Du Junhong</div>
+    <div class="nav-footer-center">Copyright 2024, Du Junhong</div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
 <li class="nav-item compact">
