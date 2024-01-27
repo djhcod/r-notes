@@ -21,13 +21,13 @@ In this lesson you will:
 
 -   Explore the cell type identities by looking at the expression for known markers across the clusters.
 
-## Exploration of quality control metrics
+# Exploration of quality control metrics
 
 To determine whether our clusters might be due to artifacts such as cell cycle phase or mitochondrial expression, it can be useful to explore these metrics visually to see if any clusters exhibit enrichment or are different from the other clusters. However, if enrichment or differences are observed for particular clusters it may not be worrisome if it can be explained by the cell type.
 
 To explore and visualize the various quality metrics, we will use the versatile `DimPlot()` and `FeaturePlot()` functions from Seurat.
 
-## 数据读取
+# 数据读取
 
 载入上一节中完成细胞分群的数据`seurat_clustered`。
 
@@ -39,7 +39,7 @@ seurat_clustered
 head(seurat_clustered, 5)
 ```
 
-## 分析样本类型是否影响细胞分群
+# 分析样本类型是否影响细胞分群
 
 首先通过UMAP图，直观查看不同样本类型的细胞分群情况：
 
@@ -86,7 +86,7 @@ n_cells
 Generally, we expect to see the majority of the cell type clusters to be present in all conditions; however, depending on the experiment we might expect to see some **condition-specific cell types** present.
 :::
 
-## 分析细胞周期是否影响细胞分群
+# 分析细胞周期是否影响细胞分群
 
 Next, we can explore whether the **cells cluster influenced by the different cell cycle phases**. We did not regress out variation due to cell cycle phase when we performed the `SCTransform` normalization (见[Normalization and regressing out unwanted variation](/single_cell/scRNA-seq_online/06_SC_SCT_normalization.qmd#sec-evaluating_effects_of_cell_cycle)). **If our cell clusters showed large differences in cell cycle expression, this would be an indication we would want to re-run the `SCTransform` and add the `S.Score` and `G2M.Score` to our variables to regress, then re-run the rest of the steps.**
 
@@ -101,7 +101,7 @@ DimPlot(seurat_clustered,
 
 > We do not see much clustering by cell cycle score, so we can proceed with the QC.
 
-## 分析其他非期望变异来源是否会影响细胞分群
+# 分析其他非期望变异来源是否会影响细胞分群
 
 Next we will explore additional metrics, such as the **number of UMIs** and **genes per cell**, **S-phase and G2M-phase markers**, and **mitochondrial gene expression** by UMAP. Looking at the individual S and G2M scores can give us additional information to checking the phase as we did previously.
 
@@ -128,7 +128,7 @@ FeaturePlot(seurat_clustered,
 >
 > If we see differences corresponding to any of these metrics at this point in time, then we will often note them and then decide after identifying the cell type identities whether to take any further action.
 
-## 分析主成分（PCs）对细胞分群的影响 {#sec-Effect_of_pcs_clustering}
+# 分析主成分（PCs）对细胞分群的影响 {#sec-Effect_of_pcs_clustering}
 
 We can also explore how well our clusters separate by the different PCs; **we hope that the defined PCs separate the cell types well**. To visualize this information, we need to extract the UMAP coordinate information for the cells along with their corresponding scores for each of the PCs to view by UMAP.
 
@@ -220,7 +220,7 @@ With the **GNLY** and **NKG7** genes as positive markers of `PC_2`, **we can hyp
 
 To truly determine the identity of the clusters and whether the `resolution` is appropriate, it is helpful to explore a handful of known gene markers for the cell types expected.
 
-## 探索已知的cell type markers的表达 {#sec-explore_known_markers}
+# 探索已知的cell type markers的表达 {#sec-explore_known_markers}
 
 With the cells clustered, we can explore the cell type identities by looking for known markers. 下面给出了本案例的cell type markers及其对应的细胞类型：
 
@@ -282,7 +282,7 @@ Depending on our markers of interest, they could be positive or negative markers
 
 For the markers used here, we are looking for positive markers and consistency of expression of the markers across the clusters. For example, if there are two markers for a cell type and only one of them is expressed in a cluster - then we cannot reliably assign that cluster to the cell type.
 
-### CD14+ monocyte markers
+## CD14+ monocyte markers
 
 ```{r}
 #| fig-width: 10
@@ -296,7 +296,7 @@ FeaturePlot(seurat_clustered,
 
 CD14+ monocytes appear to correspond to **clusters 1, and 3**. We wouldn't include clusters 14 and 10 because they do not highly express both of these markers.
 
-### FCGR3A+ monocyte markers {#sec-fcgr3a_monocyte_markers}
+## FCGR3A+ monocyte markers {#sec-fcgr3a_monocyte_markers}
 
 ```{r}
 #| fig-width: 10
@@ -310,7 +310,7 @@ FeaturePlot(seurat_clustered,
 
 FCGR3A+ monocytes markers distinctly highlight **cluster 10**, although we do see some decent expression in clusters 1 and 3. We would like to see additional markers for FCGR3A+ cells show up when we perform the marker identification.
 
-### Conventional dendritic cell markers
+## Conventional dendritic cell markers
 
 ```{r}
 #| fig-width: 10
@@ -324,7 +324,7 @@ FeaturePlot(seurat_clustered,
 
 The markers corresponding to conventional dendritic cells identify **cluster 14** (both markers consistently show expression).
 
-### Plasmacytoid dendritic cell markers
+## Plasmacytoid dendritic cell markers
 
 ```{r}
 #| fig-width: 10
@@ -339,7 +339,7 @@ FeaturePlot(seurat_clustered,
 
 Plasmacytoid dendritic cells represent **cluster 16**. While there are a lot of differences in the expression of these markers, we see cluster 16 (though small) is consistently strongly expressed.
 
-### Macrophages
+## Macrophages
 
 ```{r}
 #| fig-width: 10
@@ -354,7 +354,7 @@ FeaturePlot(seurat_clustered,
 
 We don't see much overlap of our markers, so no clusters appear to correspond to macrophages; perhaps cell culture conditions negatively selected for macrophages (more highly adherent).
 
-### B cells
+## B cells
 
 ```{r}
 #| fig-width: 10
@@ -368,7 +368,7 @@ FeaturePlot(seurat_clustered,
 
 可以看出，cluster 11, 7, 13属于B细胞。
 
-### T cells
+## T cells
 
 ```{r}
 FeaturePlot(seurat_clustered, 
@@ -381,7 +381,7 @@ FeaturePlot(seurat_clustered,
 
 T细胞的标志物在大量的cluster中均表达，包括cluster 0, 2, 6, 4, 5, 9。
 
-### CD4+ T cells {#sec-cd4_t_cells}
+## CD4+ T cells {#sec-cd4_t_cells}
 
 ```{r}
 #| fig-width: 10
@@ -396,7 +396,7 @@ FeaturePlot(seurat_clustered,
 
 大致看出cluster 4, 0, 6, 2属于CD4+ T 细胞。
 
-### CD8+ T cells
+## CD8+ T cells
 
 ```{r}
 #| fig-width: 10
@@ -410,7 +410,7 @@ FeaturePlot(seurat_clustered,
 
 cluster 5和 cluster 9属于CD8+ T细胞。
 
-### NK cells
+## NK cells
 
 ```{r}
 #| fig-width: 10
@@ -424,7 +424,7 @@ FeaturePlot(seurat_clustered,
 
 cluster 8, 12属于NK细胞。这和我们在前面的 @sec-Effect_of_pcs_clustering 中的结论（第二主成分的top基因GNLY和NKG7在cluster 8和cluster 12中高表达）一致。
 
-### Megakaryocytes（巨核细胞）
+## Megakaryocytes（巨核细胞）
 
 ```{r}
 FeaturePlot(seurat_clustered, 
@@ -437,7 +437,7 @@ FeaturePlot(seurat_clustered,
 
 cluster 15属于巨核细胞。
 
-### Erythrocytes（红细胞）
+## Erythrocytes（红细胞）
 
 ```{r}
 #| fig-width: 10
@@ -453,7 +453,7 @@ FeaturePlot(seurat_clustered,
 
 ------------------------------------------------------------------------
 
-## **细胞类型初步鉴定结果** {#sec-Preliminary_cell_type_identification_results}
+# **细胞类型初步鉴定结果** {#sec-Preliminary_cell_type_identification_results}
 
 根据上面的marker表达情况，我们大致可以确定如下细胞类型鉴定结果:
 
@@ -489,7 +489,7 @@ Marker identification analysis can help us address all of these questions!!
 
 The next step will be to perform marker identification analysis, which will output the genes that significantly differ in expression between clusters. Using these genes we can determine or improve confidence in the identities of the clusters/subclusters.
 
-## 保存数据
+# 保存数据
 
 ```{r}
 saveRDS(seurat_clustered, file = "output/scRNA-seq_online/seurat_clustered_qc.rds")

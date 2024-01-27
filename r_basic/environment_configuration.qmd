@@ -6,7 +6,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-## 更新R
+# 更新R
 
 在R原软件中逐个运行下面的代码（仅适用Windows系统）。macOS直接打开[CRAN官网](https://cran.r-project.org/bin/macosx/)下载最新版本的R覆盖安装，重启RStudio即可完成R的更新，原R包都在。
 
@@ -16,7 +16,7 @@ library(installr)
 updateR()
 ```
 
-## 更新R包
+# 更新R包
 
 运行下面的代码或通过右下角的Packages选项卡进行R包的更新
 
@@ -27,13 +27,13 @@ news(package = "limma") # 参看R包的更新内容
 BiocManager::valid() # 查看是否有需要更新的bioconductor包。根据提示安装更新
 ```
 
-## 从bioconductor安装R包
+# 从bioconductor安装R包
 
 ```{r}
 BiocManager::install("biomaRt",update = TRUE,ask = FALSE)
 ```
 
-## 清除当前加载的程序包
+# 清除当前加载的程序包
 
 ```{r}
 detach("package:dplyr", unload=TRUE)
@@ -47,14 +47,14 @@ pacman::p_unload("dplyr")
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
 
-## 更改当前R脚本运行目录
+# 更改当前R脚本运行目录
 
 ```{r}
 setwd("/Users/totoshihiro/Library/Mobile Documents/com~apple~CloudDocs/Documents/科研/医学统计学/数据基本处理与标准化")
 getwd()#查看当前R脚本运行目录
 ```
 
-## 环境查看和清理
+# 环境查看和清理
 
 ```{r}
 rm(mydata)
@@ -63,7 +63,7 @@ cat("\014")#清空所有输出结果
 sessionInfo()#收集有关当前R项目的信息
 ```
 
-## 自动安装所需的R包
+# 自动安装所需的R包
 
 ```{r}
 packages <-c("GEOquery", "limma","ggplot2", "pheatmap")#列出所需的R包
@@ -84,9 +84,9 @@ packagecheck <- function(x) {
 lapply(packages, packagecheck)
 ```
 
-## 调整矢量/内存分配上限
+# 调整矢量/内存分配上限
 
-### 提高矢量大小上限
+## 提高矢量大小上限
 
 在R语言中如果我们要处理的数据集较大，如在[处理单细胞数据时](/single_cell/scRNA-seq_online/06_SC_SCT_normalization.qmd#re_sctransform)，可能会出现如下报错：
 
@@ -102,7 +102,7 @@ Error: cannot allocate vector of size *** Mb
 options(future.globals.maxSize = 6 * 1024 * 1024^2)
 ```
 
-### 提高R内存分配上限（macOS） {#sec-Raising_memory_limit}
+## 提高R内存分配上限（macOS） {#sec-Raising_memory_limit}
 
 如果在运行大量的数据处理时，出现如下报错：
 
@@ -156,7 +156,7 @@ R_MAX_VSIZE=50Gb
 
 保存文件，重启RStudio。
 
-## 自动整理代码
+# 自动整理代码
 
 [The tidyverse style guide](https://style.tidyverse.org/index.html)**对代码编写时的规范格式进行了详细说明。通过**[styler包](https://styler.r-lib.org)可以实现对代码的自动整理，有助于保持不同项目之间的代码风格一致，并促进协作。安装styler后通过运行下面的命令即可自动整理当前打开的文档的代码。
 
@@ -169,7 +169,7 @@ styler:::style_active_file()
 
 ![Rstudio插件](images/screenshot_2023-11-14%2011.44.02.png){#fig-插件 width="219"}
 
-## Rstudio主题
+# Rstudio主题
 
 [`rsthemes`](https://www.garrickadenbuie.com/project/rsthemes/#installation)包提供了多种额外的主题。
 

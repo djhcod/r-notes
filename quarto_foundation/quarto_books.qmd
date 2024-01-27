@@ -26,7 +26,7 @@ Quarto Books能够将多个Quarto文档（章节）组合成一份文档。这�
 
 `_quarto.yml`文件为YAML配置文件。要实现按照一定的格式将各个Quarto文档组合成一个完整的网页或Quarto Books，定义这个YAML配置文件是核心。**YAML配置文件一般以"\_quarto.yml"命名**，并保存在项目的根目录中，在每次编译书籍时都会读取这个配置文件。实际上Quarto Books的YAML配置和此前独立的qmd文档的[YAML配置](/quarto_foundation/yaml_settings.qmd)有大量相似之处。最大的区别是Quarto Books需要通过`chapter`来将不同的qmd文件（章节）按照一定的顺序组合起来形成一本完整的书籍。下面主要介绍YAML配置文件的主要内容。各个章节即各个独立的qmd文件的编写方法参考之前的章节即可。
 
-## 项目设置
+# 项目设置
 
 ```{r}
 ---
@@ -43,11 +43,11 @@ project:
 
 -   `execute-dir`：**在编译时**，各个qmd文件内的code chunk脚本运行的根目录，默认是`file`，即**当前qmd文档所在目录**，可设置为 "**project**"，这样在编译过程中执行代码块时会**将脚本运行根目录设置为项目根目录**。
 
-## 书结构设置
+# 书结构设置
 
 `book`参数定义了Quarto Book的章节结构以及顶栏、导航栏等内容。**是Quarto Books的YAML配置的核心**。
 
-### 标题/作者/日期信息
+## 标题/作者/日期信息
 
 ```{r}
 ---
@@ -77,7 +77,7 @@ book:
 上面列出的信息也可以在index.qmd文件中定义。
 :::
 
-### `chapter`章节
+## `chapter`章节
 
 **章节的定义是Quarto Books的YAML配置的核心**。通过`chapter`函数将多个不同的qmd文件（章节）按照指定的顺序结合起来就形成了一本书或者网站。
 
@@ -123,7 +123,7 @@ book:
 
 ![](images/截屏2023-11-26%2013.02.00.png){width="199"}
 
-### 侧边栏 {#sec-sidebar}
+## 侧边栏 {#sec-sidebar}
 
 侧边栏是传统意义上的总目录，默认在网页的左侧显示，其内容反映了上面`chapter`中定义的章节编排。通过`sidebar`对侧边栏的样式、内容等进行进一步的设定。
 
@@ -157,7 +157,7 @@ book:
 
 ![](images/截屏2023-11-26%2019.30.06.png){width="171"}
 
-### 顶部导航栏 {#sec-navbar}
+## 顶部导航栏 {#sec-navbar}
 
 除了添加侧边导航栏之外，还可以通过`navbar`参数添加顶部导航栏。
 
@@ -223,7 +223,7 @@ book:
 顶栏和侧边导航栏的更多设置，参考[Quarto官方指南](https://quarto.org/docs/websites/website-navigation.html#side-navigation)。
 :::
 
-### 右侧页内导航 {#sec-page_navigation}
+## 右侧页内导航 {#sec-page_navigation}
 
 右侧页内导航显示的是当前页面的目录。可在`book`内的`page-navigation`和`format`-`html`内的`toc`相关函数中共同配置。
 
@@ -244,7 +244,7 @@ book:
 
 -   `repo-actions`：（可选）在右侧页内导航的下方显示导航到GitHub仓库各板块的链接。可选的值有`source`、`issue`、`edit`。如果是`source`，`repo-actions`会首先根据当前所浏览的页面，在`repo-url`定义的URL后加上当前页面源码的后缀（如"/blob/main/quarto_foundation/quarto_books.qmd"），这样就会得到一个指向GitHub项目中编译该页面的源码的链接。如果是`edit`则会在此链接的基础上再加上编辑该页面源码的后缀（"/edit/main/quarto_foundation/quarto_books.qmd"）。如果是`issue`则会在GitHub仓库链接的基础上加上定位到问题报告的后缀（"/issues/new"）。
 
-### 搜索框设置
+## 搜索框设置
 
 `search`可以用来指定搜索按钮的样式。同时，对于既有顶栏又有左侧导航栏的book，可以通过`search`来指定搜索按钮出现的位置。
 
@@ -261,7 +261,7 @@ book:
 
 -   `type`：搜索按钮的样式。可以仅搜索图标（`overlay`），也可以展示搜索框（`textbox`）。
 
-### 页脚设置
+## 页脚设置
 
 页脚出现在每个页面的最下面，通过`page-footer`统一配置。
 
@@ -283,7 +283,7 @@ book:
 
 页脚的配置和 @sec-navbar 的语法基本一致，此处不再赘述。
 
-### 网站分享设置
+## 网站分享设置
 
 ```{r}
 ---
@@ -303,7 +303,7 @@ book:
 
 ![](images/截屏2023-11-26%2020.07.29.png){width="188"}
 
-### `comments`用户批注及评论功能
+## `comments`用户批注及评论功能
 
 Quarto Books编译后的HTML网页支持配置[Hypothesis](https://web.hypothes.is)标注功能。配置后不同的读者在登录Hypothesis账号后可以在页面上进行标注和评论。效果如下：
 
@@ -354,7 +354,7 @@ html:
 
 `input-position: top`表示将评论框放置在其他评论的顶部。更多关于`comments`的参数和设置，参考[Quarto官方文档](https://quarto.org/docs/reference/projects/websites.html#hypothesis)。
 
-## `format`编译设置
+# `format`编译设置
 
 `format`定义了Quarto Books最终编译成的格式。Quarto Books可以编译成各种格式，如HTML、PDF、MS Word、EPub，或AsciiDoc。最常用和最好的编译格式是HTML。HTML books实际上是一种特殊类型的[Quarto Website](https://quarto.org/docs/websites/)，因此支持包括全文搜索在内的网站功能。这两者最重要的一个区别是，**HTML books能够使用章节编号，因此支持不同章节之间的交叉引用**。因此下面只介绍编译成HTML的相关设置。
 
@@ -399,7 +399,7 @@ format:
 
 -   `toc-location`：设置页内目录的位置。默认在右侧（`right`）,可以设置为`left`或`body`（在文稿最开头显示）。
 
-## 代码块执行设置
+# 代码块执行设置
 
 `execute`用来指定代码块的执行行为，例如是否运行、是否显示警告信息和是否缓存运行结果等。
 
@@ -434,7 +434,7 @@ execute:
 如果只是渲染单个Quarto文件，则不会受到`freeze`的控制。参考[*Quarto官方文档：Managing Execution*](https://quarto.org/docs/projects/code-execution.html#freeze)获取更多关于`freeze`的说明。
 :::
 
-## 标题编号设置 {#sec-number_sections}
+# 标题编号设置 {#sec-number_sections}
 
 ```{r}
 ---
@@ -451,7 +451,7 @@ number-depth: 2
 
 -   `{.unlisted}`：将某个标题设置为不在目录中列出。如"第三章{.unlisted}"。如果想要某个标题既不编号也不在目录中列出就可以这样写："标题{.unnumbered .unlisted}"。
 
-## 交叉引用设置
+# 交叉引用设置
 
 ```{r}
 ---
@@ -504,7 +504,7 @@ crossref:
 
 -   `alpha X` (start from letter 'X')
 
-## 排版设置
+# 排版设置
 
 ```{r}
 ---
@@ -538,7 +538,7 @@ citation-location: document
 |                      | \[`top` \| `bottom` \| `margin`\]                                                                                                     |
 +----------------------+---------------------------------------------------------------------------------------------------------------------------------------+
 
-## 参考文献设置
+# 参考文献设置
 
 ```{r}
 ---
@@ -554,7 +554,7 @@ bibliography: references.bib # 参考文献目录
 可以参考Quarto官方指南网站的[YAML配置文件](https://github.com/quarto-dev/quarto-web/blob/main/_quarto.yml)进行学习。
 :::
 
-## 附：制作About Pages
+# 附：制作About Pages
 
 index.qmd文件会编译形成首页/封面文件（index.html），如果我们将书籍/网页发布（详见[发布到GitHub Pages](/quarto_foundation/github_pages.qmd)），这是打开网站链接后首先看到的页面。我们可以通过Quarto提供的About Pages模板来快速创建一个美观的首页，其核心是`about`命令。下面是一个采用了About Pages模板的index.qmd文件的示例：
 

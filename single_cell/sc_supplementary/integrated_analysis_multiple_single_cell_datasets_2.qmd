@@ -6,7 +6,7 @@ title: "多个单细胞数据集整合分析（下）"
 
 [上一节](/single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_1.qmd)中我们完成了对GSE150430的分群注释，并提取了髓系细胞亚群，本节对髓系细胞进一步分群。
 
-## 加载包
+# 加载包
 
 ```{r}
 library(Seurat)
@@ -17,9 +17,9 @@ library(clustree)
 library(scCustomize)
 ```
 
-## 髓系细胞进一步归一化、整合、降维、分群
+# 髓系细胞进一步归一化、整合、降维、分群
 
-### SCTransform、PCA
+## SCTransform、PCA
 
 ```{r}
 myeloid_seurat <- readRDS("output/sc_supplementary/GSE150430_myeloid_seurat.RDS")
@@ -39,7 +39,7 @@ Layers(myeloid_seurat)
 myeloid_seurat <- RunPCA(myeloid_seurat)
 ```
 
-### 不进行整合时检查细胞分群情况：
+## 不进行整合时检查细胞分群情况：
 
 ```{r}
 #| fig-height: 15
@@ -72,7 +72,7 @@ plot_grid(p1, p2,
           ncol = 1, labels = "AUTO")
 ```
 
-### 整合
+## 整合
 
 ```{r}
 # 整合
@@ -88,7 +88,7 @@ myeloid_integrated[["RNA"]] <- JoinLayers(myeloid_integrated[["RNA"]])
 names(myeloid_integrated@reductions)
 ```
 
-### **整合后检验细胞分群情况**
+## **整合后检验细胞分群情况**
 
 ```{r}
 #| fig-width: 10
@@ -122,7 +122,7 @@ plot_grid(p1, p3, p2, p4,
                      "Before Harmony", "After Harmony"))
 ```
 
-### 聚类
+## 聚类
 
 ```{r}
 # Determine the clusters for various resolutions                                
@@ -162,7 +162,7 @@ DimPlot(myeloid_integrated,
         label = T)
 ```
 
-### **细胞分群质量评估**
+## **细胞分群质量评估**
 
 分析样本类型是否影响细胞分群
 
@@ -213,7 +213,7 @@ saveRDS(myeloid_integrated,
         file = "output/sc_supplementary/GSE150430_myeloid_clustered.RDS")
 ```
 
-### 亚群细胞注释
+## 亚群细胞注释
 
 髓系亚群进一步细分的marker如下：
 
@@ -304,7 +304,7 @@ saveRDS(myeloid_clustered,
 
 ------------------------------------------------------------------------
 
-## 整合三个数据集的髓系细胞
+# 整合三个数据集的髓系细胞
 
 后面分别对[**GSE150825**](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?&acc=GSE150825)**, [GSE162025](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?&acc=GSE162025)**两个数据集进行同样的处理，即先大致分群，然后提取髓系细胞进一步分群，保存文件名为“GSE\*\*\*\_myeloid_clustered.RDS”的文件。最后读取三个数据集，整合重新降维分群，再继续分析。这里不再实际分析。
 

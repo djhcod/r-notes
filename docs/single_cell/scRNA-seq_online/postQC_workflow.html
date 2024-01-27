@@ -230,11 +230,11 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
       <div class="sidebar-item-container"> 
             <a href="../../r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">R语言基础</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
@@ -471,11 +471,11 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
       <div class="sidebar-item-container"> 
             <a href="../../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quarto基础</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
@@ -530,7 +530,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#clustering-workflow" id="toc-clustering-workflow" class="nav-link active" data-scroll-target="#clustering-workflow"><span class="header-section-number">1</span> Clustering workflow</a>
+  <li><a href="#clustering-workflow" id="toc-clustering-workflow" class="nav-link active" data-scroll-target="#clustering-workflow">Clustering workflow</a>
   <ul class="collapse">
   <li><a href="#explore-sources-of-unwanted-variation" id="toc-explore-sources-of-unwanted-variation" class="nav-link" data-scroll-target="#explore-sources-of-unwanted-variation">1. Explore sources of unwanted variation</a></li>
   <li><a href="#normalization-and-regressing-out-sources-of-unwanted-variation" id="toc-normalization-and-regressing-out-sources-of-unwanted-variation" class="nav-link" data-scroll-target="#normalization-and-regressing-out-sources-of-unwanted-variation">2. Normalization and regressing out sources of unwanted variation</a></li>
@@ -567,8 +567,8 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 </ul>
 <p>Now that we have our high quality cells, we can move forward with the workflow. Ultimately, we want to cluster cells and identify different potential celltypes however there are a few steps to walk-through before we get there. The green boxes in our workflow schematic below correspond to the steps taken post-QC and together consistute the clustering workflow.</p>
 <p><img src="images/sc_workflow_2022-01.jpg" class="img-fluid" width="545"></p>
-<section id="clustering-workflow" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="clustering-workflow"><span class="header-section-number">1</span> Clustering workflow</h2>
+<section id="clustering-workflow" class="level1">
+<h1>Clustering workflow</h1>
 <p>For something to be informative, it needs to exhibit variation, but not all variation is informative. The goal of our clustering analysis is to keep the major sources of variation in our dataset that should define our cell types, while restricting the variation due to <strong>uninteresting sources of variation (sequencing depth, cell cycle differences, mitochondrial expression, batch effects, etc.)</strong>. Then, to determine the cell types present, we will perform a clustering analysis using the most variable genes to define the major sources of variation in the dataset.</p>
 <p>The workflow for this analysis is adapted from the following sources:</p>
 <ul>
@@ -576,16 +576,16 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <li>Paul Hoffman: <a href="http://satijalab.org/seurat/cell_cycle_vignette.html">Cell-Cycle Scoring and Regression</a></li>
 </ul>
 <p>To identify clusters, the following steps will be performed:</p>
-<section id="explore-sources-of-unwanted-variation" class="level3">
-<h3 class="anchored" data-anchor-id="explore-sources-of-unwanted-variation">1. Explore sources of unwanted variation</h3>
+<section id="explore-sources-of-unwanted-variation" class="level2">
+<h2 class="anchored" data-anchor-id="explore-sources-of-unwanted-variation">1. Explore sources of unwanted variation</h2>
 <p>The first step in the workflow is to see if our data contains any unwanted variability. The most common biological effect that is evaluated in single-cell RNA-seq data is the effect of <strong>cell cycle</strong> on the transcriptome. Another known biological effect is <strong>mitochondrial gene expression</strong>, which is interpreted as an indication of cell stress. This step of the workflow involves exploring our data to identify which covariates we would like to regress out.</p>
 </section>
-<section id="normalization-and-regressing-out-sources-of-unwanted-variation" class="level3">
-<h3 class="anchored" data-anchor-id="normalization-and-regressing-out-sources-of-unwanted-variation">2. Normalization and regressing out sources of unwanted variation</h3>
+<section id="normalization-and-regressing-out-sources-of-unwanted-variation" class="level2">
+<h2 class="anchored" data-anchor-id="normalization-and-regressing-out-sources-of-unwanted-variation">2. Normalization and regressing out sources of unwanted variation</h2>
 <p>Seurat recently introduced a new method called <code>sctransform</code> which performs multiple processing steps on scRNA-seq data. Normalization is required to scale the raw count data to obtain correct relative gene expression abundances between cells. The <code>sctransform</code> function implements an advanced normalization and variance stabilization of the data. The <code>sctransform</code> function also regresses out sources of unwanted variation in our data. In the previous step, we had identified these sources of variability, and here we specify what those covariates are.</p>
 </section>
-<section id="integration" class="level3">
-<h3 class="anchored" data-anchor-id="integration">3. Integration</h3>
+<section id="integration" class="level2">
+<h2 class="anchored" data-anchor-id="integration">3. Integration</h2>
 <p>Often with single cell RNA-seq we are working with <strong>multiple samples</strong> which correspond to <strong>different</strong> <strong>sample groups</strong>, <strong>multiple experiments</strong> or <strong>different modalities</strong>. If we want to ultimately <strong>compare celltype expression between groups</strong> it is recommended to integrate the data. Integration is a powerful method that uses these shared sources of greatest variation to identify shared sub-populations across conditions or datasets. There are several steps involved in performing intergration in Seurat. Once complete, we use visualization methods to ensure a good integration before we proceed to cluster cells.</p>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -601,12 +601,12 @@ Caution
 </div>
 </div>
 </section>
-<section id="clustering-cells" class="level3">
-<h3 class="anchored" data-anchor-id="clustering-cells">4. Clustering cells</h3>
+<section id="clustering-cells" class="level2">
+<h2 class="anchored" data-anchor-id="clustering-cells">4. Clustering cells</h2>
 <p>Clusters of cells are obtained by grouping cells based on the similarity of their gene expression profiles. Expression profile similarity is determined via distance metrics, which often take <strong>dimensionality‐reduced representations</strong> as input. Seurat assigns cells to clusters based on their PCA scores derived from the expression of the integrated most variable genes.</p>
 </section>
-<section id="cluster-quality-evaluation" class="level3">
-<h3 class="anchored" data-anchor-id="cluster-quality-evaluation">5. Cluster quality evaluation</h3>
+<section id="cluster-quality-evaluation" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-quality-evaluation">5. Cluster quality evaluation</h2>
 <p>The clusters identified in our data represent groups of cells that presumably belong to a similar cell type. Before we can confirm the celltype of a group of member cells, the following steps are taken:</p>
 <ul>
 <li><strong>a.</strong> Check to see that clusters are not influenced by sources of uninteresting variation.</li>
@@ -1050,54 +1050,55 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Single-cell RNA-seq Clustering Workflow"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>**Learning Objectives:**</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Describe the workflow for single-cell RNA-seq analysis after the quality control step.</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>Now that we have our high quality cells, we can move forward with the workflow. Ultimately, we want to cluster cells and identify different potential celltypes however there are a few steps to walk-through before we get there. The green boxes in our workflow schematic below correspond to the steps taken post-QC and together consistute the clustering workflow.</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_workflow_2022-01.jpg)</span>{width="545"}</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## Clustering workflow</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>For something to be informative, it needs to exhibit variation, but not all variation is informative. The goal of our clustering analysis is to keep the major sources of variation in our dataset that should define our cell types, while restricting the variation due to **uninteresting sources of variation (sequencing depth, cell cycle differences, mitochondrial expression, batch effects, etc.)**. Then, to determine the cell types present, we will perform a clustering analysis using the most variable genes to define the major sources of variation in the dataset.</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>The workflow for this analysis is adapted from the following sources:</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Satija Lab: <span class="co">[</span><span class="ot">Seurat v3 Guided Integration Tutorial</span><span class="co">](https://satijalab.org/seurat/v3.0/immune_alignment.html)</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Paul Hoffman: <span class="co">[</span><span class="ot">Cell-Cycle Scoring and Regression</span><span class="co">](http://satijalab.org/seurat/cell_cycle_vignette.html)</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>To identify clusters, the following steps will be performed:</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">### 1. Explore sources of unwanted variation</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>The first step in the workflow is to see if our data contains any unwanted variability. The most common biological effect that is evaluated in single-cell RNA-seq data is the effect of **cell cycle** on the transcriptome. Another known biological effect is **mitochondrial gene expression**, which is interpreted as an indication of cell stress. This step of the workflow involves exploring our data to identify which covariates we would like to regress out.</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">### 2. Normalization and regressing out sources of unwanted variation</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>Seurat recently introduced a new method called <span class="in">`sctransform`</span> which performs multiple processing steps on scRNA-seq data. Normalization is required to scale the raw count data to obtain correct relative gene expression abundances between cells. The <span class="in">`sctransform`</span> function implements an advanced normalization and variance stabilization of the data. The <span class="in">`sctransform`</span> function also regresses out sources of unwanted variation in our data. In the previous step, we had identified these sources of variability, and here we specify what those covariates are.</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">### 3. Integration</span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>Often with single cell RNA-seq we are working with **multiple samples** which correspond to **different** **sample groups**, **multiple experiments** or **different modalities**. If we want to ultimately **compare celltype expression between groups** it is recommended to integrate the data. Integration is a powerful method that uses these shared sources of greatest variation to identify shared sub-populations across conditions or datasets. There are several steps involved in performing intergration in Seurat. Once complete, we use visualization methods to ensure a good integration before we proceed to cluster cells.</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>::: callout-caution</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>Integration is optional. We recommend going through the workflow without integration to decide whether or not it is necessary for your data.</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="fu">### 4. Clustering cells</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>Clusters of cells are obtained by grouping cells based on the similarity of their gene expression profiles. Expression profile similarity is determined via distance metrics, which often take **dimensionality‐reduced representations** as input. Seurat assigns cells to clusters based on their PCA scores derived from the expression of the integrated most variable genes.</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5. Cluster quality evaluation</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>The clusters identified in our data represent groups of cells that presumably belong to a similar cell type. Before we can confirm the celltype of a group of member cells, the following steps are taken:</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**a.** Check to see that clusters are not influenced by sources of uninteresting variation.</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**b.** Check to see whether the major principal components are driving the different clusters.</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**c.** Explore the cell type identities by looking at the expression for **known markers** across the clusters.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">number-sections:</span><span class="co"> false</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>**Learning Objectives:**</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Describe the workflow for single-cell RNA-seq analysis after the quality control step.</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>Now that we have our high quality cells, we can move forward with the workflow. Ultimately, we want to cluster cells and identify different potential celltypes however there are a few steps to walk-through before we get there. The green boxes in our workflow schematic below correspond to the steps taken post-QC and together consistute the clustering workflow.</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/sc_workflow_2022-01.jpg)</span>{width="545"}</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu"># Clustering workflow</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>For something to be informative, it needs to exhibit variation, but not all variation is informative. The goal of our clustering analysis is to keep the major sources of variation in our dataset that should define our cell types, while restricting the variation due to **uninteresting sources of variation (sequencing depth, cell cycle differences, mitochondrial expression, batch effects, etc.)**. Then, to determine the cell types present, we will perform a clustering analysis using the most variable genes to define the major sources of variation in the dataset.</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>The workflow for this analysis is adapted from the following sources:</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Satija Lab: <span class="co">[</span><span class="ot">Seurat v3 Guided Integration Tutorial</span><span class="co">](https://satijalab.org/seurat/v3.0/immune_alignment.html)</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>Paul Hoffman: <span class="co">[</span><span class="ot">Cell-Cycle Scoring and Regression</span><span class="co">](http://satijalab.org/seurat/cell_cycle_vignette.html)</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>To identify clusters, the following steps will be performed:</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Explore sources of unwanted variation</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>The first step in the workflow is to see if our data contains any unwanted variability. The most common biological effect that is evaluated in single-cell RNA-seq data is the effect of **cell cycle** on the transcriptome. Another known biological effect is **mitochondrial gene expression**, which is interpreted as an indication of cell stress. This step of the workflow involves exploring our data to identify which covariates we would like to regress out.</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. Normalization and regressing out sources of unwanted variation</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>Seurat recently introduced a new method called <span class="in">`sctransform`</span> which performs multiple processing steps on scRNA-seq data. Normalization is required to scale the raw count data to obtain correct relative gene expression abundances between cells. The <span class="in">`sctransform`</span> function implements an advanced normalization and variance stabilization of the data. The <span class="in">`sctransform`</span> function also regresses out sources of unwanted variation in our data. In the previous step, we had identified these sources of variability, and here we specify what those covariates are.</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. Integration</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>Often with single cell RNA-seq we are working with **multiple samples** which correspond to **different** **sample groups**, **multiple experiments** or **different modalities**. If we want to ultimately **compare celltype expression between groups** it is recommended to integrate the data. Integration is a powerful method that uses these shared sources of greatest variation to identify shared sub-populations across conditions or datasets. There are several steps involved in performing intergration in Seurat. Once complete, we use visualization methods to ensure a good integration before we proceed to cluster cells.</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>::: callout-caution</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>Integration is optional. We recommend going through the workflow without integration to decide whether or not it is necessary for your data.</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="fu">## 4. Clustering cells</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>Clusters of cells are obtained by grouping cells based on the similarity of their gene expression profiles. Expression profile similarity is determined via distance metrics, which often take **dimensionality‐reduced representations** as input. Seurat assigns cells to clusters based on their PCA scores derived from the expression of the integrated most variable genes.</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5. Cluster quality evaluation</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>The clusters identified in our data represent groups of cells that presumably belong to a similar cell type. Before we can confirm the celltype of a group of member cells, the following steps are taken:</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**a.** Check to see that clusters are not influenced by sources of uninteresting variation.</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**b.** Check to see whether the major principal components are driving the different clusters.</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>**c.** Explore the cell type identities by looking at the expression for **known markers** across the clusters.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 <footer class="footer">

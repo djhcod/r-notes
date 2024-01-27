@@ -34,7 +34,7 @@ Now that we have identified our desired clusters, we can move on to marker ident
 
 ------------------------------------------------------------------------
 
-## 数据导入
+# 数据导入
 
 载入[此前](/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd)完成细胞分群质量评估的数据`seurat_clustered_qc`。
 
@@ -97,7 +97,7 @@ There are a few different types of marker identification that we can explore usi
 
 ------------------------------------------------------------------------
 
-## `FindAllMarkers`-Identification of all markers for each cluster
+# `FindAllMarkers`-Identification of all markers for each cluster
 
 This type of analysis is typically recommended for when **evaluating a single sample group/condition**. With the `FindAllMarkers()` function we are comparing each cluster against all other clusters to identify potential marker genes. The cells in each cluster are treated as replicates, and essentially a **differential expression analysis** is performed with some statistical test.
 
@@ -162,13 +162,13 @@ top_markers <- markers |>
   slice_max(n = 10, order_by = avg_log2FC)
 ```
 
-## `FindConservedMarkers`-Identification of conserved markers in all conditions
+# `FindConservedMarkers`-Identification of conserved markers in all conditions
 
 Since we have samples representing different conditions in our dataset, **our best option is to find conserved markers**. This function internally **separates out cells by sample group/condition**, and then performs differential gene expression testing for a single specified cluster against all other clusters (or a second cluster, if specified). Gene-level p-values are computed for each condition and then combined across groups using meta-analysis methods from the MetaDE R package.
 
 ![](images/marker_ident_function2.png){width="360"}
 
-### 寻找cluster 0和cluster 10的conserved markers
+## 寻找cluster 0和cluster 10的conserved markers
 
 我们首先通过寻找cluster 0和cluster 10的conserved markers来初步学习`FindConservedMarkers`函数的用法。
 
@@ -185,7 +185,7 @@ BiocManager::install('multtest')
 install.packages('metap')
 ```
 
-#### 寻找cluster 0的conserved markers
+### 寻找cluster 0的conserved markers
 
 For our analysis we will be fairly lenient and **use only the log fold change threshold greater than 0.25**. We will also specify to return only the positive markers for each cluster.
 
@@ -223,7 +223,7 @@ Since each cell is being treated as a replicate this will result in inflated p-v
 
 When looking at the output, [**we suggest looking for markers with large differences in expression between `pct.1` and `pct.2` and larger fold changes**]{.underline}. For instance if `pct.1` = 0.90 and `pct.2` = 0.80, it may not be as exciting of a marker. However, if `pct.2` = 0.1 instead, the bigger difference would be more convincing. Also, of interest is if the majority of cells expressing the marker is in my cluster of interest. If `pct.1` is low, such as 0.3, it may not be as interesting. Both of these are also possible parameters to include when running the function, as described above.
 
-#### 添加基因注释信息
+### 添加基因注释信息
 
 It can be helpful to add columns with gene annotation information. In order to do that we will load in an annotation file located in your `data` folder, using the code provided below:
 
@@ -431,7 +431,7 @@ cluster0_ann_markers <- cluster0_conserved_markers |>
 head(cluster0_ann_markers, 3)
 ```
 
-#### 寻找cluster 10的conserved markers
+### 寻找cluster 10的conserved markers
 
 In the [previous lesson](/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd#sec-fcgr3a_monocyte_markers), we identified **cluster 10** as FCGR3A+ monocytes by inspecting the expression of known cell markers FCGR3A and MS4A7.
 
@@ -465,7 +465,7 @@ head(cluster10_ann_markers)
 
 ------------------------------------------------------------------------
 
-### 批量寻找多个clusters的conserved markers {#sec-function_to_find_markers}
+## 批量寻找多个clusters的conserved markers {#sec-function_to_find_markers}
 
 The function `FindConservedMarkers()` **accepts a single cluster at a time**, and we could run this function as many times as we have clusters. However, this is not very efficient. Instead we will first create a function to find the conserved markers including all the parameters we want to include. We will also **add a few lines of code to modify the output**. Our function will:
 
@@ -516,7 +516,7 @@ conserved_markers <- map(c(4, 0, 6, 2), get_conserved) |> list_rbind()
 For your data, you may want to run this function on all clusters, in which case you could input `0:20` instead of `c(4,0,6,2)`. Also, it is possible that when you run this function on all clusters, in **some cases you will have clusters that do not have enough cells for a particular group** - and your function will fail. For these clusters you will need to use `FindAllMarkers()`.
 :::
 
-#### 获取top marker基因 {#sec-top_conserved_markers}
+### 获取top marker基因 {#sec-top_conserved_markers}
 
 We would like to use these gene lists to see of we can **identify which celltypes these clusters identify with.** Let's take a look at the top genes for each of the clusters and see if that gives us any hints. We can view the top 10 markers by **average fold change** across the two groups, for each cluster for a quick perusal:
 
@@ -546,7 +546,7 @@ top_conserved_markers <- conserved_markers %>%
 这一小节的后续内容暂时以原教程的marker基因结果为准。
 :::
 
-#### 根据top marker基因重新评估细胞群的注释结果
+### 根据top marker基因重新评估细胞群的注释结果
 
 When we look at the entire list, we see **clusters 0** **and 6** have some overlapping genes, like **CCR7** and **SELL** which correspond to **markers of memory T cells**.
 
@@ -615,7 +615,7 @@ VlnPlot(seurat_clustered_qc,
 Violin plots are similar to box plots, except that they also show the **probability density** of the data at different values, usually smoothed by a **kernel density estimator**. A violin plot is more informative than a plain box plot. While a box plot only shows summary statistics such as mean/median and interquartile ranges, the **violin plot shows the full distribution of the data**. The difference is particularly useful when the data distribution is multimodal (more than one peak). In this case a violin plot shows the presence of different peaks, their position and relative amplitude.
 :::
 
-## `FindMarkers`-**Marker identification between specific clusters**
+# `FindMarkers`-**Marker identification between specific clusters**
 
 Sometimes the list of markers returned don't sufficiently separate some of the clusters. For instance, we had previously identified clusters 0, 4, 6 and 2 as CD4+ T cells, but when looking at marker gene lists we identfied markers to help us further subset cells. We were lucky and the signal observed from `FindAllMarkers()` helped us differentiate between naive and activated cells.
 
@@ -673,7 +673,7 @@ DotPlot(seurat_clustered_qc,
 
 ------------------------------------------------------------------------
 
-## 注释细胞cluster
+# 注释细胞cluster
 
 Now taking all of this information, we can surmise the cell types of the different clusters and plot the cells with cell type labels.
 
@@ -782,41 +782,41 @@ sink()
 
 ------------------------------------------------------------------------
 
-## 可选的后续分析:
+# 可选的后续分析:
 
 [![](images/640.png)](https://mp.weixin.qq.com/s?__biz=Mzg2MTExNTkwNA==&mid=2247532151&idx=1&sn=55ff4362b5a572d53072c1fe85c593d6&chksm=ce1e3d18f969b40e71503729f38a8e01cd80e313446da1571d7d42c61e094d94b3519cdb85be&mpshare=1&scene=1&srcid=0910pFfJBQOE8XVDU2opxc6B&sharer_shareinfo=98ce7b038453fa671b5e609905ff82f0&sharer_shareinfo_first=98ce7b038453fa671b5e609905ff82f0#rd)
 
 [![](images/640-2.png)](https://mp.weixin.qq.com/s?__biz=Mzg2MTExNTkwNA==&mid=2247532151&idx=1&sn=55ff4362b5a572d53072c1fe85c593d6&chksm=ce1e3d18f969b40e71503729f38a8e01cd80e313446da1571d7d42c61e094d94b3519cdb85be&mpshare=1&scene=1&srcid=0910pFfJBQOE8XVDU2opxc6B&sharer_shareinfo=98ce7b038453fa671b5e609905ff82f0&sharer_shareinfo_first=98ce7b038453fa671b5e609905ff82f0#rd)
 
-### 提取感兴趣细胞亚群进一步细分（Explore a subset of the cell types to discover subclusters of cells）
+## 提取感兴趣细胞亚群进一步细分（Explore a subset of the cell types to discover subclusters of cells）
 
 鉴定完细胞类型后，接下来就是对鉴定的目标细胞群进行深入的研究。一般是提取目标亚群，然后在进一步细分。细胞再分群的意义在于进一步分析细胞的组成成分。见[多个单细胞数据集整合分析（下）](/single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.qmd)。
 
-### **单细胞差异分析（**Perform **differential expression analysis** **between conditions）**
+## **单细胞差异分析（**Perform **differential expression analysis** **between conditions）**
 
 在实际研究中，往往需要研究两类细胞之间的差异，或者是某类细胞在不同处理样本间的差异基因情况，因此需要将待比较的细胞群单独拿出来进行分析。后面，我们在[此前的章节](/single_cell/seurat/de_vignette.qmd)中对如何**寻找不同样本类型/条件间同一细胞类型内的差异基因**进行了探索。
 
 除了分析细胞内基因表达的差异，也可以采用最常见的GO和KEGG富集分析，还可以进行GSEA、GSVA、SCENIC等分析，从功能、通路、基因调控网络等方面进行探究。
 
-### 免疫类群分析
+## 免疫类群分析
 
 很多疾病的发生、发展都和免疫细胞有关，一般病灶组织内或者附近的免疫细胞较正常的组织会更丰富。为了将疾病中免疫反应描绘出来，可以采用以下分析策略：①对免疫细胞再分群，得到更多功能更加精细化的免疫细胞亚群；②免疫细胞类群在不同分组中的分布变化；③免疫细胞类群拟时序分析，探究不同疾病程度、不同发育阶段或者不同生理状态下的免疫反应机制。
 
-### 关键细胞的分化轨迹
+## 关键细胞的分化轨迹
 
 最开始拿到的单细胞转录组测序数据，并未直接告诉我们每个细胞处在什么状态。因此，需要借助一些分析方法来实现轨迹上的排序，比如Monocle2拟时序分析/轨迹推断，ScVelo RNA速度分析等，推断潜在的细胞分化方向性，挖掘一些稀少的中间状态细胞，解析细胞分化过程中起调控作用的关键基因；也可以比较实验组/对照组中分化的差异。
 
-### 探索细胞-细胞互作
+## 探索细胞-细胞互作
 
 每个细胞都能分泌细胞因子或者激素，这些细胞因子能够被周围细胞上的受体接收并用于调节相应的生理活动，细胞与细胞之间有相互联系，致病细胞可能是由于大类中某一种亚类细胞分化或者演化过来的；那么这些演化过程可能是由于其他细胞的细胞因子导致的。
 
 在锁定目标细胞类群之后，通过CellphoneDB细胞通讯分析、受体-配体分析等，找到与目标细胞相互作用的其他细胞类型，找到“直接”和“间接”的细胞调控网络。当然，对于已经筛选出目标基因了，也可以通过PPI分析找到基因/蛋白间的互作关系。
 
-### 挖掘关键调控转录因子
+## 挖掘关键调控转录因子
 
 细胞异质性以及这种异质性是如何发展和维持的，在很大程度上是由潜在的基因调控网络决定的，特定转录因子（transcription factor，TF）集合的协同表达驱动各自靶标基因的表达，从而建立特定的基因表达谱；SCENIC是用来研究和破译基因调控的工具，能从单细胞转录组数据中推断TF、基因调控网络和细胞类型。其基本原理是基于共表达和DNA调控保守序列（motif）分析推断基因调控网络，然后在每个细胞中分析网络活性以鉴定细胞状态。
 
-### 湿实验验证，探索潜在机制（Experimentally validate intriguing markers for our identified cell types）
+## 湿实验验证，探索潜在机制（Experimentally validate intriguing markers for our identified cell types）
 
 除了以上单细胞测序数据相关分析以外，湿实验验证已逐渐成为单细胞分析的有力补充。比如用RT-qPCR/FISH等在RNA层面进行验证，用WB/免疫荧光/免疫组化/流式分析等在蛋白层面进行验证，还可以利用组织芯片或者TCGA数据库信息，进行临床水平的验证；也可以用细胞谱系示踪技术标记细胞 , 对关键细胞类群及其后代所有细胞的增殖、分化和迁移等活动进行追踪观察等；甚至可以利用流式分选出感兴趣的细胞群，然后对目的细胞群进行基因操作（上调/下调/敲除等），进行更深入的机制研究。总之，根据具体的实验目的，进行更完善的实验设计。
 

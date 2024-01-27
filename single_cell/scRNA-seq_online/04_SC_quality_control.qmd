@@ -29,7 +29,7 @@ Each step of this workflow has its own goals and challenges. For QC of our raw c
 
 ------------------------------------------------------------------------
 
-## 计算质控指标 (Generating quality metrics)
+# 计算质控指标 (Generating quality metrics)
 
 When data is loaded into Seurat and the initial object is created, there is some basic metadata asssembled for each of the cells in the count matrix. To take a close look at this metadata, let's view the data frame stored in the `meta.data` slot of our `merged_seurat` object:
 
@@ -45,7 +45,7 @@ In order to create the appropriate plots for the quality control analysis, we ne
 -   **number of genes detected per UMI (**novelty score**):** this metric will give us an idea of the complexity of our dataset (more genes detected per UMI, more complex our data)
 -   **mitochondrial ratio:** this metric will give us a percentage of cell reads originating from the mitochondrial genes
 
-### Novelty score
+## Novelty score
 
 This value is quite easy to calculate, as we take the log10 of the number of genes detected per cell and the log10 of the number of UMIs per cell, then divide the log10 number of genes by the log10 number of UMIs. The novelty score and how it relates to complexity of the RNA species, is described in more detail later in this lesson.
 
@@ -56,7 +56,7 @@ head(merged_seurat@meta.data)
 summary(merged_seurat$log10GenesPerUMI)
 ```
 
-### Mitochondrial Ratio
+## Mitochondrial Ratio
 
 Seurat has a convenient function that allows us to calculate the **proportion of transcripts mapping to mitochondrial genes**. The `PercentageFeatureSet()` function takes in a `pattern` argument and searches through all gene identifiers in the dataset for that pattern. Since we are looking for mitochondrial genes, we are searching any gene identifiers that begin with the pattern **"MT-"**. For each cell, the function takes the sum of counts across all genes (features) belonging to the "Mt-" set, and then divides by the count sum for all genes (features). This value is multiplied by 100 to obtain a percentage value.
 
@@ -94,7 +94,7 @@ merged_seurat$riboRatio <- PercentageFeatureSet(
 ```
 :::
 
-### Additional metadata columns
+## Additional metadata columns
 
 We are a now all set with quality metrics required for assessing our data. However, we would like to include some additional information that would be useful to have in our metadata including **cell IDs and condition information**.
 
@@ -114,7 +114,7 @@ Now you are all setup with the metrics you need to assess the quality of your da
 saveRDS(merged_seurat, file = "output/scRNA-seq_online/merged_seurat_with_qc_metrics.rds")
 ```
 
-## 质量评价 (Assessing the quality metrics)
+# 质量评价 (Assessing the quality metrics)
 
 Now that we have generated the various metrics to assess, we can explore them with **visualizations**. We will assess various metrics and then decide on which cells are low quality and should be removed from the analysis:
 
@@ -132,7 +132,7 @@ In single-cell RNA sequencing experiments, doublets are generated from two cells
 **Why aren't we checking for doublets?** Many workflows use maximum thresholds for UMIs or genes, with the idea that a much higher number of reads or genes detected indicate multiple cells. While this rationale seems to be intuitive, it is not accurate. Also, many of the tools used to detect doublets tend to get rid of cells with intermediate or continuous phenotypes, although they may work well on datasets with very discrete cell types. [Scrublet](https://github.com/AllonKleinLab/scrublet) is a popular tool for doublet detection, but we haven't adequately benchmarked it yet. Currently, we recommend not including any thresholds at this point in time. When we have identified markers for each of the clusters, we suggest exploring the markers to determine whether the markers apply to more than one cell type.
 :::
 
-### Cell counts
+## Cell counts
 
 The cell counts are determined by the number of unique cellular barcodes detected. For this experiment, between 12,000 -13,000 cells are expected.
 
@@ -158,7 +158,7 @@ merged_seurat@meta.data  |>
 
 We see over 15,000 cells per sample, which is quite a bit more than the 12-13,000 expected. **It is clear that we likely have some junk 'cells' present.**
 
-### UMI counts (transcripts) per cell
+## UMI counts (transcripts) per cell
 
 **The UMI counts per cell should generally be above 500**, that is the low end of what we expect. If UMI counts are between 500-1000 counts, it is usable but the cells probably should have been sequenced more deeply.
 
@@ -175,7 +175,7 @@ merged_seurat@meta.data |>
 
 We can see that majority of our cells in both samples have 1000 UMIs or greater, which is great.
 
-### Genes detected per cell
+## Genes detected per cell
 
 We have similar expectations for gene detection as for UMI detection, although it may be a bit lower than UMIs. For high quality data, the proportional histogram should contain **a single large peak** that represents cells that were encapsulated. If we see a **small shoulder** to the left of the major peak (not present in our data), or a bimodal distribution of the cells, that can indicate a couple of things:
 
@@ -195,7 +195,7 @@ merged_seurat@meta.data |>
     geom_vline(xintercept = 250)
 ```
 
-### Complexity
+## Complexity
 
 We can evaluate each cell in terms of how complex the RNA species are by using a measure called the **novelty score**. The novelty score is computed by taking the **ratio of nGenes over nUMI.** If there are many captured transcripts (high nUMI) and a low number of genes detected in a cell, this likely means that you only captured a low number of genes and simply sequenced transcripts from those lower number of genes over and over again. These **low complexity (low novelty)** cells could represent a specific cell type (i.e. **red blood cells** which lack a typical transcriptome), or could be due to an artifact or contamination. Generally, we expect the novelty score to be **above 0.80** for good quality cells.
 
@@ -210,7 +210,7 @@ merged_seurat@meta.data |>
 
 如果有较多的细胞处于较低的novelty score，表示可能样品受到了红细胞等低复杂性细胞的污染。
 
-### Mitochondrial counts ratio
+## Mitochondrial counts ratio
 
 This metric can identify whether there is a large amount of mitochondrial contamination from dead or dying cells. We define poor quality samples for mitochondrial counts as cells which surpass the **0.2** mitochondrial ratio mark, unless of course you are expecting this in your sample.
 
@@ -238,7 +238,7 @@ VlnPlot(merged_seurat,
         pt.size = 0)
 ```
 
-### Joint filtering effects
+## Joint filtering effects
 
 Considering any of these QC metrics in isolation can lead to misinterpretation of cellular signals. For example, cells with a comparatively high fraction of mitochondrial counts may be involved in respiratory processes and may be cells that you would like to keep. Likewise, other metrics can have other biological interpretations. A general rule of thumb when performing QC is to **set thresholds for individual metrics to be as permissive as possible, and always consider the joint effects** of these metrics. In this way, you reduce the risk of filtering out any viable cell populations.
 
@@ -271,9 +271,9 @@ Good cells will generally exhibit both higher number of genes per cell and highe
 
 **Mitochondrial read fractions are only high in particularly low count cells with few detected genes** (darker colored data points). This could be indicative of damaged/dying cells whose cytoplasmic mRNA has leaked out through a broken membrane, and thus, only mRNA located in the mitochondria is still conserved. We can see from the plot, that these cells are filtered out by our count and gene number thresholds.
 
-## 细胞/基因过滤 (Filtering) {#sec-filtering}
+# 细胞/基因过滤 (Filtering) {#sec-filtering}
 
-### Cell-level filtering
+## Cell-level filtering
 
 Now that we have visualized the various metrics, we can decide on the thresholds to apply which will result in the removal of low quality cells. Often the recommendations mentioned earlier are a rough guideline, and the specific experiment needs to inform the exact thresholds chosen. We will use the following thresholds:
 
@@ -296,7 +296,7 @@ filtered_seurat <- subset(x = merged_seurat,
 paste0("质控过滤掉了", ncol(merged_seurat) - ncol(filtered_seurat), "个细胞")
 ```
 
-### Gene-level filtering
+## Gene-level filtering
 
 Within our data we will have many genes with zero counts. These genes can dramatically reduce the average expression for a cell and so we will remove them from our data. We will start by identifying which genes have a zero count in each cell:
 
@@ -325,7 +325,7 @@ filtered_seurat <- subset(filtered_seurat,
 filtered_seurat
 ```
 
-## 重新质量评价 (Re-assess QC metrics)
+# 重新质量评价 (Re-assess QC metrics)
 
 After performing the filtering, it's recommended to look back over the metrics to make sure that your data matches your expectations and is good for downstream analysis.
 
@@ -413,7 +413,7 @@ The cells that were removed were those with **high nUMI but low numbers of genes
 
 ------------------------------------------------------------------------
 
-## Saving filtered cells
+# Saving filtered cells
 
 Based on these QC metrics we would identify any failed samples and move forward with our filtered cells. Often we iterate through the QC metrics using different filtering criteria; it is not necessarily a linear process. When satisfied with the filtering criteria, we would save our filtered cell object for clustering and marker identification.
 
@@ -423,11 +423,11 @@ saveRDS(filtered_seurat, file="output/scRNA-seq_online/seurat_filtered.rds")
 
 ------------------------------------------------------------------------
 
-## Exploring a Poor Quality Sample
+# Exploring a Poor Quality Sample
 
 The data we are working with is pretty good quality. If you are interested in knowing what 'bad' data might look like when performing QC, we have some materials here where we explore similar QC metrics of a poor quality sample.
 
-### Cell counts
+## Cell counts
 
 The cell counts are determined by the number of unique cellular barcodes detected. During the droplet-based protocols, the cellular barcodes are present in the hydrogels, which are encapsulated in the droplets with a single cell and lysis/reaction mixture. While each hydrogel should have a single cellular barcode associated with it, occasionally a hydrogel can have more than one cellular barcode. We often see all possible combinations of cellular barcodes at a low level, leading to a **higher number of cellular barcodes than cells**.
 
@@ -435,13 +435,13 @@ You expect the number of unique cellular barcodes to be often greater than the n
 
 ![](images/sc_qc_cellcounts.png){width="552"}
 
-### UMI counts per cell
+## UMI counts per cell
 
 The number of UMIs per cell tends to be very low for the Unsorted sample (yellow). The other samples have good numbers of UMIs per cell, indicating a problem only with the Unsorted sample. Using this cutoff, we will lose the majority of the Unsorted cells.
 
 ![](images/sc_qc_umisPerCell.png){width="549"}
 
-### Genes detected per cell
+## Genes detected per cell
 
 Seeing gene detection in the range of **500-5000** is normal for inDrop/10X analyses. However, expectations can vary depending on the complexity of the cells expected in the experiment. Similar expectations for gene detection as for UMI detection.
 
@@ -449,7 +449,7 @@ All samples other than the Unsorted sample have a good number of genes detected 
 
 ![](images/sc_qc_genesDetected.png){width="480"}
 
-### UMIs vs. genes detected
+## UMIs vs. genes detected
 
 Poor quality cells are likely to have low genes and UMIs per cell. Therefore, a poor sample is likely to have cells in the lower left of the graph. Good cells should exhibit both higher number of genes per cell and higher numbers of UMIs. We also expect similar lines with similar slopes for all samples.
 
@@ -457,7 +457,7 @@ The Unsorted sample has many cells with few UMIs and low number of genes per cel
 
 ![](images/sc_qc_UMIsVsGenesDetected.png){width="499"}
 
-### Mitochondrial counts ratio
+## Mitochondrial counts ratio
 
 Poor quality samples for mitochondrial counts would have larger peaks above the 0.1 mitochondrial ratio mark, unless it is expected based on sample type.
 
@@ -465,7 +465,7 @@ There was just a very low number of genes detected for the Unsorted sample, so m
 
 ![](images/sc_qc_mitoRatio.png){width="564"}
 
-### Novelty
+## Novelty
 
 We can see the samples where we sequenced each cell less have a higher overall novelty, that is because we have not started saturated the sequencing for any given gene for these samples. Outlier cells in these samples might be cells that we have a less complex RNA species than other cells. Sometimes we can detect contamination with low complexity cell types like red blood cells via this metric.
 
@@ -473,7 +473,7 @@ All of the samples look fine for complexity, except for the Unsorted sample, so 
 
 ![](images/sc_qc_novelty.png){width="509"}
 
-### Filtered results
+## Filtered results
 
 One main plot to look at to determine the success of the filtering criteria is the number of cell counts. The number of cells to expect depends on the library preparation method, but **for inDrops we see \~80% or less of the total sequenced cells per sample and for 10X it is often \~50% or less**.
 

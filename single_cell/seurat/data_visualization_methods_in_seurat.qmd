@@ -41,7 +41,7 @@ saveRDS(pbmc3k.final, file = "data/seurat_official/pbmc3k.final.rds")
 pbmc3k.final <- readRDS("data/seurat_official/pbmc3k.final.rds")
 ```
 
-## 5种可视化marker gene的方法
+# 5种可视化marker gene的方法
 
 定义要检查的marker gene：
 
@@ -49,7 +49,7 @@ pbmc3k.final <- readRDS("data/seurat_official/pbmc3k.final.rds")
 features <- c("LYZ", "CCL5", "IL32", "PTPRCAP", "FCGR3A", "PF4")
 ```
 
-### Ridge plots
+## Ridge plots
 
 Ridge plots - from ggridges. Visualize single cell expression distributions in each cluster
 
@@ -60,7 +60,7 @@ library(Seurat)
 RidgePlot(pbmc3k.final, features = features, ncol = 2)
 ```
 
-### Violin plot
+## Violin plot
 
 ```{r}
 #| fig-width: 10
@@ -75,7 +75,7 @@ VlnPlot(pbmc3k.final,
         split.by = "groups")
 ```
 
-### Feature plot
+## Feature plot
 
 Visualize feature expression in low-dimensional space
 
@@ -85,7 +85,7 @@ Visualize feature expression in low-dimensional space
 FeaturePlot(pbmc3k.final, features = features)
 ```
 
-#### 对`FeaturePlot`的进一步修饰 {#sec-Further_modifications_to_featureplot}
+### 对`FeaturePlot`的进一步修饰 {#sec-Further_modifications_to_featureplot}
 
 原始图像：
 
@@ -162,7 +162,7 @@ Plot_Density_Joint_Only(seurat_object = pbmc3k.final,
                         custom_palette = BlueAndRed())
 ```
 
-### Dot plots
+## Dot plots
 
 The **size** of the dot corresponds to **the percentage of cells expressing the feature in each cluster**. The **color** represents the **average expression level**
 
@@ -181,7 +181,7 @@ DotPlot(pbmc3k.final,
   RotatedAxis()
 ```
 
-### Heatmap
+## Heatmap
 
 ```{r}
 DoHeatmap(subset(pbmc3k.final, downsample = 100), 
@@ -213,7 +213,7 @@ DoHeatmap(pbmc3k.final,
   NoLegend()
 ```
 
-## 细胞分群图
+# 细胞分群图
 
 ```{r}
 DimPlot(pbmc3k.final, reduction = "pca")

@@ -8,14 +8,14 @@ title: "基于参考集的细胞注释"
 
 In this vignette, we first build an **integrated reference** and then demonstrate how to leverage this reference to annotate new **query datasets**. Generating an integrated reference follows the same workflow described in more detail in the [integration introduction](/single_cell/seurat/integration.qmd). Once generated, this reference can be used to analyze additional query datasets through tasks like cell type label transfer and projecting query cells onto reference UMAPs. Notably, this does not require correction of the underlying raw query data and can therefore be an efficient strategy if a high quality reference is available.
 
-## 构建参考数据集
+# 构建参考数据集
 
 For the purposes of this example, we've chosen human pancreatic islet cell datasets produced across four technologies, **CelSeq ([GSE81076](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE81076)) CelSeq2 ([GSE85241](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE85241)), Fluidigm C1 ([GSE86469](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE86469)), and SMART-Seq2 (E-MTAB-5061)**. For convenience, we distribute this dataset through our `SeuratData` package. The metadata contains the technology (`tech` column) and cell type annotations (`celltype` column) for each cell in the four datasets.
 
-### 数据读取
+## 数据读取
 
 ::: {.callout-note collapse="true" appearance="minimal" icon="false"}
-#### 在线读取（可能需要全局代理）
+### 在线读取（可能需要全局代理）
 
 ```{r}
 #| eval: false
@@ -52,7 +52,7 @@ pancreas.ref[["RNA"]] <- split(pancreas.ref[["RNA"]],
 
 ![](images/截屏2023-11-28%2011.10.36.png)
 
-### 数据预处理
+## 数据预处理
 
 标准化、找高变基因、归一化、降维、聚类、可视化：
 
@@ -97,7 +97,7 @@ DimPlot(pancreas.ref, split.by = "tech")
 
 可以看到，和此前相比，整合后不再有不同测序技术间细胞类型的差异。
 
-## 基于参考集的细胞注释
+# 基于参考集的细胞注释
 
 Seurat also supports the projection of reference data (or meta data) onto a query object. While many of the methods are conserved (both procedures begin by identifying anchors), there are two important distinctions between data transfer and integration:
 
@@ -164,7 +164,7 @@ VlnPlot(pancreas.query,
 
 > Note that even though some of these cell types are only represented by one or two cells (e.g. epsilon cells), we are still able to classify them correctly.
 
-### UMAP映射
+## UMAP映射
 
 We also enable projection of a query onto the reference UMAP structure. This can be achieved by computing the reference UMAP model and then calling `MapQuery()` instead of `TransferData()`.
 

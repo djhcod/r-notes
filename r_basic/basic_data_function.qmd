@@ -2,7 +2,7 @@
 title: "数据处理基本函数"
 ---
 
-## 数据展示
+# 数据展示
 
 载入示例数据：
 
@@ -10,22 +10,22 @@ title: "数据处理基本函数"
 mydata <- readRDS("data/r_basic/lms_ess.rds")
 ```
 
-### 展示最大值、最小值、平均数、中位数、缺失值数量
+## 展示最大值、最小值、平均数、中位数、缺失值数量
 
 ```{r}
 summary(mydata)
 ```
 
-### 展示变量数量和样本数量
+## 展示变量数量和样本数量
 
-#### 展示变量（列）数
+### 展示变量（列）数
 
 ```{r}
 dim(mydata)[2]#dim()函数获取数据的维度，即行、列数。所以[1]输出行数，[2]输出列数
 ncol(mydata)#另一种方式
 ```
 
-#### 展示行数
+### 展示行数
 
 ```{r}
 dim(mydata)[1]
@@ -33,13 +33,13 @@ dim(mydata)[1]
 nrow(mydata)
 ```
 
-#### 综合展示
+### 综合展示
 
 ```{r}
 print(paste0("该数据集有 ",dim(mydata)[1]," 个样本； ",dim(mydata)[2]," 个变量"))
 ```
 
-#### 展示所有变量名
+### 展示所有变量名
 
 ```{r}
 colnames(mydata)
@@ -47,7 +47,7 @@ colnames(mydata)
 dput(names(mydata))
 ```
 
-#### 展示所有行名称
+### 展示所有行名称
 
 ```{r}
 #| eval: false
@@ -55,14 +55,14 @@ dput(names(mydata))
 rownames(mydata)
 ```
 
-#### 展示某个变量的所有值及其频数
+### 展示某个变量的所有值及其频数
 
 ```{r}
 table(mydata$his)
 hist(mydata$age,col="coral")#以直方图的形式展示
 ```
 
-### 展示缺失值的构成
+## 展示缺失值的构成
 
 加载案例数据：这里用VIM包内自带的sleep数据集为例进行演示。该数据集显示了两种安眠药对10名患者的影响(与对照组相比，睡眠时间的增加量)。其中就包含了很多缺失值。
 
@@ -118,9 +118,9 @@ marginplot(sleep[3:4])
 sleep<-na.omit(sleep)
 ```
 
-## 数据整理
+# 数据整理
 
-### 排序
+## 排序
 
 ```{r}
 library(dplyr)
@@ -142,9 +142,9 @@ mydata <- mydata[order(-mydata$age),]
 mydata <- mydata[order(mydata$age, mydata$his, mydata$tumor_size),]
 ```
 
-### 重新命名行、列
+## 重新命名行、列
 
-#### 重新命名变量（列）
+### 重新命名变量（列）
 
 ```{r}
 #| eval: false
@@ -152,16 +152,16 @@ names(mydata) <- c("N","patient_ID","diagnosis") # 连续命名
 colnames(mydata)[2] <- 'patient_ID'# 重新命名指定列名
 ```
 
-#### 设置行名
+### 设置行名
 
 ```{r}
 #| eval: false
 rownames(mydata) <- mydata$ID # 将ID列设置为行名（注意不能有重复值）
 ```
 
-### 数据筛选
+## 数据筛选
 
-#### 提取某几列数据形成新的数据集
+### 提取某几列数据形成新的数据集
 
 ```{r}
 #| eval: false
@@ -169,14 +169,14 @@ vnumber <- mydata[, 4:16] # 提取第4-16列的数据形成新的“vnumber”�
 vnumber <- mydata[,c(2:12,16)] # 提取2-12列和第16列的数据
 ```
 
-#### 提取指定行数的数据
+### 提取指定行数的数据
 
 ```{r}
 #| eval: false
 mydata_less <- mydata[1:100, ]#提取1-100行的数据
 ```
 
-#### 筛选数据
+### 筛选数据
 
 筛选出低级别、接受了放疗的病例，并生成新的"new_data"数据集
 
@@ -192,9 +192,9 @@ new_data <- mydata[which((mydata$grade == "Well differentiated; Grade I") &
 new_data[,c("grade", "rad")]
 ```
 
-### 合并两个数据集
+## 合并两个数据集
 
-#### 纵向合并
+### 纵向合并
 
 即增加个案，要求两个数据集具有相同的列名及列数
 
@@ -203,7 +203,7 @@ new_data[,c("grade", "rad")]
 rbind_data <- rbind(mydata, mydata2)
 ```
 
-#### 横向合并
+### 横向合并
 
 直接通过cbind()函数合并数据集，要求两个数据集具有相同的行数及顺序
 
@@ -212,7 +212,7 @@ rbind_data <- rbind(mydata, mydata2)
 total <- cbind(dataframeA, dataframeB)
 ```
 
-#### 以某一列（如学号等）匹配两个数据集
+### 以某一列（如学号等）匹配两个数据集
 
 详细解读：<https://blog.csdn.net/chongbaikaishi/article/details/115740560>
 
@@ -241,7 +241,7 @@ rawcount <- merge(id2symbol,
 
 ![](images/20210416100511517.png)
 
-### 去重（保留唯一值）
+## 去重（保留唯一值）
 
 生成带有重复值的示例数据
 
@@ -275,7 +275,7 @@ mydata <- distinct(mydata, # 需要去重的数据集名称
 mydata
 ```
 
-### 变量的赋值/替换
+## 变量的赋值/替换
 
 ```{r}
 #| eval: false
@@ -293,7 +293,7 @@ mydata <- within(mydata, {
 mydata
 ```
 
-### 转换变量类型
+## 转换变量类型
 
 将结局变量转换成因子变量,ordered=F,用于定义无序多分类变量，起到设置哑变量的作用；ordered=T用于定义有序多分类变量。如果变量的取值以英文字符表示，那么默认以变量首字母的顺序编号赋值；如果变量的取值已经转换成数字，那么默认按照编号的大小依次赋值。可以通过指定"levels"选项来覆盖默认排序。
 
@@ -330,7 +330,7 @@ mydata$grade <- as.numeric(mydata$grade)
 mydata = lapply(mydata, as.numeric) # 将所有的变量转换成数值型
 ```
 
-### 哑变量设置
+## 哑变量设置
 
 ```{r}
 #| eval: false
@@ -340,7 +340,7 @@ savdata$race2 <- ifelse(savdata$race == "黑种人", 1, 0)
 savdata$race3 <- ifelse(savdata$race == "其他种族", 1, 0)
 ```
 
-## 数学函数
+# 数学函数
 
 ```{r}
 abs(-4) #取绝对值
@@ -357,7 +357,7 @@ sprintf("%0.3f", 3.14159) #四舍五入保留3位小数
 round(3.14159,digits=3) #同上。注意该函数在处理科学计数法时无法有效保留目标小数位数
 ```
 
-## 管道操作符(%\>%)的使用
+# 管道操作符(%\>%)的使用
 
 ％\>％为来自**dplyr包**的**管道操作符（pipe operator)**，我们可以将其理解为车间里的流水线，经过前一步加工的产品才能进入后一步进一步加工，其作用是将上一步的结果直接传参给下一步的函数，从而省略了中间的赋值步骤，可以大量减少内存中的对象，节省内存。
 
@@ -415,7 +415,7 @@ datstd <- dat %>% unite("datehour",date,hour,sep = ' ',remove = T) %>% unite("da
 datstd
 ```
 
-## 自定义函数
+# 自定义函数
 
 R语言可以自定义函数，也可以使用其自带的函数。
 

@@ -8,9 +8,9 @@ title: "消除细胞周期的影响"
 
 We demonstrate how to mitigate the effects of cell cycle heterogeneity in scRNA-seq data by calculating **cell cycle phase scores** based on canonical markers, and regressing these out of the data during pre-processing. We demonstrate this on a dataset of murine hematopoietic progenitors [@nestorowa2016].You can download the files needed to run this vignette [here](https://www.dropbox.com/s/3dby3bjsaf5arrw/cell_cycle_vignette_files.zip?dl=1).
 
-## 数据读取和预处理
+# 数据读取和预处理
 
-### 创建Seurat对象
+## 创建Seurat对象
 
 ```{r}
 # Read in the expression matrix 
@@ -29,7 +29,7 @@ marrow <- FindVariableFeatures(marrow, selection.method = "vst")
 marrow <- ScaleData(marrow, features = rownames(marrow))
 ```
 
-### 获取细胞周期marker基因列表
+## 获取细胞周期marker基因列表
 
 A list of cell cycle markers, from Tirosh et al, 2015, is loaded with Seurat. We can segregate this list into markers of G2/M phase and markers of S phase
 
@@ -38,7 +38,7 @@ s.genes <- cc.genes$s.genes
 g2m.genes <- cc.genes$g2m.genes
 ```
 
-### 降维
+## 降维
 
 If we run a PCA on our object, using the variable genes we found in `FindVariableFeatures()` above, we see that while most of the variance can be explained by lineage, **PC8 and PC10 are split on cell-cycle genes** including ***TOP2A*** and ***MKI67***. We will attempt to regress this signal from the data, **so that cell-cycle heterogeneity does not contribute to PCA or downstream analysis**.
 
@@ -50,9 +50,9 @@ marrow <- RunPCA(marrow,
 DimHeatmap(marrow, dims = c(8, 10))
 ```
 
-## 消除细胞周期的影响
+# 消除细胞周期的影响
 
-### 计算细胞周期评分 {#sec-Calculating_cell_cycle_scores}
+## 计算细胞周期评分 {#sec-Calculating_cell_cycle_scores}
 
 First, we assign each cell a score, **based on its expression of G2/M and S phase markers**. These marker sets should be **anticorrelated** in their expression levels, and **cells expressing neither are likely not cycling and in G1 phase**.
 
@@ -78,7 +78,7 @@ First, we assign each cell a score, **based on its expression of G2/M and S phas
 -   **M:** M phase is the nuclear division of the cell (consisting of prophase, metaphase, anaphase and telophase).
 
 |   状态   |   阶段   |   缩写   |                                                            描述                                                            |
-|:--------:|:--------:|:--------:|:--------------------------------------------------------------------------------------------------------------------------:|
+|:-------:|:-------:|:-------:|:--------------------------------------------:|
 |   休息   |  G~0~期  | **G~0~** |                                               细胞离开周期并停止分裂的阶段。                                               |
 |   间期   |  G~1~期  |  **G1**  |                                       G~1~检查点控制机制确保一切准备好进行DNA合成。                                        |
 |   合成   |    S     |  **S**   |                                                  DNA复制发生在这个阶段。                                                   |
@@ -100,7 +100,7 @@ table(Idents(marrow))
 head(marrow@meta.data)
 ```
 
-#### 可视化细胞周期的影响
+## 可视化细胞周期的影响
 
 可视化细胞周期marker的表达分布：
 
@@ -129,7 +129,7 @@ DimPlot(marrow) +
   guides(colour = guide_legend(override.aes = list(size = 10)))
 ```
 
-### 回归（regress out）细胞周期评分 {#sec-regress-out}
+## 回归（regress out）细胞周期评分 {#sec-regress-out}
 
 We now attempt to subtract ('regress out') this source of heterogeneity from the data. For users of Seurat v1.4, this was implemented in `RegressOut`. However, as the results of this procedure are stored in the scaled data slot (therefore overwriting the output of `ScaleData()`), we now merge this functionality into the `ScaleData()` function itself.
 
@@ -159,7 +159,7 @@ DimPlot(marrow)
 
 As the best cell cycle markers are extremely well conserved across tissues and species, we have found this procedure to work robustly and reliably on diverse datasets.
 
-## 消除细胞周期的影响同时保留增殖细胞与静止细胞的区分
+# 消除细胞周期的影响同时保留增殖细胞与静止细胞的区分
 
 The procedure above removes all signal associated with cell cycle. In some cases, we've found that this can negatively impact downstream analysis, particularly in differentiating processes (like **murine hematopoiesis**), where stem cells are quiescent and differentiated cells are proliferating (or vice versa). **In this case, regressing out all cell cycle effects can blur the distinction between stem and progenitor cells as well**.
 

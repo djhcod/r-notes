@@ -212,11 +212,11 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
       <div class="sidebar-item-container"> 
             <a href="../../r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">R语言基础</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
@@ -453,11 +453,11 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
       <div class="sidebar-item-container"> 
             <a href="../../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Quarto基础</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
@@ -535,8 +535,8 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <p>参考原文：<a href="https://satijalab.org/seurat/articles/integration_introduction#identify-conserved-cell-type-markers"><em>Introduction to scRNA-seq integration</em></a></p>
 <p>原文发布日期：2023年10月31日</p>
 </blockquote>
-<section id="数据导入" class="level2" data-number="1"><h2 data-number="1" class="anchored" data-anchor-id="数据导入">
-<span class="header-section-number">1</span> 数据导入</h2>
+<section id="数据导入" class="level1" data-number="1"><h1 data-number="1">
+<span class="header-section-number">1</span> 数据导入</h1>
 <p>这里我们导入<a href="../../single_cell/seurat/integration.html">整合（integration）</a>中完成<code>SCTransform</code>和整合的单细胞数据。这里的meta.data已经提前注释好了细胞类型（储存在”seurat_annotations”列中）。</p>
 <div class="cell" data-hash="marker_gene_identification_cache/html/unnamed-chunk-1_6be870435f453571b413bd0f60d6b7ba">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
@@ -578,8 +578,8 @@ AAACATACCTCGCT.1       1951          804               1               1</code><
 <p><img src="marker_gene_identification_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid" width="960"></p>
 </div>
 </div>
-</section><section id="sec-findmarkers_function" class="level2" data-number="2"><h2 data-number="2" class="anchored" data-anchor-id="sec-findmarkers_function">
-<span class="header-section-number">2</span> <code>FindMarkers</code>-在特定cluster之间寻找marker基因</h2>
+</section><section id="sec-findmarkers_function" class="level1" data-number="2"><h1 data-number="2">
+<span class="header-section-number">2</span> <code>FindMarkers</code>-在特定cluster之间寻找marker基因</h1>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -665,8 +665,8 @@ MS4A4A     0   4.661394 0.739 0.051         0
 LST1       0   2.988332 0.887 0.205         0</code></pre>
 </div>
 </div>
-</section><section id="findconservedmarkers-鉴定在所有conditions下保守的cell-marker" class="level2" data-number="3"><h2 data-number="3" class="anchored" data-anchor-id="findconservedmarkers-鉴定在所有conditions下保守的cell-marker">
-<span class="header-section-number">3</span> FindConservedMarkers-鉴定在所有conditions下保守的cell marker</h2>
+</section><section id="findconservedmarkers-鉴定在所有conditions下保守的cell-marker" class="level1" data-number="3"><h1 data-number="3">
+<span class="header-section-number">3</span> FindConservedMarkers-鉴定在所有conditions下保守的cell marker</h1>
 <p>To <strong>identify canonical cell type marker genes that are conserved across conditions</strong>, we provide the&nbsp;<code><a href="https://satijalab.org/seurat/reference/FindConservedMarkers.html">FindConservedMarkers()</a></code> function. This function performs <strong>differential gene expression testing</strong> for each dataset/group and combines the p-values using meta-analysis methods from the <code>MetaDE</code> R package.</p>
 <p>在实际分析中，鉴定这些保守的cell marker主要用来辅助对cluster的注释：you can perform these same analysis on the unsupervised clustering results (stored in&nbsp;<code>seurat_clusters</code>), and <strong>use these conserved markers to annotate cell types in your dataset</strong>.</p>
 <p>We can calculated the genes that are conserved markers irrespective of stimulation condition in cluster 6 (NK cells).</p>
@@ -718,8 +718,8 @@ KLRC1   0.000000e+00              0
 PRF1   3.646682e-300              0</code></pre>
 </div>
 </div>
-</section><section id="可视化cell-markers的表达" class="level2" data-number="4"><h2 data-number="4" class="anchored" data-anchor-id="可视化cell-markers的表达">
-<span class="header-section-number">4</span> 可视化cell markers的表达</h2>
+</section><section id="可视化cell-markers的表达" class="level1" data-number="4"><h1 data-number="4">
+<span class="header-section-number">4</span> 可视化cell markers的表达</h1>
 <p>The&nbsp;<code><a href="https://satijalab.org/seurat/reference/DotPlot.html">DotPlot()</a></code>&nbsp;function with the&nbsp;<code>split.by</code>&nbsp;parameter can be useful for viewing conserved cell type markers across conditions, showing both the expression level and the percentage of cells in a cluster expressing any given gene. Here we plot 2-3 strong marker genes for each of our 14 clusters.</p>
 <div class="cell" data-hash="marker_gene_identification_cache/html/unnamed-chunk-7_137b967f772b87a97135019d6fbc6119">
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">markers.to.plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CD3D"</span>, <span class="st">"CREM"</span>, <span class="st">"HSPH1"</span>, <span class="st">"SELL"</span>, <span class="st">"GIMAP5"</span>, <span class="st">"CACYBP"</span>, <span class="st">"GNLY"</span>, <span class="st">"NKG7"</span>,</span>
@@ -1258,7 +1258,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 原文发布日期：2023年10月31日</span></span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## 数据导入</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu"># 数据导入</span></span>
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>这里我们导入<span class="co">[</span><span class="ot">整合（integration）</span><span class="co">](/single_cell/seurat/integration.qmd)</span>中完成<span class="in">`SCTransform`</span>和整合的单细胞数据。这里的meta.data已经提前注释好了细胞类型（储存在"seurat_annotations"列中）。</span>
 <span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
@@ -1274,7 +1274,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">group.by =</span> <span class="fu">c</span>(<span class="st">"stim"</span>, <span class="st">"seurat_annotations"</span>))</span>
 <span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## `FindMarkers`-在特定cluster之间寻找marker基因 {#sec-findmarkers_function}</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="fu"># `FindMarkers`-在特定cluster之间寻找marker基因 {#sec-findmarkers_function}</span></span>
 <span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>::: callout-caution</span>
 <span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>For a **much** faster implementation of the Wilcoxon Rank Sum Test,(default method for <span class="in">`FindMarkers`</span>) please install the <span class="co">[</span><span class="ot">`presto`</span><span class="co">](https://github.com/immunogenomics/presto)</span> package:</span>
@@ -1330,7 +1330,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb22-86"><a href="#cb22-86" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(monocyte.de.markers)</span>
 <span id="cb22-87"><a href="#cb22-87" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-88"><a href="#cb22-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-89"><a href="#cb22-89" aria-hidden="true" tabindex="-1"></a><span class="fu">## FindConservedMarkers-鉴定在所有conditions下保守的cell marker</span></span>
+<span id="cb22-89"><a href="#cb22-89" aria-hidden="true" tabindex="-1"></a><span class="fu"># FindConservedMarkers-鉴定在所有conditions下保守的cell marker</span></span>
 <span id="cb22-90"><a href="#cb22-90" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-91"><a href="#cb22-91" aria-hidden="true" tabindex="-1"></a>To **identify canonical cell type marker genes that are conserved across conditions**, we provide the&nbsp;`FindConservedMarkers()` function. This function performs **differential gene expression testing** for each dataset/group and combines the p-values using meta-analysis methods from the <span class="in">`MetaDE`</span> R package.</span>
 <span id="cb22-92"><a href="#cb22-92" aria-hidden="true" tabindex="-1"></a></span>
@@ -1359,7 +1359,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb22-119"><a href="#cb22-119" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(nk.markers)</span>
 <span id="cb22-120"><a href="#cb22-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb22-121"><a href="#cb22-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-122"><a href="#cb22-122" aria-hidden="true" tabindex="-1"></a><span class="fu">## 可视化cell markers的表达</span></span>
+<span id="cb22-122"><a href="#cb22-122" aria-hidden="true" tabindex="-1"></a><span class="fu"># 可视化cell markers的表达</span></span>
 <span id="cb22-123"><a href="#cb22-123" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-124"><a href="#cb22-124" aria-hidden="true" tabindex="-1"></a>The&nbsp;<span class="in">`DotPlot()`</span>&nbsp;function with the&nbsp;<span class="in">`split.by`</span>&nbsp;parameter can be useful for viewing conserved cell type markers across conditions, showing both the expression level and the percentage of cells in a cluster expressing any given gene. Here we plot 2-3 strong marker genes for each of our 14 clusters.</span>
 <span id="cb22-125"><a href="#cb22-125" aria-hidden="true" tabindex="-1"></a></span>

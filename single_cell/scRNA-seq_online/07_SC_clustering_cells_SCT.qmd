@@ -36,7 +36,7 @@ Now that we have our high quality cells integrated, we want to know the differen
 
 ------------------------------------------------------------------------
 
-## Set up
+# Set up
 
 读取[上一节](/single_cell/scRNA-seq_online/06_integration.qmd)中完成质控和整合的单细胞数据`seurat_integrated`。
 
@@ -47,13 +47,13 @@ seurat_integrated
 head(seurat_integrated, 5)
 ```
 
-## 决定后续分析的主成分
+# 决定后续分析的主成分
 
 To overcome the extensive technical noise in the expression of any single gene for scRNA-seq data, **Seurat assigns cells to clusters based on their PCA scores derived from the expression of the integrated most variable genes**, with each PC essentially representing a "metagene" that combines information across a correlated gene set. **Determining how many PCs to include in the clustering step is therefore important to ensure that we are capturing the majority of the variation**, or cell types, present in our dataset.
 
 It is useful to explore the PCs prior to deciding which PCs to include for the downstream clustering analysis.
 
-### 通过热图判断需要包括的主成分
+## 通过热图判断需要包括的主成分
 
 One way of exploring the PCs is using a heatmap to visualize the most variant genes for select PCs with the **genes and cells ordered by PCA scores**. The idea here is to look at the PCs and determine whether the genes driving them make sense for differentiating the different cell types.
 
@@ -78,7 +78,7 @@ print(x = seurat_integrated[["pca"]],
       nfeatures = 5)
 ```
 
-### 通过肘图（elbow plot）判断需要包括的主成分
+## 通过肘图（elbow plot）判断需要包括的主成分
 
 The **elbow plot** is another helpful way to determine how many PCs to use for clustering so that we are capturing majority of the variation in the data. The elbow plot visualizes the standard deviation of each PC, and we are looking for where the standard deviations begins to plateau. Essentially, **where the elbow appears is usually the threshold for identifying the majority of the variation**. However, this method can be quite subjective.
 
@@ -102,11 +102,11 @@ The older methods incorporated some technical sources of variation into some of 
 In theory, with `SCTransform`, **the more PCs we choose the more variation is accounted for when performing the clustering**, but it takes a lot longer to perform the clustering. Therefore for this analysis, we will use the **first 40 PCs** to generate the clusters.
 :::
 
-## 聚类（Cluster the cells）
+# 聚类（Cluster the cells）
 
 Seurat uses a graph-based clustering approach using a K-nearest neighbor approach, and then attempts to partition this graph into highly interconnected 'quasi-cliques' or 'communities' （见[Seurat-细胞聚类](/single_cell/seurat/seurat_tutorial.qmd#sec-clustering_seurat)）. A nice in-depth description of clustering methods is provided in the [SVI Bioinformatics and Cellular Genomics Lab course](https://biocellgen-public.svi.edu.au/mig_2019_scrnaseq-workshop/clustering-and-cell-annotation.html).
 
-### Find neighbors
+## Find neighbors
 
 The first step is to **construct a K-nearest neighbor (KNN) graph** based on the euclidean distance in PCA space.
 
@@ -127,7 +127,7 @@ seurat_integrated <- FindNeighbors(seurat_integrated,
                                    reduction = "integrated.cca")
 ```
 
-### Find clusters
+## Find clusters
 
 Next, Seurat will **iteratively group cells together with the goal of optimizing the standard modularity function**.
 
@@ -141,7 +141,7 @@ seurat_integrated <- FindClusters(object = seurat_integrated,
                                   resolution = c(0.4, 0.6, 0.8, 1.0, 1.4))
 ```
 
-## Visualize clusters of cells {#sec-visualize-clusters-of-cells}
+# Visualize clusters of cells {#sec-visualize-clusters-of-cells}
 
 To visualize the cell clusters, there are a few different dimensionality reduction techniques that can be helpful. The most popular methods include [t-distributed stochastic neighbor embedding (t-SNE)](https://kb.10xgenomics.com/hc/en-us/articles/217265066-What-is-t-Distributed-Stochastic-Neighbor-Embedding-t-SNE-) and [Uniform Manifold Approximation and Projection (UMAP)](https://umap-learn.readthedocs.io/en/latest/index.html) techniques.
 
@@ -194,7 +194,7 @@ DimPlot(seurat_integrated,
         label.size = 6)
 ```
 
-### 载入案例数据 {#sec-Load_case_data}
+## 载入案例数据 {#sec-Load_case_data}
 
 **How does your UMAP plot compare to the one above?**
 
@@ -226,7 +226,7 @@ head(seurat_integrated, 5)
 
 ------------------------------------------------------------------------
 
-### 再次检查不同分辨率下的细胞分群情况
+## 再次检查不同分辨率下的细胞分群情况
 
 After loading `seurat_integrated.RData.bz2`, we now re-check the object clusters with different resolution (0.4, 0.6, 0.8, 1.0, 1.4).
 

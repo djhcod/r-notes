@@ -22,10 +22,10 @@ The following tutorial is designed to give you an overview of the kinds of compa
 
 -   **Compare the datasets** to find cell-type specific responses to stimulation
 
-## 数据读取和分层
+# 数据读取和分层
 
 ::: {.callout-note collapse="true" appearance="minimal" icon="false"}
-### 在线读取（可能需要全局代理）
+## 在线读取（可能需要全局代理）
 
 ```{r}
 #| eval: false
@@ -76,7 +76,7 @@ ifnb
 
 ![](images/截屏2023-11-27%2011.55.48.png)
 
-## 不进行整合的情况下的数据处理
+# 不进行整合的情况下的数据处理
 
 进行标准的数据处理流程：
 
@@ -108,7 +108,7 @@ DimPlot(ifnb,
 
 可以发现：The resulting clusters are defined **both by cell type** **and stimulation condition**, which creates challenges for downstream analysis.
 
-## 进行数据整合
+# 进行数据整合
 
 We now aim to integrate data from the two conditions, so that cells from the same cell type/subpopulation will cluster together.
 
@@ -146,7 +146,7 @@ Layers(ifnb_integrated[["RNA"]])
 Once integrative analysis is complete, you can rejoin the layers - which collapses the individual datasets together and recreates the original `counts` and `data` layers. **You will need to do this before performing any differential expression analysis**. However, you can always resplit the layers in case you would like to reperform integrative analysis.
 :::
 
-### 整合后重新聚类、降维
+## 整合后重新聚类、降维
 
 ```{r}
 #| label: fig-整合后
@@ -181,11 +181,11 @@ DimPlot(ifnb_integrated, reduction = "umap", split.by = "stim")
 
 可以看到，和上面的结论一致，两种条件下的细胞分群基本一致。
 
-## 执行`SCTransform`标准化流程之后的整合
+# 执行`SCTransform`标准化流程之后的整合
 
 As an alternative to log-normalization, Seurat also includes support for preprocessing of scRNA-seq using the [`SCTransform()` workflow](/single_cell/seurat/sctransform.qmd). The `IntegrateLayers` function also supports SCTransform-normalized data, by setting the `normalization.method` parameter, as shown below.
 
-### 不进行整合的情况下的数据分析
+## 不进行整合的情况下的数据分析
 
 ```{r}
 #| label: fig-sctransform_未整合
@@ -210,7 +210,7 @@ DimPlot(ifnb,
 
 可以看到，如果不进行整合，不同样本（STIM vs. STIM）的细胞类型差异很大。
 
-### 进行整合 {#sec-integration_after_sct}
+## 进行整合 {#sec-integration_after_sct}
 
 同样通过`IntegrateLayers`函数进行数据整合，只不过需要将默认的标准化方法由"LogNormalize"指定为"SCT"（`normalization.method = "SCT"`）：
 
@@ -229,7 +229,7 @@ Layers(ifnb_integrated[["RNA"]])
 
 可以看到经过整合的Seurat对象的降维（"reduction"）信息中多出了整合后的降维（"integrated.dr"）。
 
-### 整合后聚类
+## 整合后聚类
 
 ```{r}
 #| fig-width: 10
@@ -248,7 +248,7 @@ DimPlot(ifnb_integrated,
 
 可以看到和 @fig-sctransform_未整合 相比，整合后在样本间的细胞类型基本均匀分布。
 
-### 保存整合后的Seurat对象
+## 保存整合后的Seurat对象
 
 ```{r}
 saveRDS(ifnb_integrated, file = "output/seurat_official/ifnb_integrated.rds")

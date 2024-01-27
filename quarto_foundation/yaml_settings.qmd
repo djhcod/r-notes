@@ -13,7 +13,7 @@ execute:
 
 ![](images/截屏2023-11-22%2020.30.02.png)
 
-## `project`设置 {#sec-project_setting}
+# `project`设置 {#sec-project_setting}
 
 `project`在编写**Quarto Book**或者**Quarto Websites**时使用，因为要创建这些类型的Quarto项目需要通过新建一个Quarto Project来进行，因此YAML中的`project`项就定义了项目的类型是Quarto Book还是Quarto Websites，以及其他项目的基本设定。并且这些类型的Quarto项目会在根目录中生成一个"**\_quarto.yml**"文件，对于YAML的配置在这个独立的文件中进行，从而将项目内的多个.qmd文档合并编译成一个Quarto Book或者Quarto Websites。
 
@@ -34,7 +34,7 @@ project:
 
 -   `execute-dir`：**在编译时**，各个qmd文件内的code chunk脚本运行的根目录，默认是"file"，即当前qmd文**档所在目录**，可设置为 "**project**"，这样在编译过程中执行代码块时会将运行根目录设置为项目根目录。
 
-## 标题/作者/日期信息
+# 标题/作者/日期信息
 
 对于HTML的编译，这些信息会展示在文档的开头部分。
 
@@ -67,47 +67,79 @@ published-title: 写作日期
 
 -   `published-title`：修改`date`的标签，默认是"PUBLISHED DATE"。
 
-### `date-format`的设置 {#sec-dateformat}
+## `date-format`的设置 {#sec-dateformat}
 
 `date-format`通过以下关键词来定义日期格式：
 
-| Style    | Description                                 | Example               |
-|----------|---------------------------------------------|-----------------------|
-| `full`   | A full date that includes the weekday name  | Monday, March 7, 2005 |
-| `long`   | A long date that includes a wide month name | March 7, 2005         |
-| `medium` | A medium date                               | Mar 7, 2005           |
-| `short`  | A short date with a numeric month           | 3/7/05                |
-| `iso`    | A short date in ISO format                  | 2005-03-07            |
++--------------+---------------------------------------------+-----------------------+
+| Style        | Description                                 | Example               |
++==============+=============================================+=======================+
+| `full`       | A full date that includes the weekday name  | Monday, March 7, 2005 |
++--------------+---------------------------------------------+-----------------------+
+| `long`       | A long date that includes a wide month name | March 7, 2005         |
++--------------+---------------------------------------------+-----------------------+
+| `medium`     | A medium date                               | Mar 7, 2005           |
++--------------+---------------------------------------------+-----------------------+
+| `short`      | A short date with a numeric month           | 3/7/05                |
++--------------+---------------------------------------------+-----------------------+
+| `iso`        | A short date in ISO format                  | 2005-03-07            |
++--------------+---------------------------------------------+-----------------------+
 
 也可以通过以下语法更加灵活的定义日期格式：
 
++------------------+------------------+---------------------------------------+
 | **ormat String** | **Output**       | **Description**                       |
-|------------------|------------------|---------------------------------------|
++==================+==================+=======================================+
 | `YY`             | 18               | Two-digit year                        |
++------------------+------------------+---------------------------------------+
 | `YYYY`           | 2018             | 四位数年份                            |
++------------------+------------------+---------------------------------------+
 | `M`              | 1-12             | The month, beginning at 1             |
++------------------+------------------+---------------------------------------+
 | `MM`             | 01-12            | 两位数月份                            |
++------------------+------------------+---------------------------------------+
 | `MMM`            | Jan-Dec          | The abbreviated month name            |
++------------------+------------------+---------------------------------------+
 | `MMMM`           | January-December | The full month name                   |
++------------------+------------------+---------------------------------------+
 | `D`              | 1-31             | The day of the month                  |
++------------------+------------------+---------------------------------------+
 | `DD`             | 01-31            | 两位数日期                            |
++------------------+------------------+---------------------------------------+
 | `d`              | 0-6              | The day of the week, with Sunday as 0 |
++------------------+------------------+---------------------------------------+
 | `dd`             | Su-Sa            | The min name of the day of the week   |
++------------------+------------------+---------------------------------------+
 | `ddd`            | Sun-Sat          | The short name of the day of the week |
++------------------+------------------+---------------------------------------+
 | `dddd`           | Sunday-Saturday  | The name of the day of the week       |
++------------------+------------------+---------------------------------------+
 | `H`              | 0-23             | The hour                              |
++------------------+------------------+---------------------------------------+
 | `HH`             | 00-23            | 两位数小时，24小时制                  |
++------------------+------------------+---------------------------------------+
 | `h`              | 1-12             | The hour, 12-hour clock               |
++------------------+------------------+---------------------------------------+
 | `hh`             | 01-12            | The hour, 12-hour clock, 2-digits     |
++------------------+------------------+---------------------------------------+
 | `m`              | 0-59             | The minute                            |
++------------------+------------------+---------------------------------------+
 | `mm`             | 00-59            | 两位数分钟                            |
++------------------+------------------+---------------------------------------+
 | `s`              | 0-59             | The second                            |
++------------------+------------------+---------------------------------------+
 | `ss`             | 00-59            | The second, 2-digits                  |
++------------------+------------------+---------------------------------------+
 | `SSS`            | 000-999          | The millisecond, 3-digits             |
++------------------+------------------+---------------------------------------+
 | `Z`              | +05:00           | The offset from UTC, ±HH:mm           |
++------------------+------------------+---------------------------------------+
 | `A`              | AM PM            |                                       |
++------------------+------------------+---------------------------------------+
 | `a`              | am pm            |                                       |
++------------------+------------------+---------------------------------------+
 | `Do`             | 1st 2nd ... 31st | Day of Month with ordinal             |
++------------------+------------------+---------------------------------------+
 
 可以通过"\[\]"添加自定义字符。通过这些语法，可以定制符合中文语法的日期格式，如：`date-format: "YYYY[年]M[月]D[日] HH:mm"`
 
@@ -115,7 +147,7 @@ published-title: 写作日期
 关于日期的详细指南，详见：<https://quarto.org/docs/reference/dates.html>。
 :::
 
-## `theme`主题设置 {#sec-theme}
+# `theme`主题设置 {#sec-theme}
 
 `theme`定义了编译文档的主题。可以直接调用Quarto内置的Bootswatch主题，如"default"、"cerulean"和"cosmo"等，也可以通过Sassy Cascading Style Sheets (SCSS)文件来自定义主题。`theme`参数既可以在YAML中直接定义，也可以在不同的`format`内定义，这样可以对不同的编译格式应用不同的主题。关于Quarto主题的详细指南，参考[Quarto Guide](https://quarto.org/docs/output-formats/html-themes.html)。
 
@@ -145,7 +177,7 @@ format:
 
 这样，在输出的HTML网页的右上角会出现一个亮色/深色模式的切换开关。
 
-## `toc`目录设置 {#sec-toc}
+# `toc`目录设置 {#sec-toc}
 
 和`theme`一样`toc`同样可以在YAML中直接定义，也可以在不同的`format`内定义。
 
@@ -169,7 +201,7 @@ toc-location: left
 
 -   `toc-location`：设置目录的位置。默认在右侧（`right`）,可以设置为`left`或`body`（在文稿最开头显示）。
 
-## `number-sections`标题编号设置 {#sec-number_sections}
+# `number-sections`标题编号设置 {#sec-number_sections}
 
 和`theme`一样`number-sections`同样可以在YAML中直接定义，也可以在不同的`format`内定义。
 
@@ -186,7 +218,7 @@ number-depth: 3
 
 -   `{.unlisted}`：将某个标题设置为不在目录中列出。如"第三章{.unlisted}"。如果想要某个标题既不编号也不在目录中列出就可以这样写："标题{.unnumbered .unlisted}"。
 
-## 排版设置
+# 排版设置
 
 主要定义了图/表标题的位置、参考文献/脚注的位置、页面大小和页边距等。可以在YAML中直接定义，也可以在不同的`format`内定义。
 
@@ -224,7 +256,7 @@ citation-location: document
 
 : 图/表标题位置、参考文献/脚注的位置设置 {#tbl-图表标题位置设置}
 
-## `execute`代码块执行设置
+# `execute`代码块执行设置
 
 `execute`用来指定代码块的执行行为，例如是否运行、是否显示警告信息和是否缓存运行结果等。
 
@@ -276,7 +308,7 @@ seurat_integrated <- readRDS("output/scRNA-seq_online/seurat_clustered.rds")
 ```
 :::
 
-## `crossref`交叉引用设置
+# `crossref`交叉引用设置
 
 `crossref`定义了图/表的标签、默认引用样式、编号类型等。
 
@@ -328,7 +360,7 @@ crossref:
 
 -   `alpha X` (start from letter 'X')
 
-## 参考文献设置
+# 参考文献设置
 
 只要在编辑qmd文档时插入了参考文献，YAML中会新增参考文献的配置选项：`bibliography: references.bib`。同时根目录下会生成一个名为"references.bib"的参考文献配置文件。该配置文件包括了qmd文档中所插入的所有参考文献的列表。以BibTeX/Citation风格语言编写。`bibliography`指定了这个参考文献配置文件所在的路径。
 
@@ -338,7 +370,7 @@ bibliography: references.bib
 ---
 ```
 
-## `format`编译设置
+# `format`编译设置
 
 `format`定义了qmd文档编译后的文件类型，例如："html", "pdf", "docx", "odt", "pptx", "revealjs", "beamer", "gfm"（GitHub风格的Markdown文档）, "commonmark", "mediawiki", "epub", "ipynb"。不同的编译格式对应的子项设置各不相同，有些参数适用于某些格式但是在另一些格式中则无法兼容。所有支持的编译格式详见[Quarto官方文档](https://quarto.org/docs/output-formats/all-formats.html)。下面的案例为编译HTML和GFM的常用设置。
 
@@ -364,7 +396,7 @@ format:
 
 ![](images/rstudio-qmd-how-it-works.png)
 
-### 编译HTML
+## 编译HTML
 
 ```{r}
 ---
@@ -430,7 +462,7 @@ format:
 
 -   `code-link`: 是否自动为函数加上超链接。该功能基于[downlit](https://downlit.r-lib.org/)包，可以自动为识别到的函数加上一个链接到官方文档的超链接。
 
-### 编译GitHub Flavored Markdown（GFM） {#sec-github-markdown}
+## 编译GitHub Flavored Markdown（GFM） {#sec-github-markdown}
 
 我们可以将Quarto文档转换为GitHub风格的Markdown文档（GitHub Flavored Markdown，GFM）。这可以用来生成GitHub项目的README.md文档。
 
@@ -450,7 +482,7 @@ format:
 ---
 ```
 
-### 编译PDF
+## 编译PDF
 
 如果要在rmarkdown、bookdown中使用PDF输出功能， 可以在在R中安装tinytex扩展包并安装TinyTeX编译软件：
 

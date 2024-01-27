@@ -6,7 +6,7 @@ title: "寻找marker gene"
 >
 > 原文发布日期：2023年10月31日
 
-## 数据导入
+# 数据导入
 
 这里我们导入[整合（integration）](/single_cell/seurat/integration.qmd)中完成`SCTransform`和整合的单细胞数据。这里的meta.data已经提前注释好了细胞类型（储存在"seurat_annotations"列中）。
 
@@ -22,7 +22,7 @@ DimPlot(ifnb,
         group.by = c("stim", "seurat_annotations"))
 ```
 
-## `FindMarkers`-在特定cluster之间寻找marker基因 {#sec-findmarkers_function}
+# `FindMarkers`-在特定cluster之间寻找marker基因 {#sec-findmarkers_function}
 
 ::: callout-caution
 For a **much** faster implementation of the Wilcoxon Rank Sum Test,(default method for `FindMarkers`) please install the [`presto`](https://github.com/immunogenomics/presto) package:
@@ -78,7 +78,7 @@ nrow(monocyte.de.markers)
 head(monocyte.de.markers)
 ```
 
-## FindConservedMarkers-鉴定在所有conditions下保守的cell marker
+# FindConservedMarkers-鉴定在所有conditions下保守的cell marker
 
 To **identify canonical cell type marker genes that are conserved across conditions**, we provide the `FindConservedMarkers()` function. This function performs **differential gene expression testing** for each dataset/group and combines the p-values using meta-analysis methods from the `MetaDE` R package.
 
@@ -107,7 +107,7 @@ nk.markers <- FindConservedMarkers(ifnb,
 head(nk.markers)
 ```
 
-## 可视化cell markers的表达
+# 可视化cell markers的表达
 
 The `DotPlot()` function with the `split.by` parameter can be useful for viewing conserved cell type markers across conditions, showing both the expression level and the percentage of cells in a cluster expressing any given gene. Here we plot 2-3 strong marker genes for each of our 14 clusters.
 
