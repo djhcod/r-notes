@@ -120,7 +120,7 @@ sleep<-na.omit(sleep)
 
 # 数据整理
 
-## 排序
+## 排序 {#sec-排序}
 
 ```{r}
 library(dplyr)
@@ -176,7 +176,7 @@ vnumber <- mydata[,c(2:12,16)] # 提取2-12列和第16列的数据
 mydata_less <- mydata[1:100, ]#提取1-100行的数据
 ```
 
-### 筛选数据
+### 筛选数据 {#sec-筛选数据}
 
 筛选出低级别、接受了放疗的病例，并生成新的"new_data"数据集
 
@@ -355,64 +355,6 @@ ceiling(3.14159) #取不小于x的最小整数（有小数点一律进一位）
 floor(3.99999) #取不大于x的最大整数（忽略小数点）
 sprintf("%0.3f", 3.14159) #四舍五入保留3位小数
 round(3.14159,digits=3) #同上。注意该函数在处理科学计数法时无法有效保留目标小数位数
-```
-
-# 管道操作符(%\>%)的使用
-
-％\>％为来自**dplyr包**的**管道操作符（pipe operator)**，我们可以将其理解为车间里的流水线，经过前一步加工的产品才能进入后一步进一步加工，其作用是将上一步的结果直接传参给下一步的函数，从而省略了中间的赋值步骤，可以大量减少内存中的对象，节省内存。
-
-> **将%\>%左边的对象传递给右边的函数，作为第一个选项的设置（或剩下唯一一个选项的设置）。**
->
-> a %\>% f(b)等同于f(a,b)；b% \> %f(a,.,c)等同于f(a,b,c)
-
-【例一】
-
-比如我们要算f(x)=sin((x+1)\^2)在x=4的值，可以分为以下三步：
-
-1.  计算a = x+1的值；
-
-2.  计算b = a\^2的值；
-
-3.  计算c = sin(b)的值
-
-这样一来，c就是我们需要的最终结果了。用R语言管道传参，只需要这样写：
-
-```{r}
-f1 <- function(x){return(x+1)}
-f2 <- function(x){return(x^2)}
-f3 <- function(x){return(sin(x))}
-library(dplyr)
-x <- 1
-y <- x %>% f1 %>% f2 %>% f3
-print(y)
-```
-
-【例二】
-
-```{r}
-f1 <- function(x,y){return(x+y)}
-f2 <- function(x,y,z){return(x*y+z)}
-x <- 2
-y <- 3
-z <- 4
-x %>% f1(y)
-y %>% f2(x,.,5)
-z %>% f2(x,y,.)
-```
-
-【例三】日期合并
-
-```{r}
-date <- as.Date('2017-6-22')+0:14
-hour <- sample(1:24, 15)
-min <- sample(1:60, 15)
-second <- sample(1:60, 15)
-dat <- data.frame(date,hour,min,second)
-dat
-
-library(tidyr)
-datstd <- dat %>% unite("datehour",date,hour,sep = ' ',remove = T) %>% unite("datetime",datehour,min,second,sep = ':',remove = T)
-datstd
 ```
 
 # 自定义函数

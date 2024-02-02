@@ -1,0 +1,655 @@
+---
+title: "基于dplyr包的数据处理"
+---
+
+> 参考：
+>
+> [*dplyr官方文档*](https://dplyr.tidyverse.org/index.html)
+>
+> [*Data transformation chapter*](https://r4ds.hadley.nz/data-transform) *in R for Data Science*
+
+![](images/logo-2.png){width="205"}
+
+# 介绍
+
+`dplyr`包是`tidyverse`的核心包之一，为数据处理提供了一系列方便快捷的函数。本章将以`nycflights13`包中的flights案例数据来介绍基于dplyr包的数据处理语法。该数据集包含 2013 年从纽约市起飞的所有 336,776 次航班的信息。
+
+```{r}
+library(dplyr)
+
+data(flights, package = "nycflights13")
+flights
+```
+
+这里的flights数据是一个 tibble，这是一种升级版的data.frame，被 tidyverse 用来避免一些data.frame的常见问题。Tibbles 和data.frame之间的一个重要的区别在于 tibbles 打印数据的方式：tibbles 是为大型数据集设计的，因此只显示前几行和适应屏幕宽度的列（如上）。可以使用 `print(flights, width = Inf)` 显示所有列，或者使用 `glimpse()`：
+
+```{r}
+glimpse(flights)
+```
+
+在这两种视图中，变量名下方或后面都有相应的缩写，代表每个变量的类型：`<int>` 代表整数型数据，<dbl> 代表数值型数据，<chr> 代表字符型数据，<dttm> 代表日期时间型数据。这些变量非常重要，因为对列进行的操作在很大程度上取决于该列的 "类型"。更多关于tibble的说明参考`tibble`包的[官方文档](https://tibble.tidyverse.org/index.html)。
+
+[![](images/logo.png){width="157"}](https://tibble.tidyverse.org/index.html)
+
+`dplyr`语法的共同特点：
+
+-   第一个参数始终是数据集（tibble或data.frame）的名字。
+
+-   后面的参数通常使用变量名（不带引号）来描述要对哪些列进行操作。
+
+-   输出总是一个新的tibble或data.frame。
+
+`dplyr` 的函数可以根据它们的操作对象分为四类：分别是对行进行操作的函数、对列进行操作的函数、对表进行操作的函数以及分组统计函数，同时还包括一个特殊的管道符号`%>%`。本章将介绍除对表进行操作之外的函数。
+
+# 管道操作符
+
+> 参考：[*生信菜鸟团-R tips: R管道的用法*](https://mp.weixin.qq.com/s?__biz=MzUzMTEwODk0Ng==&mid=2247512157&idx=1&sn=47466392bd7c54e17c57b232b29b551b&chksm=fa457560cd32fc76da55c346ef08917343322ecb5d24b3b591d9c65549ed1f0ca10f57f1105d&mpshare=1&scene=1&srcid=0407dIwqephXlKmnMrPSvpRb&sharer_sharetime=1680842848403&sharer_shareid=568f49cb24905bf546294e6985a632bf#rd)
+
+R中有两种管道操作符（pipe operator)，分别是R自带的来自`base`包的`|>`，和来自`magrittr`**包（上级包是**`dplyr`和`tidyverse`**）**的`%>%`。我们可以将管道操作符理解为车间里的流水线，经过前一步加工的产品才能进入后一步进一步加工，其作用是将上一步的结果直接传参给下一步的函数，从而**省略了中间的赋值步骤**，可以大量**减少中间变量**，节省内存。例如：
+
+```{r}
+# 不使用管道操作服
+x <- rnorm(10)
+y <- sort(x)
+plot(y)
+```
+
+```{r}
+#| eval: false
+# 管道调用
+rnorm(10) |> sort() |> plot()
+# or
+10 |> rnorm() |> sort() |> plot()
+```
+
+如果`x`, `y`并不会被后面的代码用到的话，那么减少这种中间变量的产生是有利于代码的整洁和降低变量冲突的风险的。
+
+如果不使用管道操作，同时要避免产生中间变量的话就需要嵌套代码，而管道操作则通过一种链式调用的方式去写嵌套调用的代码，使代码更清晰和易于理解。比如：
+
+```{r}
+#| eval: false
+# 嵌套调用
+plot(sort(rnorm(10)))
+
+# 管道调用
+rnorm(10) |> sort() |> plot()
+```
+
+很明显管道的调用逻辑要比嵌套调用更加清晰而符合直觉。
+
+::: callout-tip
+-   来自`magrittr`**包**的管道符`%>%`和`base`包的`|>`存在一些语法上的区别，`%>%`的功能更多（见下文）。
+
+-   在一般使用时，如果不需要`%>%`的高级功能，建议直接用从2021年的R 4.1.0开始原生支持的`|>`作为默认管道符。如果需要用到高级功能，或习惯tidyverse包的数据处理语法，则再考虑使用`%>%`。
+
+-   RStudio目前通过快捷键`Command`+`Shift`+`M`默认插入的是`%>%`符号，可以通过在设置中勾选如下选项来让该快捷键默认插入`|>`。
+
+    ![](images/截屏2024-02-02%2015.41.06.png){width="573"}
+:::
+
+## 管道的基本用法
+
+管道的用法就是通过管道符`|>`或`%>%`串联起来前后的两个函数调用，先计算管道符号左边的函数调用，然后将其结果自动传递给管道符号右边函数的**第一个参数（默认）**，然后对运行这个函数，正如上面的例子中提到的一样。**如果不想把值传递给第一个参数，则可以用占位符`_`（适用于**`|>`）或**`.`（适用于`%>%`）的形式指定把前面的运算结果传递给哪个参数**。
+
+比如想在mtcars数据集的车名中寻找所有以“M”开头的车名，则可以通过如下方式寻找：
+
+```{r}
+mtcars |> rownames() |> grep("^M", x = _)
+
+#或用%>%形式
+library(magrittr) # 也可以直接加载dplyr或tidyverse包，便于后续调用其他tidyverse函数
+mtcars %>%  rownames() %>%  grep(pattern = "^M", x = .)
+```
+
+解释如下：在`grep`函数那里，由于我们想在车名（这里是行名）中找到符合特定`pattern`的车名位置，因此需要把车名传给`grep`的第二个参数`x`，所以就可以`.`或`_`的形式将前面的值传给`grep`的`x`。
+
+**⚠️注意：传给其他位置的`.`必须是独立的**，不能在一个表达式（函数）中，比如如下情况，我只想寻找前10个车名中以“M”开头的车名位置：
+
+```{r}
+#| warning: true
+# 错误 ---------------
+mtcars %>% rownames %>% grep("^M", x = .[1:10])
+
+# 正确 ---------------
+mtcars[1:10, ] %>% rownames %>% grep("^M", x = .)
+```
+
+上面的错误调用中，传递给`grep`的`x`参数的是一个表达式`.[1:10]`，不是一个单独的`.`了，因此失去了调整前面值的位置的作用，它就等价于如下调用：
+
+```{r}
+#| eval: false
+# 错误  ---------------
+mtcars %>% rownames %>% grep("^M", x = .[1:10])
+
+# 等价于 --------------
+# 还是把前面的值传递给第一个参数：
+mtcars %>% rownames %>% grep(., "^M", x = .[1:10])
+```
+
+## **管道的进阶用法**
+
+我们可以通过“{}”符号包裹后续函数，在“{}”内的代码，可以任意的使用多个占位符`.`去传递管道前的值。还是上面的例子：
+
+```{r}
+#| eval: false
+mtcars[1:10, ] %>%  rownames() %>%  grep("^M", x = .) %>% plot()
+
+# 用“{}”的形式 ---------------
+mtcars %>% rownames %>% {grep("^M", x = .[1:10])} %>% plot()
+```
+
+⚠️注意，`|>`不支持“{}”形式：
+
+```{r}
+#| eval: false
+# 错误：
+mtcars |> rownames() |> {grep("^M", x = _[1:10])}
+```
+
+这也反映出`base`包`|>`功能的局限性。
+
+本质上“{}”是`magrittr`改写的一个匿名函数，只有唯一的一个参数，也就是`.` ：
+
+```{r}
+#| eval: false
+function(.) {
+  # any code
+}
+```
+
+比如想要获取mtcars的前5行前5列，然后更改行名和列名后，再返回这个数据框：
+
+```{r}
+df <- mtcars %>% .[1:5, 1:5] %>%
+  {
+    rownames(.) <- paste0("row", 1:5)
+    colnames(.) <- paste0("col", 1:5)
+    . # <---------- 不要忘了返回这个数据框
+  }
+df
+```
+
+⚠️注意，在整个“{}”包括的语句中，如果再使用管道要注意这时的占位符.代表的是“{}”内的对象。
+
+```{r}
+mtcars %>% .[1:5, 1:5] %>%
+  {
+    rownames(.) <- paste0("row", 1:5)
+    colnames(.) <- paste0("col", 1:5)
+    .[1:3, ] %>% cbind(., .) # cbind里面的.不指代{}外面的值
+  }
+
+# 等价：
+mtcars %>% .[1:5, 1:5] %>%
+  {
+    rownames(.) <- paste0("row", 1:5)
+    colnames(.) <- paste0("col", 1:5)
+    .
+  } %>% 
+  .[1:3, ] %>% 
+  cbind(., .)
+```
+
+## 特殊管道符
+
+`magrittr`包内除了`%>%`管道符外，还提供了`%$%`、`%<>%`、`%T>%`、`%!>%`，他们的作用简述如下：
+
+### `%$%`
+
+用于传递管道左侧数据的names：
+
+```{r}
+colnames(mtcars)
+
+# mtcars的每个元素都可以被后面的函数所使用
+mtcars %$% plot(mpg, cyl)
+```
+
+```{r}
+# 等价于
+mtcars %>% {plot(.[,"mpg"], .[, "cyl"])}
+sum(mtcars$mpg, mtcars$cyl)
+```
+
+### `%<>%`
+
+将管道的结果最终再赋值回最左侧的变量：
+
+```{r}
+set.seed(1234)
+x <- rnorm(5)
+x
+
+# x排序后加上10，最后再赋值给x
+x %<>% sort() %>% {. + 10}
+x
+```
+
+```{r}
+#| eval: false
+# 等价于
+x <- x %>% sort() %>% {. + 10}
+```
+
+### `%T>%`
+
+分支管道，传入左侧的值并运算后将原始值而不是运算结果传递给后续管道。这在多个管道中间使用`print()`、`plot()`或`summary()`这些函数返回信息时非常有用。
+
+```{r}
+1:5 %>% plot() %>% sum() # 传递给sum()的是前面所有函数的运算结果，由于plot()不返回任何数值，所以sum()的结果为0
+1:5 %T>% plot() %>% sum() # 传递给sum()的是1:5
+
+# 另一个例子
+rnorm(200) %>%
+  matrix(ncol = 2) %T>%
+  plot %>% 
+  colSums() # 传递给colSums()的是“rnorm(200) %>% matrix(ncol = 2)”
+```
+
+------------------------------------------------------------------------
+
+# 对行的操作
+
+## `filter()`
+
+![](images/截屏2024-02-02%2017.29.00.png){width="173"}
+
+用于提取满足某（些）条件的行，基本等同于[`subset()`](/r_basic/basic_data_function.qmd#sec-筛选数据)。
+
+```{r}
+# 查找所有晚点 120 分钟（两小时）以上起飞的航班：
+filter(flights, dep_delay > 120)
+
+# 查找一月或二月起飞的航班
+filter(flights, month %in% c(1, 2))
+```
+
+## `arrange()`
+
+排序，以某列为依据对行进行排序（在前面的数据[处理基本函数](/r_basic/basic_data_function.qmd#sec-排序)一章中已涉及该函数）。对应的功能在`base`包中是`order()`函数。如果提供的列名不止一个，则依次根据提供的列的顺序对数据进行排序。例如，下面的代码按航班出发时间排序，出发时间分布在四列中。我们首先得到最早的年份，然后在一年内得到最早的月份，依此类推。
+
+```{r}
+arrange(flights, year, month, day, dep_time)
+```
+
+可以加上`desc()`实现降序排列：
+
+```{r}
+arrange(flights, desc(dep_delay))
+```
+
+## `distinct()`
+
+![](images/截屏2024-02-02%2017.29.29.png){width="212"}
+
+查找数据集中所有唯一的行。
+
+```{r}
+# 移除所有完全相同的行
+distinct(flights)
+
+# 查找所有唯一的出发地和目的地配对
+distinct(flights, origin, dest)
+```
+
+可以看到，如果根据某列或某几列为依据来查找非重复值，那么默认只输出这几列，我们可以通过加入`.keep_all = TRUE`参数来保留其他列。`.`表示 `.keep_all` 是函数的一个参数，而不另一个变量的名称。
+
+```{r}
+distinct(flights, origin, dest, .keep_all = TRUE)
+```
+
+可以发现所有这些不同的航班都是在 1 月 1 日，这绝非巧合：distinct() 会在数据集中找到唯一值第一次出现的那一行，并舍弃其他行。
+
+如果要得到每种出发地和目的地配对出现的次数，可以将 `distinct()` 换成 `count()`，并可使用 `sort = TRUE` 参数按出现次数降序排列。`count()`同样来自`dplyr`包，用于快速统计一个或多个变量的唯一值的出现次数。
+
+```{r}
+count(flights, origin, dest, sort = TRUE)
+```
+
+# 对列的操作
+
+## `mutate()`
+
+![](images/截屏2024-02-02%2017.31.09.png){width="199"}
+
+`mutate()`的作用是根据现有列计算并添加新列。
+
+```{r}
+# 计算延误航班在空中停留的时间（gain）以及平均速度（speed，英里/小时）：
+mutate(
+  flights,
+  gain = dep_delay - arr_delay,
+  speed = distance / air_time * 60
+)
+```
+
+默认情况下，`mutate()` 会在数据集的最右侧添加计算后的新列，因此很难看到这里发生了什么。我们可以使用 `.before` 参数将变量添加到数据集的左侧：
+
+```{r}
+mutate(
+  flights,
+  gain = dep_delay - arr_delay,
+  speed = distance / air_time * 60,
+  .before = 1 # 添加到第一列
+)
+```
+
+也可以使用 `.after` 指定新变量应该在哪个变量后添加，在 `.before` 和 `.after` 中，都可以使用变量名和列数两种方法指定新变量出现的位置。例如，我们可以在 “day” 之后添加新变量：
+
+```{r}
+mutate(
+  flights,
+  gain = dep_delay - arr_delay,
+  speed = distance / air_time * 60,
+  .after = day # 添加到第一列
+)
+```
+
+另外，也可以使用 `.keep` 参数来控制在计算新变量后哪些变量会被保留:
+
+-   `.keep = "all"`：默认。保留所有变量
+
+-   `.keep = "used"`：保留用于计算新变量的旧变量。这可以用于检查我们的新变量是否计算正确，因为它和原始变量一起展示。
+
+-   `.keep = "unused"`：保留其他不用于计算新变量的旧变量。
+
+例如，下面的输出将只包含旧变量 “dep_delay”、“arr_delay”、“distance”、“air_time”，以及新变量“gain”、“speed”：
+
+```{r}
+mutate(
+  flights,
+  gain = dep_delay - arr_delay,
+  speed = distance / air_time * 60,
+  .keep = "used"
+)
+```
+
+## `select()`
+
+![](images/截屏2024-02-02%2017.30.02.png){width="201"}
+
+选择并输出某几列。
+
+```{r}
+# 根据列名选择某几列
+select(flights, year, month, day)
+
+# 选择“year”和“day”及其之间的所有列
+select(flights, year:day)
+
+# 选择不在“year”和“day”及其之间的所有列
+select(flights, !year:day)
+
+# 选择所有字符型的列
+select(flights, where(is.character))
+```
+
+在select()内有许多经常可以组合使用的函数：
+
+-   `starts_with("abc")`: 以特定字符开头的列名.
+
+-   `ends_with("xyz")`: 以特定字符结尾的列名.
+
+-   `contains("ijk")`: 包含特定字符的列名.
+
+-   `num_range("x", 1:3)`: 列名`x1`, `x2` 和 `x3`.
+
+可以在选择变量的同时使用 `=` 对这些变量进行重命名。新变量名在 `=` 的左侧，旧变量名在右侧（`new_name = old_name`）：
+
+```{r}
+select(flights, tail_num = tailnum)
+```
+
+## `rename()`
+
+重命名列。新变量名在 `=` 的左侧，旧变量名在右侧。
+
+```{r}
+rename(
+  flights, 
+  years = year, 
+  months = month
+  )
+```
+
+⚠️和其他`dplyr`中的函数一样，`rename`不会对原始数据进行修改，因此需要将`rename`后的数据重新赋值给新的对象或覆盖原来的对象以应用对变量名的修改。
+
+如果我们有一个提供了重命名依据的字符串向量，那么可以通过`all_of()`来基于这个字符串向量对数据集的列进行重命名：
+
+```{r}
+lookup <- c(
+  years = "year", 
+  months = "month"
+  )
+rename(flights, all_of(lookup))
+```
+
+如果提供重命名依据的字符串向量中有的变量是原数据集中不存在的，那么可以用 `any_of()`代替 `all_of()` 来实现：
+
+```{r}
+lookup <- c(
+  years = "year", 
+  months = "month",
+  new = "unknown"
+  )
+rename(flights, any_of(lookup))
+```
+
+### `rename_with()`
+
+根据函数批量重命名列。
+
+```{r}
+# 将所有列名变为大写
+rename_with(flights, toupper)
+
+# 将所有以“dep_"开头的列名转换为大写
+rename_with(flights, toupper, .cols = starts_with("dep_"))
+
+# 将列名中所有的"_"替换成“.”，并将所有列名转换成大写
+rename_with(
+  flights, 
+  function(x) {
+    gsub(pattern = "_", replacement = ".", x = x) %>% 
+    toupper()
+}
+)
+# 匿名函数形式
+rename_with(flights, ~ gsub(pattern = "_", replacement = ".", x= .x) %>% toupper())
+```
+
+## `relocate()`
+
+调整列的顺序。
+
+```{r}
+# 将“day”和“year”放到最前面
+relocate(flights, day, year)
+```
+
+也可以和上面的\[mutate()\]一样通过`.before` 和 `.after` 参数指定放置位置：
+
+```{r}
+# 将“year”和“dep_time”及其之间的列放到“sched_dep_time”之后
+relocate(flights, year:dep_time, .after = sched_dep_time)
+
+# 将所有以“dep_”开头的列放到“sched_dep_time”之前
+relocate(flights, starts_with("dep_"), .before = sched_dep_time)
+```
+
+# 分组统计
+
+## `group_by()`
+
+![](images/截屏2024-02-02%2017.26.52.png){width="240"}
+
+根据某一列或几列将数据分组，便于后续的分组统计/运算。
+
+```{r}
+group_by(flights, month)
+```
+
+`group_by()`本身不会改变数据，除了在输出结果中出现了`# Groups: month [12]`，提示我们该数据集进行了分组。这意味着随后的操作将按不同的月份分别进行。`group_by()`向数据添加了这个分组特性（称为类），从而改变了接下来对数据应用的函数的行为。
+
+## `summarize()`
+
+分组汇总数据。根据某列或某几列的数据汇总一个包含了统计数据的新表。
+
+```{r}
+# 计算每月的平均起飞延误时间
+group_by(flights, month) |> 
+  summarise(avg_delay = mean(dep_delay))
+```
+
+可以看到，这里出现了问题，所有的结果都是“NA”。这是因为一些航班在延误时间（dep_delay）列中有缺失数据，所以当我们计算包括这些缺失值的平均值时，得到了一个NA结果。所以需要在mean()中设置参数 `na.rm = TRUE` 来忽略所有缺失值：
+
+```{r}
+# 计算每月的平均起飞延误时间
+group_by(flights, month) |> 
+  summarise(avg_delay = mean(dep_delay, na.rm = TRUE))
+```
+
+可以在单次对summarize()的调用中创建任意数量的数据汇总。但其中一个非常有用的汇总函数是`n()`，它返回每个组中行数：
+
+```{r}
+# 计算每月的平均起飞延误时间和延误航班数量
+flights |> 
+  group_by(month) |> 
+  summarize(
+    avg_delay = mean(dep_delay, na.rm = TRUE), 
+    n = n()
+  )
+```
+
+## `slice_`系列函数
+
+分组提取数据。
+
+-   `df |> slice_head(n = 1)` 从每一组中取前n行数据.
+
+-   `df |> slice_tail(n = 1)` 从每一组中取后n行数据.
+
+-   `df |> slice_min(x, n = 1)` 从每一组中取`x`列的值最小的n行数据.
+
+-   `df |> slice_max(x, n = 1)` 从每一组中取`x`列的值最大的n行数据.
+
+-   `df |> slice_sample(n = 1)` 从每一组中随机取n行数据.
+
+其中的`n`参数指定需要提取的行数，同时，也可以用`prop`参数指定从每组中提取多少比例的行。例如，`prop = 0.1` 表示从每组中提取10%的行。
+
+```{r}
+# 找出到达每个目的地的延误最严重的航班
+flights %>%
+  group_by(dest) %>% 
+  slice_max(order_by = arr_delay, n = 1) %>%
+  relocate(dest, arr_delay) %T>% 
+  print() %>%
+  nrow()
+
+nrow(flights)
+```
+
+上面的例子中，`relocate()`函数后用到了分支管道\[%T\>%\]，先通过`print()`把分组统计的结果打印出来，然后通过`nrow()`返回分组统计数据的行数。结果发现有108行，和原来数据的105行不符合，这是因为有的目的地可能有几架次并列延误最严重的航班。例如，第22行和23行的航班信息：
+
+```{r}
+flights |> 
+  group_by(dest) |> 
+  slice_max(order_by = arr_delay, n = 1) |> 
+  relocate(dest, arr_delay) |> 
+  _[22:23,]
+```
+
+## 多变量分组统计
+
+例如分别统计每个日期（年+月+日）的航班数量：
+
+```{r}
+daily <- flights |>  
+  group_by(year, month, day)
+
+daily |> 
+  summarize(flights = n())
+```
+
+需要注意到结果中的第一行提示我们 `summarise()` 后的数据按照“year”和“month”进行了`group`处理。这是因为`summarise()` 在处理超过一个分组的数据时，输出的结果默认去除最后一个分组依据。这一行为可以通过设定`.groups`参数进行修改：
+
+-   `.groups = "drop_last"`：默认。`summarise()`后丢掉最后一个分组依据。
+
+-   `.groups = "drop"`：`summarise()`后取消分组。
+
+-   `.groups = "keep"`：`summarise()`后保留原分组。
+
+```{r}
+flights |>  
+  group_by(year, month, day) |> 
+  summarize(
+    flights = n(),
+    .groups = "keep"
+    ) 
+```
+
+## `ungroup()`
+
+取消分组。
+
+```{r}
+daily |> 
+  ungroup() |>
+  summarize(
+    avg_delay = mean(dep_delay, na.rm = TRUE), 
+    flights = n()
+  )
+```
+
+## `.by`
+
+[![](images/截屏2024-02-02%2017.05.04.png){width="147"}](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+
+dplyr从1.1.0版本开始包括了一个新的实验性语法，用于直接在统计函数中指定分组依据，即 `.by` 参数。`group_by()` 和 `ungroup()` 不会消失，但现在也可以使用 `.by` 参数来在单个操作中进行分组：
+
+```{r}
+flights |> 
+  summarize(
+    avg_delay = mean(dep_delay, na.rm = TRUE), 
+    flights = n(),
+    .by = month # 按“month”分组统计
+  ) |> 
+  arrange(month)
+
+# 等价于:
+flights |> 
+  group_by(month) |> 
+  summarise(
+    avg_delay = mean(dep_delay, na.rm = TRUE), 
+    flights = n()
+    )
+
+# 支持指定多个分组依据
+flights |> 
+  summarize(
+    avg_delay = mean(dep_delay, na.rm = TRUE), 
+    flights = n(),
+    .by = c(origin, dest)
+  ) |> 
+  arrange(origin, dest)
+
+# 等价于：
+flights |> 
+  group_by(origin, dest) |> 
+  summarize(
+    avg_delay = mean(dep_delay, na.rm = TRUE), 
+    flights = n()
+  ) |> 
+  ungroup()
+```
+
+------------------------------------------------------------------------
+
+::: {.callout-note collapse="true" icon="false"}
+## Session Info
+
+```{r}
+#| echo: false
+sessionInfo()
+```
+:::

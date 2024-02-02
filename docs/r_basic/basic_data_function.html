@@ -60,7 +60,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../r_basic/character.html" rel="next">
+<link href="../r_basic/dplyr.html" rel="next">
 <link href="../r_basic/data_input_output.html" rel="prev">
 <link href="../images/logo.jpg" rel="icon" type="image/jpeg">
 <script src="../site_libs/quarto-html/quarto.js"></script>
@@ -233,6 +233,12 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   <div class="sidebar-item-container"> 
   <a href="../r_basic/basic_data_function.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">数据处理基本函数</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">基于dplyr包的数据处理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -531,7 +537,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   <li>
 <a href="#%E6%95%B0%E6%8D%AE%E6%95%B4%E7%90%86" id="toc-数据整理" class="nav-link" data-scroll-target="#%E6%95%B0%E6%8D%AE%E6%95%B4%E7%90%86"><span class="header-section-number">2</span> 数据整理</a>
   <ul class="collapse">
-<li><a href="#%E6%8E%92%E5%BA%8F" id="toc-排序" class="nav-link" data-scroll-target="#%E6%8E%92%E5%BA%8F"><span class="header-section-number">2.1</span> 排序</a></li>
+<li><a href="#sec-%E6%8E%92%E5%BA%8F" id="toc-sec-排序" class="nav-link" data-scroll-target="#sec-%E6%8E%92%E5%BA%8F"><span class="header-section-number">2.1</span> 排序</a></li>
   <li>
 <a href="#%E9%87%8D%E6%96%B0%E5%91%BD%E5%90%8D%E8%A1%8C%E5%88%97" id="toc-重新命名行列" class="nav-link" data-scroll-target="#%E9%87%8D%E6%96%B0%E5%91%BD%E5%90%8D%E8%A1%8C%E5%88%97"><span class="header-section-number">2.2</span> 重新命名行、列</a>
   <ul class="collapse">
@@ -544,7 +550,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   <ul class="collapse">
 <li><a href="#%E6%8F%90%E5%8F%96%E6%9F%90%E5%87%A0%E5%88%97%E6%95%B0%E6%8D%AE%E5%BD%A2%E6%88%90%E6%96%B0%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86" id="toc-提取某几列数据形成新的数据集" class="nav-link" data-scroll-target="#%E6%8F%90%E5%8F%96%E6%9F%90%E5%87%A0%E5%88%97%E6%95%B0%E6%8D%AE%E5%BD%A2%E6%88%90%E6%96%B0%E7%9A%84%E6%95%B0%E6%8D%AE%E9%9B%86">提取某几列数据形成新的数据集</a></li>
   <li><a href="#%E6%8F%90%E5%8F%96%E6%8C%87%E5%AE%9A%E8%A1%8C%E6%95%B0%E7%9A%84%E6%95%B0%E6%8D%AE" id="toc-提取指定行数的数据" class="nav-link" data-scroll-target="#%E6%8F%90%E5%8F%96%E6%8C%87%E5%AE%9A%E8%A1%8C%E6%95%B0%E7%9A%84%E6%95%B0%E6%8D%AE">提取指定行数的数据</a></li>
-  <li><a href="#%E7%AD%9B%E9%80%89%E6%95%B0%E6%8D%AE" id="toc-筛选数据" class="nav-link" data-scroll-target="#%E7%AD%9B%E9%80%89%E6%95%B0%E6%8D%AE">筛选数据</a></li>
+  <li><a href="#sec-%E7%AD%9B%E9%80%89%E6%95%B0%E6%8D%AE" id="toc-sec-筛选数据" class="nav-link" data-scroll-target="#sec-%E7%AD%9B%E9%80%89%E6%95%B0%E6%8D%AE">筛选数据</a></li>
   </ul>
 </li>
   <li>
@@ -562,8 +568,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   </ul>
 </li>
   <li><a href="#%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0" id="toc-数学函数" class="nav-link" data-scroll-target="#%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0"><span class="header-section-number">3</span> 数学函数</a></li>
-  <li><a href="#%E7%AE%A1%E9%81%93%E6%93%8D%E4%BD%9C%E7%AC%A6%E7%9A%84%E4%BD%BF%E7%94%A8" id="toc-管道操作符的使用" class="nav-link" data-scroll-target="#%E7%AE%A1%E9%81%93%E6%93%8D%E4%BD%9C%E7%AC%A6%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="header-section-number">4</span> 管道操作符(%&gt;%)的使用</a></li>
-  <li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0" id="toc-自定义函数" class="nav-link" data-scroll-target="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0"><span class="header-section-number">5</span> 自定义函数</a></li>
+  <li><a href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0" id="toc-自定义函数" class="nav-link" data-scroll-target="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%87%BD%E6%95%B0"><span class="header-section-number">4</span> 自定义函数</a></li>
   </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/r_basic/basic_data_function.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
@@ -825,7 +830,7 @@ LMS ESS
 </div>
 </section></section><section id="数据整理" class="level1" data-number="2"><h1 data-number="2">
 <span class="header-section-number">2</span> 数据整理</h1>
-<section id="排序" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="排序">
+<section id="sec-排序" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="sec-排序">
 <span class="header-section-number">2.1</span> 排序</h2>
 <div class="cell" data-hash="basic_data_function_cache/html/unnamed-chunk-15_0f321cb57d085f7d30b41f73965e15ab">
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
@@ -893,7 +898,7 @@ LMS ESS
 <div class="cell" data-hash="basic_data_function_cache/html/unnamed-chunk-20_b5809ba0218bc855f16d1a29e4a2960f">
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mydata_less</span> <span class="op">&lt;-</span> <span class="va">mydata</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, <span class="op">]</span><span class="co">#提取1-100行的数据</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="筛选数据" class="level3"><h3 class="anchored" data-anchor-id="筛选数据">筛选数据</h3>
+</section><section id="sec-筛选数据" class="level3"><h3 class="anchored" data-anchor-id="sec-筛选数据">筛选数据</h3>
 <p>筛选出低级别、接受了放疗的病例，并生成新的”new_data”数据集</p>
 <div class="cell" data-hash="basic_data_function_cache/html/unnamed-chunk-21_0f5dc3128fe44dceba8dd66a91567aac">
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">#方法一</span></span>
@@ -1160,103 +1165,8 @@ FALSE  TRUE
 <pre><code>[1] 3.142</code></pre>
 </div>
 </div>
-</section><section id="管道操作符的使用" class="level1" data-number="4"><h1 data-number="4">
-<span class="header-section-number">4</span> 管道操作符(%&gt;%)的使用</h1>
-<p>％&gt;％为来自<strong>dplyr包</strong>的<strong>管道操作符（pipe operator)</strong>，我们可以将其理解为车间里的流水线，经过前一步加工的产品才能进入后一步进一步加工，其作用是将上一步的结果直接传参给下一步的函数，从而省略了中间的赋值步骤，可以大量减少内存中的对象，节省内存。</p>
-<blockquote class="blockquote">
-<p><strong>将%&gt;%左边的对象传递给右边的函数，作为第一个选项的设置（或剩下唯一一个选项的设置）。</strong></p>
-<p>a %&gt;% f(b)等同于f(a,b)；b% &gt; %f(a,.,c)等同于f(a,b,c)</p>
-</blockquote>
-<p>【例一】</p>
-<p>比如我们要算f(x)=sin((x+1)^2)在x=4的值，可以分为以下三步：</p>
-<ol type="1">
-<li><p>计算a = x+1的值；</p></li>
-<li><p>计算b = a^2的值；</p></li>
-<li><p>计算c = sin(b)的值</p></li>
-</ol>
-<p>这样一来，c就是我们需要的最终结果了。用R语言管道传参，只需要这样写：</p>
-<div class="cell" data-hash="basic_data_function_cache/html/unnamed-chunk-38_fefc1b646178c8f631d515a73290bbb3">
-<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">f1</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">x</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">}</span></span>
-<span><span class="va">f2</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">x</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">}</span></span>
-<span><span class="va">f3</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html">sin</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">}</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="va">f1</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="va">f2</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="va">f3</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] -0.7568025</code></pre>
-</div>
-</div>
-<p>【例二】</p>
-<div class="cell" data-hash="basic_data_function_cache/html/unnamed-chunk-39_bc6ca093732bf56efc772e4f32df4ed1">
-<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">f1</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span><span class="op">)</span><span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">x</span><span class="op">+</span><span class="va">y</span><span class="op">)</span><span class="op">}</span></span>
-<span><span class="va">f2</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span>,<span class="va">z</span><span class="op">)</span><span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">x</span><span class="op">*</span><span class="va">y</span><span class="op">+</span><span class="va">z</span><span class="op">)</span><span class="op">}</span></span>
-<span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
-<span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
-<span><span class="va">z</span> <span class="op">&lt;-</span> <span class="fl">4</span></span>
-<span><span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">f1</span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 5</code></pre>
-</div>
-<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">y</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">f2</span><span class="op">(</span><span class="va">x</span>,<span class="va">.</span>,<span class="fl">5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 11</code></pre>
-</div>
-<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">z</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu">f2</span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span>,<span class="va">.</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 10</code></pre>
-</div>
-</div>
-<p>【例三】日期合并</p>
-<div class="cell" data-hash="basic_data_function_cache/html/unnamed-chunk-40_65711d145036a8af82749b638bc0a894">
-<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">'2017-6-22'</span><span class="op">)</span><span class="op">+</span><span class="fl">0</span><span class="op">:</span><span class="fl">14</span></span>
-<span><span class="va">hour</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">24</span>, <span class="fl">15</span><span class="op">)</span></span>
-<span><span class="va">min</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">60</span>, <span class="fl">15</span><span class="op">)</span></span>
-<span><span class="va">second</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">60</span>, <span class="fl">15</span><span class="op">)</span></span>
-<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">date</span>,<span class="va">hour</span>,<span class="va">min</span>,<span class="va">second</span><span class="op">)</span></span>
-<span><span class="va">dat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>         date hour min second
-1  2017-06-22   19  23     18
-2  2017-06-23    4  27     33
-3  2017-06-24   14  53     57
-4  2017-06-25   17   7     27
-5  2017-06-26   11  58     25
-6  2017-06-27    7  59     38
-7  2017-06-28   12  32     21
-8  2017-06-29   15  38     15
-9  2017-06-30   16  25     41
-10 2017-07-01   10  34     47
-11 2017-07-02   13  29     26
-12 2017-07-03   24   5     31
-13 2017-07-04    9   8     16
-14 2017-07-05   18  12     30
-15 2017-07-06   21  13      6</code></pre>
-</div>
-<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span></span>
-<span><span class="va">datstd</span> <span class="op">&lt;-</span> <span class="va">dat</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/unite.html">unite</a></span><span class="op">(</span><span class="st">"datehour"</span>,<span class="va">date</span>,<span class="va">hour</span>,sep <span class="op">=</span> <span class="st">' '</span>,remove <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/unite.html">unite</a></span><span class="op">(</span><span class="st">"datetime"</span>,<span class="va">datehour</span>,<span class="va">min</span>,<span class="va">second</span>,sep <span class="op">=</span> <span class="st">':'</span>,remove <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
-<span><span class="va">datstd</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>              datetime
-1  2017-06-22 19:23:18
-2   2017-06-23 4:27:33
-3  2017-06-24 14:53:57
-4   2017-06-25 17:7:27
-5  2017-06-26 11:58:25
-6   2017-06-27 7:59:38
-7  2017-06-28 12:32:21
-8  2017-06-29 15:38:15
-9  2017-06-30 16:25:41
-10 2017-07-01 10:34:47
-11 2017-07-02 13:29:26
-12  2017-07-03 24:5:31
-13   2017-07-04 9:8:16
-14 2017-07-05 18:12:30
-15  2017-07-06 21:13:6</code></pre>
-</div>
-</div>
-</section><section id="自定义函数" class="level1" data-number="5"><h1 data-number="5">
-<span class="header-section-number">5</span> 自定义函数</h1>
+</section><section id="自定义函数" class="level1" data-number="4"><h1 data-number="4">
+<span class="header-section-number">4</span> 自定义函数</h1>
 <p>R语言可以自定义函数，也可以使用其自带的函数。</p>
 <pre><code>R语言中，自定义函数的一般格式为：
 函数名 &lt;- function（输入1，……，输入n）{
@@ -1265,8 +1175,8 @@ FALSE  TRUE
 }</code></pre>
 <p>其中，return并不是必需的，默认函数体最后一行的值作为返回值，即return完全可以换成”返回值”。下面以判断score为优良及格差的代码进行讲解。案例来源：<a href="https://zhuanlan.zhihu.com/p/441710174" class="uri">https://zhuanlan.zhihu.com/p/441710174</a>。</p>
 <p>首先对于不用函数的情况</p>
-<div class="cell" data-hash="basic_data_function_cache/html/unnamed-chunk-41_c79fb38bbf917d9555a343f041f861b4">
-<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">score</span> <span class="op">=</span> <span class="fl">73</span></span>
+<div class="cell" data-hash="basic_data_function_cache/html/unnamed-chunk-38_a9d93a07a65fb32a98e709cc9cb12ad9">
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">score</span> <span class="op">=</span> <span class="fl">73</span></span>
 <span><span class="kw">if</span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;=</span> <span class="fl">90</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">res</span> <span class="op">=</span> <span class="st">"优"</span></span>
 <span>  <span class="op">}</span><span class="kw">else</span> <span class="kw">if</span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;=</span><span class="fl">70</span><span class="op">)</span><span class="op">{</span></span>
@@ -1282,8 +1192,8 @@ FALSE  TRUE
 </div>
 </div>
 <p>接下来我们自定义一个scorejudge()函数实现对单个成绩对判断。实际上就是把上面的代码封装起来</p>
-<div class="cell" data-hash="basic_data_function_cache/html/unnamed-chunk-42_7bc2f3649bd6a83457b9675d5add22d9">
-<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scorejudge</span><span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
+<div class="cell" data-hash="basic_data_function_cache/html/unnamed-chunk-39_25c7eea343529f6b522b1386dde07ad9">
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scorejudge</span><span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="kw">if</span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;=</span> <span class="fl">90</span><span class="op">)</span><span class="op">{</span></span>
 <span>    <span class="va">res</span> <span class="op">=</span> <span class="st">"优"</span></span>
 <span>    <span class="op">}</span><span class="kw">else</span> <span class="kw">if</span><span class="op">(</span><span class="va">score</span> <span class="op">&gt;=</span><span class="fl">70</span><span class="op">)</span><span class="op">{</span></span>
@@ -1301,8 +1211,8 @@ FALSE  TRUE
 </div>
 </div>
 <p>如若想要同时查询多个分数，则需要对原来的代码进行修改，加入for循环语句</p>
-<div class="cell" data-hash="basic_data_function_cache/html/unnamed-chunk-43_2879c73da43638f28d119045f138d186">
-<div class="sourceCode" id="cb106"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scorejudge</span><span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
+<div class="cell" data-hash="basic_data_function_cache/html/unnamed-chunk-40_606c812c170ec49f9e5a7f9f7ae199af">
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">scorejudge</span><span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">n</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="co">#首先确定循环次数，即x中有多少个分数，下面的for循环就要运行多少次</span></span>
 <span>  <span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">vector</a></span><span class="op">(</span><span class="st">"character"</span>,<span class="va">n</span><span class="op">)</span><span class="co">#建立一个和输入的分数个数相同的空向量，用来放每次for循环的输出结果</span></span>
 <span>  <span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span><span class="op">{</span></span>
@@ -1747,497 +1657,439 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../r_basic/character.html" class="pagination-link">
-        <span class="nav-page-text">字符的处理</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../r_basic/dplyr.html" class="pagination-link">
+        <span class="nav-page-text">基于dplyr包的数据处理</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb108" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "数据处理基本函数"</span></span>
-<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a><span class="fu"># 数据展示</span></span>
-<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>载入示例数据：</span>
-<span id="cb108-8"><a href="#cb108-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-11"><a href="#cb108-11" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-12"><a href="#cb108-12" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/r_basic/lms_ess.rds"</span>)</span>
-<span id="cb108-13"><a href="#cb108-13" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-14"><a href="#cb108-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-15"><a href="#cb108-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## 展示最大值、最小值、平均数、中位数、缺失值数量</span></span>
-<span id="cb108-16"><a href="#cb108-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-19"><a href="#cb108-19" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-20"><a href="#cb108-20" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mydata)</span>
-<span id="cb108-21"><a href="#cb108-21" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-22"><a href="#cb108-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-23"><a href="#cb108-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## 展示变量数量和样本数量</span></span>
-<span id="cb108-24"><a href="#cb108-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-25"><a href="#cb108-25" aria-hidden="true" tabindex="-1"></a><span class="fu">### 展示变量（列）数</span></span>
-<span id="cb108-26"><a href="#cb108-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-29"><a href="#cb108-29" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-30"><a href="#cb108-30" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(mydata)[<span class="dv">2</span>]<span class="co">#dim()函数获取数据的维度，即行、列数。所以[1]输出行数，[2]输出列数</span></span>
-<span id="cb108-31"><a href="#cb108-31" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(mydata)<span class="co">#另一种方式</span></span>
-<span id="cb108-32"><a href="#cb108-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-33"><a href="#cb108-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-34"><a href="#cb108-34" aria-hidden="true" tabindex="-1"></a><span class="fu">### 展示行数</span></span>
-<span id="cb108-35"><a href="#cb108-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-38"><a href="#cb108-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-39"><a href="#cb108-39" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(mydata)[<span class="dv">1</span>]</span>
-<span id="cb108-40"><a href="#cb108-40" aria-hidden="true" tabindex="-1"></a><span class="co">#或者</span></span>
-<span id="cb108-41"><a href="#cb108-41" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(mydata)</span>
-<span id="cb108-42"><a href="#cb108-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-43"><a href="#cb108-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-44"><a href="#cb108-44" aria-hidden="true" tabindex="-1"></a><span class="fu">### 综合展示</span></span>
-<span id="cb108-45"><a href="#cb108-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-48"><a href="#cb108-48" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-49"><a href="#cb108-49" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"该数据集有 "</span>,<span class="fu">dim</span>(mydata)[<span class="dv">1</span>],<span class="st">" 个样本； "</span>,<span class="fu">dim</span>(mydata)[<span class="dv">2</span>],<span class="st">" 个变量"</span>))</span>
-<span id="cb108-50"><a href="#cb108-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-51"><a href="#cb108-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-52"><a href="#cb108-52" aria-hidden="true" tabindex="-1"></a><span class="fu">### 展示所有变量名</span></span>
-<span id="cb108-53"><a href="#cb108-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-56"><a href="#cb108-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-57"><a href="#cb108-57" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mydata)</span>
-<span id="cb108-58"><a href="#cb108-58" aria-hidden="true" tabindex="-1"></a><span class="co">#或者通过dput函数将所有变量名输出为向量</span></span>
-<span id="cb108-59"><a href="#cb108-59" aria-hidden="true" tabindex="-1"></a><span class="fu">dput</span>(<span class="fu">names</span>(mydata))</span>
-<span id="cb108-60"><a href="#cb108-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-61"><a href="#cb108-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-62"><a href="#cb108-62" aria-hidden="true" tabindex="-1"></a><span class="fu">### 展示所有行名称</span></span>
-<span id="cb108-63"><a href="#cb108-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-66"><a href="#cb108-66" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-67"><a href="#cb108-67" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-68"><a href="#cb108-68" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
-<span id="cb108-69"><a href="#cb108-69" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(mydata)</span>
-<span id="cb108-70"><a href="#cb108-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-71"><a href="#cb108-71" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-72"><a href="#cb108-72" aria-hidden="true" tabindex="-1"></a><span class="fu">### 展示某个变量的所有值及其频数</span></span>
-<span id="cb108-73"><a href="#cb108-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-76"><a href="#cb108-76" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-77"><a href="#cb108-77" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(mydata<span class="sc">$</span>his)</span>
-<span id="cb108-78"><a href="#cb108-78" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(mydata<span class="sc">$</span>age,<span class="at">col=</span><span class="st">"coral"</span>)<span class="co">#以直方图的形式展示</span></span>
-<span id="cb108-79"><a href="#cb108-79" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-80"><a href="#cb108-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-81"><a href="#cb108-81" aria-hidden="true" tabindex="-1"></a><span class="fu">## 展示缺失值的构成</span></span>
-<span id="cb108-82"><a href="#cb108-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-83"><a href="#cb108-83" aria-hidden="true" tabindex="-1"></a>加载案例数据：这里用VIM包内自带的sleep数据集为例进行演示。该数据集显示了两种安眠药对10名患者的影响(与对照组相比，睡眠时间的增加量)。其中就包含了很多缺失值。</span>
-<span id="cb108-84"><a href="#cb108-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-87"><a href="#cb108-87" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-88"><a href="#cb108-88" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(sleep, <span class="at">package=</span><span class="st">"VIM"</span>)</span>
-<span id="cb108-89"><a href="#cb108-89" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sleep)</span>
-<span id="cb108-90"><a href="#cb108-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-91"><a href="#cb108-91" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-92"><a href="#cb108-92" aria-hidden="true" tabindex="-1"></a>首先展示缺失值的比例。</span>
-<span id="cb108-93"><a href="#cb108-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-94"><a href="#cb108-94" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>左侧直方图展示单个变量的缺失比例，其中NonD缺失比例大于20%。</span>
-<span id="cb108-95"><a href="#cb108-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-96"><a href="#cb108-96" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>右侧直方图展示各个变量的缺失模式。如第一行表示NonD、Dream和Span 3个变量共同缺失的比例为1.6%。NonD的缺失比例=1.6%+3.2%+3.2%+14.5%=22.5%。所有变量均无缺失值的个案占67.7%</span>
-<span id="cb108-97"><a href="#cb108-97" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-98"><a href="#cb108-98" aria-hidden="true" tabindex="-1"></a>输出的结果部分同样展示了各个变量缺失的具体比例</span>
-<span id="cb108-99"><a href="#cb108-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-102"><a href="#cb108-102" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-103"><a href="#cb108-103" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VIM)</span>
-<span id="cb108-104"><a href="#cb108-104" aria-hidden="true" tabindex="-1"></a>aggr_plot<span class="ot">&lt;-</span><span class="fu">aggr</span>(sleep,</span>
-<span id="cb108-105"><a href="#cb108-105" aria-hidden="true" tabindex="-1"></a>                <span class="at">prop=</span>T,</span>
-<span id="cb108-106"><a href="#cb108-106" aria-hidden="true" tabindex="-1"></a>                <span class="at">numbers=</span>T,</span>
-<span id="cb108-107"><a href="#cb108-107" aria-hidden="true" tabindex="-1"></a>                <span class="at">sortVars=</span><span class="cn">TRUE</span>,</span>
-<span id="cb108-108"><a href="#cb108-108" aria-hidden="true" tabindex="-1"></a>                <span class="at">gap=</span><span class="dv">2</span>,</span>
-<span id="cb108-109"><a href="#cb108-109" aria-hidden="true" tabindex="-1"></a>                <span class="at">ylab=</span><span class="fu">c</span>(<span class="st">"Histogram of missing data"</span>,<span class="st">"Pattern"</span>))</span>
-<span id="cb108-110"><a href="#cb108-110" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-111"><a href="#cb108-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-112"><a href="#cb108-112" aria-hidden="true" tabindex="-1"></a>展示缺失值的数量。输出的结果部分展示了各个变量缺失的具体数量。</span>
-<span id="cb108-113"><a href="#cb108-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-116"><a href="#cb108-116" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-117"><a href="#cb108-117" aria-hidden="true" tabindex="-1"></a>aggr_plot<span class="ot">&lt;-</span><span class="fu">aggr</span>(sleep,</span>
-<span id="cb108-118"><a href="#cb108-118" aria-hidden="true" tabindex="-1"></a>                <span class="at">prop=</span>F,</span>
-<span id="cb108-119"><a href="#cb108-119" aria-hidden="true" tabindex="-1"></a>                <span class="at">numbers=</span>T,</span>
-<span id="cb108-120"><a href="#cb108-120" aria-hidden="true" tabindex="-1"></a>                <span class="at">sortVars=</span><span class="cn">TRUE</span>,</span>
-<span id="cb108-121"><a href="#cb108-121" aria-hidden="true" tabindex="-1"></a>                <span class="at">gap=</span><span class="dv">2</span>,</span>
-<span id="cb108-122"><a href="#cb108-122" aria-hidden="true" tabindex="-1"></a>                <span class="at">ylab=</span><span class="fu">c</span>(<span class="st">"Histogram of missing data"</span>,<span class="st">"Pattern"</span>))</span>
-<span id="cb108-123"><a href="#cb108-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-124"><a href="#cb108-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-125"><a href="#cb108-125" aria-hidden="true" tabindex="-1"></a>以表格的形式展示各个变量的缺失模式（同右侧图形）</span>
-<span id="cb108-126"><a href="#cb108-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-129"><a href="#cb108-129" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-130"><a href="#cb108-130" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(aggr_plot)</span>
-<span id="cb108-131"><a href="#cb108-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-132"><a href="#cb108-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-133"><a href="#cb108-133" aria-hidden="true" tabindex="-1"></a>通过marginplot分析缺失值。空心的湖蓝色圆圈表示非缺失值，红色实心圆圈表示缺失值，深红色实心圆圈表示两个变量均缺失。图左侧的红色箱型图显示了在保留NonD缺失值的情况下Dream的分布，蓝色箱型图显示了删除NonD缺失值后Dream的分布。图表底部的框图正好相反，反映了在保留和删除Dreamq缺失值的情况下NonD的分布情况。如果数据是完全随机缺失(MCAR : missing completely at random)，那么红色和蓝色箱型图将十分接近</span>
-<span id="cb108-134"><a href="#cb108-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-137"><a href="#cb108-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-138"><a href="#cb108-138" aria-hidden="true" tabindex="-1"></a><span class="fu">marginplot</span>(sleep[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>])</span>
-<span id="cb108-139"><a href="#cb108-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-140"><a href="#cb108-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-141"><a href="#cb108-141" aria-hidden="true" tabindex="-1"></a>删除所有缺失值</span>
-<span id="cb108-142"><a href="#cb108-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-145"><a href="#cb108-145" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-146"><a href="#cb108-146" aria-hidden="true" tabindex="-1"></a>sleep<span class="ot">&lt;-</span><span class="fu">na.omit</span>(sleep)</span>
-<span id="cb108-147"><a href="#cb108-147" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-148"><a href="#cb108-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-149"><a href="#cb108-149" aria-hidden="true" tabindex="-1"></a><span class="fu"># 数据整理</span></span>
-<span id="cb108-150"><a href="#cb108-150" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-151"><a href="#cb108-151" aria-hidden="true" tabindex="-1"></a><span class="fu">## 排序</span></span>
-<span id="cb108-152"><a href="#cb108-152" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-155"><a href="#cb108-155" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-156"><a href="#cb108-156" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb108-157"><a href="#cb108-157" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">arrange</span>(mydata, age)<span class="co">#按照某列升序排序</span></span>
-<span id="cb108-158"><a href="#cb108-158" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>age[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb108-159"><a href="#cb108-159" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">arrange</span>(mydata, <span class="fu">desc</span>(age))<span class="co">#按照某列降序排序</span></span>
-<span id="cb108-160"><a href="#cb108-160" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>age[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
-<span id="cb108-161"><a href="#cb108-161" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">arrange</span>(mydata, his, tumor_size)<span class="co">#根据多列排序</span></span>
-<span id="cb108-162"><a href="#cb108-162" aria-hidden="true" tabindex="-1"></a>mydata[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,<span class="fu">c</span>(<span class="st">"his"</span>, <span class="st">"tumor_size"</span>)]</span>
-<span id="cb108-163"><a href="#cb108-163" aria-hidden="true" tabindex="-1"></a>mydata[<span class="dv">445</span><span class="sc">:</span><span class="dv">455</span>,<span class="fu">c</span>(<span class="st">"his"</span>, <span class="st">"tumor_size"</span>)]</span>
-<span id="cb108-164"><a href="#cb108-164" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-165"><a href="#cb108-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-166"><a href="#cb108-166" aria-hidden="true" tabindex="-1"></a>也可用自带base包内的<span class="in">`order()`</span>函数排序：</span>
-<span id="cb108-167"><a href="#cb108-167" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-170"><a href="#cb108-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-171"><a href="#cb108-171" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-172"><a href="#cb108-172" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> mydata[<span class="fu">order</span>(mydata<span class="sc">$</span>age),]</span>
-<span id="cb108-173"><a href="#cb108-173" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> mydata[<span class="fu">order</span>(<span class="sc">-</span>mydata<span class="sc">$</span>age),]</span>
-<span id="cb108-174"><a href="#cb108-174" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> mydata[<span class="fu">order</span>(mydata<span class="sc">$</span>age, mydata<span class="sc">$</span>his, mydata<span class="sc">$</span>tumor_size),]</span>
-<span id="cb108-175"><a href="#cb108-175" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-176"><a href="#cb108-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-177"><a href="#cb108-177" aria-hidden="true" tabindex="-1"></a><span class="fu">## 重新命名行、列</span></span>
-<span id="cb108-178"><a href="#cb108-178" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-179"><a href="#cb108-179" aria-hidden="true" tabindex="-1"></a><span class="fu">### 重新命名变量（列）</span></span>
-<span id="cb108-180"><a href="#cb108-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-183"><a href="#cb108-183" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-184"><a href="#cb108-184" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-185"><a href="#cb108-185" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(mydata) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"N"</span>,<span class="st">"patient_ID"</span>,<span class="st">"diagnosis"</span>) <span class="co"># 连续命名</span></span>
-<span id="cb108-186"><a href="#cb108-186" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mydata)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">'patient_ID'</span><span class="co"># 重新命名指定列名</span></span>
-<span id="cb108-187"><a href="#cb108-187" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-188"><a href="#cb108-188" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-189"><a href="#cb108-189" aria-hidden="true" tabindex="-1"></a><span class="fu">### 设置行名</span></span>
-<span id="cb108-190"><a href="#cb108-190" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-193"><a href="#cb108-193" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-194"><a href="#cb108-194" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-195"><a href="#cb108-195" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(mydata) <span class="ot">&lt;-</span> mydata<span class="sc">$</span>ID <span class="co"># 将ID列设置为行名（注意不能有重复值）</span></span>
-<span id="cb108-196"><a href="#cb108-196" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-197"><a href="#cb108-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-198"><a href="#cb108-198" aria-hidden="true" tabindex="-1"></a><span class="fu">## 数据筛选</span></span>
-<span id="cb108-199"><a href="#cb108-199" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-200"><a href="#cb108-200" aria-hidden="true" tabindex="-1"></a><span class="fu">### 提取某几列数据形成新的数据集</span></span>
-<span id="cb108-201"><a href="#cb108-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-204"><a href="#cb108-204" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-205"><a href="#cb108-205" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-206"><a href="#cb108-206" aria-hidden="true" tabindex="-1"></a>vnumber <span class="ot">&lt;-</span> mydata[, <span class="dv">4</span><span class="sc">:</span><span class="dv">16</span>] <span class="co"># 提取第4-16列的数据形成新的“vnumber”数据集</span></span>
-<span id="cb108-207"><a href="#cb108-207" aria-hidden="true" tabindex="-1"></a>vnumber <span class="ot">&lt;-</span> mydata[,<span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">12</span>,<span class="dv">16</span>)] <span class="co"># 提取2-12列和第16列的数据</span></span>
-<span id="cb108-208"><a href="#cb108-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-209"><a href="#cb108-209" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-210"><a href="#cb108-210" aria-hidden="true" tabindex="-1"></a><span class="fu">### 提取指定行数的数据</span></span>
-<span id="cb108-211"><a href="#cb108-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-214"><a href="#cb108-214" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-215"><a href="#cb108-215" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-216"><a href="#cb108-216" aria-hidden="true" tabindex="-1"></a>mydata_less <span class="ot">&lt;-</span> mydata[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, ]<span class="co">#提取1-100行的数据</span></span>
-<span id="cb108-217"><a href="#cb108-217" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-218"><a href="#cb108-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-219"><a href="#cb108-219" aria-hidden="true" tabindex="-1"></a><span class="fu">### 筛选数据</span></span>
-<span id="cb108-220"><a href="#cb108-220" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-221"><a href="#cb108-221" aria-hidden="true" tabindex="-1"></a>筛选出低级别、接受了放疗的病例，并生成新的"new_data"数据集</span>
-<span id="cb108-222"><a href="#cb108-222" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-225"><a href="#cb108-225" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-226"><a href="#cb108-226" aria-hidden="true" tabindex="-1"></a><span class="co">#方法一</span></span>
-<span id="cb108-227"><a href="#cb108-227" aria-hidden="true" tabindex="-1"></a>new_data<span class="ot">&lt;-</span><span class="fu">subset</span>(mydata,grade <span class="sc">==</span> <span class="st">"Well differentiated; Grade I"</span> <span class="sc">&amp;</span> rad <span class="sc">==</span> <span class="st">"Yes"</span>)</span>
-<span id="cb108-228"><a href="#cb108-228" aria-hidden="true" tabindex="-1"></a>new_data[,<span class="fu">c</span>(<span class="st">"grade"</span>, <span class="st">"rad"</span>)]</span>
-<span id="cb108-229"><a href="#cb108-229" aria-hidden="true" tabindex="-1"></a><span class="co">#也可用“｜”（或者），“！”（NOT）连接</span></span>
-<span id="cb108-230"><a href="#cb108-230" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-231"><a href="#cb108-231" aria-hidden="true" tabindex="-1"></a><span class="co">#方法二</span></span>
-<span id="cb108-232"><a href="#cb108-232" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> mydata[<span class="fu">which</span>((mydata<span class="sc">$</span>grade <span class="sc">==</span> <span class="st">"Well differentiated; Grade I"</span>) <span class="sc">&amp;</span></span>
-<span id="cb108-233"><a href="#cb108-233" aria-hidden="true" tabindex="-1"></a>                           (mydata<span class="sc">$</span>rad <span class="sc">==</span> <span class="st">"Yes"</span>)),] </span>
-<span id="cb108-234"><a href="#cb108-234" aria-hidden="true" tabindex="-1"></a>new_data[,<span class="fu">c</span>(<span class="st">"grade"</span>, <span class="st">"rad"</span>)]</span>
-<span id="cb108-235"><a href="#cb108-235" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-236"><a href="#cb108-236" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-237"><a href="#cb108-237" aria-hidden="true" tabindex="-1"></a><span class="fu">## 合并两个数据集</span></span>
-<span id="cb108-238"><a href="#cb108-238" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-239"><a href="#cb108-239" aria-hidden="true" tabindex="-1"></a><span class="fu">### 纵向合并</span></span>
-<span id="cb108-240"><a href="#cb108-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-241"><a href="#cb108-241" aria-hidden="true" tabindex="-1"></a>即增加个案，要求两个数据集具有相同的列名及列数</span>
-<span id="cb108-242"><a href="#cb108-242" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-245"><a href="#cb108-245" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-246"><a href="#cb108-246" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-247"><a href="#cb108-247" aria-hidden="true" tabindex="-1"></a>rbind_data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(mydata, mydata2)</span>
-<span id="cb108-248"><a href="#cb108-248" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-249"><a href="#cb108-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-250"><a href="#cb108-250" aria-hidden="true" tabindex="-1"></a><span class="fu">### 横向合并</span></span>
-<span id="cb108-251"><a href="#cb108-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-252"><a href="#cb108-252" aria-hidden="true" tabindex="-1"></a>直接通过cbind()函数合并数据集，要求两个数据集具有相同的行数及顺序</span>
-<span id="cb108-253"><a href="#cb108-253" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-256"><a href="#cb108-256" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-257"><a href="#cb108-257" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-258"><a href="#cb108-258" aria-hidden="true" tabindex="-1"></a>total <span class="ot">&lt;-</span> <span class="fu">cbind</span>(dataframeA, dataframeB)</span>
-<span id="cb108-259"><a href="#cb108-259" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-260"><a href="#cb108-260" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-261"><a href="#cb108-261" aria-hidden="true" tabindex="-1"></a><span class="fu">### 以某一列（如学号等）匹配两个数据集</span></span>
-<span id="cb108-262"><a href="#cb108-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-263"><a href="#cb108-263" aria-hidden="true" tabindex="-1"></a>详细解读：<span class="ot">&lt;https://blog.csdn.net/chongbaikaishi/article/details/115740560&gt;</span></span>
-<span id="cb108-264"><a href="#cb108-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-267"><a href="#cb108-267" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-268"><a href="#cb108-268" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-269"><a href="#cb108-269" aria-hidden="true" tabindex="-1"></a><span class="co"># 以"probe_id"为匹配标准匹配探针id和gene symbol</span></span>
-<span id="cb108-270"><a href="#cb108-270" aria-hidden="true" tabindex="-1"></a>exptab1 <span class="ot">&lt;-</span> <span class="fu">merge</span>(<span class="at">x =</span> ids,</span>
-<span id="cb108-271"><a href="#cb108-271" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> expset1,<span class="co">#x、y为要合并的数据框或者对象</span></span>
-<span id="cb108-272"><a href="#cb108-272" aria-hidden="true" tabindex="-1"></a>                 <span class="at">by =</span><span class="st">"probe_id"</span>, <span class="co">#指定以哪一列为标准匹配两个数据集。</span></span>
-<span id="cb108-273"><a href="#cb108-273" aria-hidden="true" tabindex="-1"></a>                                 <span class="co">#如果有多个匹配项，则所有可能的匹配项各贡献一行。</span></span>
-<span id="cb108-274"><a href="#cb108-274" aria-hidden="true" tabindex="-1"></a>                 <span class="at">all.x=</span>F,<span class="co">#是否将没有匹配到y数据集的行也保留下来，并以NA替代。</span></span>
-<span id="cb108-275"><a href="#cb108-275" aria-hidden="true" tabindex="-1"></a>                         <span class="co">#默认为FALSE，只有x与y数据框相匹配的行会被包含在输出结果中</span></span>
-<span id="cb108-276"><a href="#cb108-276" aria-hidden="true" tabindex="-1"></a>                 <span class="at">all.y=</span>F)<span class="co">#与上面类似</span></span>
-<span id="cb108-277"><a href="#cb108-277" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-278"><a href="#cb108-278" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-279"><a href="#cb108-279" aria-hidden="true" tabindex="-1"></a>如果两个数据集要用来匹配的列的列名不同则可用by.x和by.y指定。如下面的代码就是用id2symbol数据集中的ENSEMBL列去匹配rawcount数据集中的GeneID列</span>
-<span id="cb108-280"><a href="#cb108-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-283"><a href="#cb108-283" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-284"><a href="#cb108-284" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-285"><a href="#cb108-285" aria-hidden="true" tabindex="-1"></a>rawcount <span class="ot">&lt;-</span> <span class="fu">merge</span>(id2symbol,</span>
-<span id="cb108-286"><a href="#cb108-286" aria-hidden="true" tabindex="-1"></a>                  rawcount,</span>
-<span id="cb108-287"><a href="#cb108-287" aria-hidden="true" tabindex="-1"></a>                  <span class="at">by.x=</span><span class="st">"ENSEMBL"</span>,</span>
-<span id="cb108-288"><a href="#cb108-288" aria-hidden="true" tabindex="-1"></a>                  <span class="at">by.y=</span><span class="st">"GeneID"</span>,</span>
-<span id="cb108-289"><a href="#cb108-289" aria-hidden="true" tabindex="-1"></a>                  <span class="at">all.y=</span>T)<span class="co">#对于没有匹配到的GeneID以NA替代</span></span>
-<span id="cb108-290"><a href="#cb108-290" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-291"><a href="#cb108-291" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-292"><a href="#cb108-292" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/20210416100511517.png)</span></span>
-<span id="cb108-293"><a href="#cb108-293" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-294"><a href="#cb108-294" aria-hidden="true" tabindex="-1"></a><span class="fu">## 去重（保留唯一值）</span></span>
-<span id="cb108-295"><a href="#cb108-295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-296"><a href="#cb108-296" aria-hidden="true" tabindex="-1"></a>生成带有重复值的示例数据</span>
-<span id="cb108-297"><a href="#cb108-297" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-300"><a href="#cb108-300" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-301"><a href="#cb108-301" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb108-302"><a href="#cb108-302" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">9</span>,<span class="dv">2</span>), <span class="at">y =</span> <span class="fu">rnorm</span>(<span class="dv">16</span>))</span>
-<span id="cb108-303"><a href="#cb108-303" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">rbind</span>(mydata, mydata)</span>
-<span id="cb108-304"><a href="#cb108-304" aria-hidden="true" tabindex="-1"></a>mydata</span>
-<span id="cb108-305"><a href="#cb108-305" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-306"><a href="#cb108-306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-307"><a href="#cb108-307" aria-hidden="true" tabindex="-1"></a>通过<span class="in">`duplicated()`</span>函数检查某一列是否有重复值，及有多少重复值</span>
-<span id="cb108-308"><a href="#cb108-308" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-311"><a href="#cb108-311" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-312"><a href="#cb108-312" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">duplicated</span>(mydata<span class="sc">$</span>ID))</span>
-<span id="cb108-313"><a href="#cb108-313" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-314"><a href="#cb108-314" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-315"><a href="#cb108-315" aria-hidden="true" tabindex="-1"></a>通过<span class="in">`unique()`</span>函数去除完全相同的行。<span class="in">`unique()`</span>函数：一行的所有数据都相同认定为重复</span>
-<span id="cb108-316"><a href="#cb108-316" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-319"><a href="#cb108-319" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-320"><a href="#cb108-320" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">unique</span>(mydata)</span>
-<span id="cb108-321"><a href="#cb108-321" aria-hidden="true" tabindex="-1"></a>mydata</span>
-<span id="cb108-322"><a href="#cb108-322" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-323"><a href="#cb108-323" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-324"><a href="#cb108-324" aria-hidden="true" tabindex="-1"></a>通过<span class="in">`distinct()`</span>函数，去除ID列重复的数据</span>
-<span id="cb108-325"><a href="#cb108-325" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-328"><a href="#cb108-328" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-329"><a href="#cb108-329" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb108-330"><a href="#cb108-330" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">distinct</span>(mydata, <span class="co"># 需要去重的数据集名称</span></span>
-<span id="cb108-331"><a href="#cb108-331" aria-hidden="true" tabindex="-1"></a>                   ID, <span class="co"># 按照哪一列去重（可为多个条件）</span></span>
-<span id="cb108-332"><a href="#cb108-332" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.keep_all =</span> T) <span class="co"># 去重后保留所有列</span></span>
-<span id="cb108-333"><a href="#cb108-333" aria-hidden="true" tabindex="-1"></a>mydata</span>
-<span id="cb108-334"><a href="#cb108-334" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-335"><a href="#cb108-335" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-336"><a href="#cb108-336" aria-hidden="true" tabindex="-1"></a><span class="fu">## 变量的赋值/替换</span></span>
-<span id="cb108-337"><a href="#cb108-337" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-340"><a href="#cb108-340" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-341"><a href="#cb108-341" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-342"><a href="#cb108-342" aria-hidden="true" tabindex="-1"></a>savdata<span class="sc">$</span>low <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(savdata<span class="sc">$</span>low <span class="sc">==</span><span class="st">"低出生体重"</span>, <span class="dv">1</span>, <span class="dv">0</span>)<span class="co">#将结局变量low赋值为0和1</span></span>
-<span id="cb108-343"><a href="#cb108-343" aria-hidden="true" tabindex="-1"></a>mydata[<span class="fu">is.na</span>(mydata)] <span class="ot">&lt;-</span> <span class="st">"Unknown"</span><span class="co">#替换缺失值</span></span>
-<span id="cb108-344"><a href="#cb108-344" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-345"><a href="#cb108-345" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-346"><a href="#cb108-346" aria-hidden="true" tabindex="-1"></a>当需要对一个数据集的多个变量进行转换时，可通过<span class="in">`within(data, {expression})`</span>函数将括号内的操作限定到当前数据集中，避免"\$"的反复使用，简化代码。函数<span class="in">`within()`</span>与函数<span class="in">`with()`</span>类似，不同的是<span class="in">`within()`</span>允许你修改数据框:</span>
-<span id="cb108-347"><a href="#cb108-347" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-350"><a href="#cb108-350" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-351"><a href="#cb108-351" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">within</span>(mydata, {</span>
-<span id="cb108-352"><a href="#cb108-352" aria-hidden="true" tabindex="-1"></a>  ID <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(ID <span class="sc">&lt;</span> <span class="dv">5</span>, <span class="st">"A"</span>, <span class="st">"B"</span>)</span>
-<span id="cb108-353"><a href="#cb108-353" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(y <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="st">"A"</span>, <span class="st">"B"</span>)</span>
-<span id="cb108-354"><a href="#cb108-354" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb108-355"><a href="#cb108-355" aria-hidden="true" tabindex="-1"></a>mydata</span>
-<span id="cb108-356"><a href="#cb108-356" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-357"><a href="#cb108-357" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-358"><a href="#cb108-358" aria-hidden="true" tabindex="-1"></a><span class="fu">## 转换变量类型</span></span>
-<span id="cb108-359"><a href="#cb108-359" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-360"><a href="#cb108-360" aria-hidden="true" tabindex="-1"></a>将结局变量转换成因子变量,ordered=F,用于定义无序多分类变量，起到设置哑变量的作用；ordered=T用于定义有序多分类变量。如果变量的取值以英文字符表示，那么默认以变量首字母的顺序编号赋值；如果变量的取值已经转换成数字，那么默认按照编号的大小依次赋值。可以通过指定"levels"选项来覆盖默认排序。</span>
-<span id="cb108-361"><a href="#cb108-361" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-364"><a href="#cb108-364" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-365"><a href="#cb108-365" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-366"><a href="#cb108-366" aria-hidden="true" tabindex="-1"></a>savdata<span class="sc">$</span>stage <span class="ot">&lt;-</span> <span class="fu">factor</span>(savdata<span class="sc">$</span>stage, </span>
-<span id="cb108-367"><a href="#cb108-367" aria-hidden="true" tabindex="-1"></a>                        <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>),</span>
-<span id="cb108-368"><a href="#cb108-368" aria-hidden="true" tabindex="-1"></a>                        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"I"</span>,<span class="st">"II"</span>,<span class="st">"III"</span>,<span class="st">"IV"</span>),</span>
-<span id="cb108-369"><a href="#cb108-369" aria-hidden="true" tabindex="-1"></a>                        <span class="at">ordered =</span> T)</span>
-<span id="cb108-370"><a href="#cb108-370" aria-hidden="true" tabindex="-1"></a>savdata<span class="sc">$</span>stage <span class="ot">&lt;-</span> <span class="fu">relevel</span>(savdata<span class="sc">$</span>stage,<span class="at">ref=</span><span class="st">"IV"</span>) <span class="co"># 设置因子的参照水平，仅限无序因子变量</span></span>
-<span id="cb108-371"><a href="#cb108-371" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-372"><a href="#cb108-372" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-373"><a href="#cb108-373" aria-hidden="true" tabindex="-1"></a>通过<span class="in">`lapply`</span>函数批量转换因子变量</span>
-<span id="cb108-374"><a href="#cb108-374" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-377"><a href="#cb108-377" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-378"><a href="#cb108-378" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-379"><a href="#cb108-379" aria-hidden="true" tabindex="-1"></a>mydata[<span class="dv">2</span><span class="sc">:</span><span class="dv">14</span>] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(mydata[<span class="dv">2</span><span class="sc">:</span><span class="dv">14</span>], factor) <span class="co"># 转换几个连续列的因子变量</span></span>
-<span id="cb108-380"><a href="#cb108-380" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-381"><a href="#cb108-381" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-382"><a href="#cb108-382" aria-hidden="true" tabindex="-1"></a>批量转换多个指定因子变量</span>
-<span id="cb108-383"><a href="#cb108-383" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-386"><a href="#cb108-386" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-387"><a href="#cb108-387" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-388"><a href="#cb108-388" aria-hidden="true" tabindex="-1"></a>catvars<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"race"</span>, <span class="st">"single"</span>, <span class="st">"grade"</span>, <span class="st">"T_stage"</span>, <span class="st">"N_stage"</span>, <span class="st">"M_stage"</span>,</span>
-<span id="cb108-389"><a href="#cb108-389" aria-hidden="true" tabindex="-1"></a>           <span class="st">"surgery"</span>, <span class="st">"lymphadenectomy"</span>, <span class="st">"radiotherapy"</span>, <span class="st">"chemotherapy"</span>)</span>
-<span id="cb108-390"><a href="#cb108-390" aria-hidden="true" tabindex="-1"></a>mydata[catvars] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(mydata[catvars], factor)</span>
-<span id="cb108-391"><a href="#cb108-391" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-392"><a href="#cb108-392" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-393"><a href="#cb108-393" aria-hidden="true" tabindex="-1"></a>转换为数值型变量</span>
-<span id="cb108-394"><a href="#cb108-394" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-397"><a href="#cb108-397" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-398"><a href="#cb108-398" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-399"><a href="#cb108-399" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>grade <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(mydata<span class="sc">$</span>grade)</span>
-<span id="cb108-400"><a href="#cb108-400" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">=</span> <span class="fu">lapply</span>(mydata, as.numeric) <span class="co"># 将所有的变量转换成数值型</span></span>
-<span id="cb108-401"><a href="#cb108-401" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-402"><a href="#cb108-402" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-403"><a href="#cb108-403" aria-hidden="true" tabindex="-1"></a><span class="fu">## 哑变量设置</span></span>
-<span id="cb108-404"><a href="#cb108-404" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-407"><a href="#cb108-407" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-408"><a href="#cb108-408" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb108-409"><a href="#cb108-409" aria-hidden="true" tabindex="-1"></a><span class="co"># 因种族为无序多分类变量，需要设置三个哑变量（race1～3）</span></span>
-<span id="cb108-410"><a href="#cb108-410" aria-hidden="true" tabindex="-1"></a>savdata<span class="sc">$</span>race1 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(savdata<span class="sc">$</span>race <span class="sc">==</span> <span class="st">"白种人"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb108-411"><a href="#cb108-411" aria-hidden="true" tabindex="-1"></a>savdata<span class="sc">$</span>race2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(savdata<span class="sc">$</span>race <span class="sc">==</span> <span class="st">"黑种人"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb108-412"><a href="#cb108-412" aria-hidden="true" tabindex="-1"></a>savdata<span class="sc">$</span>race3 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(savdata<span class="sc">$</span>race <span class="sc">==</span> <span class="st">"其他种族"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
-<span id="cb108-413"><a href="#cb108-413" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-414"><a href="#cb108-414" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-415"><a href="#cb108-415" aria-hidden="true" tabindex="-1"></a><span class="fu"># 数学函数</span></span>
-<span id="cb108-416"><a href="#cb108-416" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-419"><a href="#cb108-419" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-420"><a href="#cb108-420" aria-hidden="true" tabindex="-1"></a><span class="fu">abs</span>(<span class="sc">-</span><span class="dv">4</span>) <span class="co">#取绝对值</span></span>
-<span id="cb108-421"><a href="#cb108-421" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">16</span>) <span class="co">#开平方根</span></span>
-<span id="cb108-422"><a href="#cb108-422" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="dv">4</span>,<span class="at">base=</span><span class="dv">2</span>) <span class="co">#取2为底的对数</span></span>
-<span id="cb108-423"><a href="#cb108-423" aria-hidden="true" tabindex="-1"></a><span class="fu">log10</span>(<span class="dv">100</span>) <span class="co">#取10为底的对数</span></span>
-<span id="cb108-424"><a href="#cb108-424" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="dv">2</span>) <span class="co">#取2的自然对数</span></span>
-<span id="cb108-425"><a href="#cb108-425" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="dv">2</span>) <span class="co">#取e的指数函数</span></span>
-<span id="cb108-426"><a href="#cb108-426" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-427"><a href="#cb108-427" aria-hidden="true" tabindex="-1"></a><span class="co">#设置小数位数</span></span>
-<span id="cb108-428"><a href="#cb108-428" aria-hidden="true" tabindex="-1"></a><span class="fu">ceiling</span>(<span class="fl">3.14159</span>) <span class="co">#取不小于x的最小整数（有小数点一律进一位）</span></span>
-<span id="cb108-429"><a href="#cb108-429" aria-hidden="true" tabindex="-1"></a><span class="fu">floor</span>(<span class="fl">3.99999</span>) <span class="co">#取不大于x的最大整数（忽略小数点）</span></span>
-<span id="cb108-430"><a href="#cb108-430" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"%0.3f"</span>, <span class="fl">3.14159</span>) <span class="co">#四舍五入保留3位小数</span></span>
-<span id="cb108-431"><a href="#cb108-431" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fl">3.14159</span>,<span class="at">digits=</span><span class="dv">3</span>) <span class="co">#同上。注意该函数在处理科学计数法时无法有效保留目标小数位数</span></span>
-<span id="cb108-432"><a href="#cb108-432" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-433"><a href="#cb108-433" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-434"><a href="#cb108-434" aria-hidden="true" tabindex="-1"></a><span class="fu"># 管道操作符(%\&gt;%)的使用</span></span>
-<span id="cb108-435"><a href="#cb108-435" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-436"><a href="#cb108-436" aria-hidden="true" tabindex="-1"></a>％<span class="sc">\&gt;</span>％为来自**dplyr包**的**管道操作符（pipe operator)**，我们可以将其理解为车间里的流水线，经过前一步加工的产品才能进入后一步进一步加工，其作用是将上一步的结果直接传参给下一步的函数，从而省略了中间的赋值步骤，可以大量减少内存中的对象，节省内存。</span>
-<span id="cb108-437"><a href="#cb108-437" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-438"><a href="#cb108-438" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; **将%\&gt;%左边的对象传递给右边的函数，作为第一个选项的设置（或剩下唯一一个选项的设置）。**</span></span>
-<span id="cb108-439"><a href="#cb108-439" aria-hidden="true" tabindex="-1"></a><span class="at">&gt;</span></span>
-<span id="cb108-440"><a href="#cb108-440" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; a %</span><span class="sc">\&gt;</span><span class="at">% f(b)等同于f(a,b)；b% </span><span class="sc">\&gt;</span><span class="at"> %f(a,.,c)等同于f(a,b,c)</span></span>
-<span id="cb108-441"><a href="#cb108-441" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-442"><a href="#cb108-442" aria-hidden="true" tabindex="-1"></a>【例一】</span>
-<span id="cb108-443"><a href="#cb108-443" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-444"><a href="#cb108-444" aria-hidden="true" tabindex="-1"></a>比如我们要算f(x)=sin((x+1)\^2)在x=4的值，可以分为以下三步：</span>
-<span id="cb108-445"><a href="#cb108-445" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-446"><a href="#cb108-446" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>计算a = x+1的值；</span>
-<span id="cb108-447"><a href="#cb108-447" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-448"><a href="#cb108-448" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>计算b = a\^2的值；</span>
-<span id="cb108-449"><a href="#cb108-449" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-450"><a href="#cb108-450" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>计算c = sin(b)的值</span>
-<span id="cb108-451"><a href="#cb108-451" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-452"><a href="#cb108-452" aria-hidden="true" tabindex="-1"></a>这样一来，c就是我们需要的最终结果了。用R语言管道传参，只需要这样写：</span>
-<span id="cb108-453"><a href="#cb108-453" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-456"><a href="#cb108-456" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-457"><a href="#cb108-457" aria-hidden="true" tabindex="-1"></a>f1 <span class="ot">&lt;-</span> <span class="cf">function</span>(x){<span class="fu">return</span>(x<span class="sc">+</span><span class="dv">1</span>)}</span>
-<span id="cb108-458"><a href="#cb108-458" aria-hidden="true" tabindex="-1"></a>f2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x){<span class="fu">return</span>(x<span class="sc">^</span><span class="dv">2</span>)}</span>
-<span id="cb108-459"><a href="#cb108-459" aria-hidden="true" tabindex="-1"></a>f3 <span class="ot">&lt;-</span> <span class="cf">function</span>(x){<span class="fu">return</span>(<span class="fu">sin</span>(x))}</span>
-<span id="cb108-460"><a href="#cb108-460" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb108-461"><a href="#cb108-461" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb108-462"><a href="#cb108-462" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> x <span class="sc">%&gt;%</span> f1 <span class="sc">%&gt;%</span> f2 <span class="sc">%&gt;%</span> f3</span>
-<span id="cb108-463"><a href="#cb108-463" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(y)</span>
-<span id="cb108-464"><a href="#cb108-464" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-465"><a href="#cb108-465" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-466"><a href="#cb108-466" aria-hidden="true" tabindex="-1"></a>【例二】</span>
-<span id="cb108-467"><a href="#cb108-467" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-470"><a href="#cb108-470" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-471"><a href="#cb108-471" aria-hidden="true" tabindex="-1"></a>f1 <span class="ot">&lt;-</span> <span class="cf">function</span>(x,y){<span class="fu">return</span>(x<span class="sc">+</span>y)}</span>
-<span id="cb108-472"><a href="#cb108-472" aria-hidden="true" tabindex="-1"></a>f2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x,y,z){<span class="fu">return</span>(x<span class="sc">*</span>y<span class="sc">+</span>z)}</span>
-<span id="cb108-473"><a href="#cb108-473" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb108-474"><a href="#cb108-474" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb108-475"><a href="#cb108-475" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb108-476"><a href="#cb108-476" aria-hidden="true" tabindex="-1"></a>x <span class="sc">%&gt;%</span> <span class="fu">f1</span>(y)</span>
-<span id="cb108-477"><a href="#cb108-477" aria-hidden="true" tabindex="-1"></a>y <span class="sc">%&gt;%</span> <span class="fu">f2</span>(x,.,<span class="dv">5</span>)</span>
-<span id="cb108-478"><a href="#cb108-478" aria-hidden="true" tabindex="-1"></a>z <span class="sc">%&gt;%</span> <span class="fu">f2</span>(x,y,.)</span>
-<span id="cb108-479"><a href="#cb108-479" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-480"><a href="#cb108-480" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-481"><a href="#cb108-481" aria-hidden="true" tabindex="-1"></a>【例三】日期合并</span>
-<span id="cb108-482"><a href="#cb108-482" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-485"><a href="#cb108-485" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-486"><a href="#cb108-486" aria-hidden="true" tabindex="-1"></a>date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(<span class="st">'2017-6-22'</span>)<span class="sc">+</span><span class="dv">0</span><span class="sc">:</span><span class="dv">14</span></span>
-<span id="cb108-487"><a href="#cb108-487" aria-hidden="true" tabindex="-1"></a>hour <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>, <span class="dv">15</span>)</span>
-<span id="cb108-488"><a href="#cb108-488" aria-hidden="true" tabindex="-1"></a>min <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">60</span>, <span class="dv">15</span>)</span>
-<span id="cb108-489"><a href="#cb108-489" aria-hidden="true" tabindex="-1"></a>second <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">60</span>, <span class="dv">15</span>)</span>
-<span id="cb108-490"><a href="#cb108-490" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(date,hour,min,second)</span>
-<span id="cb108-491"><a href="#cb108-491" aria-hidden="true" tabindex="-1"></a>dat</span>
-<span id="cb108-492"><a href="#cb108-492" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-493"><a href="#cb108-493" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
-<span id="cb108-494"><a href="#cb108-494" aria-hidden="true" tabindex="-1"></a>datstd <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span> <span class="fu">unite</span>(<span class="st">"datehour"</span>,date,hour,<span class="at">sep =</span> <span class="st">' '</span>,<span class="at">remove =</span> T) <span class="sc">%&gt;%</span> <span class="fu">unite</span>(<span class="st">"datetime"</span>,datehour,min,second,<span class="at">sep =</span> <span class="st">':'</span>,<span class="at">remove =</span> T)</span>
-<span id="cb108-495"><a href="#cb108-495" aria-hidden="true" tabindex="-1"></a>datstd</span>
-<span id="cb108-496"><a href="#cb108-496" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-497"><a href="#cb108-497" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-498"><a href="#cb108-498" aria-hidden="true" tabindex="-1"></a><span class="fu"># 自定义函数</span></span>
-<span id="cb108-499"><a href="#cb108-499" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-500"><a href="#cb108-500" aria-hidden="true" tabindex="-1"></a>R语言可以自定义函数，也可以使用其自带的函数。</span>
-<span id="cb108-501"><a href="#cb108-501" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-502"><a href="#cb108-502" aria-hidden="true" tabindex="-1"></a><span class="in">```         </span></span>
-<span id="cb108-503"><a href="#cb108-503" aria-hidden="true" tabindex="-1"></a><span class="in">R语言中，自定义函数的一般格式为：</span></span>
-<span id="cb108-504"><a href="#cb108-504" aria-hidden="true" tabindex="-1"></a><span class="in">函数名 &lt;- function（输入1，……，输入n）{</span></span>
-<span id="cb108-505"><a href="#cb108-505" aria-hidden="true" tabindex="-1"></a><span class="in">     函数体</span></span>
-<span id="cb108-506"><a href="#cb108-506" aria-hidden="true" tabindex="-1"></a><span class="in">     return（返回值）</span></span>
-<span id="cb108-507"><a href="#cb108-507" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
-<span id="cb108-508"><a href="#cb108-508" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-509"><a href="#cb108-509" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-510"><a href="#cb108-510" aria-hidden="true" tabindex="-1"></a>其中，return并不是必需的，默认函数体最后一行的值作为返回值，即return完全可以换成"返回值"。下面以判断score为优良及格差的代码进行讲解。案例来源：<span class="ot">&lt;https://zhuanlan.zhihu.com/p/441710174&gt;</span>。</span>
-<span id="cb108-511"><a href="#cb108-511" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-512"><a href="#cb108-512" aria-hidden="true" tabindex="-1"></a>首先对于不用函数的情况</span>
-<span id="cb108-513"><a href="#cb108-513" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-516"><a href="#cb108-516" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-517"><a href="#cb108-517" aria-hidden="true" tabindex="-1"></a>score <span class="ot">=</span> <span class="dv">73</span></span>
-<span id="cb108-518"><a href="#cb108-518" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(score <span class="sc">&gt;=</span> <span class="dv">90</span>){</span>
-<span id="cb108-519"><a href="#cb108-519" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">=</span> <span class="st">"优"</span></span>
-<span id="cb108-520"><a href="#cb108-520" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(score <span class="sc">&gt;=</span><span class="dv">70</span>){</span>
-<span id="cb108-521"><a href="#cb108-521" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">=</span> <span class="st">"良"</span></span>
-<span id="cb108-522"><a href="#cb108-522" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span> <span class="cf">if</span>(score <span class="sc">&gt;=</span> <span class="dv">60</span>){</span>
-<span id="cb108-523"><a href="#cb108-523" aria-hidden="true" tabindex="-1"></a>      res <span class="ot">=</span> <span class="st">"及格"</span></span>
-<span id="cb108-524"><a href="#cb108-524" aria-hidden="true" tabindex="-1"></a>      }<span class="cf">else</span>{</span>
-<span id="cb108-525"><a href="#cb108-525" aria-hidden="true" tabindex="-1"></a>        res <span class="ot">=</span> <span class="st">"不及格"</span></span>
-<span id="cb108-526"><a href="#cb108-526" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb108-527"><a href="#cb108-527" aria-hidden="true" tabindex="-1"></a>res<span class="co">#输出判断结果</span></span>
-<span id="cb108-528"><a href="#cb108-528" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-529"><a href="#cb108-529" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-530"><a href="#cb108-530" aria-hidden="true" tabindex="-1"></a>接下来我们自定义一个scorejudge()函数实现对单个成绩对判断。实际上就是把上面的代码封装起来</span>
-<span id="cb108-531"><a href="#cb108-531" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-534"><a href="#cb108-534" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-535"><a href="#cb108-535" aria-hidden="true" tabindex="-1"></a>scorejudge<span class="ot">&lt;-</span><span class="cf">function</span>(x){</span>
-<span id="cb108-536"><a href="#cb108-536" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(score <span class="sc">&gt;=</span> <span class="dv">90</span>){</span>
-<span id="cb108-537"><a href="#cb108-537" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">=</span> <span class="st">"优"</span></span>
-<span id="cb108-538"><a href="#cb108-538" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span> <span class="cf">if</span>(score <span class="sc">&gt;=</span><span class="dv">70</span>){</span>
-<span id="cb108-539"><a href="#cb108-539" aria-hidden="true" tabindex="-1"></a>      res <span class="ot">=</span> <span class="st">"良"</span></span>
-<span id="cb108-540"><a href="#cb108-540" aria-hidden="true" tabindex="-1"></a>      }<span class="cf">else</span> <span class="cf">if</span>(score <span class="sc">&gt;=</span> <span class="dv">60</span>){</span>
-<span id="cb108-541"><a href="#cb108-541" aria-hidden="true" tabindex="-1"></a>        res <span class="ot">=</span> <span class="st">"及格"</span></span>
-<span id="cb108-542"><a href="#cb108-542" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
-<span id="cb108-543"><a href="#cb108-543" aria-hidden="true" tabindex="-1"></a>          res <span class="ot">=</span> <span class="st">"不及格"</span></span>
-<span id="cb108-544"><a href="#cb108-544" aria-hidden="true" tabindex="-1"></a>          }</span>
-<span id="cb108-545"><a href="#cb108-545" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">"该同学的分数等级为"</span>,res)</span>
-<span id="cb108-546"><a href="#cb108-546" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb108-547"><a href="#cb108-547" aria-hidden="true" tabindex="-1"></a><span class="fu">scorejudge</span>(score)<span class="co">#就像调用R自带函数一样调用我们自己编写的函数</span></span>
-<span id="cb108-548"><a href="#cb108-548" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb108-549"><a href="#cb108-549" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-550"><a href="#cb108-550" aria-hidden="true" tabindex="-1"></a>如若想要同时查询多个分数，则需要对原来的代码进行修改，加入for循环语句</span>
-<span id="cb108-551"><a href="#cb108-551" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb108-554"><a href="#cb108-554" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb108-555"><a href="#cb108-555" aria-hidden="true" tabindex="-1"></a>scorejudge<span class="ot">&lt;-</span><span class="cf">function</span>(x){</span>
-<span id="cb108-556"><a href="#cb108-556" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">=</span> <span class="fu">length</span>(x)<span class="co">#首先确定循环次数，即x中有多少个分数，下面的for循环就要运行多少次</span></span>
-<span id="cb108-557"><a href="#cb108-557" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">=</span> <span class="fu">vector</span>(<span class="st">"character"</span>,n)<span class="co">#建立一个和输入的分数个数相同的空向量，用来放每次for循环的输出结果</span></span>
-<span id="cb108-558"><a href="#cb108-558" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n){</span>
-<span id="cb108-559"><a href="#cb108-559" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(x[i] <span class="sc">&gt;=</span> <span class="dv">90</span>){</span>
-<span id="cb108-560"><a href="#cb108-560" aria-hidden="true" tabindex="-1"></a>      res[i] <span class="ot">=</span> <span class="fu">paste0</span>(i,<span class="st">"号同学的分数等级为"</span>,<span class="st">"优"</span>)</span>
-<span id="cb108-561"><a href="#cb108-561" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> <span class="cf">if</span>(x[i] <span class="sc">&gt;=</span><span class="dv">70</span>){</span>
-<span id="cb108-562"><a href="#cb108-562" aria-hidden="true" tabindex="-1"></a>        res[i] <span class="ot">=</span> <span class="fu">paste0</span>(i,<span class="st">"号同学的分数等级为"</span>,<span class="st">"良"</span>)</span>
-<span id="cb108-563"><a href="#cb108-563" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span>(x[i] <span class="sc">&gt;=</span> <span class="dv">60</span>){</span>
-<span id="cb108-564"><a href="#cb108-564" aria-hidden="true" tabindex="-1"></a>          res[i] <span class="ot">=</span> <span class="fu">paste0</span>(i,<span class="st">"号同学的分数等级为"</span>,<span class="st">"及格"</span>)</span>
-<span id="cb108-565"><a href="#cb108-565" aria-hidden="true" tabindex="-1"></a>          } <span class="cf">else</span>{</span>
-<span id="cb108-566"><a href="#cb108-566" aria-hidden="true" tabindex="-1"></a>            res[i] <span class="ot">=</span> <span class="fu">paste0</span>(i,<span class="st">"号同学的分数等级为"</span>,<span class="st">"不及格"</span>)</span>
-<span id="cb108-567"><a href="#cb108-567" aria-hidden="true" tabindex="-1"></a>          }</span>
-<span id="cb108-568"><a href="#cb108-568" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb108-569"><a href="#cb108-569" aria-hidden="true" tabindex="-1"></a>  res <span class="co">#输出最终的res向量</span></span>
-<span id="cb108-570"><a href="#cb108-570" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb108-571"><a href="#cb108-571" aria-hidden="true" tabindex="-1"></a><span class="fu">scorejudge</span>(<span class="fu">c</span>(<span class="dv">34</span>,<span class="dv">67</span>,<span class="dv">89</span>,<span class="dv">95</span>))</span>
-<span id="cb108-572"><a href="#cb108-572" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="sourceCode" id="cb96" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "数据处理基本函数"</span></span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb96-4"><a href="#cb96-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-5"><a href="#cb96-5" aria-hidden="true" tabindex="-1"></a><span class="fu"># 数据展示</span></span>
+<span id="cb96-6"><a href="#cb96-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-7"><a href="#cb96-7" aria-hidden="true" tabindex="-1"></a>载入示例数据：</span>
+<span id="cb96-8"><a href="#cb96-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-11"><a href="#cb96-11" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-12"><a href="#cb96-12" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"data/r_basic/lms_ess.rds"</span>)</span>
+<span id="cb96-13"><a href="#cb96-13" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-14"><a href="#cb96-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-15"><a href="#cb96-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## 展示最大值、最小值、平均数、中位数、缺失值数量</span></span>
+<span id="cb96-16"><a href="#cb96-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-19"><a href="#cb96-19" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-20"><a href="#cb96-20" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mydata)</span>
+<span id="cb96-21"><a href="#cb96-21" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-22"><a href="#cb96-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-23"><a href="#cb96-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## 展示变量数量和样本数量</span></span>
+<span id="cb96-24"><a href="#cb96-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-25"><a href="#cb96-25" aria-hidden="true" tabindex="-1"></a><span class="fu">### 展示变量（列）数</span></span>
+<span id="cb96-26"><a href="#cb96-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-29"><a href="#cb96-29" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-30"><a href="#cb96-30" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(mydata)[<span class="dv">2</span>]<span class="co">#dim()函数获取数据的维度，即行、列数。所以[1]输出行数，[2]输出列数</span></span>
+<span id="cb96-31"><a href="#cb96-31" aria-hidden="true" tabindex="-1"></a><span class="fu">ncol</span>(mydata)<span class="co">#另一种方式</span></span>
+<span id="cb96-32"><a href="#cb96-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-33"><a href="#cb96-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-34"><a href="#cb96-34" aria-hidden="true" tabindex="-1"></a><span class="fu">### 展示行数</span></span>
+<span id="cb96-35"><a href="#cb96-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-38"><a href="#cb96-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-39"><a href="#cb96-39" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(mydata)[<span class="dv">1</span>]</span>
+<span id="cb96-40"><a href="#cb96-40" aria-hidden="true" tabindex="-1"></a><span class="co">#或者</span></span>
+<span id="cb96-41"><a href="#cb96-41" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(mydata)</span>
+<span id="cb96-42"><a href="#cb96-42" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-43"><a href="#cb96-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-44"><a href="#cb96-44" aria-hidden="true" tabindex="-1"></a><span class="fu">### 综合展示</span></span>
+<span id="cb96-45"><a href="#cb96-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-48"><a href="#cb96-48" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-49"><a href="#cb96-49" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste0</span>(<span class="st">"该数据集有 "</span>,<span class="fu">dim</span>(mydata)[<span class="dv">1</span>],<span class="st">" 个样本； "</span>,<span class="fu">dim</span>(mydata)[<span class="dv">2</span>],<span class="st">" 个变量"</span>))</span>
+<span id="cb96-50"><a href="#cb96-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-51"><a href="#cb96-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-52"><a href="#cb96-52" aria-hidden="true" tabindex="-1"></a><span class="fu">### 展示所有变量名</span></span>
+<span id="cb96-53"><a href="#cb96-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-56"><a href="#cb96-56" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-57"><a href="#cb96-57" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mydata)</span>
+<span id="cb96-58"><a href="#cb96-58" aria-hidden="true" tabindex="-1"></a><span class="co">#或者通过dput函数将所有变量名输出为向量</span></span>
+<span id="cb96-59"><a href="#cb96-59" aria-hidden="true" tabindex="-1"></a><span class="fu">dput</span>(<span class="fu">names</span>(mydata))</span>
+<span id="cb96-60"><a href="#cb96-60" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-61"><a href="#cb96-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-62"><a href="#cb96-62" aria-hidden="true" tabindex="-1"></a><span class="fu">### 展示所有行名称</span></span>
+<span id="cb96-63"><a href="#cb96-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-66"><a href="#cb96-66" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-67"><a href="#cb96-67" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-68"><a href="#cb96-68" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: fenced</span></span>
+<span id="cb96-69"><a href="#cb96-69" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(mydata)</span>
+<span id="cb96-70"><a href="#cb96-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-71"><a href="#cb96-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-72"><a href="#cb96-72" aria-hidden="true" tabindex="-1"></a><span class="fu">### 展示某个变量的所有值及其频数</span></span>
+<span id="cb96-73"><a href="#cb96-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-76"><a href="#cb96-76" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-77"><a href="#cb96-77" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(mydata<span class="sc">$</span>his)</span>
+<span id="cb96-78"><a href="#cb96-78" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(mydata<span class="sc">$</span>age,<span class="at">col=</span><span class="st">"coral"</span>)<span class="co">#以直方图的形式展示</span></span>
+<span id="cb96-79"><a href="#cb96-79" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-80"><a href="#cb96-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-81"><a href="#cb96-81" aria-hidden="true" tabindex="-1"></a><span class="fu">## 展示缺失值的构成</span></span>
+<span id="cb96-82"><a href="#cb96-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-83"><a href="#cb96-83" aria-hidden="true" tabindex="-1"></a>加载案例数据：这里用VIM包内自带的sleep数据集为例进行演示。该数据集显示了两种安眠药对10名患者的影响(与对照组相比，睡眠时间的增加量)。其中就包含了很多缺失值。</span>
+<span id="cb96-84"><a href="#cb96-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-87"><a href="#cb96-87" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-88"><a href="#cb96-88" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(sleep, <span class="at">package=</span><span class="st">"VIM"</span>)</span>
+<span id="cb96-89"><a href="#cb96-89" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sleep)</span>
+<span id="cb96-90"><a href="#cb96-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-91"><a href="#cb96-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-92"><a href="#cb96-92" aria-hidden="true" tabindex="-1"></a>首先展示缺失值的比例。</span>
+<span id="cb96-93"><a href="#cb96-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-94"><a href="#cb96-94" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>左侧直方图展示单个变量的缺失比例，其中NonD缺失比例大于20%。</span>
+<span id="cb96-95"><a href="#cb96-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-96"><a href="#cb96-96" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>右侧直方图展示各个变量的缺失模式。如第一行表示NonD、Dream和Span 3个变量共同缺失的比例为1.6%。NonD的缺失比例=1.6%+3.2%+3.2%+14.5%=22.5%。所有变量均无缺失值的个案占67.7%</span>
+<span id="cb96-97"><a href="#cb96-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-98"><a href="#cb96-98" aria-hidden="true" tabindex="-1"></a>输出的结果部分同样展示了各个变量缺失的具体比例</span>
+<span id="cb96-99"><a href="#cb96-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-102"><a href="#cb96-102" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-103"><a href="#cb96-103" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VIM)</span>
+<span id="cb96-104"><a href="#cb96-104" aria-hidden="true" tabindex="-1"></a>aggr_plot<span class="ot">&lt;-</span><span class="fu">aggr</span>(sleep,</span>
+<span id="cb96-105"><a href="#cb96-105" aria-hidden="true" tabindex="-1"></a>                <span class="at">prop=</span>T,</span>
+<span id="cb96-106"><a href="#cb96-106" aria-hidden="true" tabindex="-1"></a>                <span class="at">numbers=</span>T,</span>
+<span id="cb96-107"><a href="#cb96-107" aria-hidden="true" tabindex="-1"></a>                <span class="at">sortVars=</span><span class="cn">TRUE</span>,</span>
+<span id="cb96-108"><a href="#cb96-108" aria-hidden="true" tabindex="-1"></a>                <span class="at">gap=</span><span class="dv">2</span>,</span>
+<span id="cb96-109"><a href="#cb96-109" aria-hidden="true" tabindex="-1"></a>                <span class="at">ylab=</span><span class="fu">c</span>(<span class="st">"Histogram of missing data"</span>,<span class="st">"Pattern"</span>))</span>
+<span id="cb96-110"><a href="#cb96-110" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-111"><a href="#cb96-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-112"><a href="#cb96-112" aria-hidden="true" tabindex="-1"></a>展示缺失值的数量。输出的结果部分展示了各个变量缺失的具体数量。</span>
+<span id="cb96-113"><a href="#cb96-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-116"><a href="#cb96-116" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-117"><a href="#cb96-117" aria-hidden="true" tabindex="-1"></a>aggr_plot<span class="ot">&lt;-</span><span class="fu">aggr</span>(sleep,</span>
+<span id="cb96-118"><a href="#cb96-118" aria-hidden="true" tabindex="-1"></a>                <span class="at">prop=</span>F,</span>
+<span id="cb96-119"><a href="#cb96-119" aria-hidden="true" tabindex="-1"></a>                <span class="at">numbers=</span>T,</span>
+<span id="cb96-120"><a href="#cb96-120" aria-hidden="true" tabindex="-1"></a>                <span class="at">sortVars=</span><span class="cn">TRUE</span>,</span>
+<span id="cb96-121"><a href="#cb96-121" aria-hidden="true" tabindex="-1"></a>                <span class="at">gap=</span><span class="dv">2</span>,</span>
+<span id="cb96-122"><a href="#cb96-122" aria-hidden="true" tabindex="-1"></a>                <span class="at">ylab=</span><span class="fu">c</span>(<span class="st">"Histogram of missing data"</span>,<span class="st">"Pattern"</span>))</span>
+<span id="cb96-123"><a href="#cb96-123" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-124"><a href="#cb96-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-125"><a href="#cb96-125" aria-hidden="true" tabindex="-1"></a>以表格的形式展示各个变量的缺失模式（同右侧图形）</span>
+<span id="cb96-126"><a href="#cb96-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-129"><a href="#cb96-129" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-130"><a href="#cb96-130" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(aggr_plot)</span>
+<span id="cb96-131"><a href="#cb96-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-132"><a href="#cb96-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-133"><a href="#cb96-133" aria-hidden="true" tabindex="-1"></a>通过marginplot分析缺失值。空心的湖蓝色圆圈表示非缺失值，红色实心圆圈表示缺失值，深红色实心圆圈表示两个变量均缺失。图左侧的红色箱型图显示了在保留NonD缺失值的情况下Dream的分布，蓝色箱型图显示了删除NonD缺失值后Dream的分布。图表底部的框图正好相反，反映了在保留和删除Dreamq缺失值的情况下NonD的分布情况。如果数据是完全随机缺失(MCAR : missing completely at random)，那么红色和蓝色箱型图将十分接近</span>
+<span id="cb96-134"><a href="#cb96-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-137"><a href="#cb96-137" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-138"><a href="#cb96-138" aria-hidden="true" tabindex="-1"></a><span class="fu">marginplot</span>(sleep[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>])</span>
+<span id="cb96-139"><a href="#cb96-139" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-140"><a href="#cb96-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-141"><a href="#cb96-141" aria-hidden="true" tabindex="-1"></a>删除所有缺失值</span>
+<span id="cb96-142"><a href="#cb96-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-145"><a href="#cb96-145" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-146"><a href="#cb96-146" aria-hidden="true" tabindex="-1"></a>sleep<span class="ot">&lt;-</span><span class="fu">na.omit</span>(sleep)</span>
+<span id="cb96-147"><a href="#cb96-147" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-148"><a href="#cb96-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-149"><a href="#cb96-149" aria-hidden="true" tabindex="-1"></a><span class="fu"># 数据整理</span></span>
+<span id="cb96-150"><a href="#cb96-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-151"><a href="#cb96-151" aria-hidden="true" tabindex="-1"></a><span class="fu">## 排序 {#sec-排序}</span></span>
+<span id="cb96-152"><a href="#cb96-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-155"><a href="#cb96-155" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-156"><a href="#cb96-156" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb96-157"><a href="#cb96-157" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">arrange</span>(mydata, age)<span class="co">#按照某列升序排序</span></span>
+<span id="cb96-158"><a href="#cb96-158" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>age[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb96-159"><a href="#cb96-159" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">arrange</span>(mydata, <span class="fu">desc</span>(age))<span class="co">#按照某列降序排序</span></span>
+<span id="cb96-160"><a href="#cb96-160" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>age[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb96-161"><a href="#cb96-161" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">arrange</span>(mydata, his, tumor_size)<span class="co">#根据多列排序</span></span>
+<span id="cb96-162"><a href="#cb96-162" aria-hidden="true" tabindex="-1"></a>mydata[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,<span class="fu">c</span>(<span class="st">"his"</span>, <span class="st">"tumor_size"</span>)]</span>
+<span id="cb96-163"><a href="#cb96-163" aria-hidden="true" tabindex="-1"></a>mydata[<span class="dv">445</span><span class="sc">:</span><span class="dv">455</span>,<span class="fu">c</span>(<span class="st">"his"</span>, <span class="st">"tumor_size"</span>)]</span>
+<span id="cb96-164"><a href="#cb96-164" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-165"><a href="#cb96-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-166"><a href="#cb96-166" aria-hidden="true" tabindex="-1"></a>也可用自带base包内的<span class="in">`order()`</span>函数排序：</span>
+<span id="cb96-167"><a href="#cb96-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-170"><a href="#cb96-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-171"><a href="#cb96-171" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-172"><a href="#cb96-172" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> mydata[<span class="fu">order</span>(mydata<span class="sc">$</span>age),]</span>
+<span id="cb96-173"><a href="#cb96-173" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> mydata[<span class="fu">order</span>(<span class="sc">-</span>mydata<span class="sc">$</span>age),]</span>
+<span id="cb96-174"><a href="#cb96-174" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> mydata[<span class="fu">order</span>(mydata<span class="sc">$</span>age, mydata<span class="sc">$</span>his, mydata<span class="sc">$</span>tumor_size),]</span>
+<span id="cb96-175"><a href="#cb96-175" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-176"><a href="#cb96-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-177"><a href="#cb96-177" aria-hidden="true" tabindex="-1"></a><span class="fu">## 重新命名行、列</span></span>
+<span id="cb96-178"><a href="#cb96-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-179"><a href="#cb96-179" aria-hidden="true" tabindex="-1"></a><span class="fu">### 重新命名变量（列）</span></span>
+<span id="cb96-180"><a href="#cb96-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-183"><a href="#cb96-183" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-184"><a href="#cb96-184" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-185"><a href="#cb96-185" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(mydata) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"N"</span>,<span class="st">"patient_ID"</span>,<span class="st">"diagnosis"</span>) <span class="co"># 连续命名</span></span>
+<span id="cb96-186"><a href="#cb96-186" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(mydata)[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="st">'patient_ID'</span><span class="co"># 重新命名指定列名</span></span>
+<span id="cb96-187"><a href="#cb96-187" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-188"><a href="#cb96-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-189"><a href="#cb96-189" aria-hidden="true" tabindex="-1"></a><span class="fu">### 设置行名</span></span>
+<span id="cb96-190"><a href="#cb96-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-193"><a href="#cb96-193" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-194"><a href="#cb96-194" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-195"><a href="#cb96-195" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(mydata) <span class="ot">&lt;-</span> mydata<span class="sc">$</span>ID <span class="co"># 将ID列设置为行名（注意不能有重复值）</span></span>
+<span id="cb96-196"><a href="#cb96-196" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-197"><a href="#cb96-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-198"><a href="#cb96-198" aria-hidden="true" tabindex="-1"></a><span class="fu">## 数据筛选</span></span>
+<span id="cb96-199"><a href="#cb96-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-200"><a href="#cb96-200" aria-hidden="true" tabindex="-1"></a><span class="fu">### 提取某几列数据形成新的数据集</span></span>
+<span id="cb96-201"><a href="#cb96-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-204"><a href="#cb96-204" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-205"><a href="#cb96-205" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-206"><a href="#cb96-206" aria-hidden="true" tabindex="-1"></a>vnumber <span class="ot">&lt;-</span> mydata[, <span class="dv">4</span><span class="sc">:</span><span class="dv">16</span>] <span class="co"># 提取第4-16列的数据形成新的“vnumber”数据集</span></span>
+<span id="cb96-207"><a href="#cb96-207" aria-hidden="true" tabindex="-1"></a>vnumber <span class="ot">&lt;-</span> mydata[,<span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">12</span>,<span class="dv">16</span>)] <span class="co"># 提取2-12列和第16列的数据</span></span>
+<span id="cb96-208"><a href="#cb96-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-209"><a href="#cb96-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-210"><a href="#cb96-210" aria-hidden="true" tabindex="-1"></a><span class="fu">### 提取指定行数的数据</span></span>
+<span id="cb96-211"><a href="#cb96-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-214"><a href="#cb96-214" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-215"><a href="#cb96-215" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-216"><a href="#cb96-216" aria-hidden="true" tabindex="-1"></a>mydata_less <span class="ot">&lt;-</span> mydata[<span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, ]<span class="co">#提取1-100行的数据</span></span>
+<span id="cb96-217"><a href="#cb96-217" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-218"><a href="#cb96-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-219"><a href="#cb96-219" aria-hidden="true" tabindex="-1"></a><span class="fu">### 筛选数据 {#sec-筛选数据}</span></span>
+<span id="cb96-220"><a href="#cb96-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-221"><a href="#cb96-221" aria-hidden="true" tabindex="-1"></a>筛选出低级别、接受了放疗的病例，并生成新的"new_data"数据集</span>
+<span id="cb96-222"><a href="#cb96-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-225"><a href="#cb96-225" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-226"><a href="#cb96-226" aria-hidden="true" tabindex="-1"></a><span class="co">#方法一</span></span>
+<span id="cb96-227"><a href="#cb96-227" aria-hidden="true" tabindex="-1"></a>new_data<span class="ot">&lt;-</span><span class="fu">subset</span>(mydata,grade <span class="sc">==</span> <span class="st">"Well differentiated; Grade I"</span> <span class="sc">&amp;</span> rad <span class="sc">==</span> <span class="st">"Yes"</span>)</span>
+<span id="cb96-228"><a href="#cb96-228" aria-hidden="true" tabindex="-1"></a>new_data[,<span class="fu">c</span>(<span class="st">"grade"</span>, <span class="st">"rad"</span>)]</span>
+<span id="cb96-229"><a href="#cb96-229" aria-hidden="true" tabindex="-1"></a><span class="co">#也可用“｜”（或者），“！”（NOT）连接</span></span>
+<span id="cb96-230"><a href="#cb96-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-231"><a href="#cb96-231" aria-hidden="true" tabindex="-1"></a><span class="co">#方法二</span></span>
+<span id="cb96-232"><a href="#cb96-232" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> mydata[<span class="fu">which</span>((mydata<span class="sc">$</span>grade <span class="sc">==</span> <span class="st">"Well differentiated; Grade I"</span>) <span class="sc">&amp;</span></span>
+<span id="cb96-233"><a href="#cb96-233" aria-hidden="true" tabindex="-1"></a>                           (mydata<span class="sc">$</span>rad <span class="sc">==</span> <span class="st">"Yes"</span>)),] </span>
+<span id="cb96-234"><a href="#cb96-234" aria-hidden="true" tabindex="-1"></a>new_data[,<span class="fu">c</span>(<span class="st">"grade"</span>, <span class="st">"rad"</span>)]</span>
+<span id="cb96-235"><a href="#cb96-235" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-236"><a href="#cb96-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-237"><a href="#cb96-237" aria-hidden="true" tabindex="-1"></a><span class="fu">## 合并两个数据集</span></span>
+<span id="cb96-238"><a href="#cb96-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-239"><a href="#cb96-239" aria-hidden="true" tabindex="-1"></a><span class="fu">### 纵向合并</span></span>
+<span id="cb96-240"><a href="#cb96-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-241"><a href="#cb96-241" aria-hidden="true" tabindex="-1"></a>即增加个案，要求两个数据集具有相同的列名及列数</span>
+<span id="cb96-242"><a href="#cb96-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-245"><a href="#cb96-245" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-246"><a href="#cb96-246" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-247"><a href="#cb96-247" aria-hidden="true" tabindex="-1"></a>rbind_data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(mydata, mydata2)</span>
+<span id="cb96-248"><a href="#cb96-248" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-249"><a href="#cb96-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-250"><a href="#cb96-250" aria-hidden="true" tabindex="-1"></a><span class="fu">### 横向合并</span></span>
+<span id="cb96-251"><a href="#cb96-251" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-252"><a href="#cb96-252" aria-hidden="true" tabindex="-1"></a>直接通过cbind()函数合并数据集，要求两个数据集具有相同的行数及顺序</span>
+<span id="cb96-253"><a href="#cb96-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-256"><a href="#cb96-256" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-257"><a href="#cb96-257" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-258"><a href="#cb96-258" aria-hidden="true" tabindex="-1"></a>total <span class="ot">&lt;-</span> <span class="fu">cbind</span>(dataframeA, dataframeB)</span>
+<span id="cb96-259"><a href="#cb96-259" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-260"><a href="#cb96-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-261"><a href="#cb96-261" aria-hidden="true" tabindex="-1"></a><span class="fu">### 以某一列（如学号等）匹配两个数据集</span></span>
+<span id="cb96-262"><a href="#cb96-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-263"><a href="#cb96-263" aria-hidden="true" tabindex="-1"></a>详细解读：<span class="ot">&lt;https://blog.csdn.net/chongbaikaishi/article/details/115740560&gt;</span></span>
+<span id="cb96-264"><a href="#cb96-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-267"><a href="#cb96-267" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-268"><a href="#cb96-268" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-269"><a href="#cb96-269" aria-hidden="true" tabindex="-1"></a><span class="co"># 以"probe_id"为匹配标准匹配探针id和gene symbol</span></span>
+<span id="cb96-270"><a href="#cb96-270" aria-hidden="true" tabindex="-1"></a>exptab1 <span class="ot">&lt;-</span> <span class="fu">merge</span>(<span class="at">x =</span> ids,</span>
+<span id="cb96-271"><a href="#cb96-271" aria-hidden="true" tabindex="-1"></a>                 <span class="at">y =</span> expset1,<span class="co">#x、y为要合并的数据框或者对象</span></span>
+<span id="cb96-272"><a href="#cb96-272" aria-hidden="true" tabindex="-1"></a>                 <span class="at">by =</span><span class="st">"probe_id"</span>, <span class="co">#指定以哪一列为标准匹配两个数据集。</span></span>
+<span id="cb96-273"><a href="#cb96-273" aria-hidden="true" tabindex="-1"></a>                                 <span class="co">#如果有多个匹配项，则所有可能的匹配项各贡献一行。</span></span>
+<span id="cb96-274"><a href="#cb96-274" aria-hidden="true" tabindex="-1"></a>                 <span class="at">all.x=</span>F,<span class="co">#是否将没有匹配到y数据集的行也保留下来，并以NA替代。</span></span>
+<span id="cb96-275"><a href="#cb96-275" aria-hidden="true" tabindex="-1"></a>                         <span class="co">#默认为FALSE，只有x与y数据框相匹配的行会被包含在输出结果中</span></span>
+<span id="cb96-276"><a href="#cb96-276" aria-hidden="true" tabindex="-1"></a>                 <span class="at">all.y=</span>F)<span class="co">#与上面类似</span></span>
+<span id="cb96-277"><a href="#cb96-277" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-278"><a href="#cb96-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-279"><a href="#cb96-279" aria-hidden="true" tabindex="-1"></a>如果两个数据集要用来匹配的列的列名不同则可用by.x和by.y指定。如下面的代码就是用id2symbol数据集中的ENSEMBL列去匹配rawcount数据集中的GeneID列</span>
+<span id="cb96-280"><a href="#cb96-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-283"><a href="#cb96-283" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-284"><a href="#cb96-284" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-285"><a href="#cb96-285" aria-hidden="true" tabindex="-1"></a>rawcount <span class="ot">&lt;-</span> <span class="fu">merge</span>(id2symbol,</span>
+<span id="cb96-286"><a href="#cb96-286" aria-hidden="true" tabindex="-1"></a>                  rawcount,</span>
+<span id="cb96-287"><a href="#cb96-287" aria-hidden="true" tabindex="-1"></a>                  <span class="at">by.x=</span><span class="st">"ENSEMBL"</span>,</span>
+<span id="cb96-288"><a href="#cb96-288" aria-hidden="true" tabindex="-1"></a>                  <span class="at">by.y=</span><span class="st">"GeneID"</span>,</span>
+<span id="cb96-289"><a href="#cb96-289" aria-hidden="true" tabindex="-1"></a>                  <span class="at">all.y=</span>T)<span class="co">#对于没有匹配到的GeneID以NA替代</span></span>
+<span id="cb96-290"><a href="#cb96-290" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-291"><a href="#cb96-291" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-292"><a href="#cb96-292" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/20210416100511517.png)</span></span>
+<span id="cb96-293"><a href="#cb96-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-294"><a href="#cb96-294" aria-hidden="true" tabindex="-1"></a><span class="fu">## 去重（保留唯一值）</span></span>
+<span id="cb96-295"><a href="#cb96-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-296"><a href="#cb96-296" aria-hidden="true" tabindex="-1"></a>生成带有重复值的示例数据</span>
+<span id="cb96-297"><a href="#cb96-297" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-300"><a href="#cb96-300" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-301"><a href="#cb96-301" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb96-302"><a href="#cb96-302" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">ID =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,<span class="dv">9</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">9</span>,<span class="dv">9</span>,<span class="dv">2</span>), <span class="at">y =</span> <span class="fu">rnorm</span>(<span class="dv">16</span>))</span>
+<span id="cb96-303"><a href="#cb96-303" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">rbind</span>(mydata, mydata)</span>
+<span id="cb96-304"><a href="#cb96-304" aria-hidden="true" tabindex="-1"></a>mydata</span>
+<span id="cb96-305"><a href="#cb96-305" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-306"><a href="#cb96-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-307"><a href="#cb96-307" aria-hidden="true" tabindex="-1"></a>通过<span class="in">`duplicated()`</span>函数检查某一列是否有重复值，及有多少重复值</span>
+<span id="cb96-308"><a href="#cb96-308" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-311"><a href="#cb96-311" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-312"><a href="#cb96-312" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">duplicated</span>(mydata<span class="sc">$</span>ID))</span>
+<span id="cb96-313"><a href="#cb96-313" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-314"><a href="#cb96-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-315"><a href="#cb96-315" aria-hidden="true" tabindex="-1"></a>通过<span class="in">`unique()`</span>函数去除完全相同的行。<span class="in">`unique()`</span>函数：一行的所有数据都相同认定为重复</span>
+<span id="cb96-316"><a href="#cb96-316" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-319"><a href="#cb96-319" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-320"><a href="#cb96-320" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">unique</span>(mydata)</span>
+<span id="cb96-321"><a href="#cb96-321" aria-hidden="true" tabindex="-1"></a>mydata</span>
+<span id="cb96-322"><a href="#cb96-322" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-323"><a href="#cb96-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-324"><a href="#cb96-324" aria-hidden="true" tabindex="-1"></a>通过<span class="in">`distinct()`</span>函数，去除ID列重复的数据</span>
+<span id="cb96-325"><a href="#cb96-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-328"><a href="#cb96-328" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-329"><a href="#cb96-329" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb96-330"><a href="#cb96-330" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">distinct</span>(mydata, <span class="co"># 需要去重的数据集名称</span></span>
+<span id="cb96-331"><a href="#cb96-331" aria-hidden="true" tabindex="-1"></a>                   ID, <span class="co"># 按照哪一列去重（可为多个条件）</span></span>
+<span id="cb96-332"><a href="#cb96-332" aria-hidden="true" tabindex="-1"></a>                   <span class="at">.keep_all =</span> T) <span class="co"># 去重后保留所有列</span></span>
+<span id="cb96-333"><a href="#cb96-333" aria-hidden="true" tabindex="-1"></a>mydata</span>
+<span id="cb96-334"><a href="#cb96-334" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-335"><a href="#cb96-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-336"><a href="#cb96-336" aria-hidden="true" tabindex="-1"></a><span class="fu">## 变量的赋值/替换</span></span>
+<span id="cb96-337"><a href="#cb96-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-340"><a href="#cb96-340" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-341"><a href="#cb96-341" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-342"><a href="#cb96-342" aria-hidden="true" tabindex="-1"></a>savdata<span class="sc">$</span>low <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(savdata<span class="sc">$</span>low <span class="sc">==</span><span class="st">"低出生体重"</span>, <span class="dv">1</span>, <span class="dv">0</span>)<span class="co">#将结局变量low赋值为0和1</span></span>
+<span id="cb96-343"><a href="#cb96-343" aria-hidden="true" tabindex="-1"></a>mydata[<span class="fu">is.na</span>(mydata)] <span class="ot">&lt;-</span> <span class="st">"Unknown"</span><span class="co">#替换缺失值</span></span>
+<span id="cb96-344"><a href="#cb96-344" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-345"><a href="#cb96-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-346"><a href="#cb96-346" aria-hidden="true" tabindex="-1"></a>当需要对一个数据集的多个变量进行转换时，可通过<span class="in">`within(data, {expression})`</span>函数将括号内的操作限定到当前数据集中，避免"\$"的反复使用，简化代码。函数<span class="in">`within()`</span>与函数<span class="in">`with()`</span>类似，不同的是<span class="in">`within()`</span>允许你修改数据框:</span>
+<span id="cb96-347"><a href="#cb96-347" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-350"><a href="#cb96-350" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-351"><a href="#cb96-351" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> <span class="fu">within</span>(mydata, {</span>
+<span id="cb96-352"><a href="#cb96-352" aria-hidden="true" tabindex="-1"></a>  ID <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(ID <span class="sc">&lt;</span> <span class="dv">5</span>, <span class="st">"A"</span>, <span class="st">"B"</span>)</span>
+<span id="cb96-353"><a href="#cb96-353" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(y <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="st">"A"</span>, <span class="st">"B"</span>)</span>
+<span id="cb96-354"><a href="#cb96-354" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb96-355"><a href="#cb96-355" aria-hidden="true" tabindex="-1"></a>mydata</span>
+<span id="cb96-356"><a href="#cb96-356" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-357"><a href="#cb96-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-358"><a href="#cb96-358" aria-hidden="true" tabindex="-1"></a><span class="fu">## 转换变量类型</span></span>
+<span id="cb96-359"><a href="#cb96-359" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-360"><a href="#cb96-360" aria-hidden="true" tabindex="-1"></a>将结局变量转换成因子变量,ordered=F,用于定义无序多分类变量，起到设置哑变量的作用；ordered=T用于定义有序多分类变量。如果变量的取值以英文字符表示，那么默认以变量首字母的顺序编号赋值；如果变量的取值已经转换成数字，那么默认按照编号的大小依次赋值。可以通过指定"levels"选项来覆盖默认排序。</span>
+<span id="cb96-361"><a href="#cb96-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-364"><a href="#cb96-364" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-365"><a href="#cb96-365" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-366"><a href="#cb96-366" aria-hidden="true" tabindex="-1"></a>savdata<span class="sc">$</span>stage <span class="ot">&lt;-</span> <span class="fu">factor</span>(savdata<span class="sc">$</span>stage, </span>
+<span id="cb96-367"><a href="#cb96-367" aria-hidden="true" tabindex="-1"></a>                        <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>),</span>
+<span id="cb96-368"><a href="#cb96-368" aria-hidden="true" tabindex="-1"></a>                        <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"I"</span>,<span class="st">"II"</span>,<span class="st">"III"</span>,<span class="st">"IV"</span>),</span>
+<span id="cb96-369"><a href="#cb96-369" aria-hidden="true" tabindex="-1"></a>                        <span class="at">ordered =</span> T)</span>
+<span id="cb96-370"><a href="#cb96-370" aria-hidden="true" tabindex="-1"></a>savdata<span class="sc">$</span>stage <span class="ot">&lt;-</span> <span class="fu">relevel</span>(savdata<span class="sc">$</span>stage,<span class="at">ref=</span><span class="st">"IV"</span>) <span class="co"># 设置因子的参照水平，仅限无序因子变量</span></span>
+<span id="cb96-371"><a href="#cb96-371" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-372"><a href="#cb96-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-373"><a href="#cb96-373" aria-hidden="true" tabindex="-1"></a>通过<span class="in">`lapply`</span>函数批量转换因子变量</span>
+<span id="cb96-374"><a href="#cb96-374" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-377"><a href="#cb96-377" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-378"><a href="#cb96-378" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-379"><a href="#cb96-379" aria-hidden="true" tabindex="-1"></a>mydata[<span class="dv">2</span><span class="sc">:</span><span class="dv">14</span>] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(mydata[<span class="dv">2</span><span class="sc">:</span><span class="dv">14</span>], factor) <span class="co"># 转换几个连续列的因子变量</span></span>
+<span id="cb96-380"><a href="#cb96-380" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-381"><a href="#cb96-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-382"><a href="#cb96-382" aria-hidden="true" tabindex="-1"></a>批量转换多个指定因子变量</span>
+<span id="cb96-383"><a href="#cb96-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-386"><a href="#cb96-386" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-387"><a href="#cb96-387" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-388"><a href="#cb96-388" aria-hidden="true" tabindex="-1"></a>catvars<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"year"</span>, <span class="st">"race"</span>, <span class="st">"single"</span>, <span class="st">"grade"</span>, <span class="st">"T_stage"</span>, <span class="st">"N_stage"</span>, <span class="st">"M_stage"</span>,</span>
+<span id="cb96-389"><a href="#cb96-389" aria-hidden="true" tabindex="-1"></a>           <span class="st">"surgery"</span>, <span class="st">"lymphadenectomy"</span>, <span class="st">"radiotherapy"</span>, <span class="st">"chemotherapy"</span>)</span>
+<span id="cb96-390"><a href="#cb96-390" aria-hidden="true" tabindex="-1"></a>mydata[catvars] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(mydata[catvars], factor)</span>
+<span id="cb96-391"><a href="#cb96-391" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-392"><a href="#cb96-392" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-393"><a href="#cb96-393" aria-hidden="true" tabindex="-1"></a>转换为数值型变量</span>
+<span id="cb96-394"><a href="#cb96-394" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-397"><a href="#cb96-397" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-398"><a href="#cb96-398" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-399"><a href="#cb96-399" aria-hidden="true" tabindex="-1"></a>mydata<span class="sc">$</span>grade <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(mydata<span class="sc">$</span>grade)</span>
+<span id="cb96-400"><a href="#cb96-400" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">=</span> <span class="fu">lapply</span>(mydata, as.numeric) <span class="co"># 将所有的变量转换成数值型</span></span>
+<span id="cb96-401"><a href="#cb96-401" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-402"><a href="#cb96-402" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-403"><a href="#cb96-403" aria-hidden="true" tabindex="-1"></a><span class="fu">## 哑变量设置</span></span>
+<span id="cb96-404"><a href="#cb96-404" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-407"><a href="#cb96-407" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-408"><a href="#cb96-408" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb96-409"><a href="#cb96-409" aria-hidden="true" tabindex="-1"></a><span class="co"># 因种族为无序多分类变量，需要设置三个哑变量（race1～3）</span></span>
+<span id="cb96-410"><a href="#cb96-410" aria-hidden="true" tabindex="-1"></a>savdata<span class="sc">$</span>race1 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(savdata<span class="sc">$</span>race <span class="sc">==</span> <span class="st">"白种人"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb96-411"><a href="#cb96-411" aria-hidden="true" tabindex="-1"></a>savdata<span class="sc">$</span>race2 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(savdata<span class="sc">$</span>race <span class="sc">==</span> <span class="st">"黑种人"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb96-412"><a href="#cb96-412" aria-hidden="true" tabindex="-1"></a>savdata<span class="sc">$</span>race3 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(savdata<span class="sc">$</span>race <span class="sc">==</span> <span class="st">"其他种族"</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb96-413"><a href="#cb96-413" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-414"><a href="#cb96-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-415"><a href="#cb96-415" aria-hidden="true" tabindex="-1"></a><span class="fu"># 数学函数</span></span>
+<span id="cb96-416"><a href="#cb96-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-419"><a href="#cb96-419" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-420"><a href="#cb96-420" aria-hidden="true" tabindex="-1"></a><span class="fu">abs</span>(<span class="sc">-</span><span class="dv">4</span>) <span class="co">#取绝对值</span></span>
+<span id="cb96-421"><a href="#cb96-421" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="dv">16</span>) <span class="co">#开平方根</span></span>
+<span id="cb96-422"><a href="#cb96-422" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="dv">4</span>,<span class="at">base=</span><span class="dv">2</span>) <span class="co">#取2为底的对数</span></span>
+<span id="cb96-423"><a href="#cb96-423" aria-hidden="true" tabindex="-1"></a><span class="fu">log10</span>(<span class="dv">100</span>) <span class="co">#取10为底的对数</span></span>
+<span id="cb96-424"><a href="#cb96-424" aria-hidden="true" tabindex="-1"></a><span class="fu">log</span>(<span class="dv">2</span>) <span class="co">#取2的自然对数</span></span>
+<span id="cb96-425"><a href="#cb96-425" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="dv">2</span>) <span class="co">#取e的指数函数</span></span>
+<span id="cb96-426"><a href="#cb96-426" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-427"><a href="#cb96-427" aria-hidden="true" tabindex="-1"></a><span class="co">#设置小数位数</span></span>
+<span id="cb96-428"><a href="#cb96-428" aria-hidden="true" tabindex="-1"></a><span class="fu">ceiling</span>(<span class="fl">3.14159</span>) <span class="co">#取不小于x的最小整数（有小数点一律进一位）</span></span>
+<span id="cb96-429"><a href="#cb96-429" aria-hidden="true" tabindex="-1"></a><span class="fu">floor</span>(<span class="fl">3.99999</span>) <span class="co">#取不大于x的最大整数（忽略小数点）</span></span>
+<span id="cb96-430"><a href="#cb96-430" aria-hidden="true" tabindex="-1"></a><span class="fu">sprintf</span>(<span class="st">"%0.3f"</span>, <span class="fl">3.14159</span>) <span class="co">#四舍五入保留3位小数</span></span>
+<span id="cb96-431"><a href="#cb96-431" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fl">3.14159</span>,<span class="at">digits=</span><span class="dv">3</span>) <span class="co">#同上。注意该函数在处理科学计数法时无法有效保留目标小数位数</span></span>
+<span id="cb96-432"><a href="#cb96-432" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-433"><a href="#cb96-433" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-434"><a href="#cb96-434" aria-hidden="true" tabindex="-1"></a><span class="fu"># 自定义函数</span></span>
+<span id="cb96-435"><a href="#cb96-435" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-436"><a href="#cb96-436" aria-hidden="true" tabindex="-1"></a>R语言可以自定义函数，也可以使用其自带的函数。</span>
+<span id="cb96-437"><a href="#cb96-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-438"><a href="#cb96-438" aria-hidden="true" tabindex="-1"></a><span class="in">```         </span></span>
+<span id="cb96-439"><a href="#cb96-439" aria-hidden="true" tabindex="-1"></a><span class="in">R语言中，自定义函数的一般格式为：</span></span>
+<span id="cb96-440"><a href="#cb96-440" aria-hidden="true" tabindex="-1"></a><span class="in">函数名 &lt;- function（输入1，……，输入n）{</span></span>
+<span id="cb96-441"><a href="#cb96-441" aria-hidden="true" tabindex="-1"></a><span class="in">     函数体</span></span>
+<span id="cb96-442"><a href="#cb96-442" aria-hidden="true" tabindex="-1"></a><span class="in">     return（返回值）</span></span>
+<span id="cb96-443"><a href="#cb96-443" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb96-444"><a href="#cb96-444" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-445"><a href="#cb96-445" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-446"><a href="#cb96-446" aria-hidden="true" tabindex="-1"></a>其中，return并不是必需的，默认函数体最后一行的值作为返回值，即return完全可以换成"返回值"。下面以判断score为优良及格差的代码进行讲解。案例来源：<span class="ot">&lt;https://zhuanlan.zhihu.com/p/441710174&gt;</span>。</span>
+<span id="cb96-447"><a href="#cb96-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-448"><a href="#cb96-448" aria-hidden="true" tabindex="-1"></a>首先对于不用函数的情况</span>
+<span id="cb96-449"><a href="#cb96-449" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-452"><a href="#cb96-452" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-453"><a href="#cb96-453" aria-hidden="true" tabindex="-1"></a>score <span class="ot">=</span> <span class="dv">73</span></span>
+<span id="cb96-454"><a href="#cb96-454" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(score <span class="sc">&gt;=</span> <span class="dv">90</span>){</span>
+<span id="cb96-455"><a href="#cb96-455" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">=</span> <span class="st">"优"</span></span>
+<span id="cb96-456"><a href="#cb96-456" aria-hidden="true" tabindex="-1"></a>  }<span class="cf">else</span> <span class="cf">if</span>(score <span class="sc">&gt;=</span><span class="dv">70</span>){</span>
+<span id="cb96-457"><a href="#cb96-457" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">=</span> <span class="st">"良"</span></span>
+<span id="cb96-458"><a href="#cb96-458" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span> <span class="cf">if</span>(score <span class="sc">&gt;=</span> <span class="dv">60</span>){</span>
+<span id="cb96-459"><a href="#cb96-459" aria-hidden="true" tabindex="-1"></a>      res <span class="ot">=</span> <span class="st">"及格"</span></span>
+<span id="cb96-460"><a href="#cb96-460" aria-hidden="true" tabindex="-1"></a>      }<span class="cf">else</span>{</span>
+<span id="cb96-461"><a href="#cb96-461" aria-hidden="true" tabindex="-1"></a>        res <span class="ot">=</span> <span class="st">"不及格"</span></span>
+<span id="cb96-462"><a href="#cb96-462" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb96-463"><a href="#cb96-463" aria-hidden="true" tabindex="-1"></a>res<span class="co">#输出判断结果</span></span>
+<span id="cb96-464"><a href="#cb96-464" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-465"><a href="#cb96-465" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-466"><a href="#cb96-466" aria-hidden="true" tabindex="-1"></a>接下来我们自定义一个scorejudge()函数实现对单个成绩对判断。实际上就是把上面的代码封装起来</span>
+<span id="cb96-467"><a href="#cb96-467" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-470"><a href="#cb96-470" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-471"><a href="#cb96-471" aria-hidden="true" tabindex="-1"></a>scorejudge<span class="ot">&lt;-</span><span class="cf">function</span>(x){</span>
+<span id="cb96-472"><a href="#cb96-472" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(score <span class="sc">&gt;=</span> <span class="dv">90</span>){</span>
+<span id="cb96-473"><a href="#cb96-473" aria-hidden="true" tabindex="-1"></a>    res <span class="ot">=</span> <span class="st">"优"</span></span>
+<span id="cb96-474"><a href="#cb96-474" aria-hidden="true" tabindex="-1"></a>    }<span class="cf">else</span> <span class="cf">if</span>(score <span class="sc">&gt;=</span><span class="dv">70</span>){</span>
+<span id="cb96-475"><a href="#cb96-475" aria-hidden="true" tabindex="-1"></a>      res <span class="ot">=</span> <span class="st">"良"</span></span>
+<span id="cb96-476"><a href="#cb96-476" aria-hidden="true" tabindex="-1"></a>      }<span class="cf">else</span> <span class="cf">if</span>(score <span class="sc">&gt;=</span> <span class="dv">60</span>){</span>
+<span id="cb96-477"><a href="#cb96-477" aria-hidden="true" tabindex="-1"></a>        res <span class="ot">=</span> <span class="st">"及格"</span></span>
+<span id="cb96-478"><a href="#cb96-478" aria-hidden="true" tabindex="-1"></a>        }<span class="cf">else</span>{</span>
+<span id="cb96-479"><a href="#cb96-479" aria-hidden="true" tabindex="-1"></a>          res <span class="ot">=</span> <span class="st">"不及格"</span></span>
+<span id="cb96-480"><a href="#cb96-480" aria-hidden="true" tabindex="-1"></a>          }</span>
+<span id="cb96-481"><a href="#cb96-481" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">"该同学的分数等级为"</span>,res)</span>
+<span id="cb96-482"><a href="#cb96-482" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb96-483"><a href="#cb96-483" aria-hidden="true" tabindex="-1"></a><span class="fu">scorejudge</span>(score)<span class="co">#就像调用R自带函数一样调用我们自己编写的函数</span></span>
+<span id="cb96-484"><a href="#cb96-484" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb96-485"><a href="#cb96-485" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-486"><a href="#cb96-486" aria-hidden="true" tabindex="-1"></a>如若想要同时查询多个分数，则需要对原来的代码进行修改，加入for循环语句</span>
+<span id="cb96-487"><a href="#cb96-487" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb96-490"><a href="#cb96-490" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb96-491"><a href="#cb96-491" aria-hidden="true" tabindex="-1"></a>scorejudge<span class="ot">&lt;-</span><span class="cf">function</span>(x){</span>
+<span id="cb96-492"><a href="#cb96-492" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">=</span> <span class="fu">length</span>(x)<span class="co">#首先确定循环次数，即x中有多少个分数，下面的for循环就要运行多少次</span></span>
+<span id="cb96-493"><a href="#cb96-493" aria-hidden="true" tabindex="-1"></a>  res <span class="ot">=</span> <span class="fu">vector</span>(<span class="st">"character"</span>,n)<span class="co">#建立一个和输入的分数个数相同的空向量，用来放每次for循环的输出结果</span></span>
+<span id="cb96-494"><a href="#cb96-494" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n){</span>
+<span id="cb96-495"><a href="#cb96-495" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(x[i] <span class="sc">&gt;=</span> <span class="dv">90</span>){</span>
+<span id="cb96-496"><a href="#cb96-496" aria-hidden="true" tabindex="-1"></a>      res[i] <span class="ot">=</span> <span class="fu">paste0</span>(i,<span class="st">"号同学的分数等级为"</span>,<span class="st">"优"</span>)</span>
+<span id="cb96-497"><a href="#cb96-497" aria-hidden="true" tabindex="-1"></a>      } <span class="cf">else</span> <span class="cf">if</span>(x[i] <span class="sc">&gt;=</span><span class="dv">70</span>){</span>
+<span id="cb96-498"><a href="#cb96-498" aria-hidden="true" tabindex="-1"></a>        res[i] <span class="ot">=</span> <span class="fu">paste0</span>(i,<span class="st">"号同学的分数等级为"</span>,<span class="st">"良"</span>)</span>
+<span id="cb96-499"><a href="#cb96-499" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span>(x[i] <span class="sc">&gt;=</span> <span class="dv">60</span>){</span>
+<span id="cb96-500"><a href="#cb96-500" aria-hidden="true" tabindex="-1"></a>          res[i] <span class="ot">=</span> <span class="fu">paste0</span>(i,<span class="st">"号同学的分数等级为"</span>,<span class="st">"及格"</span>)</span>
+<span id="cb96-501"><a href="#cb96-501" aria-hidden="true" tabindex="-1"></a>          } <span class="cf">else</span>{</span>
+<span id="cb96-502"><a href="#cb96-502" aria-hidden="true" tabindex="-1"></a>            res[i] <span class="ot">=</span> <span class="fu">paste0</span>(i,<span class="st">"号同学的分数等级为"</span>,<span class="st">"不及格"</span>)</span>
+<span id="cb96-503"><a href="#cb96-503" aria-hidden="true" tabindex="-1"></a>          }</span>
+<span id="cb96-504"><a href="#cb96-504" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb96-505"><a href="#cb96-505" aria-hidden="true" tabindex="-1"></a>  res <span class="co">#输出最终的res向量</span></span>
+<span id="cb96-506"><a href="#cb96-506" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb96-507"><a href="#cb96-507" aria-hidden="true" tabindex="-1"></a><span class="fu">scorejudge</span>(<span class="fu">c</span>(<span class="dv">34</span>,<span class="dv">67</span>,<span class="dv">89</span>,<span class="dv">95</span>))</span>
+<span id="cb96-508"><a href="#cb96-508" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
