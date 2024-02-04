@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - Normalization and regressing out unwanted variation</title>
 <style>
@@ -19,7 +19,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -55,6 +55,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -98,7 +99,12 @@ div.csl-indent {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -107,6 +113,7 @@ div.csl-indent {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -124,21 +131,23 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   "showHighlights": "always",
   "enableExperimentalNewNoteButton": true
 }
-</script><script async="" src="https://hypothes.is/embed.js"></script>
+</script><script async="" src="https://hypothes.is/embed.js"></script><script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
 <meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - Normalization and regressing out unwanted variation">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/images/sc_workflow_2022-01.jpg">
-<meta property="og:site-name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
+<meta property="og:site_name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
 <meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - Normalization and regressing out unwanted variation">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/images/sc_workflow_2022-01.jpg">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 <body class="nav-sidebar docked nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
     <img src="../../images/logo.jpg" alt="" class="navbar-logo"></a>
     <a class="navbar-brand" href="../../index.html">
@@ -152,50 +161,51 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link active" href="../../index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link active" href="../../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../r_basic/r_basics.html" rel="" target="">
- <span class="menu-text">R语言基础</span></a>
+    <a class="nav-link" href="../../r_basic/r_basics.html"> 
+<span class="menu-text">R语言基础</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">单细胞数据分析</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-">
 <li>
-    <a class="dropdown-item" href="../../single_cell/single_cell_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/single_cell_intro.html">
  <span class="dropdown-text">单细胞数据分析介绍</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/seurat/seurat_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/seurat/seurat_intro.html">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/scRNA-seq_online/00_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/scRNA-seq_online/00_intro.html">
  <span class="dropdown-text">scRNA-seq_online学习材料</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html">
  <span class="dropdown-text">单细胞补充内容</span></a>
   </li>  
     </ul>
 </li>
   <li class="nav-item">
-    <a class="nav-link" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
- <span class="menu-text">Quarto基础</span></a>
+    <a class="nav-link" href="../../quarto_foundation/quarto_foundation.html"> 
+<span class="menu-text">Quarto基础</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item">
-    <a class="nav-link" href="https://bookdown.org" rel="" target=""><i class="bi bi-book-fill" role="img">
+    <a class="nav-link" href="https://bookdown.org"> <i class="bi bi-book-fill" role="img">
 </i> 
- <span class="menu-text">Bookdown</span></a>
+<span class="menu-text">Bookdown</span></a>
   </li>  
 </ul>
-<div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/djhcod/r-notes" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/djhcod/r-notes" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
@@ -203,19 +213,18 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   </div>
 </a>
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html">Normalization and regressing out unwanted variation</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html">Normalization and regressing out unwanted variation</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
@@ -525,7 +534,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 </li>
     </ul>
 </div>
-</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">On this page</h2>
@@ -568,10 +577,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   </ul>
 </li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/scRNA-seq_online/06_SC_SCT_normalization.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/scRNA-seq_online/06_SC_SCT_normalization.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html">Normalization and regressing out unwanted variation</a></li></ol></nav><div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">Normalization and regressing out unwanted variation</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
@@ -584,6 +593,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
     
   </div>
   
+
 
 </header><div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -819,7 +829,10 @@ ctrl_AAACATACCTCGCT-1  0.03421052  0.02033139     S</code></pre>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/">cowplot</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">2</span>, labels <span class="op">=</span> <span class="st">"AUTO"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="06_SC_SCT_normalization_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="06_SC_SCT_normalization_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p><strong>We do not see large differences due to cell cycle phase. Based on this plot, we would not regress out the variation due to cell cycle.</strong></p>
@@ -893,7 +906,10 @@ Tip
 <span>              split.by <span class="op">=</span> <span class="st">"mitoFr"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">2</span>, labels <span class="op">=</span> <span class="st">"AUTO"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="06_SC_SCT_normalization_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="1920"></p>
+<div>
+<figure class="figure"><p><img src="06_SC_SCT_normalization_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="1920"></p>
+</figure>
+</div>
 </div>
 </div>
 </li>
@@ -1063,7 +1079,10 @@ ctrl_AAACATACCTCGCT-1       1493          632  0.018235066  0.018993438   G2M</c
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/">cowplot</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">2</span>, labels <span class="op">=</span> <span class="st">"AUTO"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="06_SC_SCT_normalization_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="06_SC_SCT_normalization_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 </section><section id="评估线粒体基因的影响" class="level2" data-number="3.4"><h2 data-number="3.4" class="anchored" data-anchor-id="评估线粒体基因的影响">
@@ -1095,7 +1114,10 @@ ctrl_AAACATACCTCGCT-1       1493          632  0.018235066  0.018993438   G2M</c
 <span>              split.by <span class="op">=</span> <span class="st">"mitoFr"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">2</span>, labels <span class="op">=</span> <span class="st">"AUTO"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="06_SC_SCT_normalization_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="1920"></p>
+<div>
+<figure class="figure"><p><img src="06_SC_SCT_normalization_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="1920"></p>
+</figure>
+</div>
 </div>
 </div>
 </section><section id="re_sctransform" class="level2" data-number="3.5"><h2 data-number="3.5" class="anchored" data-anchor-id="re_sctransform">
@@ -1131,8 +1153,8 @@ Tip
 <p>The output of <code><a href="https://satijalab.org/seurat/reference/SCTransform.html">SCTransform()</a></code> can generate large R objects/variables in terms of memory. If we have a large dataset, then we might need to <strong>adjust the limit for allowable object sizes within R</strong> (<em>Default is 500</em> 1024 ^ 2 = 500 Mb*) using the following code:</p>
 <div class="cell" data-hash="06_SC_SCT_normalization_cache/html/unnamed-chunk-12_7bd61303ffdbfc0b44e7f68f2b748ac1">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">future.globals.maxSize =</span> <span class="dv">4000</span> <span class="sc">*</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| eval: false</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="in">options(future.globals.maxSize = 4000 * 1024^2)</span></span>
 <span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>如果出现如下报错：</p>
@@ -1263,7 +1285,7 @@ loaded via a namespace (and not attached):
 </div>
 </div>
 </section></section><section id="references" class="level1 unnumbered"><h1 class="unnumbered">References</h1>
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-bacher2017" class="csl-entry" role="listitem">
 Bacher, Rhonda, Li-Fang Chu, Ning Leng, Audrey P Gasch, James A Thomson, Ron M Stewart, Michael Newton, and Christina Kendziorski. 2017. <span>“SCnorm: Robust Normalization of Single-Cell RNA-Seq Data.”</span> <em>Nature Methods</em> 14 (6): 584–86. <a href="https://doi.org/10.1038/nmeth.4263">https://doi.org/10.1038/nmeth.4263</a>.
 </div>
@@ -1316,6 +1338,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -1384,13 +1433,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1520,10 +1571,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1533,8 +1601,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1547,6 +1624,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1590,6 +1786,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1615,6 +1812,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1672,29 +1895,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-          // target, if specified
-          link.setAttribute("target", "_blank");
-      }
-    }
 });
 </script><script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="pagination-link">
+</script><input type="hidden" id="giscus-base-theme" value="light"><input type="hidden" id="giscus-alt-theme" value="dark"><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="pagination-link  aria-label=" pca="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">PCA原理</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="pagination-link">
+      <a href="../../single_cell/scRNA-seq_online/06_integration.html" class="pagination-link" aria-label="单细胞数据整合（Integration）">
         <span class="nav-page-text">单细胞数据整合（Integration）</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -1906,30 +2115,30 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb48-213"><a href="#cb48-213" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>First, turn the mitochondrial ratio variable into a new categorical variable based on quartiles. 根据各细胞线粒体基因的比例的四分位数将所有细胞分为低线粒体基因比例细胞、中线粒体基因比例细胞···</span>
 <span id="cb48-214"><a href="#cb48-214" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb48-215"><a href="#cb48-215" aria-hidden="true" tabindex="-1"></a>    <span class="in">```{r}</span></span>
-<span id="cb48-216"><a href="#cb48-216" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check quartile values</span></span>
-<span id="cb48-217"><a href="#cb48-217" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summary</span>(seurat_phase<span class="sc">$</span>mitoRatio)</span>
+<span id="cb48-216"><a href="#cb48-216" aria-hidden="true" tabindex="-1"></a><span class="in">    # Check quartile values</span></span>
+<span id="cb48-217"><a href="#cb48-217" aria-hidden="true" tabindex="-1"></a><span class="in">    summary(seurat_phase$mitoRatio)</span></span>
 <span id="cb48-218"><a href="#cb48-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-219"><a href="#cb48-219" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Turn mitoRatio into categorical factor vector based on quartile values</span></span>
-<span id="cb48-220"><a href="#cb48-220" aria-hidden="true" tabindex="-1"></a>    seurat_phase<span class="sc">$</span>mitoFr <span class="ot">&lt;-</span> <span class="fu">cut</span>(seurat_phase<span class="sc">@</span>meta.data<span class="sc">$</span>mitoRatio, </span>
-<span id="cb48-221"><a href="#cb48-221" aria-hidden="true" tabindex="-1"></a>                               <span class="at">breaks=</span><span class="fu">c</span>(<span class="sc">-</span><span class="cn">Inf</span>, <span class="fl">0.0144</span>, <span class="fl">0.0199</span>, <span class="fl">0.0267</span>, <span class="cn">Inf</span>), </span>
-<span id="cb48-222"><a href="#cb48-222" aria-hidden="true" tabindex="-1"></a>                               <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Low"</span>, <span class="st">"Medium"</span>, <span class="st">"Medium high"</span>, <span class="st">"High"</span>))</span>
-<span id="cb48-223"><a href="#cb48-223" aria-hidden="true" tabindex="-1"></a>    <span class="fu">table</span>(seurat_phase<span class="sc">$</span>mitoFr)</span>
-<span id="cb48-224"><a href="#cb48-224" aria-hidden="true" tabindex="-1"></a>    <span class="in">```</span></span>
+<span id="cb48-219"><a href="#cb48-219" aria-hidden="true" tabindex="-1"></a><span class="in">    # Turn mitoRatio into categorical factor vector based on quartile values</span></span>
+<span id="cb48-220"><a href="#cb48-220" aria-hidden="true" tabindex="-1"></a><span class="in">    seurat_phase$mitoFr &lt;- cut(seurat_phase@meta.data$mitoRatio, </span></span>
+<span id="cb48-221"><a href="#cb48-221" aria-hidden="true" tabindex="-1"></a><span class="in">                               breaks=c(-Inf, 0.0144, 0.0199, 0.0267, Inf), </span></span>
+<span id="cb48-222"><a href="#cb48-222" aria-hidden="true" tabindex="-1"></a><span class="in">                               labels=c("Low", "Medium", "Medium high", "High"))</span></span>
+<span id="cb48-223"><a href="#cb48-223" aria-hidden="true" tabindex="-1"></a><span class="in">    table(seurat_phase$mitoFr)</span></span>
+<span id="cb48-224"><a href="#cb48-224" aria-hidden="true" tabindex="-1"></a><span class="in">    ```</span></span>
 <span id="cb48-225"><a href="#cb48-225" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb48-226"><a href="#cb48-226" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Next, plot the PCA similar to how we did with cell cycle regression. *Hint: use the new `mitoFr` variable to split cells and color them accordingly.*</span>
 <span id="cb48-227"><a href="#cb48-227" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb48-228"><a href="#cb48-228" aria-hidden="true" tabindex="-1"></a>    <span class="in">```{r}</span></span>
-<span id="cb48-229"><a href="#cb48-229" aria-hidden="true" tabindex="-1"></a>    <span class="co">#| fig-width: 20</span></span>
-<span id="cb48-230"><a href="#cb48-230" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 根据各细胞线粒体基因的比例信息绘制PCA</span></span>
-<span id="cb48-231"><a href="#cb48-231" aria-hidden="true" tabindex="-1"></a>    p1 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
-<span id="cb48-232"><a href="#cb48-232" aria-hidden="true" tabindex="-1"></a>                  <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb48-233"><a href="#cb48-233" aria-hidden="true" tabindex="-1"></a>                  <span class="at">group.by=</span> <span class="st">"mitoFr"</span>)</span>
-<span id="cb48-234"><a href="#cb48-234" aria-hidden="true" tabindex="-1"></a>    p2 <span class="ot">&lt;-</span> <span class="fu">DimPlot</span>(seurat_phase,</span>
-<span id="cb48-235"><a href="#cb48-235" aria-hidden="true" tabindex="-1"></a>                  <span class="at">reduction =</span> <span class="st">"pca"</span>,</span>
-<span id="cb48-236"><a href="#cb48-236" aria-hidden="true" tabindex="-1"></a>                  <span class="at">group.by=</span> <span class="st">"mitoFr"</span>,</span>
-<span id="cb48-237"><a href="#cb48-237" aria-hidden="true" tabindex="-1"></a>                  <span class="at">split.by =</span> <span class="st">"mitoFr"</span>)</span>
-<span id="cb48-238"><a href="#cb48-238" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_grid</span>(p1, p2, <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">labels =</span> <span class="st">"AUTO"</span>)</span>
-<span id="cb48-239"><a href="#cb48-239" aria-hidden="true" tabindex="-1"></a>    <span class="in">```</span></span>
+<span id="cb48-229"><a href="#cb48-229" aria-hidden="true" tabindex="-1"></a><span class="in">    #| fig-width: 20</span></span>
+<span id="cb48-230"><a href="#cb48-230" aria-hidden="true" tabindex="-1"></a><span class="in">    # 根据各细胞线粒体基因的比例信息绘制PCA</span></span>
+<span id="cb48-231"><a href="#cb48-231" aria-hidden="true" tabindex="-1"></a><span class="in">    p1 &lt;- DimPlot(seurat_phase,</span></span>
+<span id="cb48-232"><a href="#cb48-232" aria-hidden="true" tabindex="-1"></a><span class="in">                  reduction = "pca",</span></span>
+<span id="cb48-233"><a href="#cb48-233" aria-hidden="true" tabindex="-1"></a><span class="in">                  group.by= "mitoFr")</span></span>
+<span id="cb48-234"><a href="#cb48-234" aria-hidden="true" tabindex="-1"></a><span class="in">    p2 &lt;- DimPlot(seurat_phase,</span></span>
+<span id="cb48-235"><a href="#cb48-235" aria-hidden="true" tabindex="-1"></a><span class="in">                  reduction = "pca",</span></span>
+<span id="cb48-236"><a href="#cb48-236" aria-hidden="true" tabindex="-1"></a><span class="in">                  group.by= "mitoFr",</span></span>
+<span id="cb48-237"><a href="#cb48-237" aria-hidden="true" tabindex="-1"></a><span class="in">                  split.by = "mitoFr")</span></span>
+<span id="cb48-238"><a href="#cb48-238" aria-hidden="true" tabindex="-1"></a><span class="in">    plot_grid(p1, p2, ncol = 2, labels = "AUTO")</span></span>
+<span id="cb48-239"><a href="#cb48-239" aria-hidden="true" tabindex="-1"></a><span class="in">    ```</span></span>
 <span id="cb48-240"><a href="#cb48-240" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb48-241"><a href="#cb48-241" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Evaluate the PCA plot.</span>
 <span id="cb48-242"><a href="#cb48-242" aria-hidden="true" tabindex="-1"></a></span>
@@ -2131,7 +2340,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </li>  
 </ul>
 </div>   
-    <div class="nav-footer-center">Copyright 2024, Du Junhong</div>
+    <div class="nav-footer-center">
+<p>Copyright 2024, Du Junhong</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/scRNA-seq_online/06_SC_SCT_normalization.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
 <li class="nav-item compact">

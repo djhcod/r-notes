@@ -41,7 +41,7 @@ glimpse(flights)
 
 `dplyr` 的函数可以根据它们的操作对象分为四类：分别是对行进行操作的函数、对列进行操作的函数、对表进行操作的函数以及分组统计函数，同时还包括一个特殊的管道符号`%>%`。本章将介绍除对表进行操作之外的函数。
 
-# 管道操作符
+# 管道操作符 {#sec-管道操作符}
 
 > 参考：[*生信菜鸟团-R tips: R管道的用法*](https://mp.weixin.qq.com/s?__biz=MzUzMTEwODk0Ng==&mid=2247512157&idx=1&sn=47466392bd7c54e17c57b232b29b551b&chksm=fa457560cd32fc76da55c346ef08917343322ecb5d24b3b591d9c65549ed1f0ca10f57f1105d&mpshare=1&scene=1&srcid=0407dIwqephXlKmnMrPSvpRb&sharer_sharetime=1680842848403&sharer_shareid=568f49cb24905bf546294e6985a632bf#rd)
 
@@ -266,7 +266,7 @@ filter(flights, month %in% c(1, 2))
 
 ## `arrange()`
 
-排序，以某列为依据对行进行排序（在前面的数据[处理基本函数](/r_basic/basic_data_function.qmd#sec-排序)一章中已涉及该函数）。对应的功能在`base`包中是`order()`函数。如果提供的列名不止一个，则依次根据提供的列的顺序对数据进行排序。例如，下面的代码按航班出发时间排序，出发时间分布在四列中。我们首先得到最早的年份，然后在一年内得到最早的月份，依此类推。
+排序，以某列为依据对行进行排序（在前面的[数据处理基本函数](/r_basic/basic_data_function.qmd#sec-排序)一章中已涉及该函数）。对应的功能在`base`包中是`order()`函数。如果提供的列名不止一个，则依次根据提供的列的顺序对数据进行排序。例如，下面的代码按航班出发时间排序，出发时间分布在四列中。我们首先得到最早的年份，然后在一年内得到最早的月份，依此类推。
 
 ```{r}
 arrange(flights, year, month, day, dep_time)
@@ -308,7 +308,7 @@ count(flights, origin, dest, sort = TRUE)
 
 # 对列的操作
 
-## `mutate()`
+## `mutate()` {#sec-mutate}
 
 ![](images/截屏2024-02-02%2017.31.09.png){width="199"}
 
@@ -400,7 +400,7 @@ select(flights, where(is.character))
 select(flights, tail_num = tailnum)
 ```
 
-## `rename()`
+## `rename()` {#sec-rename}
 
 重命名列。新变量名在 `=` 的左侧，旧变量名在右侧。
 

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - Seurat中的数据可视化方法</title>
 <style>
@@ -19,7 +19,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -79,7 +79,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -88,6 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -105,25 +111,23 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   "showHighlights": "always",
   "enableExperimentalNewNoteButton": true
 }
-</script><script async="" src="https://hypothes.is/embed.js"></script>
+</script><script async="" src="https://hypothes.is/embed.js"></script><script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
 <meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - Seurat中的数据可视化方法">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://djhcod.github.io/r-notes/single_cell/seurat/data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-6-1.png">
-<meta property="og:site-name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
-<meta property="og:image:height" content="1920">
-<meta property="og:image:width" content="1920">
+<meta property="og:site_name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
 <meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - Seurat中的数据可视化方法">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/seurat/data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-6-1.png">
-<meta name="twitter:image-height" content="1920">
-<meta name="twitter:image-width" content="1920">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 <body class="nav-sidebar docked nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
     <img src="../../images/logo.jpg" alt="" class="navbar-logo"></a>
     <a class="navbar-brand" href="../../index.html">
@@ -137,50 +141,51 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link active" href="../../index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link active" href="../../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../r_basic/r_basics.html" rel="" target="">
- <span class="menu-text">R语言基础</span></a>
+    <a class="nav-link" href="../../r_basic/r_basics.html"> 
+<span class="menu-text">R语言基础</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">单细胞数据分析</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-">
 <li>
-    <a class="dropdown-item" href="../../single_cell/single_cell_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/single_cell_intro.html">
  <span class="dropdown-text">单细胞数据分析介绍</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/seurat/seurat_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/seurat/seurat_intro.html">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/scRNA-seq_online/00_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/scRNA-seq_online/00_intro.html">
  <span class="dropdown-text">scRNA-seq_online学习材料</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html">
  <span class="dropdown-text">单细胞补充内容</span></a>
   </li>  
     </ul>
 </li>
   <li class="nav-item">
-    <a class="nav-link" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
- <span class="menu-text">Quarto基础</span></a>
+    <a class="nav-link" href="../../quarto_foundation/quarto_foundation.html"> 
+<span class="menu-text">Quarto基础</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item">
-    <a class="nav-link" href="https://bookdown.org" rel="" target=""><i class="bi bi-book-fill" role="img">
+    <a class="nav-link" href="https://bookdown.org"> <i class="bi bi-book-fill" role="img">
 </i> 
- <span class="menu-text">Bookdown</span></a>
+<span class="menu-text">Bookdown</span></a>
   </li>  
 </ul>
-<div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/djhcod/r-notes" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/djhcod/r-notes" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
@@ -188,19 +193,18 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   </div>
 </a>
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat_intro.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/data_visualization_methods_in_seurat.html">Seurat中的数据可视化方法</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat_intro.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/data_visualization_methods_in_seurat.html">Seurat中的数据可视化方法</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
@@ -510,7 +514,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 </li>
     </ul>
 </div>
-</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">On this page</h2>
@@ -532,10 +536,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   </ul>
 </li>
   <li><a href="#%E7%BB%86%E8%83%9E%E5%88%86%E7%BE%A4%E5%9B%BE" id="toc-细胞分群图" class="nav-link" data-scroll-target="#%E7%BB%86%E8%83%9E%E5%88%86%E7%BE%A4%E5%9B%BE"><span class="header-section-number">2</span> 细胞分群图</a></li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/seurat/data_visualization_methods_in_seurat.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/seurat/data_visualization_methods_in_seurat.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/seurat_intro.html">Seurat v5官方文档</a></li><li class="breadcrumb-item"><a href="../../single_cell/seurat/data_visualization_methods_in_seurat.html">Seurat中的数据可视化方法</a></li></ol></nav><div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">Seurat中的数据可视化方法</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
@@ -549,6 +553,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   </div>
   
 
+
 </header><blockquote class="blockquote">
 <p>原文：<a href="https://satijalab.org/seurat/articles/visualization_vignette"><em>Data visualization methods in Seurat</em></a></p>
 <p>原文发布日期：2023-10-31</p>
@@ -556,28 +561,28 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <p>We’ll demonstrate visualization techniques in Seurat using our previously computed Seurat object from the 2,700 PBMC tutorial. You can download this dataset from&nbsp;<a href="https://github.com/satijalab/seurat-data">SeuratData</a>。官方教程是通过<code>SeuratData</code>包的<code>InstallData</code>函数来下载案例数据，可能需要开启全局代理才能下载：</p>
 <div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-1_4a0f7c96c48c62caee11f5f282661d47">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">'satijalab/seurat-data'</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>SeuratData<span class="sc">::</span><span class="fu">InstallData</span>(<span class="st">"pbmc3k"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| eval: false</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="in">devtools::install_github('satijalab/seurat-data')</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="in">SeuratData::InstallData("pbmc3k")</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-2_610743fccec69f9717b9dbc25dffce81">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SeuratData)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>pbmc3k.final <span class="ot">&lt;-</span> <span class="fu">LoadData</span>(<span class="st">"pbmc3k"</span>, <span class="at">type =</span> <span class="st">"pbmc3k.final"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>pbmc3k.final<span class="sc">$</span>groups <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"group1"</span>, </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                                <span class="st">"group2"</span>), </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                              <span class="at">size =</span> <span class="fu">ncol</span>(pbmc3k.final), </span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                              <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>pbmc3k.final</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| eval: false</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="in">library(SeuratData)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="in">pbmc3k.final &lt;- LoadData("pbmc3k", type = "pbmc3k.final")</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="in">pbmc3k.final$groups &lt;- sample(c("group1", </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="in">                                "group2"), </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="in">                              size = ncol(pbmc3k.final), </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="in">                              replace = TRUE)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="in">pbmc3k.final</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>这里我将下载下来的数据保存起来：</p>
 <div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-3_05db33850ab867bd62245b9f6ce683a7">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(pbmc3k.final, <span class="at">file =</span> <span class="st">"data/seurat_official/pbmc3k.final.rds"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| eval: false</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="in">saveRDS(pbmc3k.final, file = "data/seurat_official/pbmc3k.final.rds")</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>后面我们直接从本地读取这个Seurat对象：</p>
@@ -597,7 +602,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/RidgePlot.html">RidgePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, features <span class="op">=</span> <span class="va">features</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 </section><section id="violin-plot" class="level2" data-number="1.2"><h2 data-number="1.2" class="anchored" data-anchor-id="violin-plot">
@@ -605,7 +613,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-7_16d54170a20c5aacc9354040a71e4058">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/VlnPlot.html">VlnPlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, features <span class="op">=</span> <span class="va">features</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Violin plots can be split on some variable. Simply add the splitting variable to object metadata and pass it to the <code>split.by</code> argument. 通过添加<code>split.by</code>参数，展示marker gene在不同的样本组别中的表达。</p>
@@ -614,7 +625,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <span>        features <span class="op">=</span> <span class="st">"percent.mt"</span>, </span>
 <span>        split.by <span class="op">=</span> <span class="st">"groups"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section><section id="feature-plot" class="level2" data-number="1.3"><h2 data-number="1.3" class="anchored" data-anchor-id="feature-plot">
@@ -623,7 +637,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-9_3c54a8da978d0b19c87d0f265b64512f">
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, features <span class="op">=</span> <span class="va">features</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="768"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
 </div>
 </div>
 <section id="sec-Further_modifications_to_featureplot" class="level3"><h3 class="anchored" data-anchor-id="sec-Further_modifications_to_featureplot">对<code>FeaturePlot</code>的进一步修饰</h3>
@@ -631,7 +648,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-10_704dd11f76cab1acb4d81d3acd3a554a">
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, features <span class="op">=</span> <span class="st">"MS4A1"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Adjust the contrast in the plot。通过<code>min.cutoff</code>和<code>max.cutoff</code>调整颜色范围。</p>
@@ -639,20 +659,29 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, features <span class="op">=</span> <span class="st">"MS4A1"</span>, </span>
 <span>            min.cutoff <span class="op">=</span> <span class="fl">1</span>, max.cutoff <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p><strong>调整颜色：</strong></p>
 <div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-12_187f9a6400818bdc2886dc79a8dfd21b">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, features <span class="op">=</span> <span class="st">"MS4A1"</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lightblue"</span>, <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 通过RColorBrewer包取色</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">RColorBrewer</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, features <span class="op">=</span> <span class="st">"MS4A1"</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span>, name <span class="op">=</span> <span class="st">"RdBu"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>也可以通过ggplot语法修改颜色：</p>
@@ -661,7 +690,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, features <span class="op">=</span> <span class="st">"MS4A1"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_gradient.html">scale_colour_gradientn</a></span><span class="op">(</span>colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rev.html">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">brewer.pal</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span>, name <span class="op">=</span> <span class="st">"RdBu"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Calculate feature-specific contrast levels based on quantiles of non-zero expression. Particularly useful when plotting multiple markers。</p>
@@ -671,7 +703,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <span>            min.cutoff <span class="op">=</span> <span class="st">"q10"</span>, </span>
 <span>            max.cutoff <span class="op">=</span> <span class="st">"q90"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p><strong>多基因FeaturePlot：</strong></p>
@@ -681,7 +716,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CD3D"</span>, <span class="st">"MS4A1"</span>, <span class="st">"CD79A"</span><span class="op">)</span>, </span>
 <span>            split.by <span class="op">=</span> <span class="st">"groups"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p><code><a href="https://satijalab.org/seurat/reference/FeaturePlot.html">FeaturePlot()</a></code>中还提供了<code>blend</code> 参数，来可视化两个基因的共表达情况（添加<code>blend = TRUE</code>）。注意<code>blend = TRUE</code><strong>只能适用于2个基因</strong>，多个基因会报错 。</p>
@@ -690,7 +728,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <span>            features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"MS4A1"</span>, <span class="st">"CD79A"</span><span class="op">)</span>, </span>
 <span>            blend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>如果想实现多个基因的话，可以使用<code>scCustomize</code>包中的<code><a href="https://samuel-marsh.github.io/scCustomize/reference/Plot_Density_Joint_Only.html">Plot_Density_Joint_Only()</a></code>函数绘制多基因联合密度图。该函数还依赖于Nebulosa包，因此还需要先从BiocManager安装该包：</p>
@@ -704,7 +745,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <span>                        features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"CD3D"</span>, <span class="st">"MS4A1"</span>, <span class="st">"CD79A"</span><span class="op">)</span>,</span>
 <span>                        custom_palette <span class="op">=</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/CustomPalette.html">BlueAndRed</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section></section><section id="dot-plots" class="level2" data-number="1.4"><h2 data-number="1.4" class="anchored" data-anchor-id="dot-plots">
@@ -715,7 +759,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <span>        features <span class="op">=</span> <span class="va">features</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">RotatedAxis</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>通过添加<code>split.by</code>参数，来按照不同的样本组别来分别展示marker gene的表达。</p>
@@ -725,7 +772,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <span>        split.by <span class="op">=</span> <span class="st">"groups"</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">RotatedAxis</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section><section id="heatmap" class="level2" data-number="1.5"><h2 data-number="1.5" class="anchored" data-anchor-id="heatmap">
@@ -735,7 +785,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <span>          features <span class="op">=</span> <span class="va">features</span>, </span>
 <span>          size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>DoHeatmap now shows a grouping bar, splitting the heatmap into groups or clusters. This can be changed with the <code>group.by</code> parameter. 默认的<code>group.by</code>为细胞分群信息，即按照细胞的分群作为分组依据来绘制热图：</p>
@@ -747,7 +800,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <span>          angle <span class="op">=</span> <span class="fl">45</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># 分组文字角度</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">NoLegend</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>我们用meta.data中的任何列作为分群依据。例如这里的”groups”列：</p>
@@ -766,7 +822,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <span>          angle <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># 分组文字角度</span></span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">NoLegend</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section></section><section id="细胞分群图" class="level1" data-number="2"><h1 data-number="2">
@@ -774,11 +833,17 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <div class="cell" data-hash="data_visualization_methods_in_seurat_cache/html/unnamed-chunk-24_4fbdc496a7a8ca3f34ca96e8fad08bd5">
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, reduction <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">pbmc3k.final</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-24-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-24-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>进一步修饰</p>
@@ -788,7 +853,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Clustering of 2,700 PBMCs"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="data_visualization_methods_in_seurat_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <hr>
@@ -956,6 +1024,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
   }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
   const toggleColorMode = (alternate) => {
     // Switch the stylesheets
     const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
@@ -1022,13 +1117,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1158,10 +1255,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1171,8 +1285,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1185,6 +1308,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1228,6 +1470,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1253,6 +1496,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1310,29 +1579,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-          // target, if specified
-          link.setAttribute("target", "_blank");
-      }
-    }
 });
 </script><script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../../single_cell/seurat/seurat_tutorial.html" class="pagination-link">
+</script><input type="hidden" id="giscus-base-theme" value="light"><input type="hidden" id="giscus-alt-theme" value="dark"><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../../single_cell/seurat/seurat_tutorial.html" class="pagination-link  aria-label=" seurat="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Seurat细胞分群官方教程</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../single_cell/seurat/sctransform.html" class="pagination-link">
+      <a href="../../single_cell/seurat/sctransform.html" class="pagination-link" aria-label="基于SCTransform的单细胞数据标准化">
         <span class="nav-page-text">基于SCTransform的单细胞数据标准化</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -1588,7 +1843,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </li>  
 </ul>
 </div>   
-    <div class="nav-footer-center">Copyright 2024, Du Junhong</div>
+    <div class="nav-footer-center">
+<p>Copyright 2024, Du Junhong</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/seurat/data_visualization_methods_in_seurat.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
 <li class="nav-item compact">

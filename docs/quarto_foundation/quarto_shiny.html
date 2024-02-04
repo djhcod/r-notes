@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 在Quarto中嵌入Shiny应用程序</title>
 <style>
@@ -19,7 +19,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -84,7 +84,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -93,6 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -110,25 +116,23 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   "showHighlights": "always",
   "enableExperimentalNewNoteButton": true
 }
-</script><script async="" src="https://hypothes.is/embed.js"></script>
+</script><script async="" src="https://hypothes.is/embed.js"></script><script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
 <meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 在Quarto中嵌入Shiny应用程序">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://djhcod.github.io/r-notes/quarto_foundation/images/截屏2024-01-13 18.28.35.png">
-<meta property="og:site-name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
-<meta property="og:image:height" content="1236">
-<meta property="og:image:width" content="2624">
+<meta property="og:site_name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
 <meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 在Quarto中嵌入Shiny应用程序">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://djhcod.github.io/r-notes/quarto_foundation/images/截屏2024-01-13 18.28.35.png">
-<meta name="twitter:image-height" content="1236">
-<meta name="twitter:image-width" content="2624">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 <body class="nav-sidebar docked nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
     <img src="../images/logo.jpg" alt="" class="navbar-logo"></a>
     <a class="navbar-brand" href="../index.html">
@@ -142,50 +146,51 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link active" href="../index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../r_basic/r_basics.html" rel="" target="">
- <span class="menu-text">R语言基础</span></a>
+    <a class="nav-link" href="../r_basic/r_basics.html"> 
+<span class="menu-text">R语言基础</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">单细胞数据分析</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-">
 <li>
-    <a class="dropdown-item" href="../single_cell/single_cell_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../single_cell/single_cell_intro.html">
  <span class="dropdown-text">单细胞数据分析介绍</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../single_cell/seurat/seurat_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../single_cell/seurat/seurat_intro.html">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../single_cell/scRNA-seq_online/00_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../single_cell/scRNA-seq_online/00_intro.html">
  <span class="dropdown-text">scRNA-seq_online学习材料</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../single_cell/sc_supplementary/sc_supplementary_intro.html">
  <span class="dropdown-text">单细胞补充内容</span></a>
   </li>  
     </ul>
 </li>
   <li class="nav-item">
-    <a class="nav-link" href="../quarto_foundation/quarto_foundation.html" rel="" target="">
- <span class="menu-text">Quarto基础</span></a>
+    <a class="nav-link" href="../quarto_foundation/quarto_foundation.html"> 
+<span class="menu-text">Quarto基础</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item">
-    <a class="nav-link" href="https://bookdown.org" rel="" target=""><i class="bi bi-book-fill" role="img">
+    <a class="nav-link" href="https://bookdown.org"> <i class="bi bi-book-fill" role="img">
 </i> 
- <span class="menu-text">Bookdown</span></a>
+<span class="menu-text">Bookdown</span></a>
   </li>  
 </ul>
-<div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/djhcod/r-notes" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/djhcod/r-notes" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
@@ -193,19 +198,18 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   </div>
 </a>
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../quarto_foundation/quarto_foundation.html">Quarto基础</a></li><li class="breadcrumb-item"><a href="../quarto_foundation/quarto_shiny.html">在Quarto中嵌入Shiny应用程序</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../quarto_foundation/quarto_foundation.html">Quarto基础</a></li><li class="breadcrumb-item"><a href="../quarto_foundation/quarto_shiny.html">在Quarto中嵌入Shiny应用程序</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
@@ -515,7 +519,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 </li>
     </ul>
 </div>
-</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">On this page</h2>
@@ -535,10 +539,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   <li><a href="#%E6%A1%88%E4%BE%8B%E4%BA%8C" id="toc-案例二" class="nav-link" data-scroll-target="#%E6%A1%88%E4%BE%8B%E4%BA%8C"><span class="header-section-number">8.2</span> 案例二</a></li>
   </ul>
 </li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/quarto_foundation/quarto_shiny.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/quarto_foundation/quarto_shiny.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../quarto_foundation/quarto_foundation.html">Quarto基础</a></li><li class="breadcrumb-item"><a href="../quarto_foundation/quarto_shiny.html">在Quarto中嵌入Shiny应用程序</a></li></ol></nav><div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">在Quarto中嵌入Shiny应用程序</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
@@ -551,6 +555,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
     
   </div>
   
+
 
 </header><blockquote class="blockquote">
 <p>参考：<a href="https://quarto.thecoatlessprofessor.com/r-shinylive-demo/"><em>R-shinylive app in Quarto!</em></a></p>
@@ -573,7 +578,7 @@ Important
 <p>Shinylive是一种非服务器依赖的Shiny，它使得Shiny应用程序能够在网页浏览器中直接运行 ，而不需要依赖后台服务器。在 2022 年的Posit大会上，第一次推出了基于 WebAssembly 和 Pyodide 的 <a href="https://github.com/posit-dev/py-shinylive">Shinylive for Python</a>。随后，在2023年的Posit大会上，首次推出了基于<a href="https://docs.r-wasm.org/webr/">webR</a>的R版本的<code>shinylive</code>。该包的第一个<a href="https://cloud.r-project.org/web/packages/shinylive/index.html">CRAN版本</a>于2023年10月11日首次发布。</p>
 <div class="quarto-figure quarto-figure-left">
 <figure class="figure"><p><img src="images/shinylive-webr.png" class="img-fluid figure-img" width="526"></p>
-<figcaption class="figure-caption">Shinylive archticture, source: Joe Cheng “Running Shiny without a server”</figcaption></figure>
+<figcaption>Shinylive archticture, source: Joe Cheng “Running Shiny without a server”</figcaption></figure>
 </div>
 <p><code>shinylive</code>视频教程《<em>Creating a Serverless R Shiny App using Quarto with R Shinylive</em>》：</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/6y2FnAugP8E" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
@@ -613,22 +618,22 @@ Important
 <span class="header-section-number">5</span> 编写Shiny程序</h1>
 <p>我们需要把Shiny程序的代码放到一个特殊的<code>{shinylive-r}</code>代码块内：</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-r}</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| standalone: true</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">shiny</span><span class="kw">)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="in">library(shiny)</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your Shiny UI here</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- fluidPage<span class="er">(</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Your UI components go here</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="in"># Define your Shiny UI here</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="in">ui &lt;- fluidPage(</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="in">  # Your UI components go here</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your Shiny server logic here</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output, session<span class="kw">)</span> <span class="kw">{</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Your server code goes here</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="in"># Define your Shiny server logic here</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="in">server &lt;- function(input, output, session) {</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="in">  # Your server code goes here</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Create and launch the Shiny app</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui,</span> server<span class="kw">)</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="in"># Create and launch the Shiny app</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="in">shinyApp(ui, server)</span></span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -731,61 +736,61 @@ server &lt;- function(input, output) {
 shinyApp(ui = ui, server = server)</a></code></pre>
 <p>代码：</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-r}</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| viewerHeight: 600</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">shiny</span><span class="kw">)</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">bslib</span><span class="kw">)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| standalone: true</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| viewerHeight: 600</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="in">library(shiny)</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="in">library(bslib)</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI for app that draws a histogram ----</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- page_sidebar<span class="er">(</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">sidebar</span> = sidebar<span class="er">(</span><span class="ex">open</span> = <span class="st">"open"</span>,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="ex">numericInput</span><span class="er">(</span><span class="st">"n"</span><span class="ex">,</span> <span class="st">"Sample count"</span>, 100<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="ex">checkboxInput</span><span class="er">(</span><span class="st">"pause"</span><span class="ex">,</span> <span class="st">"Pause"</span>, FALSE<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="ex">plotOutput</span><span class="er">(</span><span class="st">"plot"</span><span class="ex">,</span> width=1100<span class="kw">)</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="in"># Define UI for app that draws a histogram ----</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="in">ui &lt;- page_sidebar(</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="in">  sidebar = sidebar(open = "open",</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="in">    numericInput("n", "Sample count", 100),</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="in">    checkboxInput("pause", "Pause", FALSE),</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="in">  ),</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="in">  plotOutput("plot", width=1100)</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output, session<span class="kw">)</span> <span class="kw">{</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="ex">data</span> <span class="op">&lt;</span>- reactive<span class="er">(</span><span class="kw">{</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input</span><span class="va">$resample</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">(</span><span class="ex">!isTRUE</span><span class="er">(</span><span class="ex">input</span><span class="va">$pause</span><span class="kw">))</span> <span class="kw">{</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>      <span class="ex">invalidateLater</span><span class="er">(</span><span class="ex">1000</span><span class="kw">)</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">}</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="ex">rnorm</span><span class="er">(</span><span class="ex">input</span><span class="va">$n</span><span class="kw">)</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">})</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="ex">output</span><span class="va">$plot</span> <span class="op">&lt;</span>- renderPlot<span class="er">(</span><span class="kw">{</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="ex">hist</span><span class="er">(</span><span class="fu">data()</span><span class="ex">,</span></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>      <span class="ex">breaks</span> = 40,</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>      <span class="ex">xlim</span> = c<span class="er">(</span><span class="ex">-2,</span> 2<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>      <span class="ex">ylim</span> = c<span class="er">(</span><span class="ex">0,</span> 1<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>      <span class="ex">lty</span> = <span class="st">"blank"</span>,</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>      <span class="ex">xlab</span> = <span class="st">"value"</span>,</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>      <span class="ex">freq</span> = FALSE,</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>      <span class="ex">main</span> = <span class="st">""</span></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    <span class="ex">x</span> <span class="op">&lt;</span>- seq<span class="er">(</span><span class="ex">from</span> = <span class="at">-2,</span> to = 2, length.out = 500<span class="kw">)</span></span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    <span class="ex">y</span> <span class="op">&lt;</span>- dnorm<span class="er">(</span><span class="ex">x</span><span class="kw">)</span></span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="ex">lines</span><span class="er">(</span><span class="ex">x,</span> y, lwd=1.5<span class="kw">)</span></span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    <span class="ex">lwd</span> <span class="op">&lt;</span>- 5</span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>    <span class="ex">abline</span><span class="er">(</span><span class="va">v</span><span class="op">=</span>0, <span class="va">col</span><span class="op">=</span><span class="st">"red"</span>, <span class="va">lwd</span><span class="op">=</span>lwd, <span class="va">lty</span><span class="op">=</span>2<span class="kw">)</span></span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    <span class="ex">abline</span><span class="er">(</span><span class="va">v</span><span class="op">=</span>mean<span class="kw">(</span><span class="fu">data()</span><span class="kw">)</span><span class="ex">,</span> col=<span class="st">"blue"</span>, lwd=lwd, lty=1<span class="kw">)</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="in">server &lt;- function(input, output, session) {</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="in">  data &lt;- reactive({</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="in">    input$resample</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="in">    if (!isTRUE(input$pause)) {</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="in">      invalidateLater(1000)</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="in">    }</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="in">    rnorm(input$n)</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="in">  })</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="in">  output$plot &lt;- renderPlot({</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="in">    hist(data(),</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="in">      breaks = 40,</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="in">      xlim = c(-2, 2),</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="in">      ylim = c(0, 1),</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="in">      lty = "blank",</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="in">      xlab = "value",</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="in">      freq = FALSE,</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="in">      main = ""</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="in">    )</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a><span class="in">    x &lt;- seq(from = -2, to = 2, length.out = 500)</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a><span class="in">    y &lt;- dnorm(x)</span></span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a><span class="in">    lines(x, y, lwd=1.5)</span></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a><span class="in">    lwd &lt;- 5</span></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="in">    abline(v=0, col="red", lwd=lwd, lty=2)</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a><span class="in">    abline(v=mean(data()), col="blue", lwd=lwd, lty=1)</span></span>
 <span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>    <span class="ex">legend</span><span class="er">(</span><span class="ex">legend</span> = c<span class="er">(</span><span class="st">"Normal"</span><span class="ex">,</span> <span class="st">"Mean"</span>, <span class="st">"Sample mean"</span><span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>      <span class="fu">col</span> = c<span class="er">(</span><span class="st">"black"</span><span class="ex">,</span> <span class="st">"red"</span>, <span class="st">"blue"</span><span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>      <span class="ex">lty</span> = c<span class="er">(</span><span class="ex">1,</span> 2, 1<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>      <span class="ex">lwd</span> = c<span class="er">(</span><span class="ex">1,</span> lwd, lwd<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>      <span class="ex">x</span> = 1,</span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>      <span class="ex">y</span> = 0.9</span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span></span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>  <span class="ex">},</span> res=140<span class="er">)</span></span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a><span class="in">    legend(legend = c("Normal", "Mean", "Sample mean"),</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="in">      col = c("black", "red", "blue"),</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a><span class="in">      lty = c(1, 2, 1),</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a><span class="in">      lwd = c(1, lwd, lwd),</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a><span class="in">      x = 1,</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a><span class="in">      y = 0.9</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="in">    )</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a><span class="in">  }, res=140)</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
 <span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Shiny app ----</span></span>
-<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui</span> = ui, server = server<span class="kw">)</span></span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a><span class="in"># Create Shiny app ----</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="in">shinyApp(ui = ui, server = server)</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section><section id="案例二" class="level2" data-number="8.2"><h2 data-number="8.2" class="anchored" data-anchor-id="案例二">
 <span class="header-section-number">8.2</span> 案例二</h2>
 <p>来自：<a href="https://github.com/topepo/shinylive-in-book-test"><strong><em>shinylive-in-book-test</em></strong></a></p>
@@ -883,99 +888,99 @@ server &lt;- function(input, output, session) {
 shinyApp(ui = ui, server = server)</a></code></pre>
 <p>代码：</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-r}</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#| viewerHeight: 500</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-shiny-spline</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| standalone: true</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| viewerHeight: 500</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: fig-shiny-spline</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">ggplot2</span><span class="kw">)</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">htmltools</span><span class="kw">)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="in">library(ggplot2)</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="in">library(htmltools)</span></span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- fluidPage<span class="er">(</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="ex">fluidRow</span><span class="er">(</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="ex">column</span><span class="er">(</span><span class="ex">8,</span> </span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>           <span class="ex">sliderInput</span><span class="er">(</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>             <span class="st">"deg_free"</span><span class="ex">,</span> </span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>             <span class="ex">label</span> = <span class="st">"Spline degrees of freedom:"</span>,</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>             <span class="ex">min</span> = 3L, value = 3L, max = 8L, step = 1L</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>           <span class="kw">)</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    <span class="ex">imageOutput</span><span class="er">(</span><span class="st">"spline_contours"</span><span class="ex">,</span> height = <span class="st">"400px"</span><span class="kw">)</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="kw">)</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="in">ui &lt;- fluidPage(</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="in">  fluidRow(</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="in">    column(8, </span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="in">           sliderInput(</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="in">             "deg_free", </span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="in">             label = "Spline degrees of freedom:",</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="in">             min = 3L, value = 3L, max = 8L, step = 1L</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="in">           )</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="in">    ),</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="in">    imageOutput("spline_contours", height = "400px")</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="in">  )</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
 <span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output, session<span class="kw">)</span> <span class="kw">{</span></span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ------------------------------------------------------------------------</span></span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Input data from remote locations on GitHub</span></span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>  <span class="ex">pred_path</span> <span class="op">&lt;</span>-</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span><span class="er">(</span>                                                  </span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>      <span class="st">"https://raw.githubusercontent.com"</span><span class="ex">,</span>                  </span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>      <span class="st">"topepo"</span><span class="ex">,</span> <span class="st">"shinylive-in-book-test"</span>,                   </span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>      <span class="st">"main"</span><span class="ex">,</span> <span class="st">"predicted_values.RData"</span>,                     </span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>      <span class="ex">sep</span> = <span class="st">"/"</span>                                             </span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span>                                                       </span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>  <span class="ex">data_path</span> <span class="op">&lt;</span>-                                              </span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span><span class="er">(</span>                                                  </span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>      <span class="st">"https://raw.githubusercontent.com"</span><span class="ex">,</span>                  </span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>      <span class="st">"topepo"</span><span class="ex">,</span> <span class="st">"shinylive-in-book-test"</span>,                   </span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>      <span class="st">"main"</span><span class="ex">,</span> <span class="st">"sim_val.RData"</span>,                              </span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>      <span class="ex">sep</span> = <span class="st">"/"</span>                                             </span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span>                                                       </span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>  <span class="ex">rdata_file</span> <span class="op">&lt;</span>- tempfile<span class="er">(</span><span class="kw">)</span></span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>  <span class="ex">download.file</span><span class="er">(</span><span class="ex">pred_path,</span> destfile = rdata_file<span class="kw">)</span>           </span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>  <span class="ex">load</span><span class="er">(</span><span class="ex">rdata_file</span><span class="kw">)</span>                                          </span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>  <span class="ex">download.file</span><span class="er">(</span><span class="ex">data_path,</span> destfile = rdata_file<span class="kw">)</span>           </span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>  <span class="ex">load</span><span class="er">(</span><span class="ex">rdata_file</span><span class="kw">)</span>                                          </span>
-<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set some ranges for the plot</span></span>
-<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>  <span class="ex">rngs</span> <span class="op">&lt;</span>- list<span class="er">(</span><span class="ex">A</span> = c<span class="er">(</span><span class="ex">-3.3,</span> 3.3<span class="kw">)</span><span class="ex">,</span> B = c<span class="er">(</span><span class="ex">-4.4,</span> 4.4<span class="kw">))</span></span>
-<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>  <span class="ex">output</span><span class="va">$spline_contours</span> <span class="op">&lt;</span>-</span>
-<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>    <span class="ex">renderImage</span><span class="er">(</span><span class="kw">{</span></span>
-<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>      <span class="ex">preds</span> <span class="op">&lt;</span>- predicted_values[predicted_values<span class="va">$deg_free</span> == input<span class="va">$deg_free</span>,]</span>
-<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>      <span class="ex">p</span> <span class="op">&lt;</span>-</span>
-<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>        <span class="ex">ggplot</span><span class="er">(</span><span class="ex">preds,</span> aes<span class="er">(</span><span class="ex">A,</span> B<span class="kw">))</span> <span class="ex">+</span></span>
-<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Plot the validation set</span></span>
-<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>        <span class="ex">geom_point</span><span class="er">(</span></span>
-<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>          <span class="ex">data</span> = sim_val, </span>
-<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>          <span class="ex">aes</span><span class="er">(</span><span class="fu">col</span> = class, pch = class<span class="kw">)</span><span class="ex">,</span> </span>
-<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>          <span class="ex">alpha</span> = 1 / 2,</span>
-<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>          <span class="ex">cex</span> = 3</span>
-<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>        <span class="kw">)</span> <span class="ex">+</span></span>
-<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Show the class boundary</span></span>
-<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>        <span class="ex">geom_contour</span><span class="er">(</span></span>
-<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>          <span class="ex">aes</span><span class="er">(</span><span class="ex">z</span> = .pred_one<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>          <span class="ex">breaks</span> = 1 / 2,</span>
-<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>          <span class="ex">linewidth</span> = 3 / 2,</span>
-<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>          <span class="fu">col</span> = <span class="st">"black"</span></span>
-<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>        <span class="kw">)</span> <span class="ex">+</span></span>
-<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Formatting</span></span>
-<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>        <span class="ex">lims</span><span class="er">(</span><span class="ex">x</span> = rngs<span class="va">$A</span>, y = rngs<span class="va">$B</span><span class="kw">)</span> <span class="ex">+</span></span>
-<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_bw()</span> <span class="ex">+</span> </span>
-<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>        <span class="ex">theme</span><span class="er">(</span><span class="ex">legend.position</span> = <span class="st">"top"</span><span class="kw">)</span></span>
-<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>      <span class="fu">file</span> <span class="op">&lt;</span>-</span>
-<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a>        <span class="ex">htmltools::capturePlot</span><span class="er">(</span></span>
-<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a>          <span class="ex">print</span><span class="er">(</span><span class="ex">p</span><span class="kw">)</span><span class="ex">,</span> </span>
-<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>          <span class="fu">tempfile</span><span class="er">(</span><span class="ex">fileext</span> = <span class="st">".svg"</span><span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a>          <span class="ex">grDevices::svg,</span></span>
-<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a>          <span class="ex">width</span> = 4, </span>
-<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a>          <span class="ex">height</span> = 4</span>
-<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>        <span class="kw">)</span></span>
-<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a>      <span class="ex">list</span><span class="er">(</span><span class="ex">src</span> = file<span class="kw">)</span></span>
-<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a>    <span class="ex">},</span> </span>
-<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a>    <span class="ex">deleteFile</span> = TRUE<span class="er">)</span></span>
-<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="in">server &lt;- function(input, output, session) {</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="in">  # ------------------------------------------------------------------------</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="in">  # Input data from remote locations on GitHub</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="in">  pred_path &lt;-</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="in">    paste(                                                  </span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="in">      "https://raw.githubusercontent.com",                  </span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="in">      "topepo", "shinylive-in-book-test",                   </span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="in">      "main", "predicted_values.RData",                     </span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="in">      sep = "/"                                             </span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="in">    )                                                       </span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="in">  data_path &lt;-                                              </span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="in">    paste(                                                  </span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a><span class="in">      "https://raw.githubusercontent.com",                  </span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="in">      "topepo", "shinylive-in-book-test",                   </span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a><span class="in">      "main", "sim_val.RData",                              </span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a><span class="in">      sep = "/"                                             </span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a><span class="in">    )                                                       </span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a><span class="in">  rdata_file &lt;- tempfile()</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a><span class="in">  download.file(pred_path, destfile = rdata_file)           </span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a><span class="in">  load(rdata_file)                                          </span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="in">  download.file(data_path, destfile = rdata_file)           </span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a><span class="in">  load(rdata_file)                                          </span></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a><span class="in">  # Set some ranges for the plot</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a><span class="in">  rngs &lt;- list(A = c(-3.3, 3.3), B = c(-4.4, 4.4))</span></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a><span class="in">  output$spline_contours &lt;-</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a><span class="in">    renderImage({</span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="in">      preds &lt;- predicted_values[predicted_values$deg_free == input$deg_free,]</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a><span class="in">      p &lt;-</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a><span class="in">        ggplot(preds, aes(A, B)) +</span></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a><span class="in">        # Plot the validation set</span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a><span class="in">        geom_point(</span></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a><span class="in">          data = sim_val, </span></span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a><span class="in">          aes(col = class, pch = class), </span></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a><span class="in">          alpha = 1 / 2,</span></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a><span class="in">          cex = 3</span></span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a><span class="in">        ) +</span></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a><span class="in">        # Show the class boundary</span></span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a><span class="in">        geom_contour(</span></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a><span class="in">          aes(z = .pred_one),</span></span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a><span class="in">          breaks = 1 / 2,</span></span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a><span class="in">          linewidth = 3 / 2,</span></span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a><span class="in">          col = "black"</span></span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a><span class="in">        ) +</span></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a><span class="in">        # Formatting</span></span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a><span class="in">        lims(x = rngs$A, y = rngs$B) +</span></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a><span class="in">        theme_bw() + </span></span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a><span class="in">        theme(legend.position = "top")</span></span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a><span class="in">      file &lt;-</span></span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a><span class="in">        htmltools::capturePlot(</span></span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a><span class="in">          print(p), </span></span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a><span class="in">          tempfile(fileext = ".svg"),</span></span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a><span class="in">          grDevices::svg,</span></span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a><span class="in">          width = 4, </span></span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a><span class="in">          height = 4</span></span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a><span class="in">        )</span></span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a><span class="in">      list(src = file)</span></span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a><span class="in">    }, </span></span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a><span class="in">    deleteFile = TRUE)</span></span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
 <span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui</span> = ui, server = server<span class="kw">)</span></span>
-<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a><span class="in">shinyApp(ui = ui, server = server)</span></span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <hr>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
@@ -1065,6 +1070,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
   }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
   const toggleColorMode = (alternate) => {
     // Switch the stylesheets
     const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
@@ -1131,13 +1163,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1267,10 +1301,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1280,8 +1331,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1294,6 +1354,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1337,6 +1516,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1362,6 +1542,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1419,29 +1625,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-          // target, if specified
-          link.setAttribute("target", "_blank");
-      }
-    }
 });
 </script><script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../quarto_foundation/insert_other_content.html" class="pagination-link">
+</script><input type="hidden" id="giscus-base-theme" value="light"><input type="hidden" id="giscus-alt-theme" value="dark"><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../quarto_foundation/insert_other_content.html" class="pagination-link  aria-label=">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">插入其他内容</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../quarto_foundation/quarto_books.html" class="pagination-link">
+      <a href="../quarto_foundation/quarto_books.html" class="pagination-link" aria-label="Quarto Books">
         <span class="nav-page-text">Quarto Books</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -1525,22 +1717,22 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-77"><a href="#cb11-77" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-78"><a href="#cb11-78" aria-hidden="true" tabindex="-1"></a><span class="in">```` md</span></span>
 <span id="cb11-79"><a href="#cb11-79" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-r}</span></span>
-<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
+<span id="cb11-80"><a href="#cb11-80" aria-hidden="true" tabindex="-1"></a><span class="in">#| standalone: true</span></span>
 <span id="cb11-81"><a href="#cb11-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">shiny</span><span class="kw">)</span></span>
+<span id="cb11-82"><a href="#cb11-82" aria-hidden="true" tabindex="-1"></a><span class="in">library(shiny)</span></span>
 <span id="cb11-83"><a href="#cb11-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your Shiny UI here</span></span>
-<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- fluidPage<span class="er">(</span></span>
-<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Your UI components go here</span></span>
-<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb11-84"><a href="#cb11-84" aria-hidden="true" tabindex="-1"></a><span class="in"># Define your Shiny UI here</span></span>
+<span id="cb11-85"><a href="#cb11-85" aria-hidden="true" tabindex="-1"></a><span class="in">ui &lt;- fluidPage(</span></span>
+<span id="cb11-86"><a href="#cb11-86" aria-hidden="true" tabindex="-1"></a><span class="in">  # Your UI components go here</span></span>
+<span id="cb11-87"><a href="#cb11-87" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
 <span id="cb11-88"><a href="#cb11-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Define your Shiny server logic here</span></span>
-<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output, session<span class="kw">)</span> <span class="kw">{</span></span>
-<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Your server code goes here</span></span>
-<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb11-89"><a href="#cb11-89" aria-hidden="true" tabindex="-1"></a><span class="in"># Define your Shiny server logic here</span></span>
+<span id="cb11-90"><a href="#cb11-90" aria-hidden="true" tabindex="-1"></a><span class="in">server &lt;- function(input, output, session) {</span></span>
+<span id="cb11-91"><a href="#cb11-91" aria-hidden="true" tabindex="-1"></a><span class="in">  # Your server code goes here</span></span>
+<span id="cb11-92"><a href="#cb11-92" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
 <span id="cb11-93"><a href="#cb11-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a><span class="co"># Create and launch the Shiny app</span></span>
-<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui,</span> server<span class="kw">)</span></span>
+<span id="cb11-94"><a href="#cb11-94" aria-hidden="true" tabindex="-1"></a><span class="in"># Create and launch the Shiny app</span></span>
+<span id="cb11-95"><a href="#cb11-95" aria-hidden="true" tabindex="-1"></a><span class="in">shinyApp(ui, server)</span></span>
 <span id="cb11-96"><a href="#cb11-96" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-97"><a href="#cb11-97" aria-hidden="true" tabindex="-1"></a><span class="in">````</span></span>
 <span id="cb11-98"><a href="#cb11-98" aria-hidden="true" tabindex="-1"></a></span>
@@ -1571,338 +1763,338 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb11-123"><a href="#cb11-123" aria-hidden="true" tabindex="-1"></a>下面是一个来自<span class="co">[</span><span class="ot">Shiny官方入门指南</span><span class="co">](https://shiny.posit.co/r/getstarted/shiny-basics/lesson5/)</span>中的案例：</span>
 <span id="cb11-124"><a href="#cb11-124" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-125"><a href="#cb11-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-r}</span></span>
-<span id="cb11-126"><a href="#cb11-126" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
-<span id="cb11-127"><a href="#cb11-127" aria-hidden="true" tabindex="-1"></a><span class="co">#| viewerHeight: 600</span></span>
-<span id="cb11-128"><a href="#cb11-128" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">shiny</span><span class="kw">)</span></span>
+<span id="cb11-126"><a href="#cb11-126" aria-hidden="true" tabindex="-1"></a><span class="in">#| standalone: true</span></span>
+<span id="cb11-127"><a href="#cb11-127" aria-hidden="true" tabindex="-1"></a><span class="in">#| viewerHeight: 600</span></span>
+<span id="cb11-128"><a href="#cb11-128" aria-hidden="true" tabindex="-1"></a><span class="in">library(shiny)</span></span>
 <span id="cb11-129"><a href="#cb11-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-130"><a href="#cb11-130" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI ----</span></span>
-<span id="cb11-131"><a href="#cb11-131" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- fluidPage<span class="er">(</span></span>
+<span id="cb11-130"><a href="#cb11-130" aria-hidden="true" tabindex="-1"></a><span class="in"># Define UI ----</span></span>
+<span id="cb11-131"><a href="#cb11-131" aria-hidden="true" tabindex="-1"></a><span class="in">ui &lt;- fluidPage(</span></span>
 <span id="cb11-132"><a href="#cb11-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-133"><a href="#cb11-133" aria-hidden="true" tabindex="-1"></a>  <span class="co"># App title ----</span></span>
-<span id="cb11-134"><a href="#cb11-134" aria-hidden="true" tabindex="-1"></a>  <span class="ex">titlePanel</span><span class="er">(</span><span class="st">"Hello World!"</span><span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb11-133"><a href="#cb11-133" aria-hidden="true" tabindex="-1"></a><span class="in">  # App title ----</span></span>
+<span id="cb11-134"><a href="#cb11-134" aria-hidden="true" tabindex="-1"></a><span class="in">  titlePanel("Hello World!"),</span></span>
 <span id="cb11-135"><a href="#cb11-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-136"><a href="#cb11-136" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sidebar layout with input and output definitions ----</span></span>
-<span id="cb11-137"><a href="#cb11-137" aria-hidden="true" tabindex="-1"></a>  <span class="ex">sidebarLayout</span><span class="er">(</span></span>
+<span id="cb11-136"><a href="#cb11-136" aria-hidden="true" tabindex="-1"></a><span class="in">  # Sidebar layout with input and output definitions ----</span></span>
+<span id="cb11-137"><a href="#cb11-137" aria-hidden="true" tabindex="-1"></a><span class="in">  sidebarLayout(</span></span>
 <span id="cb11-138"><a href="#cb11-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-139"><a href="#cb11-139" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sidebar panel for inputs ----</span></span>
-<span id="cb11-140"><a href="#cb11-140" aria-hidden="true" tabindex="-1"></a>    <span class="ex">sidebarPanel</span><span class="er">(</span></span>
+<span id="cb11-139"><a href="#cb11-139" aria-hidden="true" tabindex="-1"></a><span class="in">    # Sidebar panel for inputs ----</span></span>
+<span id="cb11-140"><a href="#cb11-140" aria-hidden="true" tabindex="-1"></a><span class="in">    sidebarPanel(</span></span>
 <span id="cb11-141"><a href="#cb11-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-142"><a href="#cb11-142" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Input: Slider for the number of bins ----</span></span>
-<span id="cb11-143"><a href="#cb11-143" aria-hidden="true" tabindex="-1"></a>      <span class="ex">sliderInput</span><span class="er">(</span><span class="ex">inputId</span> = <span class="st">"bins"</span>,</span>
-<span id="cb11-144"><a href="#cb11-144" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">label</span> = <span class="st">"Number of bins:"</span>,</span>
-<span id="cb11-145"><a href="#cb11-145" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">min</span> = 5,</span>
-<span id="cb11-146"><a href="#cb11-146" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">max</span> = 50,</span>
-<span id="cb11-147"><a href="#cb11-147" aria-hidden="true" tabindex="-1"></a>                  <span class="ex">value</span> = 30<span class="kw">)</span></span>
+<span id="cb11-142"><a href="#cb11-142" aria-hidden="true" tabindex="-1"></a><span class="in">      # Input: Slider for the number of bins ----</span></span>
+<span id="cb11-143"><a href="#cb11-143" aria-hidden="true" tabindex="-1"></a><span class="in">      sliderInput(inputId = "bins",</span></span>
+<span id="cb11-144"><a href="#cb11-144" aria-hidden="true" tabindex="-1"></a><span class="in">                  label = "Number of bins:",</span></span>
+<span id="cb11-145"><a href="#cb11-145" aria-hidden="true" tabindex="-1"></a><span class="in">                  min = 5,</span></span>
+<span id="cb11-146"><a href="#cb11-146" aria-hidden="true" tabindex="-1"></a><span class="in">                  max = 50,</span></span>
+<span id="cb11-147"><a href="#cb11-147" aria-hidden="true" tabindex="-1"></a><span class="in">                  value = 30)</span></span>
 <span id="cb11-148"><a href="#cb11-148" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-149"><a href="#cb11-149" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span><span class="ex">,</span></span>
+<span id="cb11-149"><a href="#cb11-149" aria-hidden="true" tabindex="-1"></a><span class="in">    ),</span></span>
 <span id="cb11-150"><a href="#cb11-150" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-151"><a href="#cb11-151" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Main panel for displaying outputs ----</span></span>
-<span id="cb11-152"><a href="#cb11-152" aria-hidden="true" tabindex="-1"></a>    <span class="ex">mainPanel</span><span class="er">(</span></span>
+<span id="cb11-151"><a href="#cb11-151" aria-hidden="true" tabindex="-1"></a><span class="in">    # Main panel for displaying outputs ----</span></span>
+<span id="cb11-152"><a href="#cb11-152" aria-hidden="true" tabindex="-1"></a><span class="in">    mainPanel(</span></span>
 <span id="cb11-153"><a href="#cb11-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-154"><a href="#cb11-154" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Output: Histogram ----</span></span>
-<span id="cb11-155"><a href="#cb11-155" aria-hidden="true" tabindex="-1"></a>      <span class="ex">plotOutput</span><span class="er">(</span><span class="ex">outputId</span> = <span class="st">"distPlot"</span><span class="kw">)</span></span>
+<span id="cb11-154"><a href="#cb11-154" aria-hidden="true" tabindex="-1"></a><span class="in">      # Output: Histogram ----</span></span>
+<span id="cb11-155"><a href="#cb11-155" aria-hidden="true" tabindex="-1"></a><span class="in">      plotOutput(outputId = "distPlot")</span></span>
 <span id="cb11-156"><a href="#cb11-156" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-157"><a href="#cb11-157" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span></span>
-<span id="cb11-158"><a href="#cb11-158" aria-hidden="true" tabindex="-1"></a>  <span class="kw">)</span></span>
-<span id="cb11-159"><a href="#cb11-159" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb11-157"><a href="#cb11-157" aria-hidden="true" tabindex="-1"></a><span class="in">    )</span></span>
+<span id="cb11-158"><a href="#cb11-158" aria-hidden="true" tabindex="-1"></a><span class="in">  )</span></span>
+<span id="cb11-159"><a href="#cb11-159" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
 <span id="cb11-160"><a href="#cb11-160" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-161"><a href="#cb11-161" aria-hidden="true" tabindex="-1"></a><span class="co"># Define server logic required to draw a histogram ----</span></span>
-<span id="cb11-162"><a href="#cb11-162" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output<span class="kw">)</span> <span class="kw">{</span></span>
+<span id="cb11-161"><a href="#cb11-161" aria-hidden="true" tabindex="-1"></a><span class="in"># Define server logic required to draw a histogram ----</span></span>
+<span id="cb11-162"><a href="#cb11-162" aria-hidden="true" tabindex="-1"></a><span class="in">server &lt;- function(input, output) {</span></span>
 <span id="cb11-163"><a href="#cb11-163" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-164"><a href="#cb11-164" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Histogram of the Old Faithful Geyser Data ----</span></span>
-<span id="cb11-165"><a href="#cb11-165" aria-hidden="true" tabindex="-1"></a>  <span class="co"># with requested number of bins</span></span>
-<span id="cb11-166"><a href="#cb11-166" aria-hidden="true" tabindex="-1"></a>  <span class="co"># This expression that generates a histogram is wrapped in a call</span></span>
-<span id="cb11-167"><a href="#cb11-167" aria-hidden="true" tabindex="-1"></a>  <span class="co"># to renderPlot to indicate that:</span></span>
-<span id="cb11-168"><a href="#cb11-168" aria-hidden="true" tabindex="-1"></a>  <span class="co">#</span></span>
-<span id="cb11-169"><a href="#cb11-169" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1. It is "reactive" and therefore should be automatically</span></span>
-<span id="cb11-170"><a href="#cb11-170" aria-hidden="true" tabindex="-1"></a>  <span class="co">#    re-executed when inputs (input$bins) change</span></span>
-<span id="cb11-171"><a href="#cb11-171" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. Its output type is a plot</span></span>
-<span id="cb11-172"><a href="#cb11-172" aria-hidden="true" tabindex="-1"></a>  <span class="ex">output</span><span class="va">$distPlot</span> <span class="op">&lt;</span>- renderPlot<span class="er">(</span><span class="kw">{</span></span>
+<span id="cb11-164"><a href="#cb11-164" aria-hidden="true" tabindex="-1"></a><span class="in">  # Histogram of the Old Faithful Geyser Data ----</span></span>
+<span id="cb11-165"><a href="#cb11-165" aria-hidden="true" tabindex="-1"></a><span class="in">  # with requested number of bins</span></span>
+<span id="cb11-166"><a href="#cb11-166" aria-hidden="true" tabindex="-1"></a><span class="in">  # This expression that generates a histogram is wrapped in a call</span></span>
+<span id="cb11-167"><a href="#cb11-167" aria-hidden="true" tabindex="-1"></a><span class="in">  # to renderPlot to indicate that:</span></span>
+<span id="cb11-168"><a href="#cb11-168" aria-hidden="true" tabindex="-1"></a><span class="in">  #</span></span>
+<span id="cb11-169"><a href="#cb11-169" aria-hidden="true" tabindex="-1"></a><span class="in">  # 1. It is "reactive" and therefore should be automatically</span></span>
+<span id="cb11-170"><a href="#cb11-170" aria-hidden="true" tabindex="-1"></a><span class="in">  #    re-executed when inputs (input$bins) change</span></span>
+<span id="cb11-171"><a href="#cb11-171" aria-hidden="true" tabindex="-1"></a><span class="in">  # 2. Its output type is a plot</span></span>
+<span id="cb11-172"><a href="#cb11-172" aria-hidden="true" tabindex="-1"></a><span class="in">  output$distPlot &lt;- renderPlot({</span></span>
 <span id="cb11-173"><a href="#cb11-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-174"><a href="#cb11-174" aria-hidden="true" tabindex="-1"></a>    <span class="ex">x</span>    <span class="op">&lt;</span>- faithful<span class="va">$waiting</span></span>
-<span id="cb11-175"><a href="#cb11-175" aria-hidden="true" tabindex="-1"></a>    <span class="ex">bins</span> <span class="op">&lt;</span>- seq<span class="er">(</span><span class="ex">min</span><span class="er">(</span><span class="ex">x</span><span class="kw">)</span><span class="ex">,</span> max<span class="er">(</span><span class="ex">x</span><span class="kw">)</span><span class="ex">,</span> length.out = input<span class="va">$bins</span> + 1<span class="kw">)</span></span>
+<span id="cb11-174"><a href="#cb11-174" aria-hidden="true" tabindex="-1"></a><span class="in">    x    &lt;- faithful$waiting</span></span>
+<span id="cb11-175"><a href="#cb11-175" aria-hidden="true" tabindex="-1"></a><span class="in">    bins &lt;- seq(min(x), max(x), length.out = input$bins + 1)</span></span>
 <span id="cb11-176"><a href="#cb11-176" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-177"><a href="#cb11-177" aria-hidden="true" tabindex="-1"></a>    <span class="ex">hist</span><span class="er">(</span><span class="ex">x,</span> breaks = bins, col = <span class="st">"#007bc2"</span>, border = <span class="st">"orange"</span>,</span>
-<span id="cb11-178"><a href="#cb11-178" aria-hidden="true" tabindex="-1"></a>         <span class="ex">xlab</span> = <span class="st">"Waiting time to next eruption (in mins)"</span>,</span>
-<span id="cb11-179"><a href="#cb11-179" aria-hidden="true" tabindex="-1"></a>         <span class="ex">main</span> = <span class="st">"Histogram of waiting times"</span><span class="kw">)</span></span>
+<span id="cb11-177"><a href="#cb11-177" aria-hidden="true" tabindex="-1"></a><span class="in">    hist(x, breaks = bins, col = "#007bc2", border = "orange",</span></span>
+<span id="cb11-178"><a href="#cb11-178" aria-hidden="true" tabindex="-1"></a><span class="in">         xlab = "Waiting time to next eruption (in mins)",</span></span>
+<span id="cb11-179"><a href="#cb11-179" aria-hidden="true" tabindex="-1"></a><span class="in">         main = "Histogram of waiting times")</span></span>
 <span id="cb11-180"><a href="#cb11-180" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-181"><a href="#cb11-181" aria-hidden="true" tabindex="-1"></a>    <span class="kw">})</span></span>
+<span id="cb11-181"><a href="#cb11-181" aria-hidden="true" tabindex="-1"></a><span class="in">    })</span></span>
 <span id="cb11-182"><a href="#cb11-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-183"><a href="#cb11-183" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb11-183"><a href="#cb11-183" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
 <span id="cb11-184"><a href="#cb11-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-185"><a href="#cb11-185" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the app ----</span></span>
-<span id="cb11-186"><a href="#cb11-186" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui</span> = ui, server = server<span class="kw">)</span></span>
+<span id="cb11-185"><a href="#cb11-185" aria-hidden="true" tabindex="-1"></a><span class="in"># Run the app ----</span></span>
+<span id="cb11-186"><a href="#cb11-186" aria-hidden="true" tabindex="-1"></a><span class="in">shinyApp(ui = ui, server = server)</span></span>
 <span id="cb11-187"><a href="#cb11-187" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-188"><a href="#cb11-188" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-189"><a href="#cb11-189" aria-hidden="true" tabindex="-1"></a>代码：</span>
 <span id="cb11-190"><a href="#cb11-190" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-191"><a href="#cb11-191" aria-hidden="true" tabindex="-1"></a><span class="in">```` md</span></span>
 <span id="cb11-192"><a href="#cb11-192" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-r}</span></span>
-<span id="cb11-193"><a href="#cb11-193" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
-<span id="cb11-194"><a href="#cb11-194" aria-hidden="true" tabindex="-1"></a><span class="co">#| viewerHeight: 600</span></span>
-<span id="cb11-195"><a href="#cb11-195" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">shiny</span><span class="kw">)</span></span>
-<span id="cb11-196"><a href="#cb11-196" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">bslib</span><span class="kw">)</span></span>
+<span id="cb11-193"><a href="#cb11-193" aria-hidden="true" tabindex="-1"></a><span class="in">#| standalone: true</span></span>
+<span id="cb11-194"><a href="#cb11-194" aria-hidden="true" tabindex="-1"></a><span class="in">#| viewerHeight: 600</span></span>
+<span id="cb11-195"><a href="#cb11-195" aria-hidden="true" tabindex="-1"></a><span class="in">library(shiny)</span></span>
+<span id="cb11-196"><a href="#cb11-196" aria-hidden="true" tabindex="-1"></a><span class="in">library(bslib)</span></span>
 <span id="cb11-197"><a href="#cb11-197" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-198"><a href="#cb11-198" aria-hidden="true" tabindex="-1"></a><span class="co"># Define UI for app that draws a histogram ----</span></span>
-<span id="cb11-199"><a href="#cb11-199" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- page_sidebar<span class="er">(</span></span>
-<span id="cb11-200"><a href="#cb11-200" aria-hidden="true" tabindex="-1"></a>  <span class="ex">sidebar</span> = sidebar<span class="er">(</span><span class="ex">open</span> = <span class="st">"open"</span>,</span>
-<span id="cb11-201"><a href="#cb11-201" aria-hidden="true" tabindex="-1"></a>    <span class="ex">numericInput</span><span class="er">(</span><span class="st">"n"</span><span class="ex">,</span> <span class="st">"Sample count"</span>, 100<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-202"><a href="#cb11-202" aria-hidden="true" tabindex="-1"></a>    <span class="ex">checkboxInput</span><span class="er">(</span><span class="st">"pause"</span><span class="ex">,</span> <span class="st">"Pause"</span>, FALSE<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-203"><a href="#cb11-203" aria-hidden="true" tabindex="-1"></a>  <span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-204"><a href="#cb11-204" aria-hidden="true" tabindex="-1"></a>  <span class="ex">plotOutput</span><span class="er">(</span><span class="st">"plot"</span><span class="ex">,</span> width=1100<span class="kw">)</span></span>
-<span id="cb11-205"><a href="#cb11-205" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb11-198"><a href="#cb11-198" aria-hidden="true" tabindex="-1"></a><span class="in"># Define UI for app that draws a histogram ----</span></span>
+<span id="cb11-199"><a href="#cb11-199" aria-hidden="true" tabindex="-1"></a><span class="in">ui &lt;- page_sidebar(</span></span>
+<span id="cb11-200"><a href="#cb11-200" aria-hidden="true" tabindex="-1"></a><span class="in">  sidebar = sidebar(open = "open",</span></span>
+<span id="cb11-201"><a href="#cb11-201" aria-hidden="true" tabindex="-1"></a><span class="in">    numericInput("n", "Sample count", 100),</span></span>
+<span id="cb11-202"><a href="#cb11-202" aria-hidden="true" tabindex="-1"></a><span class="in">    checkboxInput("pause", "Pause", FALSE),</span></span>
+<span id="cb11-203"><a href="#cb11-203" aria-hidden="true" tabindex="-1"></a><span class="in">  ),</span></span>
+<span id="cb11-204"><a href="#cb11-204" aria-hidden="true" tabindex="-1"></a><span class="in">  plotOutput("plot", width=1100)</span></span>
+<span id="cb11-205"><a href="#cb11-205" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
 <span id="cb11-206"><a href="#cb11-206" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-207"><a href="#cb11-207" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output, session<span class="kw">)</span> <span class="kw">{</span></span>
-<span id="cb11-208"><a href="#cb11-208" aria-hidden="true" tabindex="-1"></a>  <span class="ex">data</span> <span class="op">&lt;</span>- reactive<span class="er">(</span><span class="kw">{</span></span>
-<span id="cb11-209"><a href="#cb11-209" aria-hidden="true" tabindex="-1"></a>    <span class="ex">input</span><span class="va">$resample</span></span>
-<span id="cb11-210"><a href="#cb11-210" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">(</span><span class="ex">!isTRUE</span><span class="er">(</span><span class="ex">input</span><span class="va">$pause</span><span class="kw">))</span> <span class="kw">{</span></span>
-<span id="cb11-211"><a href="#cb11-211" aria-hidden="true" tabindex="-1"></a>      <span class="ex">invalidateLater</span><span class="er">(</span><span class="ex">1000</span><span class="kw">)</span></span>
-<span id="cb11-212"><a href="#cb11-212" aria-hidden="true" tabindex="-1"></a>    <span class="kw">}</span></span>
-<span id="cb11-213"><a href="#cb11-213" aria-hidden="true" tabindex="-1"></a>    <span class="ex">rnorm</span><span class="er">(</span><span class="ex">input</span><span class="va">$n</span><span class="kw">)</span></span>
-<span id="cb11-214"><a href="#cb11-214" aria-hidden="true" tabindex="-1"></a>  <span class="kw">})</span></span>
-<span id="cb11-215"><a href="#cb11-215" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-216"><a href="#cb11-216" aria-hidden="true" tabindex="-1"></a>  <span class="ex">output</span><span class="va">$plot</span> <span class="op">&lt;</span>- renderPlot<span class="er">(</span><span class="kw">{</span></span>
-<span id="cb11-217"><a href="#cb11-217" aria-hidden="true" tabindex="-1"></a>    <span class="ex">hist</span><span class="er">(</span><span class="fu">data()</span><span class="ex">,</span></span>
-<span id="cb11-218"><a href="#cb11-218" aria-hidden="true" tabindex="-1"></a>      <span class="ex">breaks</span> = 40,</span>
-<span id="cb11-219"><a href="#cb11-219" aria-hidden="true" tabindex="-1"></a>      <span class="ex">xlim</span> = c<span class="er">(</span><span class="ex">-2,</span> 2<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-220"><a href="#cb11-220" aria-hidden="true" tabindex="-1"></a>      <span class="ex">ylim</span> = c<span class="er">(</span><span class="ex">0,</span> 1<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-221"><a href="#cb11-221" aria-hidden="true" tabindex="-1"></a>      <span class="ex">lty</span> = <span class="st">"blank"</span>,</span>
-<span id="cb11-222"><a href="#cb11-222" aria-hidden="true" tabindex="-1"></a>      <span class="ex">xlab</span> = <span class="st">"value"</span>,</span>
-<span id="cb11-223"><a href="#cb11-223" aria-hidden="true" tabindex="-1"></a>      <span class="ex">freq</span> = FALSE,</span>
-<span id="cb11-224"><a href="#cb11-224" aria-hidden="true" tabindex="-1"></a>      <span class="ex">main</span> = <span class="st">""</span></span>
-<span id="cb11-225"><a href="#cb11-225" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span></span>
-<span id="cb11-226"><a href="#cb11-226" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb11-227"><a href="#cb11-227" aria-hidden="true" tabindex="-1"></a>    <span class="ex">x</span> <span class="op">&lt;</span>- seq<span class="er">(</span><span class="ex">from</span> = <span class="at">-2,</span> to = 2, length.out = 500<span class="kw">)</span></span>
-<span id="cb11-228"><a href="#cb11-228" aria-hidden="true" tabindex="-1"></a>    <span class="ex">y</span> <span class="op">&lt;</span>- dnorm<span class="er">(</span><span class="ex">x</span><span class="kw">)</span></span>
-<span id="cb11-229"><a href="#cb11-229" aria-hidden="true" tabindex="-1"></a>    <span class="ex">lines</span><span class="er">(</span><span class="ex">x,</span> y, lwd=1.5<span class="kw">)</span></span>
-<span id="cb11-230"><a href="#cb11-230" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb11-231"><a href="#cb11-231" aria-hidden="true" tabindex="-1"></a>    <span class="ex">lwd</span> <span class="op">&lt;</span>- 5</span>
-<span id="cb11-232"><a href="#cb11-232" aria-hidden="true" tabindex="-1"></a>    <span class="ex">abline</span><span class="er">(</span><span class="va">v</span><span class="op">=</span>0, <span class="va">col</span><span class="op">=</span><span class="st">"red"</span>, <span class="va">lwd</span><span class="op">=</span>lwd, <span class="va">lty</span><span class="op">=</span>2<span class="kw">)</span></span>
-<span id="cb11-233"><a href="#cb11-233" aria-hidden="true" tabindex="-1"></a>    <span class="ex">abline</span><span class="er">(</span><span class="va">v</span><span class="op">=</span>mean<span class="kw">(</span><span class="fu">data()</span><span class="kw">)</span><span class="ex">,</span> col=<span class="st">"blue"</span>, lwd=lwd, lty=1<span class="kw">)</span></span>
+<span id="cb11-207"><a href="#cb11-207" aria-hidden="true" tabindex="-1"></a><span class="in">server &lt;- function(input, output, session) {</span></span>
+<span id="cb11-208"><a href="#cb11-208" aria-hidden="true" tabindex="-1"></a><span class="in">  data &lt;- reactive({</span></span>
+<span id="cb11-209"><a href="#cb11-209" aria-hidden="true" tabindex="-1"></a><span class="in">    input$resample</span></span>
+<span id="cb11-210"><a href="#cb11-210" aria-hidden="true" tabindex="-1"></a><span class="in">    if (!isTRUE(input$pause)) {</span></span>
+<span id="cb11-211"><a href="#cb11-211" aria-hidden="true" tabindex="-1"></a><span class="in">      invalidateLater(1000)</span></span>
+<span id="cb11-212"><a href="#cb11-212" aria-hidden="true" tabindex="-1"></a><span class="in">    }</span></span>
+<span id="cb11-213"><a href="#cb11-213" aria-hidden="true" tabindex="-1"></a><span class="in">    rnorm(input$n)</span></span>
+<span id="cb11-214"><a href="#cb11-214" aria-hidden="true" tabindex="-1"></a><span class="in">  })</span></span>
+<span id="cb11-215"><a href="#cb11-215" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb11-216"><a href="#cb11-216" aria-hidden="true" tabindex="-1"></a><span class="in">  output$plot &lt;- renderPlot({</span></span>
+<span id="cb11-217"><a href="#cb11-217" aria-hidden="true" tabindex="-1"></a><span class="in">    hist(data(),</span></span>
+<span id="cb11-218"><a href="#cb11-218" aria-hidden="true" tabindex="-1"></a><span class="in">      breaks = 40,</span></span>
+<span id="cb11-219"><a href="#cb11-219" aria-hidden="true" tabindex="-1"></a><span class="in">      xlim = c(-2, 2),</span></span>
+<span id="cb11-220"><a href="#cb11-220" aria-hidden="true" tabindex="-1"></a><span class="in">      ylim = c(0, 1),</span></span>
+<span id="cb11-221"><a href="#cb11-221" aria-hidden="true" tabindex="-1"></a><span class="in">      lty = "blank",</span></span>
+<span id="cb11-222"><a href="#cb11-222" aria-hidden="true" tabindex="-1"></a><span class="in">      xlab = "value",</span></span>
+<span id="cb11-223"><a href="#cb11-223" aria-hidden="true" tabindex="-1"></a><span class="in">      freq = FALSE,</span></span>
+<span id="cb11-224"><a href="#cb11-224" aria-hidden="true" tabindex="-1"></a><span class="in">      main = ""</span></span>
+<span id="cb11-225"><a href="#cb11-225" aria-hidden="true" tabindex="-1"></a><span class="in">    )</span></span>
+<span id="cb11-226"><a href="#cb11-226" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb11-227"><a href="#cb11-227" aria-hidden="true" tabindex="-1"></a><span class="in">    x &lt;- seq(from = -2, to = 2, length.out = 500)</span></span>
+<span id="cb11-228"><a href="#cb11-228" aria-hidden="true" tabindex="-1"></a><span class="in">    y &lt;- dnorm(x)</span></span>
+<span id="cb11-229"><a href="#cb11-229" aria-hidden="true" tabindex="-1"></a><span class="in">    lines(x, y, lwd=1.5)</span></span>
+<span id="cb11-230"><a href="#cb11-230" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb11-231"><a href="#cb11-231" aria-hidden="true" tabindex="-1"></a><span class="in">    lwd &lt;- 5</span></span>
+<span id="cb11-232"><a href="#cb11-232" aria-hidden="true" tabindex="-1"></a><span class="in">    abline(v=0, col="red", lwd=lwd, lty=2)</span></span>
+<span id="cb11-233"><a href="#cb11-233" aria-hidden="true" tabindex="-1"></a><span class="in">    abline(v=mean(data()), col="blue", lwd=lwd, lty=1)</span></span>
 <span id="cb11-234"><a href="#cb11-234" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-235"><a href="#cb11-235" aria-hidden="true" tabindex="-1"></a>    <span class="ex">legend</span><span class="er">(</span><span class="ex">legend</span> = c<span class="er">(</span><span class="st">"Normal"</span><span class="ex">,</span> <span class="st">"Mean"</span>, <span class="st">"Sample mean"</span><span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-236"><a href="#cb11-236" aria-hidden="true" tabindex="-1"></a>      <span class="fu">col</span> = c<span class="er">(</span><span class="st">"black"</span><span class="ex">,</span> <span class="st">"red"</span>, <span class="st">"blue"</span><span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-237"><a href="#cb11-237" aria-hidden="true" tabindex="-1"></a>      <span class="ex">lty</span> = c<span class="er">(</span><span class="ex">1,</span> 2, 1<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-238"><a href="#cb11-238" aria-hidden="true" tabindex="-1"></a>      <span class="ex">lwd</span> = c<span class="er">(</span><span class="ex">1,</span> lwd, lwd<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-239"><a href="#cb11-239" aria-hidden="true" tabindex="-1"></a>      <span class="ex">x</span> = 1,</span>
-<span id="cb11-240"><a href="#cb11-240" aria-hidden="true" tabindex="-1"></a>      <span class="ex">y</span> = 0.9</span>
-<span id="cb11-241"><a href="#cb11-241" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span></span>
-<span id="cb11-242"><a href="#cb11-242" aria-hidden="true" tabindex="-1"></a>  <span class="ex">},</span> res=140<span class="er">)</span></span>
-<span id="cb11-243"><a href="#cb11-243" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb11-235"><a href="#cb11-235" aria-hidden="true" tabindex="-1"></a><span class="in">    legend(legend = c("Normal", "Mean", "Sample mean"),</span></span>
+<span id="cb11-236"><a href="#cb11-236" aria-hidden="true" tabindex="-1"></a><span class="in">      col = c("black", "red", "blue"),</span></span>
+<span id="cb11-237"><a href="#cb11-237" aria-hidden="true" tabindex="-1"></a><span class="in">      lty = c(1, 2, 1),</span></span>
+<span id="cb11-238"><a href="#cb11-238" aria-hidden="true" tabindex="-1"></a><span class="in">      lwd = c(1, lwd, lwd),</span></span>
+<span id="cb11-239"><a href="#cb11-239" aria-hidden="true" tabindex="-1"></a><span class="in">      x = 1,</span></span>
+<span id="cb11-240"><a href="#cb11-240" aria-hidden="true" tabindex="-1"></a><span class="in">      y = 0.9</span></span>
+<span id="cb11-241"><a href="#cb11-241" aria-hidden="true" tabindex="-1"></a><span class="in">    )</span></span>
+<span id="cb11-242"><a href="#cb11-242" aria-hidden="true" tabindex="-1"></a><span class="in">  }, res=140)</span></span>
+<span id="cb11-243"><a href="#cb11-243" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
 <span id="cb11-244"><a href="#cb11-244" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-245"><a href="#cb11-245" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Shiny app ----</span></span>
-<span id="cb11-246"><a href="#cb11-246" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui</span> = ui, server = server<span class="kw">)</span></span>
-<span id="cb11-247"><a href="#cb11-247" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
-<span id="cb11-248"><a href="#cb11-248" aria-hidden="true" tabindex="-1"></a><span class="kw">````</span></span>
+<span id="cb11-245"><a href="#cb11-245" aria-hidden="true" tabindex="-1"></a><span class="in"># Create Shiny app ----</span></span>
+<span id="cb11-246"><a href="#cb11-246" aria-hidden="true" tabindex="-1"></a><span class="in">shinyApp(ui = ui, server = server)</span></span>
+<span id="cb11-247"><a href="#cb11-247" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-248"><a href="#cb11-248" aria-hidden="true" tabindex="-1"></a><span class="in">````</span></span>
 <span id="cb11-249"><a href="#cb11-249" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-250"><a href="#cb11-250" aria-hidden="true" tabindex="-1"></a><span class="co">## 案例二</span></span>
+<span id="cb11-250"><a href="#cb11-250" aria-hidden="true" tabindex="-1"></a><span class="fu">## 案例二</span></span>
 <span id="cb11-251"><a href="#cb11-251" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-252"><a href="#cb11-252" aria-hidden="true" tabindex="-1"></a><span class="ex">来自：[***shinylive-in-book-test***]</span><span class="er">(</span><span class="ex">https://github.com/topepo/shinylive-in-book-test</span><span class="kw">)</span></span>
+<span id="cb11-252"><a href="#cb11-252" aria-hidden="true" tabindex="-1"></a>来自：<span class="co">[</span><span class="ot">***shinylive-in-book-test***</span><span class="co">](https://github.com/topepo/shinylive-in-book-test)</span></span>
 <span id="cb11-253"><a href="#cb11-253" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-254"><a href="#cb11-254" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{shinylive-r}</span>
-<span id="cb11-255"><a href="#cb11-255" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
-<span id="cb11-256"><a href="#cb11-256" aria-hidden="true" tabindex="-1"></a><span class="co">#| viewerHeight: 500</span></span>
-<span id="cb11-257"><a href="#cb11-257" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-shiny-spline</span></span>
+<span id="cb11-254"><a href="#cb11-254" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-r}</span></span>
+<span id="cb11-255"><a href="#cb11-255" aria-hidden="true" tabindex="-1"></a><span class="in">#| standalone: true</span></span>
+<span id="cb11-256"><a href="#cb11-256" aria-hidden="true" tabindex="-1"></a><span class="in">#| viewerHeight: 500</span></span>
+<span id="cb11-257"><a href="#cb11-257" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: fig-shiny-spline</span></span>
 <span id="cb11-258"><a href="#cb11-258" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-259"><a href="#cb11-259" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">ggplot2</span><span class="kw">)</span></span>
-<span id="cb11-260"><a href="#cb11-260" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">htmltools</span><span class="kw">)</span></span>
+<span id="cb11-259"><a href="#cb11-259" aria-hidden="true" tabindex="-1"></a><span class="in">library(ggplot2)</span></span>
+<span id="cb11-260"><a href="#cb11-260" aria-hidden="true" tabindex="-1"></a><span class="in">library(htmltools)</span></span>
 <span id="cb11-261"><a href="#cb11-261" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-262"><a href="#cb11-262" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- fluidPage<span class="er">(</span></span>
-<span id="cb11-263"><a href="#cb11-263" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-264"><a href="#cb11-264" aria-hidden="true" tabindex="-1"></a>  <span class="ex">fluidRow</span><span class="er">(</span></span>
-<span id="cb11-265"><a href="#cb11-265" aria-hidden="true" tabindex="-1"></a>    <span class="ex">column</span><span class="er">(</span><span class="ex">8,</span> </span>
-<span id="cb11-266"><a href="#cb11-266" aria-hidden="true" tabindex="-1"></a>           <span class="ex">sliderInput</span><span class="er">(</span></span>
-<span id="cb11-267"><a href="#cb11-267" aria-hidden="true" tabindex="-1"></a>             <span class="st">"deg_free"</span><span class="ex">,</span> </span>
-<span id="cb11-268"><a href="#cb11-268" aria-hidden="true" tabindex="-1"></a>             <span class="ex">label</span> = <span class="st">"Spline degrees of freedom:"</span>,</span>
-<span id="cb11-269"><a href="#cb11-269" aria-hidden="true" tabindex="-1"></a>             <span class="ex">min</span> = 3L, value = 3L, max = 8L, step = 1L</span>
-<span id="cb11-270"><a href="#cb11-270" aria-hidden="true" tabindex="-1"></a>           <span class="kw">)</span></span>
-<span id="cb11-271"><a href="#cb11-271" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-272"><a href="#cb11-272" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb11-273"><a href="#cb11-273" aria-hidden="true" tabindex="-1"></a>    <span class="ex">imageOutput</span><span class="er">(</span><span class="st">"spline_contours"</span><span class="ex">,</span> height = <span class="st">"400px"</span><span class="kw">)</span></span>
-<span id="cb11-274"><a href="#cb11-274" aria-hidden="true" tabindex="-1"></a>  <span class="kw">)</span></span>
-<span id="cb11-275"><a href="#cb11-275" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb11-262"><a href="#cb11-262" aria-hidden="true" tabindex="-1"></a><span class="in">ui &lt;- fluidPage(</span></span>
+<span id="cb11-263"><a href="#cb11-263" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb11-264"><a href="#cb11-264" aria-hidden="true" tabindex="-1"></a><span class="in">  fluidRow(</span></span>
+<span id="cb11-265"><a href="#cb11-265" aria-hidden="true" tabindex="-1"></a><span class="in">    column(8, </span></span>
+<span id="cb11-266"><a href="#cb11-266" aria-hidden="true" tabindex="-1"></a><span class="in">           sliderInput(</span></span>
+<span id="cb11-267"><a href="#cb11-267" aria-hidden="true" tabindex="-1"></a><span class="in">             "deg_free", </span></span>
+<span id="cb11-268"><a href="#cb11-268" aria-hidden="true" tabindex="-1"></a><span class="in">             label = "Spline degrees of freedom:",</span></span>
+<span id="cb11-269"><a href="#cb11-269" aria-hidden="true" tabindex="-1"></a><span class="in">             min = 3L, value = 3L, max = 8L, step = 1L</span></span>
+<span id="cb11-270"><a href="#cb11-270" aria-hidden="true" tabindex="-1"></a><span class="in">           )</span></span>
+<span id="cb11-271"><a href="#cb11-271" aria-hidden="true" tabindex="-1"></a><span class="in">    ),</span></span>
+<span id="cb11-272"><a href="#cb11-272" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb11-273"><a href="#cb11-273" aria-hidden="true" tabindex="-1"></a><span class="in">    imageOutput("spline_contours", height = "400px")</span></span>
+<span id="cb11-274"><a href="#cb11-274" aria-hidden="true" tabindex="-1"></a><span class="in">  )</span></span>
+<span id="cb11-275"><a href="#cb11-275" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
 <span id="cb11-276"><a href="#cb11-276" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-277"><a href="#cb11-277" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-278"><a href="#cb11-278" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output, session<span class="kw">)</span> <span class="kw">{</span></span>
-<span id="cb11-279"><a href="#cb11-279" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-280"><a href="#cb11-280" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ------------------------------------------------------------------------</span></span>
-<span id="cb11-281"><a href="#cb11-281" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Input data from remote locations on GitHub</span></span>
-<span id="cb11-282"><a href="#cb11-282" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-283"><a href="#cb11-283" aria-hidden="true" tabindex="-1"></a>  <span class="ex">pred_path</span> <span class="op">&lt;</span>-</span>
-<span id="cb11-284"><a href="#cb11-284" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span><span class="er">(</span>                                                  </span>
-<span id="cb11-285"><a href="#cb11-285" aria-hidden="true" tabindex="-1"></a>      <span class="st">"https://raw.githubusercontent.com"</span><span class="ex">,</span>                  </span>
-<span id="cb11-286"><a href="#cb11-286" aria-hidden="true" tabindex="-1"></a>      <span class="st">"topepo"</span><span class="ex">,</span> <span class="st">"shinylive-in-book-test"</span>,                   </span>
-<span id="cb11-287"><a href="#cb11-287" aria-hidden="true" tabindex="-1"></a>      <span class="st">"main"</span><span class="ex">,</span> <span class="st">"predicted_values.RData"</span>,                     </span>
-<span id="cb11-288"><a href="#cb11-288" aria-hidden="true" tabindex="-1"></a>      <span class="ex">sep</span> = <span class="st">"/"</span>                                             </span>
-<span id="cb11-289"><a href="#cb11-289" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span>                                                       </span>
-<span id="cb11-290"><a href="#cb11-290" aria-hidden="true" tabindex="-1"></a>  <span class="ex">data_path</span> <span class="op">&lt;</span>-                                              </span>
-<span id="cb11-291"><a href="#cb11-291" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span><span class="er">(</span>                                                  </span>
-<span id="cb11-292"><a href="#cb11-292" aria-hidden="true" tabindex="-1"></a>      <span class="st">"https://raw.githubusercontent.com"</span><span class="ex">,</span>                  </span>
-<span id="cb11-293"><a href="#cb11-293" aria-hidden="true" tabindex="-1"></a>      <span class="st">"topepo"</span><span class="ex">,</span> <span class="st">"shinylive-in-book-test"</span>,                   </span>
-<span id="cb11-294"><a href="#cb11-294" aria-hidden="true" tabindex="-1"></a>      <span class="st">"main"</span><span class="ex">,</span> <span class="st">"sim_val.RData"</span>,                              </span>
-<span id="cb11-295"><a href="#cb11-295" aria-hidden="true" tabindex="-1"></a>      <span class="ex">sep</span> = <span class="st">"/"</span>                                             </span>
-<span id="cb11-296"><a href="#cb11-296" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span>                                                       </span>
-<span id="cb11-297"><a href="#cb11-297" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-298"><a href="#cb11-298" aria-hidden="true" tabindex="-1"></a>  <span class="ex">rdata_file</span> <span class="op">&lt;</span>- tempfile<span class="er">(</span><span class="kw">)</span></span>
-<span id="cb11-299"><a href="#cb11-299" aria-hidden="true" tabindex="-1"></a>  <span class="ex">download.file</span><span class="er">(</span><span class="ex">pred_path,</span> destfile = rdata_file<span class="kw">)</span>           </span>
-<span id="cb11-300"><a href="#cb11-300" aria-hidden="true" tabindex="-1"></a>  <span class="ex">load</span><span class="er">(</span><span class="ex">rdata_file</span><span class="kw">)</span>                                          </span>
-<span id="cb11-301"><a href="#cb11-301" aria-hidden="true" tabindex="-1"></a>  <span class="ex">download.file</span><span class="er">(</span><span class="ex">data_path,</span> destfile = rdata_file<span class="kw">)</span>           </span>
-<span id="cb11-302"><a href="#cb11-302" aria-hidden="true" tabindex="-1"></a>  <span class="ex">load</span><span class="er">(</span><span class="ex">rdata_file</span><span class="kw">)</span>                                          </span>
-<span id="cb11-303"><a href="#cb11-303" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-304"><a href="#cb11-304" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set some ranges for the plot</span></span>
-<span id="cb11-305"><a href="#cb11-305" aria-hidden="true" tabindex="-1"></a>  <span class="ex">rngs</span> <span class="op">&lt;</span>- list<span class="er">(</span><span class="ex">A</span> = c<span class="er">(</span><span class="ex">-3.3,</span> 3.3<span class="kw">)</span><span class="ex">,</span> B = c<span class="er">(</span><span class="ex">-4.4,</span> 4.4<span class="kw">))</span></span>
-<span id="cb11-306"><a href="#cb11-306" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-307"><a href="#cb11-307" aria-hidden="true" tabindex="-1"></a>  <span class="ex">output</span><span class="va">$spline_contours</span> <span class="op">&lt;</span>-</span>
-<span id="cb11-308"><a href="#cb11-308" aria-hidden="true" tabindex="-1"></a>    <span class="ex">renderImage</span><span class="er">(</span><span class="kw">{</span></span>
-<span id="cb11-309"><a href="#cb11-309" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb11-310"><a href="#cb11-310" aria-hidden="true" tabindex="-1"></a>      <span class="ex">preds</span> <span class="op">&lt;</span>- predicted_values[predicted_values<span class="va">$deg_free</span> == input<span class="va">$deg_free</span>,]</span>
-<span id="cb11-311"><a href="#cb11-311" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb11-312"><a href="#cb11-312" aria-hidden="true" tabindex="-1"></a>      <span class="ex">p</span> <span class="op">&lt;</span>-</span>
-<span id="cb11-313"><a href="#cb11-313" aria-hidden="true" tabindex="-1"></a>        <span class="ex">ggplot</span><span class="er">(</span><span class="ex">preds,</span> aes<span class="er">(</span><span class="ex">A,</span> B<span class="kw">))</span> <span class="ex">+</span></span>
-<span id="cb11-314"><a href="#cb11-314" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Plot the validation set</span></span>
-<span id="cb11-315"><a href="#cb11-315" aria-hidden="true" tabindex="-1"></a>        <span class="ex">geom_point</span><span class="er">(</span></span>
-<span id="cb11-316"><a href="#cb11-316" aria-hidden="true" tabindex="-1"></a>          <span class="ex">data</span> = sim_val, </span>
-<span id="cb11-317"><a href="#cb11-317" aria-hidden="true" tabindex="-1"></a>          <span class="ex">aes</span><span class="er">(</span><span class="fu">col</span> = class, pch = class<span class="kw">)</span><span class="ex">,</span> </span>
-<span id="cb11-318"><a href="#cb11-318" aria-hidden="true" tabindex="-1"></a>          <span class="ex">alpha</span> = 1 / 2,</span>
-<span id="cb11-319"><a href="#cb11-319" aria-hidden="true" tabindex="-1"></a>          <span class="ex">cex</span> = 3</span>
-<span id="cb11-320"><a href="#cb11-320" aria-hidden="true" tabindex="-1"></a>        <span class="kw">)</span> <span class="ex">+</span></span>
-<span id="cb11-321"><a href="#cb11-321" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Show the class boundary</span></span>
-<span id="cb11-322"><a href="#cb11-322" aria-hidden="true" tabindex="-1"></a>        <span class="ex">geom_contour</span><span class="er">(</span></span>
-<span id="cb11-323"><a href="#cb11-323" aria-hidden="true" tabindex="-1"></a>          <span class="ex">aes</span><span class="er">(</span><span class="ex">z</span> = .pred_one<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-324"><a href="#cb11-324" aria-hidden="true" tabindex="-1"></a>          <span class="ex">breaks</span> = 1 / 2,</span>
-<span id="cb11-325"><a href="#cb11-325" aria-hidden="true" tabindex="-1"></a>          <span class="ex">linewidth</span> = 3 / 2,</span>
-<span id="cb11-326"><a href="#cb11-326" aria-hidden="true" tabindex="-1"></a>          <span class="fu">col</span> = <span class="st">"black"</span></span>
-<span id="cb11-327"><a href="#cb11-327" aria-hidden="true" tabindex="-1"></a>        <span class="kw">)</span> <span class="ex">+</span></span>
-<span id="cb11-328"><a href="#cb11-328" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Formatting</span></span>
-<span id="cb11-329"><a href="#cb11-329" aria-hidden="true" tabindex="-1"></a>        <span class="ex">lims</span><span class="er">(</span><span class="ex">x</span> = rngs<span class="va">$A</span>, y = rngs<span class="va">$B</span><span class="kw">)</span> <span class="ex">+</span></span>
-<span id="cb11-330"><a href="#cb11-330" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_bw()</span> <span class="ex">+</span> </span>
-<span id="cb11-331"><a href="#cb11-331" aria-hidden="true" tabindex="-1"></a>        <span class="ex">theme</span><span class="er">(</span><span class="ex">legend.position</span> = <span class="st">"top"</span><span class="kw">)</span></span>
-<span id="cb11-332"><a href="#cb11-332" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb11-333"><a href="#cb11-333" aria-hidden="true" tabindex="-1"></a>      <span class="fu">file</span> <span class="op">&lt;</span>-</span>
-<span id="cb11-334"><a href="#cb11-334" aria-hidden="true" tabindex="-1"></a>        <span class="ex">htmltools::capturePlot</span><span class="er">(</span></span>
-<span id="cb11-335"><a href="#cb11-335" aria-hidden="true" tabindex="-1"></a>          <span class="ex">print</span><span class="er">(</span><span class="ex">p</span><span class="kw">)</span><span class="ex">,</span> </span>
-<span id="cb11-336"><a href="#cb11-336" aria-hidden="true" tabindex="-1"></a>          <span class="fu">tempfile</span><span class="er">(</span><span class="ex">fileext</span> = <span class="st">".svg"</span><span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-337"><a href="#cb11-337" aria-hidden="true" tabindex="-1"></a>          <span class="ex">grDevices::svg,</span></span>
-<span id="cb11-338"><a href="#cb11-338" aria-hidden="true" tabindex="-1"></a>          <span class="ex">width</span> = 4, </span>
-<span id="cb11-339"><a href="#cb11-339" aria-hidden="true" tabindex="-1"></a>          <span class="ex">height</span> = 4</span>
-<span id="cb11-340"><a href="#cb11-340" aria-hidden="true" tabindex="-1"></a>        <span class="kw">)</span></span>
-<span id="cb11-341"><a href="#cb11-341" aria-hidden="true" tabindex="-1"></a>      <span class="ex">list</span><span class="er">(</span><span class="ex">src</span> = file<span class="kw">)</span></span>
-<span id="cb11-342"><a href="#cb11-342" aria-hidden="true" tabindex="-1"></a>    <span class="ex">},</span> </span>
-<span id="cb11-343"><a href="#cb11-343" aria-hidden="true" tabindex="-1"></a>    <span class="ex">deleteFile</span> = TRUE<span class="er">)</span></span>
-<span id="cb11-344"><a href="#cb11-344" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb11-278"><a href="#cb11-278" aria-hidden="true" tabindex="-1"></a><span class="in">server &lt;- function(input, output, session) {</span></span>
+<span id="cb11-279"><a href="#cb11-279" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb11-280"><a href="#cb11-280" aria-hidden="true" tabindex="-1"></a><span class="in">  # ------------------------------------------------------------------------</span></span>
+<span id="cb11-281"><a href="#cb11-281" aria-hidden="true" tabindex="-1"></a><span class="in">  # Input data from remote locations on GitHub</span></span>
+<span id="cb11-282"><a href="#cb11-282" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb11-283"><a href="#cb11-283" aria-hidden="true" tabindex="-1"></a><span class="in">  pred_path &lt;-</span></span>
+<span id="cb11-284"><a href="#cb11-284" aria-hidden="true" tabindex="-1"></a><span class="in">    paste(                                                  </span></span>
+<span id="cb11-285"><a href="#cb11-285" aria-hidden="true" tabindex="-1"></a><span class="in">      "https://raw.githubusercontent.com",                  </span></span>
+<span id="cb11-286"><a href="#cb11-286" aria-hidden="true" tabindex="-1"></a><span class="in">      "topepo", "shinylive-in-book-test",                   </span></span>
+<span id="cb11-287"><a href="#cb11-287" aria-hidden="true" tabindex="-1"></a><span class="in">      "main", "predicted_values.RData",                     </span></span>
+<span id="cb11-288"><a href="#cb11-288" aria-hidden="true" tabindex="-1"></a><span class="in">      sep = "/"                                             </span></span>
+<span id="cb11-289"><a href="#cb11-289" aria-hidden="true" tabindex="-1"></a><span class="in">    )                                                       </span></span>
+<span id="cb11-290"><a href="#cb11-290" aria-hidden="true" tabindex="-1"></a><span class="in">  data_path &lt;-                                              </span></span>
+<span id="cb11-291"><a href="#cb11-291" aria-hidden="true" tabindex="-1"></a><span class="in">    paste(                                                  </span></span>
+<span id="cb11-292"><a href="#cb11-292" aria-hidden="true" tabindex="-1"></a><span class="in">      "https://raw.githubusercontent.com",                  </span></span>
+<span id="cb11-293"><a href="#cb11-293" aria-hidden="true" tabindex="-1"></a><span class="in">      "topepo", "shinylive-in-book-test",                   </span></span>
+<span id="cb11-294"><a href="#cb11-294" aria-hidden="true" tabindex="-1"></a><span class="in">      "main", "sim_val.RData",                              </span></span>
+<span id="cb11-295"><a href="#cb11-295" aria-hidden="true" tabindex="-1"></a><span class="in">      sep = "/"                                             </span></span>
+<span id="cb11-296"><a href="#cb11-296" aria-hidden="true" tabindex="-1"></a><span class="in">    )                                                       </span></span>
+<span id="cb11-297"><a href="#cb11-297" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb11-298"><a href="#cb11-298" aria-hidden="true" tabindex="-1"></a><span class="in">  rdata_file &lt;- tempfile()</span></span>
+<span id="cb11-299"><a href="#cb11-299" aria-hidden="true" tabindex="-1"></a><span class="in">  download.file(pred_path, destfile = rdata_file)           </span></span>
+<span id="cb11-300"><a href="#cb11-300" aria-hidden="true" tabindex="-1"></a><span class="in">  load(rdata_file)                                          </span></span>
+<span id="cb11-301"><a href="#cb11-301" aria-hidden="true" tabindex="-1"></a><span class="in">  download.file(data_path, destfile = rdata_file)           </span></span>
+<span id="cb11-302"><a href="#cb11-302" aria-hidden="true" tabindex="-1"></a><span class="in">  load(rdata_file)                                          </span></span>
+<span id="cb11-303"><a href="#cb11-303" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb11-304"><a href="#cb11-304" aria-hidden="true" tabindex="-1"></a><span class="in">  # Set some ranges for the plot</span></span>
+<span id="cb11-305"><a href="#cb11-305" aria-hidden="true" tabindex="-1"></a><span class="in">  rngs &lt;- list(A = c(-3.3, 3.3), B = c(-4.4, 4.4))</span></span>
+<span id="cb11-306"><a href="#cb11-306" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb11-307"><a href="#cb11-307" aria-hidden="true" tabindex="-1"></a><span class="in">  output$spline_contours &lt;-</span></span>
+<span id="cb11-308"><a href="#cb11-308" aria-hidden="true" tabindex="-1"></a><span class="in">    renderImage({</span></span>
+<span id="cb11-309"><a href="#cb11-309" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb11-310"><a href="#cb11-310" aria-hidden="true" tabindex="-1"></a><span class="in">      preds &lt;- predicted_values[predicted_values$deg_free == input$deg_free,]</span></span>
+<span id="cb11-311"><a href="#cb11-311" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb11-312"><a href="#cb11-312" aria-hidden="true" tabindex="-1"></a><span class="in">      p &lt;-</span></span>
+<span id="cb11-313"><a href="#cb11-313" aria-hidden="true" tabindex="-1"></a><span class="in">        ggplot(preds, aes(A, B)) +</span></span>
+<span id="cb11-314"><a href="#cb11-314" aria-hidden="true" tabindex="-1"></a><span class="in">        # Plot the validation set</span></span>
+<span id="cb11-315"><a href="#cb11-315" aria-hidden="true" tabindex="-1"></a><span class="in">        geom_point(</span></span>
+<span id="cb11-316"><a href="#cb11-316" aria-hidden="true" tabindex="-1"></a><span class="in">          data = sim_val, </span></span>
+<span id="cb11-317"><a href="#cb11-317" aria-hidden="true" tabindex="-1"></a><span class="in">          aes(col = class, pch = class), </span></span>
+<span id="cb11-318"><a href="#cb11-318" aria-hidden="true" tabindex="-1"></a><span class="in">          alpha = 1 / 2,</span></span>
+<span id="cb11-319"><a href="#cb11-319" aria-hidden="true" tabindex="-1"></a><span class="in">          cex = 3</span></span>
+<span id="cb11-320"><a href="#cb11-320" aria-hidden="true" tabindex="-1"></a><span class="in">        ) +</span></span>
+<span id="cb11-321"><a href="#cb11-321" aria-hidden="true" tabindex="-1"></a><span class="in">        # Show the class boundary</span></span>
+<span id="cb11-322"><a href="#cb11-322" aria-hidden="true" tabindex="-1"></a><span class="in">        geom_contour(</span></span>
+<span id="cb11-323"><a href="#cb11-323" aria-hidden="true" tabindex="-1"></a><span class="in">          aes(z = .pred_one),</span></span>
+<span id="cb11-324"><a href="#cb11-324" aria-hidden="true" tabindex="-1"></a><span class="in">          breaks = 1 / 2,</span></span>
+<span id="cb11-325"><a href="#cb11-325" aria-hidden="true" tabindex="-1"></a><span class="in">          linewidth = 3 / 2,</span></span>
+<span id="cb11-326"><a href="#cb11-326" aria-hidden="true" tabindex="-1"></a><span class="in">          col = "black"</span></span>
+<span id="cb11-327"><a href="#cb11-327" aria-hidden="true" tabindex="-1"></a><span class="in">        ) +</span></span>
+<span id="cb11-328"><a href="#cb11-328" aria-hidden="true" tabindex="-1"></a><span class="in">        # Formatting</span></span>
+<span id="cb11-329"><a href="#cb11-329" aria-hidden="true" tabindex="-1"></a><span class="in">        lims(x = rngs$A, y = rngs$B) +</span></span>
+<span id="cb11-330"><a href="#cb11-330" aria-hidden="true" tabindex="-1"></a><span class="in">        theme_bw() + </span></span>
+<span id="cb11-331"><a href="#cb11-331" aria-hidden="true" tabindex="-1"></a><span class="in">        theme(legend.position = "top")</span></span>
+<span id="cb11-332"><a href="#cb11-332" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb11-333"><a href="#cb11-333" aria-hidden="true" tabindex="-1"></a><span class="in">      file &lt;-</span></span>
+<span id="cb11-334"><a href="#cb11-334" aria-hidden="true" tabindex="-1"></a><span class="in">        htmltools::capturePlot(</span></span>
+<span id="cb11-335"><a href="#cb11-335" aria-hidden="true" tabindex="-1"></a><span class="in">          print(p), </span></span>
+<span id="cb11-336"><a href="#cb11-336" aria-hidden="true" tabindex="-1"></a><span class="in">          tempfile(fileext = ".svg"),</span></span>
+<span id="cb11-337"><a href="#cb11-337" aria-hidden="true" tabindex="-1"></a><span class="in">          grDevices::svg,</span></span>
+<span id="cb11-338"><a href="#cb11-338" aria-hidden="true" tabindex="-1"></a><span class="in">          width = 4, </span></span>
+<span id="cb11-339"><a href="#cb11-339" aria-hidden="true" tabindex="-1"></a><span class="in">          height = 4</span></span>
+<span id="cb11-340"><a href="#cb11-340" aria-hidden="true" tabindex="-1"></a><span class="in">        )</span></span>
+<span id="cb11-341"><a href="#cb11-341" aria-hidden="true" tabindex="-1"></a><span class="in">      list(src = file)</span></span>
+<span id="cb11-342"><a href="#cb11-342" aria-hidden="true" tabindex="-1"></a><span class="in">    }, </span></span>
+<span id="cb11-343"><a href="#cb11-343" aria-hidden="true" tabindex="-1"></a><span class="in">    deleteFile = TRUE)</span></span>
+<span id="cb11-344"><a href="#cb11-344" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
 <span id="cb11-345"><a href="#cb11-345" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-346"><a href="#cb11-346" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui</span> = ui, server = server<span class="kw">)</span></span>
-<span id="cb11-347"><a href="#cb11-347" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
+<span id="cb11-346"><a href="#cb11-346" aria-hidden="true" tabindex="-1"></a><span class="in">shinyApp(ui = ui, server = server)</span></span>
+<span id="cb11-347"><a href="#cb11-347" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-348"><a href="#cb11-348" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-349"><a href="#cb11-349" aria-hidden="true" tabindex="-1"></a><span class="ex">代码：</span></span>
+<span id="cb11-349"><a href="#cb11-349" aria-hidden="true" tabindex="-1"></a>代码：</span>
 <span id="cb11-350"><a href="#cb11-350" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-351"><a href="#cb11-351" aria-hidden="true" tabindex="-1"></a><span class="kw">````</span> <span class="ex">md</span></span>
-<span id="cb11-352"><a href="#cb11-352" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span>{shinylive-r}</span>
-<span id="cb11-353"><a href="#cb11-353" aria-hidden="true" tabindex="-1"></a><span class="co">#| standalone: true</span></span>
-<span id="cb11-354"><a href="#cb11-354" aria-hidden="true" tabindex="-1"></a><span class="co">#| viewerHeight: 500</span></span>
-<span id="cb11-355"><a href="#cb11-355" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-shiny-spline</span></span>
+<span id="cb11-351"><a href="#cb11-351" aria-hidden="true" tabindex="-1"></a><span class="in">```` md</span></span>
+<span id="cb11-352"><a href="#cb11-352" aria-hidden="true" tabindex="-1"></a><span class="in">```{shinylive-r}</span></span>
+<span id="cb11-353"><a href="#cb11-353" aria-hidden="true" tabindex="-1"></a><span class="in">#| standalone: true</span></span>
+<span id="cb11-354"><a href="#cb11-354" aria-hidden="true" tabindex="-1"></a><span class="in">#| viewerHeight: 500</span></span>
+<span id="cb11-355"><a href="#cb11-355" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: fig-shiny-spline</span></span>
 <span id="cb11-356"><a href="#cb11-356" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-357"><a href="#cb11-357" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">ggplot2</span><span class="kw">)</span></span>
-<span id="cb11-358"><a href="#cb11-358" aria-hidden="true" tabindex="-1"></a><span class="ex">library</span><span class="er">(</span><span class="ex">htmltools</span><span class="kw">)</span></span>
+<span id="cb11-357"><a href="#cb11-357" aria-hidden="true" tabindex="-1"></a><span class="in">library(ggplot2)</span></span>
+<span id="cb11-358"><a href="#cb11-358" aria-hidden="true" tabindex="-1"></a><span class="in">library(htmltools)</span></span>
 <span id="cb11-359"><a href="#cb11-359" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-360"><a href="#cb11-360" aria-hidden="true" tabindex="-1"></a><span class="ex">ui</span> <span class="op">&lt;</span>- fluidPage<span class="er">(</span></span>
-<span id="cb11-361"><a href="#cb11-361" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-362"><a href="#cb11-362" aria-hidden="true" tabindex="-1"></a>  <span class="ex">fluidRow</span><span class="er">(</span></span>
-<span id="cb11-363"><a href="#cb11-363" aria-hidden="true" tabindex="-1"></a>    <span class="ex">column</span><span class="er">(</span><span class="ex">8,</span> </span>
-<span id="cb11-364"><a href="#cb11-364" aria-hidden="true" tabindex="-1"></a>           <span class="ex">sliderInput</span><span class="er">(</span></span>
-<span id="cb11-365"><a href="#cb11-365" aria-hidden="true" tabindex="-1"></a>             <span class="st">"deg_free"</span><span class="ex">,</span> </span>
-<span id="cb11-366"><a href="#cb11-366" aria-hidden="true" tabindex="-1"></a>             <span class="ex">label</span> = <span class="st">"Spline degrees of freedom:"</span>,</span>
-<span id="cb11-367"><a href="#cb11-367" aria-hidden="true" tabindex="-1"></a>             <span class="ex">min</span> = 3L, value = 3L, max = 8L, step = 1L</span>
-<span id="cb11-368"><a href="#cb11-368" aria-hidden="true" tabindex="-1"></a>           <span class="kw">)</span></span>
-<span id="cb11-369"><a href="#cb11-369" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-370"><a href="#cb11-370" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb11-371"><a href="#cb11-371" aria-hidden="true" tabindex="-1"></a>    <span class="ex">imageOutput</span><span class="er">(</span><span class="st">"spline_contours"</span><span class="ex">,</span> height = <span class="st">"400px"</span><span class="kw">)</span></span>
-<span id="cb11-372"><a href="#cb11-372" aria-hidden="true" tabindex="-1"></a>  <span class="kw">)</span></span>
-<span id="cb11-373"><a href="#cb11-373" aria-hidden="true" tabindex="-1"></a><span class="kw">)</span></span>
+<span id="cb11-360"><a href="#cb11-360" aria-hidden="true" tabindex="-1"></a><span class="in">ui &lt;- fluidPage(</span></span>
+<span id="cb11-361"><a href="#cb11-361" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb11-362"><a href="#cb11-362" aria-hidden="true" tabindex="-1"></a><span class="in">  fluidRow(</span></span>
+<span id="cb11-363"><a href="#cb11-363" aria-hidden="true" tabindex="-1"></a><span class="in">    column(8, </span></span>
+<span id="cb11-364"><a href="#cb11-364" aria-hidden="true" tabindex="-1"></a><span class="in">           sliderInput(</span></span>
+<span id="cb11-365"><a href="#cb11-365" aria-hidden="true" tabindex="-1"></a><span class="in">             "deg_free", </span></span>
+<span id="cb11-366"><a href="#cb11-366" aria-hidden="true" tabindex="-1"></a><span class="in">             label = "Spline degrees of freedom:",</span></span>
+<span id="cb11-367"><a href="#cb11-367" aria-hidden="true" tabindex="-1"></a><span class="in">             min = 3L, value = 3L, max = 8L, step = 1L</span></span>
+<span id="cb11-368"><a href="#cb11-368" aria-hidden="true" tabindex="-1"></a><span class="in">           )</span></span>
+<span id="cb11-369"><a href="#cb11-369" aria-hidden="true" tabindex="-1"></a><span class="in">    ),</span></span>
+<span id="cb11-370"><a href="#cb11-370" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb11-371"><a href="#cb11-371" aria-hidden="true" tabindex="-1"></a><span class="in">    imageOutput("spline_contours", height = "400px")</span></span>
+<span id="cb11-372"><a href="#cb11-372" aria-hidden="true" tabindex="-1"></a><span class="in">  )</span></span>
+<span id="cb11-373"><a href="#cb11-373" aria-hidden="true" tabindex="-1"></a><span class="in">)</span></span>
 <span id="cb11-374"><a href="#cb11-374" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-375"><a href="#cb11-375" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-376"><a href="#cb11-376" aria-hidden="true" tabindex="-1"></a><span class="ex">server</span> <span class="op">&lt;</span>- function<span class="er">(</span><span class="ex">input,</span> output, session<span class="kw">)</span> <span class="kw">{</span></span>
-<span id="cb11-377"><a href="#cb11-377" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-378"><a href="#cb11-378" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ------------------------------------------------------------------------</span></span>
-<span id="cb11-379"><a href="#cb11-379" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Input data from remote locations on GitHub</span></span>
-<span id="cb11-380"><a href="#cb11-380" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-381"><a href="#cb11-381" aria-hidden="true" tabindex="-1"></a>  <span class="ex">pred_path</span> <span class="op">&lt;</span>-</span>
-<span id="cb11-382"><a href="#cb11-382" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span><span class="er">(</span>                                                  </span>
-<span id="cb11-383"><a href="#cb11-383" aria-hidden="true" tabindex="-1"></a>      <span class="st">"https://raw.githubusercontent.com"</span><span class="ex">,</span>                  </span>
-<span id="cb11-384"><a href="#cb11-384" aria-hidden="true" tabindex="-1"></a>      <span class="st">"topepo"</span><span class="ex">,</span> <span class="st">"shinylive-in-book-test"</span>,                   </span>
-<span id="cb11-385"><a href="#cb11-385" aria-hidden="true" tabindex="-1"></a>      <span class="st">"main"</span><span class="ex">,</span> <span class="st">"predicted_values.RData"</span>,                     </span>
-<span id="cb11-386"><a href="#cb11-386" aria-hidden="true" tabindex="-1"></a>      <span class="ex">sep</span> = <span class="st">"/"</span>                                             </span>
-<span id="cb11-387"><a href="#cb11-387" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span>                                                       </span>
-<span id="cb11-388"><a href="#cb11-388" aria-hidden="true" tabindex="-1"></a>  <span class="ex">data_path</span> <span class="op">&lt;</span>-                                              </span>
-<span id="cb11-389"><a href="#cb11-389" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span><span class="er">(</span>                                                  </span>
-<span id="cb11-390"><a href="#cb11-390" aria-hidden="true" tabindex="-1"></a>      <span class="st">"https://raw.githubusercontent.com"</span><span class="ex">,</span>                  </span>
-<span id="cb11-391"><a href="#cb11-391" aria-hidden="true" tabindex="-1"></a>      <span class="st">"topepo"</span><span class="ex">,</span> <span class="st">"shinylive-in-book-test"</span>,                   </span>
-<span id="cb11-392"><a href="#cb11-392" aria-hidden="true" tabindex="-1"></a>      <span class="st">"main"</span><span class="ex">,</span> <span class="st">"sim_val.RData"</span>,                              </span>
-<span id="cb11-393"><a href="#cb11-393" aria-hidden="true" tabindex="-1"></a>      <span class="ex">sep</span> = <span class="st">"/"</span>                                             </span>
-<span id="cb11-394"><a href="#cb11-394" aria-hidden="true" tabindex="-1"></a>    <span class="kw">)</span>                                                       </span>
-<span id="cb11-395"><a href="#cb11-395" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-396"><a href="#cb11-396" aria-hidden="true" tabindex="-1"></a>  <span class="ex">rdata_file</span> <span class="op">&lt;</span>- tempfile<span class="er">(</span><span class="kw">)</span></span>
-<span id="cb11-397"><a href="#cb11-397" aria-hidden="true" tabindex="-1"></a>  <span class="ex">download.file</span><span class="er">(</span><span class="ex">pred_path,</span> destfile = rdata_file<span class="kw">)</span>           </span>
-<span id="cb11-398"><a href="#cb11-398" aria-hidden="true" tabindex="-1"></a>  <span class="ex">load</span><span class="er">(</span><span class="ex">rdata_file</span><span class="kw">)</span>                                          </span>
-<span id="cb11-399"><a href="#cb11-399" aria-hidden="true" tabindex="-1"></a>  <span class="ex">download.file</span><span class="er">(</span><span class="ex">data_path,</span> destfile = rdata_file<span class="kw">)</span>           </span>
-<span id="cb11-400"><a href="#cb11-400" aria-hidden="true" tabindex="-1"></a>  <span class="ex">load</span><span class="er">(</span><span class="ex">rdata_file</span><span class="kw">)</span>                                          </span>
-<span id="cb11-401"><a href="#cb11-401" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-402"><a href="#cb11-402" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Set some ranges for the plot</span></span>
-<span id="cb11-403"><a href="#cb11-403" aria-hidden="true" tabindex="-1"></a>  <span class="ex">rngs</span> <span class="op">&lt;</span>- list<span class="er">(</span><span class="ex">A</span> = c<span class="er">(</span><span class="ex">-3.3,</span> 3.3<span class="kw">)</span><span class="ex">,</span> B = c<span class="er">(</span><span class="ex">-4.4,</span> 4.4<span class="kw">))</span></span>
-<span id="cb11-404"><a href="#cb11-404" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb11-405"><a href="#cb11-405" aria-hidden="true" tabindex="-1"></a>  <span class="ex">output</span><span class="va">$spline_contours</span> <span class="op">&lt;</span>-</span>
-<span id="cb11-406"><a href="#cb11-406" aria-hidden="true" tabindex="-1"></a>    <span class="ex">renderImage</span><span class="er">(</span><span class="kw">{</span></span>
-<span id="cb11-407"><a href="#cb11-407" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb11-408"><a href="#cb11-408" aria-hidden="true" tabindex="-1"></a>      <span class="ex">preds</span> <span class="op">&lt;</span>- predicted_values[predicted_values<span class="va">$deg_free</span> == input<span class="va">$deg_free</span>,]</span>
-<span id="cb11-409"><a href="#cb11-409" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb11-410"><a href="#cb11-410" aria-hidden="true" tabindex="-1"></a>      <span class="ex">p</span> <span class="op">&lt;</span>-</span>
-<span id="cb11-411"><a href="#cb11-411" aria-hidden="true" tabindex="-1"></a>        <span class="ex">ggplot</span><span class="er">(</span><span class="ex">preds,</span> aes<span class="er">(</span><span class="ex">A,</span> B<span class="kw">))</span> <span class="ex">+</span></span>
-<span id="cb11-412"><a href="#cb11-412" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Plot the validation set</span></span>
-<span id="cb11-413"><a href="#cb11-413" aria-hidden="true" tabindex="-1"></a>        <span class="ex">geom_point</span><span class="er">(</span></span>
-<span id="cb11-414"><a href="#cb11-414" aria-hidden="true" tabindex="-1"></a>          <span class="ex">data</span> = sim_val, </span>
-<span id="cb11-415"><a href="#cb11-415" aria-hidden="true" tabindex="-1"></a>          <span class="ex">aes</span><span class="er">(</span><span class="fu">col</span> = class, pch = class<span class="kw">)</span><span class="ex">,</span> </span>
-<span id="cb11-416"><a href="#cb11-416" aria-hidden="true" tabindex="-1"></a>          <span class="ex">alpha</span> = 1 / 2,</span>
-<span id="cb11-417"><a href="#cb11-417" aria-hidden="true" tabindex="-1"></a>          <span class="ex">cex</span> = 3</span>
-<span id="cb11-418"><a href="#cb11-418" aria-hidden="true" tabindex="-1"></a>        <span class="kw">)</span> <span class="ex">+</span></span>
-<span id="cb11-419"><a href="#cb11-419" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Show the class boundary</span></span>
-<span id="cb11-420"><a href="#cb11-420" aria-hidden="true" tabindex="-1"></a>        <span class="ex">geom_contour</span><span class="er">(</span></span>
-<span id="cb11-421"><a href="#cb11-421" aria-hidden="true" tabindex="-1"></a>          <span class="ex">aes</span><span class="er">(</span><span class="ex">z</span> = .pred_one<span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-422"><a href="#cb11-422" aria-hidden="true" tabindex="-1"></a>          <span class="ex">breaks</span> = 1 / 2,</span>
-<span id="cb11-423"><a href="#cb11-423" aria-hidden="true" tabindex="-1"></a>          <span class="ex">linewidth</span> = 3 / 2,</span>
-<span id="cb11-424"><a href="#cb11-424" aria-hidden="true" tabindex="-1"></a>          <span class="fu">col</span> = <span class="st">"black"</span></span>
-<span id="cb11-425"><a href="#cb11-425" aria-hidden="true" tabindex="-1"></a>        <span class="kw">)</span> <span class="ex">+</span></span>
-<span id="cb11-426"><a href="#cb11-426" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Formatting</span></span>
-<span id="cb11-427"><a href="#cb11-427" aria-hidden="true" tabindex="-1"></a>        <span class="ex">lims</span><span class="er">(</span><span class="ex">x</span> = rngs<span class="va">$A</span>, y = rngs<span class="va">$B</span><span class="kw">)</span> <span class="ex">+</span></span>
-<span id="cb11-428"><a href="#cb11-428" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_bw()</span> <span class="ex">+</span> </span>
-<span id="cb11-429"><a href="#cb11-429" aria-hidden="true" tabindex="-1"></a>        <span class="ex">theme</span><span class="er">(</span><span class="ex">legend.position</span> = <span class="st">"top"</span><span class="kw">)</span></span>
-<span id="cb11-430"><a href="#cb11-430" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb11-431"><a href="#cb11-431" aria-hidden="true" tabindex="-1"></a>      <span class="fu">file</span> <span class="op">&lt;</span>-</span>
-<span id="cb11-432"><a href="#cb11-432" aria-hidden="true" tabindex="-1"></a>        <span class="ex">htmltools::capturePlot</span><span class="er">(</span></span>
-<span id="cb11-433"><a href="#cb11-433" aria-hidden="true" tabindex="-1"></a>          <span class="ex">print</span><span class="er">(</span><span class="ex">p</span><span class="kw">)</span><span class="ex">,</span> </span>
-<span id="cb11-434"><a href="#cb11-434" aria-hidden="true" tabindex="-1"></a>          <span class="fu">tempfile</span><span class="er">(</span><span class="ex">fileext</span> = <span class="st">".svg"</span><span class="kw">)</span><span class="ex">,</span></span>
-<span id="cb11-435"><a href="#cb11-435" aria-hidden="true" tabindex="-1"></a>          <span class="ex">grDevices::svg,</span></span>
-<span id="cb11-436"><a href="#cb11-436" aria-hidden="true" tabindex="-1"></a>          <span class="ex">width</span> = 4, </span>
-<span id="cb11-437"><a href="#cb11-437" aria-hidden="true" tabindex="-1"></a>          <span class="ex">height</span> = 4</span>
-<span id="cb11-438"><a href="#cb11-438" aria-hidden="true" tabindex="-1"></a>        <span class="kw">)</span></span>
-<span id="cb11-439"><a href="#cb11-439" aria-hidden="true" tabindex="-1"></a>      <span class="ex">list</span><span class="er">(</span><span class="ex">src</span> = file<span class="kw">)</span></span>
-<span id="cb11-440"><a href="#cb11-440" aria-hidden="true" tabindex="-1"></a>    <span class="ex">},</span> </span>
-<span id="cb11-441"><a href="#cb11-441" aria-hidden="true" tabindex="-1"></a>    <span class="ex">deleteFile</span> = TRUE<span class="er">)</span></span>
-<span id="cb11-442"><a href="#cb11-442" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span>
+<span id="cb11-376"><a href="#cb11-376" aria-hidden="true" tabindex="-1"></a><span class="in">server &lt;- function(input, output, session) {</span></span>
+<span id="cb11-377"><a href="#cb11-377" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb11-378"><a href="#cb11-378" aria-hidden="true" tabindex="-1"></a><span class="in">  # ------------------------------------------------------------------------</span></span>
+<span id="cb11-379"><a href="#cb11-379" aria-hidden="true" tabindex="-1"></a><span class="in">  # Input data from remote locations on GitHub</span></span>
+<span id="cb11-380"><a href="#cb11-380" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb11-381"><a href="#cb11-381" aria-hidden="true" tabindex="-1"></a><span class="in">  pred_path &lt;-</span></span>
+<span id="cb11-382"><a href="#cb11-382" aria-hidden="true" tabindex="-1"></a><span class="in">    paste(                                                  </span></span>
+<span id="cb11-383"><a href="#cb11-383" aria-hidden="true" tabindex="-1"></a><span class="in">      "https://raw.githubusercontent.com",                  </span></span>
+<span id="cb11-384"><a href="#cb11-384" aria-hidden="true" tabindex="-1"></a><span class="in">      "topepo", "shinylive-in-book-test",                   </span></span>
+<span id="cb11-385"><a href="#cb11-385" aria-hidden="true" tabindex="-1"></a><span class="in">      "main", "predicted_values.RData",                     </span></span>
+<span id="cb11-386"><a href="#cb11-386" aria-hidden="true" tabindex="-1"></a><span class="in">      sep = "/"                                             </span></span>
+<span id="cb11-387"><a href="#cb11-387" aria-hidden="true" tabindex="-1"></a><span class="in">    )                                                       </span></span>
+<span id="cb11-388"><a href="#cb11-388" aria-hidden="true" tabindex="-1"></a><span class="in">  data_path &lt;-                                              </span></span>
+<span id="cb11-389"><a href="#cb11-389" aria-hidden="true" tabindex="-1"></a><span class="in">    paste(                                                  </span></span>
+<span id="cb11-390"><a href="#cb11-390" aria-hidden="true" tabindex="-1"></a><span class="in">      "https://raw.githubusercontent.com",                  </span></span>
+<span id="cb11-391"><a href="#cb11-391" aria-hidden="true" tabindex="-1"></a><span class="in">      "topepo", "shinylive-in-book-test",                   </span></span>
+<span id="cb11-392"><a href="#cb11-392" aria-hidden="true" tabindex="-1"></a><span class="in">      "main", "sim_val.RData",                              </span></span>
+<span id="cb11-393"><a href="#cb11-393" aria-hidden="true" tabindex="-1"></a><span class="in">      sep = "/"                                             </span></span>
+<span id="cb11-394"><a href="#cb11-394" aria-hidden="true" tabindex="-1"></a><span class="in">    )                                                       </span></span>
+<span id="cb11-395"><a href="#cb11-395" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb11-396"><a href="#cb11-396" aria-hidden="true" tabindex="-1"></a><span class="in">  rdata_file &lt;- tempfile()</span></span>
+<span id="cb11-397"><a href="#cb11-397" aria-hidden="true" tabindex="-1"></a><span class="in">  download.file(pred_path, destfile = rdata_file)           </span></span>
+<span id="cb11-398"><a href="#cb11-398" aria-hidden="true" tabindex="-1"></a><span class="in">  load(rdata_file)                                          </span></span>
+<span id="cb11-399"><a href="#cb11-399" aria-hidden="true" tabindex="-1"></a><span class="in">  download.file(data_path, destfile = rdata_file)           </span></span>
+<span id="cb11-400"><a href="#cb11-400" aria-hidden="true" tabindex="-1"></a><span class="in">  load(rdata_file)                                          </span></span>
+<span id="cb11-401"><a href="#cb11-401" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb11-402"><a href="#cb11-402" aria-hidden="true" tabindex="-1"></a><span class="in">  # Set some ranges for the plot</span></span>
+<span id="cb11-403"><a href="#cb11-403" aria-hidden="true" tabindex="-1"></a><span class="in">  rngs &lt;- list(A = c(-3.3, 3.3), B = c(-4.4, 4.4))</span></span>
+<span id="cb11-404"><a href="#cb11-404" aria-hidden="true" tabindex="-1"></a><span class="in">  </span></span>
+<span id="cb11-405"><a href="#cb11-405" aria-hidden="true" tabindex="-1"></a><span class="in">  output$spline_contours &lt;-</span></span>
+<span id="cb11-406"><a href="#cb11-406" aria-hidden="true" tabindex="-1"></a><span class="in">    renderImage({</span></span>
+<span id="cb11-407"><a href="#cb11-407" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb11-408"><a href="#cb11-408" aria-hidden="true" tabindex="-1"></a><span class="in">      preds &lt;- predicted_values[predicted_values$deg_free == input$deg_free,]</span></span>
+<span id="cb11-409"><a href="#cb11-409" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb11-410"><a href="#cb11-410" aria-hidden="true" tabindex="-1"></a><span class="in">      p &lt;-</span></span>
+<span id="cb11-411"><a href="#cb11-411" aria-hidden="true" tabindex="-1"></a><span class="in">        ggplot(preds, aes(A, B)) +</span></span>
+<span id="cb11-412"><a href="#cb11-412" aria-hidden="true" tabindex="-1"></a><span class="in">        # Plot the validation set</span></span>
+<span id="cb11-413"><a href="#cb11-413" aria-hidden="true" tabindex="-1"></a><span class="in">        geom_point(</span></span>
+<span id="cb11-414"><a href="#cb11-414" aria-hidden="true" tabindex="-1"></a><span class="in">          data = sim_val, </span></span>
+<span id="cb11-415"><a href="#cb11-415" aria-hidden="true" tabindex="-1"></a><span class="in">          aes(col = class, pch = class), </span></span>
+<span id="cb11-416"><a href="#cb11-416" aria-hidden="true" tabindex="-1"></a><span class="in">          alpha = 1 / 2,</span></span>
+<span id="cb11-417"><a href="#cb11-417" aria-hidden="true" tabindex="-1"></a><span class="in">          cex = 3</span></span>
+<span id="cb11-418"><a href="#cb11-418" aria-hidden="true" tabindex="-1"></a><span class="in">        ) +</span></span>
+<span id="cb11-419"><a href="#cb11-419" aria-hidden="true" tabindex="-1"></a><span class="in">        # Show the class boundary</span></span>
+<span id="cb11-420"><a href="#cb11-420" aria-hidden="true" tabindex="-1"></a><span class="in">        geom_contour(</span></span>
+<span id="cb11-421"><a href="#cb11-421" aria-hidden="true" tabindex="-1"></a><span class="in">          aes(z = .pred_one),</span></span>
+<span id="cb11-422"><a href="#cb11-422" aria-hidden="true" tabindex="-1"></a><span class="in">          breaks = 1 / 2,</span></span>
+<span id="cb11-423"><a href="#cb11-423" aria-hidden="true" tabindex="-1"></a><span class="in">          linewidth = 3 / 2,</span></span>
+<span id="cb11-424"><a href="#cb11-424" aria-hidden="true" tabindex="-1"></a><span class="in">          col = "black"</span></span>
+<span id="cb11-425"><a href="#cb11-425" aria-hidden="true" tabindex="-1"></a><span class="in">        ) +</span></span>
+<span id="cb11-426"><a href="#cb11-426" aria-hidden="true" tabindex="-1"></a><span class="in">        # Formatting</span></span>
+<span id="cb11-427"><a href="#cb11-427" aria-hidden="true" tabindex="-1"></a><span class="in">        lims(x = rngs$A, y = rngs$B) +</span></span>
+<span id="cb11-428"><a href="#cb11-428" aria-hidden="true" tabindex="-1"></a><span class="in">        theme_bw() + </span></span>
+<span id="cb11-429"><a href="#cb11-429" aria-hidden="true" tabindex="-1"></a><span class="in">        theme(legend.position = "top")</span></span>
+<span id="cb11-430"><a href="#cb11-430" aria-hidden="true" tabindex="-1"></a><span class="in">      </span></span>
+<span id="cb11-431"><a href="#cb11-431" aria-hidden="true" tabindex="-1"></a><span class="in">      file &lt;-</span></span>
+<span id="cb11-432"><a href="#cb11-432" aria-hidden="true" tabindex="-1"></a><span class="in">        htmltools::capturePlot(</span></span>
+<span id="cb11-433"><a href="#cb11-433" aria-hidden="true" tabindex="-1"></a><span class="in">          print(p), </span></span>
+<span id="cb11-434"><a href="#cb11-434" aria-hidden="true" tabindex="-1"></a><span class="in">          tempfile(fileext = ".svg"),</span></span>
+<span id="cb11-435"><a href="#cb11-435" aria-hidden="true" tabindex="-1"></a><span class="in">          grDevices::svg,</span></span>
+<span id="cb11-436"><a href="#cb11-436" aria-hidden="true" tabindex="-1"></a><span class="in">          width = 4, </span></span>
+<span id="cb11-437"><a href="#cb11-437" aria-hidden="true" tabindex="-1"></a><span class="in">          height = 4</span></span>
+<span id="cb11-438"><a href="#cb11-438" aria-hidden="true" tabindex="-1"></a><span class="in">        )</span></span>
+<span id="cb11-439"><a href="#cb11-439" aria-hidden="true" tabindex="-1"></a><span class="in">      list(src = file)</span></span>
+<span id="cb11-440"><a href="#cb11-440" aria-hidden="true" tabindex="-1"></a><span class="in">    }, </span></span>
+<span id="cb11-441"><a href="#cb11-441" aria-hidden="true" tabindex="-1"></a><span class="in">    deleteFile = TRUE)</span></span>
+<span id="cb11-442"><a href="#cb11-442" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
 <span id="cb11-443"><a href="#cb11-443" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-444"><a href="#cb11-444" aria-hidden="true" tabindex="-1"></a><span class="ex">shinyApp</span><span class="er">(</span><span class="ex">ui</span> = ui, server = server<span class="kw">)</span></span>
-<span id="cb11-445"><a href="#cb11-445" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
-<span id="cb11-446"><a href="#cb11-446" aria-hidden="true" tabindex="-1"></a><span class="kw">````</span></span>
+<span id="cb11-444"><a href="#cb11-444" aria-hidden="true" tabindex="-1"></a><span class="in">shinyApp(ui = ui, server = server)</span></span>
+<span id="cb11-445"><a href="#cb11-445" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-446"><a href="#cb11-446" aria-hidden="true" tabindex="-1"></a><span class="in">````</span></span>
 <span id="cb11-447"><a href="#cb11-447" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-448"><a href="#cb11-448" aria-hidden="true" tabindex="-1"></a><span class="ex">------------------------------------------------------------------------</span></span>
+<span id="cb11-448"><a href="#cb11-448" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
 <span id="cb11-449"><a href="#cb11-449" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-450"><a href="#cb11-450" aria-hidden="true" tabindex="-1"></a><span class="ex">:::</span> {.callout-note collapse=<span class="st">"true"</span> icon=<span class="st">"false"</span>}</span>
-<span id="cb11-451"><a href="#cb11-451" aria-hidden="true" tabindex="-1"></a><span class="co">## Session Info</span></span>
+<span id="cb11-450"><a href="#cb11-450" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb11-451"><a href="#cb11-451" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
 <span id="cb11-452"><a href="#cb11-452" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-455"><a href="#cb11-455" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb11-456"><a href="#cb11-456" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb11-457"><a href="#cb11-457" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo()</span></span>
-<span id="cb11-458"><a href="#cb11-458" aria-hidden="true" tabindex="-1"></a><span class="kw">```</span></span>
-<span id="cb11-459"><a href="#cb11-459" aria-hidden="true" tabindex="-1"></a><span class="ex">:::</span></span>
+<span id="cb11-457"><a href="#cb11-457" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb11-458"><a href="#cb11-458" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-459"><a href="#cb11-459" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
@@ -1914,7 +2106,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </li>  
 </ul>
 </div>   
-    <div class="nav-footer-center">Copyright 2024, Du Junhong</div>
+    <div class="nav-footer-center">
+<p>Copyright 2024, Du Junhong</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/quarto_foundation/quarto_shiny.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
 <li class="nav-item compact">

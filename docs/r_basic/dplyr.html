@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 基于dplyr包的数据处理</title>
 <style>
@@ -19,7 +19,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -79,7 +79,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -88,6 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -105,25 +111,23 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   "showHighlights": "always",
   "enableExperimentalNewNoteButton": true
 }
-</script><script async="" src="https://hypothes.is/embed.js"></script>
+</script><script async="" src="https://hypothes.is/embed.js"></script><script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
 <meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 基于dplyr包的数据处理">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://djhcod.github.io/r-notes/r_basic/images/logo-2.png">
-<meta property="og:site-name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
-<meta property="og:image:height" content="277">
-<meta property="og:image:width" content="240">
+<meta property="og:site_name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
 <meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 基于dplyr包的数据处理">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://djhcod.github.io/r-notes/r_basic/images/logo-2.png">
-<meta name="twitter:image-height" content="277">
-<meta name="twitter:image-width" content="240">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 <body class="nav-sidebar docked nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
     <img src="../images/logo.jpg" alt="" class="navbar-logo"></a>
     <a class="navbar-brand" href="../index.html">
@@ -137,50 +141,51 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link active" href="../index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../r_basic/r_basics.html" rel="" target="">
- <span class="menu-text">R语言基础</span></a>
+    <a class="nav-link" href="../r_basic/r_basics.html"> 
+<span class="menu-text">R语言基础</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">单细胞数据分析</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-">
 <li>
-    <a class="dropdown-item" href="../single_cell/single_cell_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../single_cell/single_cell_intro.html">
  <span class="dropdown-text">单细胞数据分析介绍</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../single_cell/seurat/seurat_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../single_cell/seurat/seurat_intro.html">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../single_cell/scRNA-seq_online/00_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../single_cell/scRNA-seq_online/00_intro.html">
  <span class="dropdown-text">scRNA-seq_online学习材料</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../single_cell/sc_supplementary/sc_supplementary_intro.html">
  <span class="dropdown-text">单细胞补充内容</span></a>
   </li>  
     </ul>
 </li>
   <li class="nav-item">
-    <a class="nav-link" href="../quarto_foundation/quarto_foundation.html" rel="" target="">
- <span class="menu-text">Quarto基础</span></a>
+    <a class="nav-link" href="../quarto_foundation/quarto_foundation.html"> 
+<span class="menu-text">Quarto基础</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item">
-    <a class="nav-link" href="https://bookdown.org" rel="" target=""><i class="bi bi-book-fill" role="img">
+    <a class="nav-link" href="https://bookdown.org"> <i class="bi bi-book-fill" role="img">
 </i> 
- <span class="menu-text">Bookdown</span></a>
+<span class="menu-text">Bookdown</span></a>
   </li>  
 </ul>
-<div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/djhcod/r-notes" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/djhcod/r-notes" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
@@ -188,19 +193,18 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   </div>
 </a>
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../r_basic/r_basics.html">R语言基础</a></li><li class="breadcrumb-item"><a href="../r_basic/dplyr.html">基于dplyr包的数据处理</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../r_basic/r_basics.html">R语言基础</a></li><li class="breadcrumb-item"><a href="../r_basic/dplyr.html">基于dplyr包的数据处理</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
@@ -510,7 +514,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 </li>
     </ul>
 </div>
-</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">On this page</h2>
@@ -518,7 +522,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   <ul>
 <li><a href="#%E4%BB%8B%E7%BB%8D" id="toc-介绍" class="nav-link active" data-scroll-target="#%E4%BB%8B%E7%BB%8D"><span class="header-section-number">1</span> 介绍</a></li>
   <li>
-<a href="#%E7%AE%A1%E9%81%93%E6%93%8D%E4%BD%9C%E7%AC%A6" id="toc-管道操作符" class="nav-link" data-scroll-target="#%E7%AE%A1%E9%81%93%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="header-section-number">2</span> 管道操作符</a>
+<a href="#sec-%E7%AE%A1%E9%81%93%E6%93%8D%E4%BD%9C%E7%AC%A6" id="toc-sec-管道操作符" class="nav-link" data-scroll-target="#sec-%E7%AE%A1%E9%81%93%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="header-section-number">2</span> 管道操作符</a>
   <ul class="collapse">
 <li><a href="#%E7%AE%A1%E9%81%93%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95" id="toc-管道的基本用法" class="nav-link" data-scroll-target="#%E7%AE%A1%E9%81%93%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="header-section-number">2.1</span> 管道的基本用法</a></li>
   <li><a href="#%E7%AE%A1%E9%81%93%E7%9A%84%E8%BF%9B%E9%98%B6%E7%94%A8%E6%B3%95" id="toc-管道的进阶用法" class="nav-link" data-scroll-target="#%E7%AE%A1%E9%81%93%E7%9A%84%E8%BF%9B%E9%98%B6%E7%94%A8%E6%B3%95"><span class="header-section-number">2.2</span> <strong>管道的进阶用法</strong></a></li>
@@ -543,10 +547,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   <li>
 <a href="#%E5%AF%B9%E5%88%97%E7%9A%84%E6%93%8D%E4%BD%9C" id="toc-对列的操作" class="nav-link" data-scroll-target="#%E5%AF%B9%E5%88%97%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="header-section-number">4</span> 对列的操作</a>
   <ul class="collapse">
-<li><a href="#mutate" id="toc-mutate" class="nav-link" data-scroll-target="#mutate"><span class="header-section-number">4.1</span> <code>mutate()</code></a></li>
+<li><a href="#sec-mutate" id="toc-sec-mutate" class="nav-link" data-scroll-target="#sec-mutate"><span class="header-section-number">4.1</span> <code>mutate()</code></a></li>
   <li><a href="#select" id="toc-select" class="nav-link" data-scroll-target="#select"><span class="header-section-number">4.2</span> <code>select()</code></a></li>
   <li>
-<a href="#rename" id="toc-rename" class="nav-link" data-scroll-target="#rename"><span class="header-section-number">4.3</span> <code>rename()</code></a>
+<a href="#sec-rename" id="toc-sec-rename" class="nav-link" data-scroll-target="#sec-rename"><span class="header-section-number">4.3</span> <code>rename()</code></a>
   <ul class="collapse">
 <li><a href="#rename_with" id="toc-rename_with" class="nav-link" data-scroll-target="#rename_with"><code>rename_with()</code></a></li>
   </ul>
@@ -565,10 +569,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   <li><a href="#by" id="toc-by" class="nav-link" data-scroll-target="#by"><span class="header-section-number">5.6</span> <code>.by</code></a></li>
   </ul>
 </li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/r_basic/dplyr.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/r_basic/dplyr.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../r_basic/r_basics.html">R语言基础</a></li><li class="breadcrumb-item"><a href="../r_basic/dplyr.html">基于dplyr包的数据处理</a></li></ol></nav><div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">基于dplyr包的数据处理</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
@@ -582,6 +586,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   </div>
   
 
+
 </header><blockquote class="blockquote">
 <p>参考：</p>
 <p><a href="https://dplyr.tidyverse.org/index.html"><em>dplyr官方文档</em></a></p>
@@ -591,7 +596,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <section id="介绍" class="level1" data-number="1"><h1 data-number="1">
 <span class="header-section-number">1</span> 介绍</h1>
 <p><code>dplyr</code>包是<code>tidyverse</code>的核心包之一，为数据处理提供了一系列方便快捷的函数。本章将以<code>nycflights13</code>包中的flights案例数据来介绍基于dplyr包的数据处理语法。该数据集包含 2013 年从纽约市起飞的所有 336,776 次航班的信息。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-1_c011a339dc938c4fae6d7098eb02e6c9">
+<div class="cell">
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">flights</span>, package <span class="op">=</span> <span class="st">"nycflights13"</span><span class="op">)</span></span>
@@ -617,7 +622,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 </div>
 </div>
 <p>这里的flights数据是一个 tibble，这是一种升级版的data.frame，被 tidyverse 用来避免一些data.frame的常见问题。Tibbles 和data.frame之间的一个重要的区别在于 tibbles 打印数据的方式：tibbles 是为大型数据集设计的，因此只显示前几行和适应屏幕宽度的列（如上）。可以使用 <code>print(flights, width = Inf)</code> 显示所有列，或者使用 <code><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse()</a></code>：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-2_3337a29fffb03af76a072b7d14b02ac7">
+<div class="cell">
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">flights</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 336,776
@@ -644,10 +649,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05:00:00, 2013-01-
 </div>
 </div>
 <p>在这两种视图中，变量名下方或后面都有相应的缩写，代表每个变量的类型：<code>&lt;int&gt;</code> 代表整数型数据，<dbl> 代表数值型数据，<chr> 代表字符型数据，<dttm> 代表日期时间型数据。这些变量非常重要，因为对列进行的操作在很大程度上取决于该列的 “类型”。更多关于tibble的说明参考<code>tibble</code>包的<a href="https://tibble.tidyverse.org/index.html">官方文档</a>。</dttm></chr></dbl></p>
-<div class="quarto-figure quarto-figure-left">
-<figure class="figure"><p><a href="https://tibble.tidyverse.org/index.html"><img src="images/logo.png" class="img-fluid figure-img" width="157"></a></p>
-</figure>
-</div>
+<p><a href="https://tibble.tidyverse.org/index.html"><img src="images/logo.png" class="img-fluid" width="157"></a></p>
 <p><code>dplyr</code>语法的共同特点：</p>
 <ul>
 <li><p>第一个参数始终是数据集（tibble或data.frame）的名字。</p></li>
@@ -655,22 +657,25 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05:00:00, 2013-01-
 <li><p>输出总是一个新的tibble或data.frame。</p></li>
 </ul>
 <p><code>dplyr</code> 的函数可以根据它们的操作对象分为四类：分别是对行进行操作的函数、对列进行操作的函数、对表进行操作的函数以及分组统计函数，同时还包括一个特殊的管道符号<code>%&gt;%</code>。本章将介绍除对表进行操作之外的函数。</p>
-</section><section id="管道操作符" class="level1" data-number="2"><h1 data-number="2">
+</section><section id="sec-管道操作符" class="level1" data-number="2"><h1 data-number="2">
 <span class="header-section-number">2</span> 管道操作符</h1>
 <blockquote class="blockquote">
 <p>参考：<a href="https://mp.weixin.qq.com/s?__biz=MzUzMTEwODk0Ng==&amp;mid=2247512157&amp;idx=1&amp;sn=47466392bd7c54e17c57b232b29b551b&amp;chksm=fa457560cd32fc76da55c346ef08917343322ecb5d24b3b591d9c65549ed1f0ca10f57f1105d&amp;mpshare=1&amp;scene=1&amp;srcid=0407dIwqephXlKmnMrPSvpRb&amp;sharer_sharetime=1680842848403&amp;sharer_shareid=568f49cb24905bf546294e6985a632bf#rd"><em>生信菜鸟团-R tips: R管道的用法</em></a></p>
 </blockquote>
 <p>R中有两种管道操作符（pipe operator)，分别是R自带的来自<code>base</code>包的<code>|&gt;</code>，和来自<code>magrittr</code><strong>包（上级包是</strong><code>dplyr</code>和<code>tidyverse</code><strong>）</strong>的<code>%&gt;%</code>。我们可以将管道操作符理解为车间里的流水线，经过前一步加工的产品才能进入后一步进一步加工，其作用是将上一步的结果直接传参给下一步的函数，从而<strong>省略了中间的赋值步骤</strong>，可以大量<strong>减少中间变量</strong>，节省内存。例如：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-3_611839ab288940fee989815a2e0576c5">
+<div class="cell">
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 不使用管道操作服</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="dplyr_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="dplyr_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-4_7a7e21695bfc5bcb89da5cbc25c35c7e">
+</div>
+<div class="cell">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 管道调用</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co"># or</span></span>
@@ -678,7 +683,7 @@ $ time_hour      &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05:00:00, 2013-01-
 </div>
 <p>如果<code>x</code>, <code>y</code>并不会被后面的代码用到的话，那么减少这种中间变量的产生是有利于代码的整洁和降低变量冲突的风险的。</p>
 <p>如果不使用管道操作，同时要避免产生中间变量的话就需要嵌套代码，而管道操作则通过一种链式调用的方式去写嵌套调用的代码，使代码更清晰和易于理解。比如：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-5_2d1e5dcc0cb8c51f21be540a5bc007cb">
+<div class="cell">
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 嵌套调用</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -710,7 +715,7 @@ Tip
 <span class="header-section-number">2.1</span> 管道的基本用法</h2>
 <p>管道的用法就是通过管道符<code>|&gt;</code>或<code>%&gt;%</code>串联起来前后的两个函数调用，先计算管道符号左边的函数调用，然后将其结果自动传递给管道符号右边函数的<strong>第一个参数（默认）</strong>，然后对运行这个函数，正如上面的例子中提到的一样。<strong>如果不想把值传递给第一个参数，则可以用占位符<code>_</code>（适用于</strong><code>|&gt;</code>）或<strong><code>.</code>（适用于<code>%&gt;%</code>）的形式指定把前面的运算结果传递给哪个参数</strong>。</p>
 <p>比如想在mtcars数据集的车名中寻找所有以“M”开头的车名，则可以通过如下方式寻找：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-6_d48dd4a2f8d2b221237c4334d96ca0d2">
+<div class="cell">
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">grep</a></span><span class="op">(</span><span class="st">"^M"</span>, x <span class="op">=</span> <span class="va">_</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  1  2  8  9 10 11 12 13 14 31</code></pre>
@@ -724,7 +729,7 @@ Tip
 </div>
 <p>解释如下：在<code>grep</code>函数那里，由于我们想在车名（这里是行名）中找到符合特定<code>pattern</code>的车名位置，因此需要把车名传给<code>grep</code>的第二个参数<code>x</code>，所以就可以<code>.</code>或<code>_</code>的形式将前面的值传给<code>grep</code>的<code>x</code>。</p>
 <p><strong>⚠️注意：传给其他位置的<code>.</code>必须是独立的</strong>，不能在一个表达式（函数）中，比如如下情况，我只想寻找前10个车名中以“M”开头的车名位置：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-7_4251ec8bc4b829f494c52ef2e60a4171">
+<div class="cell">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 错误 ---------------</span></span>
 <span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="va">rownames</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">grep</a></span><span class="op">(</span><span class="st">"^M"</span>, x <span class="op">=</span> <span class="va">.</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -741,7 +746,7 @@ only the first element will be used</code></pre>
 </div>
 </div>
 <p>上面的错误调用中，传递给<code>grep</code>的<code>x</code>参数的是一个表达式<code>.[1:10]</code>，不是一个单独的<code>.</code>了，因此失去了调整前面值的位置的作用，它就等价于如下调用：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-8_00f6bffe0365a2a93dc1b3a3e7c41706">
+<div class="cell">
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 错误  ---------------</span></span>
 <span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="va">rownames</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">grep</a></span><span class="op">(</span><span class="st">"^M"</span>, x <span class="op">=</span> <span class="va">.</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
@@ -753,26 +758,26 @@ only the first element will be used</code></pre>
 <span class="header-section-number">2.2</span> <strong>管道的进阶用法</strong>
 </h2>
 <p>我们可以通过“{}”符号包裹后续函数，在“{}”内的代码，可以任意的使用多个占位符<code>.</code>去传递管道前的值。还是上面的例子：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-9_6af3978432bf10e4bd401c295af19e75">
+<div class="cell">
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>  <span class="fu"><a href="https://rdrr.io/r/base/grep.html">grep</a></span><span class="op">(</span><span class="st">"^M"</span>, x <span class="op">=</span> <span class="va">.</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># 用“{}”的形式 ---------------</span></span>
 <span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="va">rownames</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html">grep</a></span><span class="op">(</span><span class="st">"^M"</span>, x <span class="op">=</span> <span class="va">.</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span><span class="op">}</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>⚠️注意，<code>|&gt;</code>不支持“{}”形式：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-10_7a2a295b0776969e50d290cc07c70f6a">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 错误：</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>mtcars <span class="sc">|&gt;</span> <span class="fu">rownames</span>() <span class="sc">|&gt;</span> {<span class="fu">grep</span>(<span class="st">"^M"</span>, <span class="at">x =</span> _[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>这也反映出<code>base</code>包<code>|&gt;</code>功能的局限性。</p>
 <p>本质上“{}”是<code>magrittr</code>改写的一个匿名函数，只有唯一的一个参数，也就是<code>.</code> ：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-11_172c31e62235fb636d90978f8d599de4">
+<div class="cell">
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw">function</span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># any code</span></span>
 <span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>比如想要获取mtcars的前5行前5列，然后更改行名和列名后，再返回这个数据框：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-12_4a2ed4a56c588035a0737d2b1d83d1c0">
+<div class="cell">
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="va">.</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"row"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span>
@@ -790,7 +795,7 @@ row5 18.7    8  360  175 3.15</code></pre>
 </div>
 </div>
 <p>⚠️注意，在整个“{}”包括的语句中，如果再使用管道要注意这时的占位符.代表的是“{}”内的对象。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-13_4f0f35db305a177f4b313b8713ca7c28">
+<div class="cell">
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="va">.</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"row"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span>
@@ -824,7 +829,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 <p><code>magrittr</code>包内除了<code>%&gt;%</code>管道符外，还提供了<code>%$%</code>、<code>%&lt;&gt;%</code>、<code>%T&gt;%</code>、<code>%!&gt;%</code>，他们的作用简述如下：</p>
 <section id="section" class="level3"><h3 class="anchored" data-anchor-id="section"><code>%$%</code></h3>
 <p>用于传递管道左侧数据的names：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-14_d86f545e341baf7ccc1c016b4de6a4bc">
+<div class="cell">
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"   "am"   "gear"
@@ -833,14 +838,20 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># mtcars的每个元素都可以被后面的函数所使用</span></span>
 <span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html">%$%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">cyl</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="dplyr_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="dplyr_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
 </div>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-15_dc5ec39ba6fdea74b633599904065f59">
+</div>
+<div class="cell">
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 等价于</span></span>
 <span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">.</span><span class="op">[</span>,<span class="st">"mpg"</span><span class="op">]</span>, <span class="va">.</span><span class="op">[</span>, <span class="st">"cyl"</span><span class="op">]</span><span class="op">)</span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="dplyr_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="dplyr_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -849,7 +860,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 </section><section id="section-1" class="level3"><h3 class="anchored" data-anchor-id="section-1"><code>%&lt;&gt;%</code></h3>
 <p>将管道的结果最终再赋值回最左侧的变量：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-16_8baa8fbc74890db8228b56ebc3b5b458">
+<div class="cell">
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
 <span><span class="va">x</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -863,20 +874,23 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 <pre><code>[1]  7.654302  8.792934 10.277429 10.429125 11.084441</code></pre>
 </div>
 </div>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-17_0a5e11fd5e1be8ce1177dd05cfe878ad">
+<div class="cell">
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 等价于</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="op">{</span><span class="va">.</span> <span class="op">+</span> <span class="fl">10</span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section><section id="t" class="level3"><h3 class="anchored" data-anchor-id="t"><code>%T&gt;%</code></h3>
 <p>分支管道，传入左侧的值并运算后将原始值而不是运算结果传递给后续管道。这在多个管道中间使用<code><a href="https://rdrr.io/r/base/print.html">print()</a></code>、<code><a href="https://rdrr.io/r/graphics/plot.default.html">plot()</a></code>或<code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code>这些函数返回信息时非常有用。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-18_31d99e96fea320e03d940c51187c3611">
+<div class="cell">
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># 传递给sum()的是前面所有函数的运算结果，由于plot()不返回任何数值，所以sum()的结果为0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/tee.html">%T&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># 传递给sum()的是1:5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="dplyr_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="dplyr_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 15</code></pre>
@@ -887,7 +901,10 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 <span>  <span class="va">plot</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/colSums.html">colSums</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># 传递给colSums()的是“rnorm(200) %&gt;% matrix(ncol = 2)”</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="dplyr_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="dplyr_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -15.23708   7.82692</code></pre>
@@ -900,7 +917,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </h2>
 <p><img src="images/截屏2024-02-02 17.29.00.png" class="img-fluid" width="173"></p>
 <p>用于提取满足某（些）条件的行，基本等同于<a href="../r_basic/basic_data_function.html#sec-筛选数据"><code>subset()</code></a>。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-19_b26a1c381fc344cd3e78d12ca8cfc84e">
+<div class="cell">
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 查找所有晚点 120 分钟（两小时）以上起飞的航班：</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">dep_delay</span> <span class="op">&gt;</span> <span class="fl">120</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -947,8 +964,8 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </section><section id="arrange" class="level2" data-number="3.2"><h2 data-number="3.2" class="anchored" data-anchor-id="arrange">
 <span class="header-section-number">3.2</span> <code>arrange()</code>
 </h2>
-<p>排序，以某列为依据对行进行排序（在前面的数据<a href="../r_basic/basic_data_function.html#sec-排序">处理基本函数</a>一章中已涉及该函数）。对应的功能在<code>base</code>包中是<code><a href="https://rdrr.io/r/base/order.html">order()</a></code>函数。如果提供的列名不止一个，则依次根据提供的列的顺序对数据进行排序。例如，下面的代码按航班出发时间排序，出发时间分布在四列中。我们首先得到最早的年份，然后在一年内得到最早的月份，依此类推。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-20_935c9354168899f58c684ee23cbd4151">
+<p>排序，以某列为依据对行进行排序（在前面的<a href="../r_basic/basic_data_function.html#sec-排序">数据处理基本函数</a>一章中已涉及该函数）。对应的功能在<code>base</code>包中是<code><a href="https://rdrr.io/r/base/order.html">order()</a></code>函数。如果提供的列名不止一个，则依次根据提供的列的顺序对数据进行排序。例如，下面的代码按航班出发时间排序，出发时间分布在四列中。我们首先得到最早的年份，然后在一年内得到最早的月份，依此类推。</p>
+<div class="cell">
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">year</span>, <span class="va">month</span>, <span class="va">day</span>, <span class="va">dep_time</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 336,776 × 19
@@ -971,7 +988,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 </div>
 <p>可以加上<code><a href="https://dplyr.tidyverse.org/reference/desc.html">desc()</a></code>实现降序排列：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-21_0b3a5585110a6ae40f48c991dec1f9ec">
+<div class="cell">
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">flights</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html">desc</a></span><span class="op">(</span><span class="va">dep_delay</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 336,776 × 19
@@ -998,7 +1015,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </h2>
 <p><img src="images/截屏2024-02-02 17.29.29.png" class="img-fluid" width="212"></p>
 <p>查找数据集中所有唯一的行。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-22_ff85d38ee38969c5e85b8ac99d78add0">
+<div class="cell">
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 移除所有完全相同的行</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html">distinct</a></span><span class="op">(</span><span class="va">flights</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1040,7 +1057,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 </div>
 <p>可以看到，如果根据某列或某几列为依据来查找非重复值，那么默认只输出这几列，我们可以通过加入<code>.keep_all = TRUE</code>参数来保留其他列。<code>.</code>表示 <code>.keep_all</code> 是函数的一个参数，而不另一个变量的名称。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-23_46472f891fc73946b0a2ce563776e6b9">
+<div class="cell">
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html">distinct</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">origin</span>, <span class="va">dest</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 224 × 19
@@ -1064,7 +1081,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 <p>可以发现所有这些不同的航班都是在 1 月 1 日，这绝非巧合：distinct() 会在数据集中找到唯一值第一次出现的那一行，并舍弃其他行。</p>
 <p>如果要得到每种出发地和目的地配对出现的次数，可以将 <code><a href="https://dplyr.tidyverse.org/reference/distinct.html">distinct()</a></code> 换成 <code><a href="https://dplyr.tidyverse.org/reference/count.html">count()</a></code>，并可使用 <code>sort = TRUE</code> 参数按出现次数降序排列。<code><a href="https://dplyr.tidyverse.org/reference/count.html">count()</a></code>同样来自<code>dplyr</code>包，用于快速统计一个或多个变量的唯一值的出现次数。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-24_10a5df190f09236c1b8b12db09467fe8">
+<div class="cell">
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/count.html">count</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">origin</span>, <span class="va">dest</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 224 × 3
@@ -1085,12 +1102,12 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 </section></section><section id="对列的操作" class="level1" data-number="4"><h1 data-number="4">
 <span class="header-section-number">4</span> 对列的操作</h1>
-<section id="mutate" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="mutate">
+<section id="sec-mutate" class="level2" data-number="4.1"><h2 data-number="4.1" class="anchored" data-anchor-id="sec-mutate">
 <span class="header-section-number">4.1</span> <code>mutate()</code>
 </h2>
 <p><img src="images/截屏2024-02-02 17.31.09.png" class="img-fluid" width="199"></p>
 <p><code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code>的作用是根据现有列计算并添加新列。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-25_c990018a1104a914836f45debca186f5">
+<div class="cell">
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 计算延误航班在空中停留的时间（gain）以及平均速度（speed，英里/小时）：</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>  <span class="va">flights</span>,</span>
@@ -1118,7 +1135,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 </div>
 <p>默认情况下，<code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> 会在数据集的最右侧添加计算后的新列，因此很难看到这里发生了什么。我们可以使用 <code>.before</code> 参数将变量添加到数据集的左侧：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-26_4475d7d9283d573fe35b026fd885f2a1">
+<div class="cell">
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>  <span class="va">flights</span>,</span>
 <span>  gain <span class="op">=</span> <span class="va">dep_delay</span> <span class="op">-</span> <span class="va">arr_delay</span>,</span>
@@ -1146,7 +1163,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 </div>
 <p>也可以使用 <code>.after</code> 指定新变量应该在哪个变量后添加，在 <code>.before</code> 和 <code>.after</code> 中，都可以使用变量名和列数两种方法指定新变量出现的位置。例如，我们可以在 “day” 之后添加新变量：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-27_cd540c45efc9822f4ba9149843414e19">
+<div class="cell">
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>  <span class="va">flights</span>,</span>
 <span>  gain <span class="op">=</span> <span class="va">dep_delay</span> <span class="op">-</span> <span class="va">arr_delay</span>,</span>
@@ -1180,7 +1197,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 <li><p><code>.keep = "unused"</code>：保留其他不用于计算新变量的旧变量。</p></li>
 </ul>
 <p>例如，下面的输出将只包含旧变量 “dep_delay”、“arr_delay”、“distance”、“air_time”，以及新变量“gain”、“speed”：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-28_44c5df1cf7c465bec89e07af1018696a">
+<div class="cell">
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>  <span class="va">flights</span>,</span>
 <span>  gain <span class="op">=</span> <span class="va">dep_delay</span> <span class="op">-</span> <span class="va">arr_delay</span>,</span>
@@ -1209,7 +1226,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </h2>
 <p><img src="images/截屏2024-02-02 17.30.02.png" class="img-fluid" width="201"></p>
 <p>选择并输出某几列。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-29_806aa6be7a345412b87e3b8b18cee5b0">
+<div class="cell">
 <div class="sourceCode" id="cb68"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 根据列名选择某几列</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">year</span>, <span class="va">month</span>, <span class="va">day</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1293,7 +1310,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 <li><p><code>num_range("x", 1:3)</code>: 列名<code>x1</code>,&nbsp;<code>x2</code> 和 <code>x3</code>.</p></li>
 </ul>
 <p>可以在选择变量的同时使用 <code>=</code> 对这些变量进行重命名。新变量名在 <code>=</code> 的左侧，旧变量名在右侧（<code>new_name = old_name</code>）：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-30_3a9ca9cae0eddbe66b7836f034fdb920">
+<div class="cell">
 <div class="sourceCode" id="cb76"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">flights</span>, tail_num <span class="op">=</span> <span class="va">tailnum</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 336,776 × 1
@@ -1312,11 +1329,11 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 # ℹ 336,766 more rows</code></pre>
 </div>
 </div>
-</section><section id="rename" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="rename">
+</section><section id="sec-rename" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="sec-rename">
 <span class="header-section-number">4.3</span> <code>rename()</code>
 </h2>
 <p>重命名列。新变量名在 <code>=</code> 的左侧，旧变量名在右侧。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-31_a5c00510a2e4d0948819ad3115ca0b53">
+<div class="cell">
 <div class="sourceCode" id="cb78"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span></span>
 <span>  <span class="va">flights</span>, </span>
 <span>  years <span class="op">=</span> <span class="va">year</span>, </span>
@@ -1344,7 +1361,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 <p>⚠️和其他<code>dplyr</code>中的函数一样，<code>rename</code>不会对原始数据进行修改，因此需要将<code>rename</code>后的数据重新赋值给新的对象或覆盖原来的对象以应用对变量名的修改。</p>
 <p>如果我们有一个提供了重命名依据的字符串向量，那么可以通过<code><a href="https://tidyselect.r-lib.org/reference/all_of.html">all_of()</a></code>来基于这个字符串向量对数据集的列进行重命名：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-32_a43c53405eeb6296734f3370e2443800">
+<div class="cell">
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lookup</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>  years <span class="op">=</span> <span class="st">"year"</span>, </span>
 <span>  months <span class="op">=</span> <span class="st">"month"</span></span>
@@ -1371,7 +1388,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 </div>
 <p>如果提供重命名依据的字符串向量中有的变量是原数据集中不存在的，那么可以用 <code><a href="https://tidyselect.r-lib.org/reference/all_of.html">any_of()</a></code>代替 <code><a href="https://tidyselect.r-lib.org/reference/all_of.html">all_of()</a></code> 来实现：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-33_57b9cd0c5fb82b423718cdc97f152fe5">
+<div class="cell">
 <div class="sourceCode" id="cb82"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lookup</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
 <span>  years <span class="op">=</span> <span class="st">"year"</span>, </span>
 <span>  months <span class="op">=</span> <span class="st">"month"</span>,</span>
@@ -1400,7 +1417,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 <section id="rename_with" class="level3"><h3 class="anchored" data-anchor-id="rename_with"><code>rename_with()</code></h3>
 <p>根据函数批量重命名列。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-34_e4cab28d40f18475283b9485b0fefc33">
+<div class="cell">
 <div class="sourceCode" id="cb84"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 将所有列名变为大写</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename_with</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">toupper</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1496,7 +1513,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 <span class="header-section-number">4.4</span> <code>relocate()</code>
 </h2>
 <p>调整列的顺序。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-35_bcfeb5d9460a295277153ba0307d702c">
+<div class="cell">
 <div class="sourceCode" id="cb92"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 将“day”和“year”放到最前面</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">day</span>, <span class="va">year</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1520,7 +1537,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 </div>
 <p>也可以和上面的[mutate()]一样通过<code>.before</code>&nbsp;和&nbsp;<code>.after</code>&nbsp;参数指定放置位置：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-36_c42770d6b0eec835374882d8761ba2d0">
+<div class="cell">
 <div class="sourceCode" id="cb94"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 将“year”和“dep_time”及其之间的列放到“sched_dep_time”之后</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">year</span><span class="op">:</span><span class="va">dep_time</span>, .after <span class="op">=</span> <span class="va">sched_dep_time</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1571,7 +1588,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </h2>
 <p><img src="images/截屏2024-02-02 17.26.52.png" class="img-fluid" width="240"></p>
 <p>根据某一列或几列将数据分组，便于后续的分组统计/运算。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-37_0a2121d5b57d056b13b1a6f1404877b1">
+<div class="cell">
 <div class="sourceCode" id="cb98"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">month</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 336,776 × 19
@@ -1599,7 +1616,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 <span class="header-section-number">5.2</span> <code>summarize()</code>
 </h2>
 <p>分组汇总数据。根据某列或某几列的数据汇总一个包含了统计数据的新表。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-38_3b32c1a1c33e1448a69e74e43766625b">
+<div class="cell">
 <div class="sourceCode" id="cb100"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 计算每月的平均起飞延误时间</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">month</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>avg_delay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">dep_delay</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1622,7 +1639,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 </div>
 <p>可以看到，这里出现了问题，所有的结果都是“NA”。这是因为一些航班在延误时间（dep_delay）列中有缺失数据，所以当我们计算包括这些缺失值的平均值时，得到了一个NA结果。所以需要在mean()中设置参数 <code>na.rm = TRUE</code> 来忽略所有缺失值：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-39_6877b6f6fcb2a689b3a3992a99ede0e8">
+<div class="cell">
 <div class="sourceCode" id="cb102"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 计算每月的平均起飞延误时间</span></span>
 <span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">month</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>avg_delay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">dep_delay</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1645,7 +1662,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 </div>
 <p>可以在单次对summarize()的调用中创建任意数量的数据汇总。但其中一个非常有用的汇总函数是<code><a href="https://dplyr.tidyverse.org/reference/context.html">n()</a></code>，它返回每个组中行数：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-40_10fe22c5da519766a12c3e0cd89f8520">
+<div class="cell">
 <div class="sourceCode" id="cb104"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 计算每月的平均起飞延误时间和延误航班数量</span></span>
 <span><span class="va">flights</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">month</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -1682,7 +1699,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 <li><p><code>df |&gt; slice_sample(n = 1)</code>&nbsp;从每一组中随机取n行数据.</p></li>
 </ul>
 <p>其中的<code>n</code>参数指定需要提取的行数，同时，也可以用<code>prop</code>参数指定从每组中提取多少比例的行。例如，<code>prop = 0.1</code> 表示从每组中提取10%的行。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-41_6fa1d6b356613e6ecf9e45fb5630aaea">
+<div class="cell">
 <div class="sourceCode" id="cb106"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 找出到达每个目的地的延误最严重的航班</span></span>
 <span><span class="va">flights</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">dest</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
@@ -1719,7 +1736,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 </div>
 <p>上面的例子中，<code><a href="https://dplyr.tidyverse.org/reference/relocate.html">relocate()</a></code>函数后用到了分支管道[%T&gt;%]，先通过<code><a href="https://rdrr.io/r/base/print.html">print()</a></code>把分组统计的结果打印出来，然后通过<code><a href="https://rdrr.io/r/base/nrow.html">nrow()</a></code>返回分组统计数据的行数。结果发现有108行，和原来数据的105行不符合，这是因为有的目的地可能有几架次并列延误最严重的航班。例如，第22行和23行的航班信息：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-42_4600e1cbb28bb77ed8fedc3ade23ae81">
+<div class="cell">
 <div class="sourceCode" id="cb111"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">flights</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">dest</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice_max</a></span><span class="op">(</span>order_by <span class="op">=</span> <span class="va">arr_delay</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -1740,7 +1757,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </section><section id="多变量分组统计" class="level2" data-number="5.4"><h2 data-number="5.4" class="anchored" data-anchor-id="多变量分组统计">
 <span class="header-section-number">5.4</span> 多变量分组统计</h2>
 <p>例如分别统计每个日期（年+月+日）的航班数量：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-43_a83be93f90371f097aa608f842e13847">
+<div class="cell">
 <div class="sourceCode" id="cb113"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">daily</span> <span class="op">&lt;-</span> <span class="va">flights</span> <span class="op">|&gt;</span>  </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">month</span>, <span class="va">day</span><span class="op">)</span></span>
 <span></span>
@@ -1770,7 +1787,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 <li><p><code>.groups = "drop"</code>：<code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code>后取消分组。</p></li>
 <li><p><code>.groups = "keep"</code>：<code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code>后保留原分组。</p></li>
 </ul>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-44_6d5287c7346de66ea1e759bfc433732b">
+<div class="cell">
 <div class="sourceCode" id="cb115"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">flights</span> <span class="op">|&gt;</span>  </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">month</span>, <span class="va">day</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span></span>
@@ -1799,7 +1816,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 <span class="header-section-number">5.5</span> <code>ungroup()</code>
 </h2>
 <p>取消分组。</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-45_4fe5036686dbc2df4e391732a7fc58ba">
+<div class="cell">
 <div class="sourceCode" id="cb117"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">daily</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span></span>
@@ -1816,12 +1833,9 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </section><section id="by" class="level2" data-number="5.6"><h2 data-number="5.6" class="anchored" data-anchor-id="by">
 <span class="header-section-number">5.6</span> <code>.by</code>
 </h2>
-<div class="quarto-figure quarto-figure-left">
-<figure class="figure"><p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="images/截屏2024-02-02 17.05.04.png" class="img-fluid figure-img" width="147"></a></p>
-</figure>
-</div>
+<p><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental"><img src="images/截屏2024-02-02 17.05.04.png" class="img-fluid" width="147"></a></p>
 <p>dplyr从1.1.0版本开始包括了一个新的实验性语法，用于直接在统计函数中指定分组依据，即 <code>.by</code> 参数。<code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code> 和 <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">ungroup()</a></code> 不会消失，但现在也可以使用 <code>.by</code> 参数来在单个操作中进行分组：</p>
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-46_d916e64191607d58c770b033fdb63552">
+<div class="cell">
 <div class="sourceCode" id="cb119"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">flights</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize</a></span><span class="op">(</span></span>
 <span>    avg_delay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">dep_delay</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, </span>
@@ -1932,7 +1946,7 @@ Session Info
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="cell" data-hash="dplyr_cache/html/unnamed-chunk-47_e870b88a95bb6330876a39d054cd9a4d">
+<div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.3.2 (2023-10-31)
 Platform: aarch64-apple-darwin20 (64-bit)
@@ -2014,6 +2028,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
   }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
   const toggleColorMode = (alternate) => {
     // Switch the stylesheets
     const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
@@ -2080,13 +2121,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -2216,10 +2259,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -2229,8 +2289,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -2243,6 +2312,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -2286,6 +2474,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -2311,6 +2500,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -2368,29 +2583,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-          // target, if specified
-          link.setAttribute("target", "_blank");
-      }
-    }
 });
 </script><script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../r_basic/basic_data_function.html" class="pagination-link">
+</script><input type="hidden" id="giscus-base-theme" value="light"><input type="hidden" id="giscus-alt-theme" value="dark"><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../r_basic/basic_data_function.html" class="pagination-link  aria-label=">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">数据处理基本函数</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../r_basic/character.html" class="pagination-link">
+      <a href="../r_basic/character.html" class="pagination-link" aria-label="字符的处理">
         <span class="nav-page-text">字符的处理</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -2424,7 +2625,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb128-31"><a href="#cb128-31" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(flights)</span>
 <span id="cb128-32"><a href="#cb128-32" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-33"><a href="#cb128-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-34"><a href="#cb128-34" aria-hidden="true" tabindex="-1"></a>在这两种视图中，变量名下方或后面都有相应的缩写，代表每个变量的类型：<span class="in">`&lt;int&gt;`</span> 代表整数型数据，<span class="kw">&lt;dbl&gt;</span> 代表数值型数据，<span class="kw">&lt;chr&gt;</span> 代表字符型数据，<span class="kw">&lt;dttm&gt;</span> 代表日期时间型数据。这些变量非常重要，因为对列进行的操作在很大程度上取决于该列的 "类型"。更多关于tibble的说明参考<span class="in">`tibble`</span>包的<span class="co">[</span><span class="ot">官方文档</span><span class="co">](https://tibble.tidyverse.org/index.html)</span>。</span>
+<span id="cb128-34"><a href="#cb128-34" aria-hidden="true" tabindex="-1"></a>在这两种视图中，变量名下方或后面都有相应的缩写，代表每个变量的类型：<span class="in">`&lt;int&gt;`</span> 代表整数型数据，&lt;dbl&gt; 代表数值型数据，&lt;chr&gt; 代表字符型数据，&lt;dttm&gt; 代表日期时间型数据。这些变量非常重要，因为对列进行的操作在很大程度上取决于该列的 "类型"。更多关于tibble的说明参考<span class="in">`tibble`</span>包的<span class="co">[</span><span class="ot">官方文档</span><span class="co">](https://tibble.tidyverse.org/index.html)</span>。</span>
 <span id="cb128-35"><a href="#cb128-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb128-36"><a href="#cb128-36" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="al">![](images/logo.png)</span><span class="ot">{width="157"}</span><span class="co">](https://tibble.tidyverse.org/index.html)</span></span>
 <span id="cb128-37"><a href="#cb128-37" aria-hidden="true" tabindex="-1"></a></span>
@@ -2438,7 +2639,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb128-45"><a href="#cb128-45" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb128-46"><a href="#cb128-46" aria-hidden="true" tabindex="-1"></a><span class="in">`dplyr`</span> 的函数可以根据它们的操作对象分为四类：分别是对行进行操作的函数、对列进行操作的函数、对表进行操作的函数以及分组统计函数，同时还包括一个特殊的管道符号<span class="in">`%&gt;%`</span>。本章将介绍除对表进行操作之外的函数。</span>
 <span id="cb128-47"><a href="#cb128-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-48"><a href="#cb128-48" aria-hidden="true" tabindex="-1"></a><span class="fu"># 管道操作符</span></span>
+<span id="cb128-48"><a href="#cb128-48" aria-hidden="true" tabindex="-1"></a><span class="fu"># 管道操作符 {#sec-管道操作符}</span></span>
 <span id="cb128-49"><a href="#cb128-49" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb128-50"><a href="#cb128-50" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 参考：</span><span class="co">[</span><span class="ot">*生信菜鸟团-R tips: R管道的用法*</span><span class="co">](https://mp.weixin.qq.com/s?__biz=MzUzMTEwODk0Ng==&amp;mid=2247512157&amp;idx=1&amp;sn=47466392bd7c54e17c57b232b29b551b&amp;chksm=fa457560cd32fc76da55c346ef08917343322ecb5d24b3b591d9c65549ed1f0ca10f57f1105d&amp;mpshare=1&amp;scene=1&amp;srcid=0407dIwqephXlKmnMrPSvpRb&amp;sharer_sharetime=1680842848403&amp;sharer_shareid=568f49cb24905bf546294e6985a632bf#rd)</span></span>
 <span id="cb128-51"><a href="#cb128-51" aria-hidden="true" tabindex="-1"></a></span>
@@ -2663,7 +2864,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb128-304"><a href="#cb128-304" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb128-305"><a href="#cb128-305" aria-hidden="true" tabindex="-1"></a><span class="fu">## `arrange()`</span></span>
 <span id="cb128-306"><a href="#cb128-306" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-307"><a href="#cb128-307" aria-hidden="true" tabindex="-1"></a>排序，以某列为依据对行进行排序（在前面的数据<span class="co">[</span><span class="ot">处理基本函数</span><span class="co">](/r_basic/basic_data_function.qmd#sec-排序)</span>一章中已涉及该函数）。对应的功能在<span class="in">`base`</span>包中是<span class="in">`order()`</span>函数。如果提供的列名不止一个，则依次根据提供的列的顺序对数据进行排序。例如，下面的代码按航班出发时间排序，出发时间分布在四列中。我们首先得到最早的年份，然后在一年内得到最早的月份，依此类推。</span>
+<span id="cb128-307"><a href="#cb128-307" aria-hidden="true" tabindex="-1"></a>排序，以某列为依据对行进行排序（在前面的<span class="co">[</span><span class="ot">数据处理基本函数</span><span class="co">](/r_basic/basic_data_function.qmd#sec-排序)</span>一章中已涉及该函数）。对应的功能在<span class="in">`base`</span>包中是<span class="in">`order()`</span>函数。如果提供的列名不止一个，则依次根据提供的列的顺序对数据进行排序。例如，下面的代码按航班出发时间排序，出发时间分布在四列中。我们首先得到最早的年份，然后在一年内得到最早的月份，依此类推。</span>
 <span id="cb128-308"><a href="#cb128-308" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb128-311"><a href="#cb128-311" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb128-312"><a href="#cb128-312" aria-hidden="true" tabindex="-1"></a><span class="fu">arrange</span>(flights, year, month, day, dep_time)</span>
@@ -2705,7 +2906,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb128-356"><a href="#cb128-356" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb128-357"><a href="#cb128-357" aria-hidden="true" tabindex="-1"></a><span class="fu"># 对列的操作</span></span>
 <span id="cb128-358"><a href="#cb128-358" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-359"><a href="#cb128-359" aria-hidden="true" tabindex="-1"></a><span class="fu">## `mutate()`</span></span>
+<span id="cb128-359"><a href="#cb128-359" aria-hidden="true" tabindex="-1"></a><span class="fu">## `mutate()` {#sec-mutate}</span></span>
 <span id="cb128-360"><a href="#cb128-360" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb128-361"><a href="#cb128-361" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-02-02%2017.31.09.png)</span>{width="199"}</span>
 <span id="cb128-362"><a href="#cb128-362" aria-hidden="true" tabindex="-1"></a></span>
@@ -2797,7 +2998,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb128-460"><a href="#cb128-460" aria-hidden="true" tabindex="-1"></a><span class="fu">select</span>(flights, <span class="at">tail_num =</span> tailnum)</span>
 <span id="cb128-461"><a href="#cb128-461" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-462"><a href="#cb128-462" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-463"><a href="#cb128-463" aria-hidden="true" tabindex="-1"></a><span class="fu">## `rename()`</span></span>
+<span id="cb128-463"><a href="#cb128-463" aria-hidden="true" tabindex="-1"></a><span class="fu">## `rename()` {#sec-rename}</span></span>
 <span id="cb128-464"><a href="#cb128-464" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb128-465"><a href="#cb128-465" aria-hidden="true" tabindex="-1"></a>重命名列。新变量名在 <span class="in">`=`</span> 的左侧，旧变量名在右侧。</span>
 <span id="cb128-466"><a href="#cb128-466" aria-hidden="true" tabindex="-1"></a></span>
@@ -3061,7 +3262,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </li>  
 </ul>
 </div>   
-    <div class="nav-footer-center">Copyright 2024, Du Junhong</div>
+    <div class="nav-footer-center">
+<p>Copyright 2024, Du Junhong</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/r_basic/dplyr.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
 <li class="nav-item compact">

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 细胞分群质量评估</title>
 <style>
@@ -19,7 +19,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -79,7 +79,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -88,6 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -105,21 +111,23 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   "showHighlights": "always",
   "enableExperimentalNewNoteButton": true
 }
-</script><script async="" src="https://hypothes.is/embed.js"></script>
+</script><script async="" src="https://hypothes.is/embed.js"></script><script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
 <meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 细胞分群质量评估">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/images/sc_workflow_2022-01.jpg">
-<meta property="og:site-name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
+<meta property="og:site_name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
 <meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 细胞分群质量评估">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/images/sc_workflow_2022-01.jpg">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 <body class="nav-sidebar docked nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
     <img src="../../images/logo.jpg" alt="" class="navbar-logo"></a>
     <a class="navbar-brand" href="../../index.html">
@@ -133,50 +141,51 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link active" href="../../index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link active" href="../../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../r_basic/r_basics.html" rel="" target="">
- <span class="menu-text">R语言基础</span></a>
+    <a class="nav-link" href="../../r_basic/r_basics.html"> 
+<span class="menu-text">R语言基础</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">单细胞数据分析</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-">
 <li>
-    <a class="dropdown-item" href="../../single_cell/single_cell_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/single_cell_intro.html">
  <span class="dropdown-text">单细胞数据分析介绍</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/seurat/seurat_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/seurat/seurat_intro.html">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/scRNA-seq_online/00_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/scRNA-seq_online/00_intro.html">
  <span class="dropdown-text">scRNA-seq_online学习材料</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html">
  <span class="dropdown-text">单细胞补充内容</span></a>
   </li>  
     </ul>
 </li>
   <li class="nav-item">
-    <a class="nav-link" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
- <span class="menu-text">Quarto基础</span></a>
+    <a class="nav-link" href="../../quarto_foundation/quarto_foundation.html"> 
+<span class="menu-text">Quarto基础</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item">
-    <a class="nav-link" href="https://bookdown.org" rel="" target=""><i class="bi bi-book-fill" role="img">
+    <a class="nav-link" href="https://bookdown.org"> <i class="bi bi-book-fill" role="img">
 </i> 
- <span class="menu-text">Bookdown</span></a>
+<span class="menu-text">Bookdown</span></a>
   </li>  
 </ul>
-<div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/djhcod/r-notes" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/djhcod/r-notes" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
@@ -184,19 +193,18 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   </div>
 </a>
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html">细胞分群质量评估</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html">细胞分群质量评估</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
@@ -506,7 +514,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 </li>
     </ul>
 </div>
-</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">On this page</h2>
@@ -537,10 +545,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 </li>
   <li><a href="#sec-Preliminary_cell_type_identification_results" id="toc-sec-Preliminary_cell_type_identification_results" class="nav-link" data-scroll-target="#sec-Preliminary_cell_type_identification_results"><span class="header-section-number">8</span> <strong>细胞类型初步鉴定结果</strong></a></li>
   <li><a href="#%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AE" id="toc-保存数据" class="nav-link" data-scroll-target="#%E4%BF%9D%E5%AD%98%E6%95%B0%E6%8D%AE"><span class="header-section-number">9</span> 保存数据</a></li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html">细胞分群质量评估</a></li></ol></nav><div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">细胞分群质量评估</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
@@ -553,6 +561,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
     
   </div>
   
+
 
 </header><div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -663,7 +672,10 @@ ctrl_AAACATACCATGCA-1                     13              13</code></pre>
 <span>        split.by <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">NoLegend</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <blockquote class="blockquote">
@@ -729,7 +741,10 @@ Caution
 <span>        split.by <span class="op">=</span> <span class="st">"Phase"</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">NoLegend</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <blockquote class="blockquote">
@@ -763,7 +778,10 @@ Tip
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <blockquote class="blockquote">
@@ -889,7 +907,10 @@ Caution
 <span>      <span class="op">}</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span>plotlist <span class="op">=</span> <span class="va">.</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="1920"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="1920"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>We can see how the clusters are represented by the different PCs. For instance, the genes driving <code>PC_2</code> exhibit higher expression in <strong>clusters 8 and 12</strong>. We could look back at our genes driving this PC to get an idea of what the cell types might be:</p>
@@ -902,14 +923,16 @@ Positive:  GNLY, CCL5, NKG7, GZMB, FGFBP2
 Negative:  CD74, IGHM, IGKC, HLA-DRA, CD79A </code></pre>
 </div>
 </div>
-<p>With the <strong>GNLY</strong> and <strong>NKG7</strong> genes as positive markers of <code>PC_2</code>, <strong>we can hypothesize that clusters 8 and 12 correspond to NK cells (</strong> <a href="#tbl-cell_type_markers">Table&nbsp;1</a> <strong>)</strong>. This just hints at what the clusters identity could be, with the identities of the clusters being determined through a combination of the PCs.</p>
+<p>With the <strong>GNLY</strong> and <strong>NKG7</strong> genes as positive markers of <code>PC_2</code>, <strong>we can hypothesize that clusters 8 and 12 correspond to NK cells (</strong> <a href="#tbl-cell_type_markers" class="quarto-xref">Table&nbsp;1</a> <strong>)</strong>. This just hints at what the clusters identity could be, with the identities of the clusters being determined through a combination of the PCs.</p>
 <p>To truly determine the identity of the clusters and whether the <code>resolution</code> is appropriate, it is helpful to explore a handful of known gene markers for the cell types expected.</p>
 </section><section id="sec-explore_known_markers" class="level1" data-number="7"><h1 data-number="7">
 <span class="header-section-number">7</span> 探索已知的cell type markers的表达</h1>
 <p>With the cells clustered, we can explore the cell type identities by looking for known markers. 下面给出了本案例的cell type markers及其对应的细胞类型：</p>
-<div id="tbl-cell_type_markers" class="anchored">
+<div id="tbl-cell_type_markers" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cell_type_markers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: 细胞类型marker基因
+</figcaption><div aria-describedby="tbl-cell_type_markers-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;1: 细胞类型marker基因</caption>
 <thead><tr class="header">
 <th style="text-align: center;">Cell Type</th>
 <th style="text-align: center;">Marker</th>
@@ -965,6 +988,8 @@ Negative:  CD74, IGHM, IGKC, HLA-DRA, CD79A </code></pre>
 </tr>
 </tbody>
 </table>
+</div>
+</figure>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
@@ -1039,7 +1064,10 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>CD14+ monocytes appear to correspond to <strong>clusters 1, and 3</strong>. We wouldn’t include clusters 14 and 10 because they do not highly express both of these markers.</p>
@@ -1053,7 +1081,10 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>FCGR3A+ monocytes markers distinctly highlight <strong>cluster 10</strong>, although we do see some decent expression in clusters 1 and 3. We would like to see additional markers for FCGR3A+ cells show up when we perform the marker identification.</p>
@@ -1067,7 +1098,10 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>The markers corresponding to conventional dendritic cells identify <strong>cluster 14</strong> (both markers consistently show expression).</p>
@@ -1081,7 +1115,10 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Plasmacytoid dendritic cells represent <strong>cluster 16</strong>. While there are a lot of differences in the expression of these markers, we see cluster 16 (though small) is consistently strongly expressed.</p>
@@ -1095,7 +1132,10 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>We don’t see much overlap of our markers, so no clusters appear to correspond to macrophages; perhaps cell culture conditions negatively selected for macrophages (more highly adherent).</p>
@@ -1109,7 +1149,10 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>可以看出，cluster 11, 7, 13属于B细胞。</p>
@@ -1123,7 +1166,10 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>T细胞的标志物在大量的cluster中均表达，包括cluster 0, 2, 6, 4, 5, 9。</p>
@@ -1137,7 +1183,10 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>大致看出cluster 4, 0, 6, 2属于CD4+ T 细胞。</p>
@@ -1151,7 +1200,10 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>cluster 5和 cluster 9属于CD8+ T细胞。</p>
@@ -1165,10 +1217,13 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
 </div>
 </div>
-<p>cluster 8, 12属于NK细胞。这和我们在前面的 <a href="#sec-Effect_of_pcs_clustering">Section&nbsp;6</a> 中的结论（第二主成分的top基因GNLY和NKG7在cluster 8和cluster 12中高表达）一致。</p>
+</div>
+<p>cluster 8, 12属于NK细胞。这和我们在前面的 <a href="#sec-Effect_of_pcs_clustering" class="quarto-xref">Section&nbsp;6</a> 中的结论（第二主成分的top基因GNLY和NKG7在cluster 8和cluster 12中高表达）一致。</p>
 </section><section id="megakaryocytes巨核细胞" class="level2" data-number="7.11"><h2 data-number="7.11" class="anchored" data-anchor-id="megakaryocytes巨核细胞">
 <span class="header-section-number">7.11</span> Megakaryocytes（巨核细胞）</h2>
 <div class="cell" data-hash="08_SC_clustering_quality_control_cache/html/unnamed-chunk-23_4f538bcefbcf8f0ecd8a7efc553d4414">
@@ -1179,7 +1234,10 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>cluster 15属于巨核细胞。</p>
@@ -1193,7 +1251,10 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="08_SC_clustering_quality_control_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>可以看到，红细胞的marker gene基本没有明显的表达。</p>
@@ -1413,6 +1474,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
   }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
   const toggleColorMode = (alternate) => {
     // Switch the stylesheets
     const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
@@ -1479,13 +1567,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1615,10 +1705,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1628,8 +1735,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1642,6 +1758,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1685,6 +1920,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1710,6 +1946,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1767,29 +2029,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-          // target, if specified
-          link.setAttribute("target", "_blank");
-      }
-    }
 });
 </script><script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="pagination-link">
+</script><input type="hidden" id="giscus-base-theme" value="light"><input type="hidden" id="giscus-alt-theme" value="dark"><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="pagination-link  aria-label=" analysis="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">细胞聚类（clustering analysis）</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="pagination-link">
+      <a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="pagination-link" aria-label="寻找marker基因+细胞注释">
         <span class="nav-page-text">寻找marker基因+细胞注释</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -2312,7 +2560,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </li>  
 </ul>
 </div>   
-    <div class="nav-footer-center">Copyright 2024, Du Junhong</div>
+    <div class="nav-footer-center">
+<p>Copyright 2024, Du Junhong</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/scRNA-seq_online/08_SC_clustering_quality_control.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
 <li class="nav-item compact">

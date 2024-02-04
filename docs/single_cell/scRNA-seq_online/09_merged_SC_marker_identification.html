@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 寻找marker基因+细胞注释</title>
 <style>
@@ -19,7 +19,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -79,7 +79,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -88,6 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -105,21 +111,23 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   "showHighlights": "always",
   "enableExperimentalNewNoteButton": true
 }
-</script><script async="" src="https://hypothes.is/embed.js"></script>
+</script><script async="" src="https://hypothes.is/embed.js"></script><script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
 <meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 寻找marker基因+细胞注释">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/images/sc_workflow_2022-01.jpg">
-<meta property="og:site-name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
+<meta property="og:site_name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
 <meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 寻找marker基因+细胞注释">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://djhcod.github.io/r-notes/single_cell/scRNA-seq_online/images/sc_workflow_2022-01.jpg">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 </head>
 <body class="nav-sidebar docked nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
     <img src="../../images/logo.jpg" alt="" class="navbar-logo"></a>
     <a class="navbar-brand" href="../../index.html">
@@ -133,50 +141,51 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
 <li class="nav-item">
-    <a class="nav-link active" href="../../index.html" rel="" target="" aria-current="page">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link active" href="../../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../r_basic/r_basics.html" rel="" target="">
- <span class="menu-text">R语言基础</span></a>
+    <a class="nav-link" href="../../r_basic/r_basics.html"> 
+<span class="menu-text">R语言基础</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">单细胞数据分析</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-">
 <li>
-    <a class="dropdown-item" href="../../single_cell/single_cell_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/single_cell_intro.html">
  <span class="dropdown-text">单细胞数据分析介绍</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/seurat/seurat_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/seurat/seurat_intro.html">
  <span class="dropdown-text">Seurat v5官方文档</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/scRNA-seq_online/00_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/scRNA-seq_online/00_intro.html">
  <span class="dropdown-text">scRNA-seq_online学习材料</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" rel="" target="">
+    <a class="dropdown-item" href="../../single_cell/sc_supplementary/sc_supplementary_intro.html">
  <span class="dropdown-text">单细胞补充内容</span></a>
   </li>  
     </ul>
 </li>
   <li class="nav-item">
-    <a class="nav-link" href="../../quarto_foundation/quarto_foundation.html" rel="" target="">
- <span class="menu-text">Quarto基础</span></a>
+    <a class="nav-link" href="../../quarto_foundation/quarto_foundation.html"> 
+<span class="menu-text">Quarto基础</span></a>
   </li>  
 </ul>
 <ul class="navbar-nav navbar-nav-scroll ms-auto">
 <li class="nav-item">
-    <a class="nav-link" href="https://bookdown.org" rel="" target=""><i class="bi bi-book-fill" role="img">
+    <a class="nav-link" href="https://bookdown.org"> <i class="bi bi-book-fill" role="img">
 </i> 
- <span class="menu-text">Bookdown</span></a>
+<span class="menu-text">Bookdown</span></a>
   </li>  
 </ul>
-<div class="quarto-navbar-tools tools-wide">
-    <a href="https://github.com/djhcod/r-notes" rel="" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/djhcod/r-notes" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
   <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
   <div class="quarto-reader-toggle-btn">
@@ -184,19 +193,18 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   </div>
 </a>
 </div>
-          </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html">寻找marker基因+细胞注释</a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html">寻找marker基因+细胞注释</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
@@ -506,7 +514,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 </li>
     </ul>
 </div>
-</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">On this page</h2>
@@ -548,10 +556,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   <li><a href="#%E6%B9%BF%E5%AE%9E%E9%AA%8C%E9%AA%8C%E8%AF%81%E6%8E%A2%E7%B4%A2%E6%BD%9C%E5%9C%A8%E6%9C%BA%E5%88%B6experimentally-validate-intriguing-markers-for-our-identified-cell-types" id="toc-湿实验验证探索潜在机制experimentally-validate-intriguing-markers-for-our-identified-cell-types" class="nav-link" data-scroll-target="#%E6%B9%BF%E5%AE%9E%E9%AA%8C%E9%AA%8C%E8%AF%81%E6%8E%A2%E7%B4%A2%E6%BD%9C%E5%9C%A8%E6%9C%BA%E5%88%B6experimentally-validate-intriguing-markers-for-our-identified-cell-types"><span class="header-section-number">6.7</span> 湿实验验证，探索潜在机制（Experimentally validate intriguing markers for our identified cell types）</a></li>
   </ul>
 </li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/scRNA-seq_online/09_merged_SC_marker_identification.qmd" class="toc-action">View source</a></p><p><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/scRNA-seq_online/09_merged_SC_marker_identification.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../single_cell/single_cell_intro.html">单细胞数据分析</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/00_intro.html">scRNA-seq_online学习材料</a></li><li class="breadcrumb-item"><a href="../../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html">寻找marker基因+细胞注释</a></li></ol></nav><div class="quarto-title">
 <div class="quarto-title-block"><div><h1 class="title">寻找marker基因+细胞注释</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
@@ -564,6 +572,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
     
   </div>
   
+
 
 </header><div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -673,7 +682,10 @@ Important
 <div class="cell" data-hash="09_merged_SC_marker_identification_cache/html/unnamed-chunk-3_fd9c976be0abe58a929675600e7de2e4">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span><span class="va">seurat_clustered_qc</span>, label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Remember that we had the following questions from the <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html#sec-Preliminary_cell_type_identification_results">clustering analysis</a>:</p>
@@ -767,9 +779,9 @@ Important
 <p>In Seurat v5, we use the&nbsp;<strong><code>presto</code></strong> package&nbsp;(as described&nbsp;<a href="https://www.biorxiv.org/content/10.1101/653253v1">here</a>&nbsp;and available for installation&nbsp;<a href="https://github.com/immunogenomics/presto">here</a>), to dramatically improve the speed of DE analysis, particularly for large datasets (见<a href="../../single_cell/seurat/marker_gene_identification.html#sec-findmarkers_function">Seurat-FindMarkers</a>).&nbsp;因此，需要先安装<code>presto</code>包：</p>
 <div class="cell" data-hash="09_merged_SC_marker_identification_cache/html/unnamed-chunk-4_4d4f8ca01666f2d172b2d18ee104dd1a">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("devtools")</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"immunogenomics/presto"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| eval: false</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="in"># install.packages("devtools")</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="in">devtools::install_github("immunogenomics/presto")</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
@@ -808,7 +820,7 @@ QTRT22   0.009998863  0.3087035 0.056 0.022         1      16   QTRT2</code></pr
 <li><p><code>pct.2</code>&nbsp;: The percentage of cells where the feature is detected in the second group</p></li>
 <li><p><code>p_val_adj</code>&nbsp;: Adjusted p-value, based on&nbsp;<strong>Bonferroni correction</strong>&nbsp;using all features in the dataset.</p></li>
 </ul>
-<p>获取每个cluster的前10个marker基因 ( 详细解释见下面的 <a href="#sec-top_conserved_markers">Section&nbsp;3.2.1</a> ):</p>
+<p>获取每个cluster的前10个marker基因 ( 详细解释见下面的 <a href="#sec-top_conserved_markers" class="quarto-xref">Section&nbsp;3.2.1</a> ):</p>
 <div class="cell" data-hash="09_merged_SC_marker_identification_cache/html/unnamed-chunk-6_2ad3bad2f901ab2e4e718d8a781c566a">
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></span>
 <span><span class="co"># 获取每个cluster的前10个marker基因</span></span>
@@ -1121,7 +1133,10 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Now, we use <code><a href="https://satijalab.org/seurat/reference/FindConservedMarkers.html">FindConservedMarkers()</a></code> function to find conserved markers for cluster 10.</p>
@@ -1203,7 +1218,10 @@ Warning
 <span>            min.cutoff <span class="op">=</span> <span class="st">'q10'</span>, </span>
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>Let’s see what genes we identify and of there are overlaps or obvious differences that can help us tease this apart a bit more.</p>
@@ -1290,7 +1308,10 @@ Finding markers for all clusters
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <blockquote class="blockquote">
@@ -1306,7 +1327,10 @@ Finding markers for all clusters
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>            repel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 提取cluster 4，并单独查看interesting marker gene在其中的表达情况</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/subset.html">subset</a></span><span class="op">(</span><span class="va">seurat_clustered_qc</span>, idents <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
@@ -1317,7 +1341,10 @@ Finding markers for all clusters
 <span>            label <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>            repel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-27-2.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-27-2.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <blockquote class="blockquote">
@@ -1329,7 +1356,10 @@ Finding markers for all clusters
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/VlnPlot.html">VlnPlot</a></span><span class="op">(</span><span class="va">seurat_clustered_qc</span>, </span>
 <span>        features <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"HSPH1"</span>, <span class="st">"HSPE1"</span>, <span class="st">"DNAJB1"</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1421,7 +1451,10 @@ Warning
 <span>        idents <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://satijalab.org/seurat/reference/SeuratTheme.html">RotatedAxis</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <blockquote class="blockquote">
@@ -1431,9 +1464,11 @@ Warning
 <hr></section><section id="注释细胞cluster" class="level1" data-number="5"><h1 data-number="5">
 <span class="header-section-number">5</span> 注释细胞cluster</h1>
 <p>Now taking all of this information, we can surmise the cell types of the different clusters and plot the cells with cell type labels.</p>
-<div id="tbl-细胞注释结果" class="anchored">
+<div id="tbl-细胞注释结果" class="quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-细胞注释结果-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: 细胞注释结果
+</figcaption><div aria-describedby="tbl-细胞注释结果-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="table">
-<caption>Table&nbsp;1: 细胞注释结果</caption>
 <thead><tr class="header">
 <th style="text-align: center;">Cluster ID</th>
 <th style="text-align: center;">Cell Type</th>
@@ -1510,6 +1545,8 @@ Warning
 </tbody>
 </table>
 </div>
+</figure>
+</div>
 <p>We can then reassign the identity of the clusters to these cell types:</p>
 <div class="cell" data-hash="09_merged_SC_marker_identification_cache/html/unnamed-chunk-31_e40dd283514074996f800384d9732eec">
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Rename all identities</span></span>
@@ -1538,7 +1575,10 @@ Warning
 <span>        reduction <span class="op">=</span> <span class="st">"umap"</span>, </span>
 <span>        label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="960"></p>
+<div>
+<figure class="figure"><p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="960"></p>
+</figure>
+</div>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -1563,7 +1603,10 @@ Tip
 <span>        reduction <span class="op">=</span> <span class="st">"umap"</span>, </span>
 <span>        label <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure"><p><img src="09_merged_SC_marker_identification_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
@@ -1605,14 +1648,8 @@ Tip
 </div>
 <hr></section><section id="可选的后续分析" class="level1" data-number="6"><h1 data-number="6">
 <span class="header-section-number">6</span> 可选的后续分析:</h1>
-<div class="quarto-figure quarto-figure-left">
-<figure class="figure"><p><a href="https://mp.weixin.qq.com/s?__biz=Mzg2MTExNTkwNA==&amp;mid=2247532151&amp;idx=1&amp;sn=55ff4362b5a572d53072c1fe85c593d6&amp;chksm=ce1e3d18f969b40e71503729f38a8e01cd80e313446da1571d7d42c61e094d94b3519cdb85be&amp;mpshare=1&amp;scene=1&amp;srcid=0910pFfJBQOE8XVDU2opxc6B&amp;sharer_shareinfo=98ce7b038453fa671b5e609905ff82f0&amp;sharer_shareinfo_first=98ce7b038453fa671b5e609905ff82f0#rd"><img src="images/640.png" class="img-fluid figure-img"></a></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-left">
-<figure class="figure"><p><a href="https://mp.weixin.qq.com/s?__biz=Mzg2MTExNTkwNA==&amp;mid=2247532151&amp;idx=1&amp;sn=55ff4362b5a572d53072c1fe85c593d6&amp;chksm=ce1e3d18f969b40e71503729f38a8e01cd80e313446da1571d7d42c61e094d94b3519cdb85be&amp;mpshare=1&amp;scene=1&amp;srcid=0910pFfJBQOE8XVDU2opxc6B&amp;sharer_shareinfo=98ce7b038453fa671b5e609905ff82f0&amp;sharer_shareinfo_first=98ce7b038453fa671b5e609905ff82f0#rd"><img src="images/640-2.png" class="img-fluid figure-img"></a></p>
-</figure>
-</div>
+<p><a href="https://mp.weixin.qq.com/s?__biz=Mzg2MTExNTkwNA==&amp;mid=2247532151&amp;idx=1&amp;sn=55ff4362b5a572d53072c1fe85c593d6&amp;chksm=ce1e3d18f969b40e71503729f38a8e01cd80e313446da1571d7d42c61e094d94b3519cdb85be&amp;mpshare=1&amp;scene=1&amp;srcid=0910pFfJBQOE8XVDU2opxc6B&amp;sharer_shareinfo=98ce7b038453fa671b5e609905ff82f0&amp;sharer_shareinfo_first=98ce7b038453fa671b5e609905ff82f0#rd"><img src="images/640.png" class="img-fluid"></a></p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=Mzg2MTExNTkwNA==&amp;mid=2247532151&amp;idx=1&amp;sn=55ff4362b5a572d53072c1fe85c593d6&amp;chksm=ce1e3d18f969b40e71503729f38a8e01cd80e313446da1571d7d42c61e094d94b3519cdb85be&amp;mpshare=1&amp;scene=1&amp;srcid=0910pFfJBQOE8XVDU2opxc6B&amp;sharer_shareinfo=98ce7b038453fa671b5e609905ff82f0&amp;sharer_shareinfo_first=98ce7b038453fa671b5e609905ff82f0#rd"><img src="images/640-2.png" class="img-fluid"></a></p>
 <section id="提取感兴趣细胞亚群进一步细分explore-a-subset-of-the-cell-types-to-discover-subclusters-of-cells" class="level2" data-number="6.1"><h2 data-number="6.1" class="anchored" data-anchor-id="提取感兴趣细胞亚群进一步细分explore-a-subset-of-the-cell-types-to-discover-subclusters-of-cells">
 <span class="header-section-number">6.1</span> 提取感兴趣细胞亚群进一步细分（Explore a subset of the cell types to discover subclusters of cells）</h2>
 <p>鉴定完细胞类型后，接下来就是对鉴定的目标细胞群进行深入的研究。一般是提取目标亚群，然后在进一步细分。细胞再分群的意义在于进一步分析细胞的组成成分。见<a href="../../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.html">多个单细胞数据集整合分析（下）</a>。</p>
@@ -1771,6 +1808,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       }
     }
   }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
   const toggleColorMode = (alternate) => {
     // Switch the stylesheets
     const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
@@ -1837,13 +1901,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -1973,10 +2039,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   if (showAllCode) {
     showAllCode.addEventListener("click", toggleCodeHandler(true));
   }
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1986,8 +2069,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -2000,6 +2092,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -2043,6 +2254,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -2068,6 +2280,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -2125,29 +2363,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       });
     }
   }
-    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
-      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
-    var isInternal = (href) => {
-        return filterRegex.test(href) || localhostRegex.test(href);
-    }
-    // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
-    for (var i=0; i<links.length; i++) {
-      const link = links[i];
-      if (!isInternal(link.href)) {
-          // target, if specified
-          link.setAttribute("target", "_blank");
-      }
-    }
 });
 </script><script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="pagination-link">
+</script><input type="hidden" id="giscus-base-theme" value="light"><input type="hidden" id="giscus-alt-theme" value="dark"><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="pagination-link  aria-label=">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">细胞分群质量评估</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" class="pagination-link">
+      <a href="../../single_cell/sc_supplementary/sc_supplementary_intro.html" class="pagination-link" aria-label="单细胞补充内容">
         <span class="nav-page-text">单细胞补充内容</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -2995,7 +3219,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </li>  
 </ul>
 </div>   
-    <div class="nav-footer-center">Copyright 2024, Du Junhong</div>
+    <div class="nav-footer-center">
+<p>Copyright 2024, Du Junhong</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/scRNA-seq_online/09_merged_SC_marker_identification.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
 <li class="nav-item compact">
