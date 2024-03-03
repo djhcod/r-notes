@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 基于tidyr的长/宽数据转换</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../r_basic/data_visualization.html" rel="next">
+<link href="../r_basic/dplyr.html" rel="prev">
+<link href="../images/logo.jpg" rel="icon" type="image/jpeg">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G2HZEXHNCE"></script><script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
+</script><script type="application/json" class="js-hypothesis-config">
+{
+  "theme": "classic",
+  "openSidebar": false,
+  "showHighlights": "always",
+  "enableExperimentalNewNoteButton": true
+}
+</script><script async="" src="https://hypothes.is/embed.js"></script><script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+<meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 基于tidyr的长/宽数据转换">
+<meta property="og:description" content="">
+<meta property="og:site_name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
+<meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 基于tidyr的长/宽数据转换">
+<meta name="twitter:description" content="">
+<meta name="twitter:card" content="summary">
+</head>
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg " data-bs-theme="dark"><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../images/logo.jpg" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">R语言学习笔记</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+<li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../r_basic/r_basics.html"> 
+<span class="menu-text">R语言基础</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">单细胞数据分析</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-">
+<li>
+    <a class="dropdown-item" href="../single_cell/single_cell_intro.html">
+ <span class="dropdown-text">单细胞数据分析介绍</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../single_cell/seurat/seurat_intro.html">
+ <span class="dropdown-text">Seurat v5官方文档</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../single_cell/scRNA-seq_online/00_intro.html">
+ <span class="dropdown-text">scRNA-seq_online学习材料</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../single_cell/sc_supplementary/sc_supplementary_intro.html">
+ <span class="dropdown-text">单细胞补充内容</span></a>
+  </li>  
+    </ul>
+</li>
+  <li class="nav-item">
+    <a class="nav-link" href="../quarto_foundation/quarto_foundation.html"> 
+<span class="menu-text">Quarto基础</span></a>
+  </li>  
+</ul>
+<ul class="navbar-nav navbar-nav-scroll ms-auto">
+<li class="nav-item">
+    <a class="nav-link" href="https://bookdown.org"> <i class="bi bi-book-fill" role="img">
+</i> 
+<span class="menu-text">Bookdown</span></a>
+  </li>  
+</ul>
+</div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools tools-wide">
+    <a href="https://github.com/djhcod/r-notes" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../r_basic/r_basics.html">R语言基础</a></li><li class="breadcrumb-item"><a href="../r_basic/tidyr.html">基于tidyr的长/宽数据转换</a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">主页</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../r_basic/r_basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R语言基础</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/environment_configuration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Rstudio环境配置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/data_input_output.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">数据的读取与输出</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/basic_data_function.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">数据处理基本函数</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">基于dplyr包的数据整理</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/tidyr.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">基于tidyr的长/宽数据转换</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/data_visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">数据可视化</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/character.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">字符的处理</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/loop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">循环</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../single_cell/single_cell_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞数据分析</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/scRNA-seq_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞测序技术介绍</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/generation_of_count_matrix.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞RNA测序—从raw data到count matrix</span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../single_cell/seurat/seurat_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat v5官方文档</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/seurat/seurat_command_list.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat常用函数清单</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/seurat/seurat_tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat细胞分群官方教程</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/seurat/data_visualization_methods_in_seurat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat中的数据可视化方法</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/seurat/sctransform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">基于SCTransform的单细胞数据标准化</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/seurat/cell_cycle_regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">消除细胞周期的影响</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/seurat/integration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">整合（integration）</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/seurat/integrative_analysis_in_seurat_v5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seurat v5单细胞数据整合分析</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/seurat/marker_gene_identification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">寻找marker gene</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/seurat/de_vignette.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">寻找不同样本类型间同一细胞类型内的差异基因</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/seurat/mapping_and_annotating_query_datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">基于参考集的细胞注释</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../single_cell/scRNA-seq_online/00_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">scRNA-seq_online学习材料</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/scRNA-seq_online/03_SC_quality_control-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">数据导入与Seurat对象构建</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/scRNA-seq_online/04_SC_quality_control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">质控</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/scRNA-seq_online/postQC_workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Single-cell RNA-seq Clustering Workflow</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/scRNA-seq_online/05_theory_of_PCA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PCA原理</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/scRNA-seq_online/06_SC_SCT_normalization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Normalization and regressing out unwanted variation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/scRNA-seq_online/06_integration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞数据整合（Integration）</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/scRNA-seq_online/07_SC_clustering_cells_SCT.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">细胞聚类（clustering analysis）</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">细胞分群质量评估</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/scRNA-seq_online/09_merged_SC_marker_identification.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">寻找marker基因+细胞注释</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../single_cell/sc_supplementary/sc_supplementary_intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">单细胞补充内容</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/sc_supplementary/read_sc_data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">读取非标准格式的单细胞数据</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/sc_supplementary/universal_marker.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">细胞分群通用marker</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">多个单细胞数据集整合分析（上）</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/sc_supplementary/integrated_analysis_multiple_single_cell_datasets_2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">多个单细胞数据集整合分析（下）</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../single_cell/sc_supplementary/DecontX.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">预测和去除单细胞转录组的环境游离RNA污染</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../quarto_foundation/quarto_foundation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto基础</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/yaml_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">YAML设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/images_settings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">图片设置</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/cross_references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">交叉引用</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/insert_other_content.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">插入其他内容</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/quarto_shiny.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">在Quarto中嵌入Shiny应用程序</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/quarto_books.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto Books</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../quarto_foundation/github_pages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">发布到GitHub Pages</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="1"><h2 id="toc-title">On this page</h2>
+   
+  <ul>
+<li><a href="#%E5%8A%A0%E8%BD%BD%E5%8C%85" id="toc-加载包" class="nav-link active" data-scroll-target="#%E5%8A%A0%E8%BD%BD%E5%8C%85"><span class="header-section-number">1</span> 加载包</a></li>
+  <li>
+<a href="#pivot_longer%E8%BD%AC%E6%8D%A2%E6%88%90%E9%95%BF%E6%95%B0%E6%8D%AE" id="toc-pivot_longer转换成长数据" class="nav-link" data-scroll-target="#pivot_longer%E8%BD%AC%E6%8D%A2%E6%88%90%E9%95%BF%E6%95%B0%E6%8D%AE"><span class="header-section-number">2</span> pivot_longer()：转换成长数据</a>
+  <ul class="collapse">
+<li><a href="#pivot_longer%E7%9A%84%E8%BD%AC%E6%8D%A2%E5%8E%9F%E7%90%86" id="toc-pivot_longer的转换原理" class="nav-link" data-scroll-target="#pivot_longer%E7%9A%84%E8%BD%AC%E6%8D%A2%E5%8E%9F%E7%90%86"><span class="header-section-number">2.1</span> pivot_longer()的转换原理</a></li>
+  <li><a href="#%E5%8C%85%E5%90%AB%E5%A4%9A%E4%B8%AA%E5%8F%98%E9%87%8F%E4%BF%A1%E6%81%AF%E7%9A%84%E5%88%97%E5%90%8D" id="toc-包含多个变量信息的列名" class="nav-link" data-scroll-target="#%E5%8C%85%E5%90%AB%E5%A4%9A%E4%B8%AA%E5%8F%98%E9%87%8F%E4%BF%A1%E6%81%AF%E7%9A%84%E5%88%97%E5%90%8D"><span class="header-section-number">2.2</span> 包含多个变量信息的列名</a></li>
+  <li><a href="#%E6%B7%B7%E5%90%88%E4%BA%86%E5%8F%98%E9%87%8F%E5%90%8D%E5%92%8C%E5%8F%98%E9%87%8F%E5%8F%96%E5%80%BC%E7%9A%84%E5%88%97%E5%90%8D" id="toc-混合了变量名和变量取值的列名" class="nav-link" data-scroll-target="#%E6%B7%B7%E5%90%88%E4%BA%86%E5%8F%98%E9%87%8F%E5%90%8D%E5%92%8C%E5%8F%98%E9%87%8F%E5%8F%96%E5%80%BC%E7%9A%84%E5%88%97%E5%90%8D"><span class="header-section-number">2.3</span> 混合了变量名和变量取值的列名</a></li>
+  </ul>
+</li>
+  <li><a href="#pivot_wider%E8%BD%AC%E6%8D%A2%E6%88%90%E5%AE%BD%E6%95%B0%E6%8D%AE" id="toc-pivot_wider转换成宽数据" class="nav-link" data-scroll-target="#pivot_wider%E8%BD%AC%E6%8D%A2%E6%88%90%E5%AE%BD%E6%95%B0%E6%8D%AE"><span class="header-section-number">3</span> pivot_wider()：转换成宽数据</a></li>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/r_basic/tidyr.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../r_basic/r_basics.html">R语言基础</a></li><li class="breadcrumb-item"><a href="../r_basic/tidyr.html">基于tidyr的长/宽数据转换</a></li></ol></nav><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">基于tidyr的长/宽数据转换</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><blockquote class="blockquote">
+<p>参考：<a href="https://r4ds.hadley.nz/data-tidy" class="uri">https://r4ds.hadley.nz/data-tidy</a></p>
+</blockquote>
+<p><a href="https://tidyr.tidyverse.org"><img src="images/logo-02.png" class="img-fluid" width="175"></a></p>
+<p><a href="https://tidyr.tidyverse.org">Tidyr</a>是tidyverse的核心包之一，其目标是帮助创建整洁的数据。整洁的数据是具有以下特征的数据：</p>
+<ul>
+<li><p>每个变量都是一列</p></li>
+<li><p>每个观测值是一行</p></li>
+<li><p>每个值是一个单元格</p></li>
+</ul>
+<div id="fig-dataset_tidy" class="quarto-figure quarto-figure-left quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-dataset_tidy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/tidy-1.png" class="img-fluid figure-img" width="553">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-dataset_tidy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: 整洁数据的基本特征
+</figcaption></figure>
+</div>
+<section id="加载包" class="level1" data-number="1"><h1 data-number="1">
+<span class="header-section-number">1</span> 加载包</h1>
+<div class="cell">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>这里的案例数据显示了以三种不同方式组织的相同数据。每个数据集都有相同的四个变量：country（国家）、year（年份）、population（总人口）和cases（结核病病例数），但每个数据集以不同的方式组织这些值。</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">table1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 4
+  country      year  cases population
+  &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+1 Afghanistan  1999    745   19987071
+2 Afghanistan  2000   2666   20595360
+3 Brazil       1999  37737  172006362
+4 Brazil       2000  80488  174504898
+5 China        1999 212258 1272915272
+6 China        2000 213766 1280428583</code></pre>
+</div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">table2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 12 × 4
+   country      year type            count
+   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;           &lt;dbl&gt;
+ 1 Afghanistan  1999 cases             745
+ 2 Afghanistan  1999 population   19987071
+ 3 Afghanistan  2000 cases            2666
+ 4 Afghanistan  2000 population   20595360
+ 5 Brazil       1999 cases           37737
+ 6 Brazil       1999 population  172006362
+ 7 Brazil       2000 cases           80488
+ 8 Brazil       2000 population  174504898
+ 9 China        1999 cases          212258
+10 China        1999 population 1272915272
+11 China        2000 cases          213766
+12 China        2000 population 1280428583</code></pre>
+</div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">table3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  country      year rate             
+  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;            
+1 Afghanistan  1999 745/19987071     
+2 Afghanistan  2000 2666/20595360    
+3 Brazil       1999 37737/172006362  
+4 Brazil       2000 80488/174504898  
+5 China        1999 212258/1272915272
+6 China        2000 213766/1280428583</code></pre>
+</div>
+</div>
+<p>table1中的数据符合@fig-dataset_tidy 中的整洁数据规范。</p>
+</section><section id="pivot_longer转换成长数据" class="level1" data-number="2"><h1 data-number="2">
+<span class="header-section-number">2</span> pivot_longer()：转换成长数据</h1>
+<p>这里我们以billboard数据集为例。该数据记录了 2000 年歌曲在广告牌上的排名情况：</p>
+<div class="cell">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">billboard</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 317 × 79
+   artist     track date.entered   wk1   wk2   wk3   wk4   wk5   wk6   wk7   wk8
+   &lt;chr&gt;      &lt;chr&gt; &lt;date&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 2 Pac      Baby… 2000-02-26      87    82    72    77    87    94    99    NA
+ 2 2Ge+her    The … 2000-09-02      91    87    92    NA    NA    NA    NA    NA
+ 3 3 Doors D… Kryp… 2000-04-08      81    70    68    67    66    57    54    53
+ 4 3 Doors D… Loser 2000-10-21      76    76    72    69    67    65    55    59
+ 5 504 Boyz   Wobb… 2000-04-15      57    34    25    17    17    31    36    49
+ 6 98^0       Give… 2000-08-19      51    39    34    26    26    19     2     2
+ 7 A*Teens    Danc… 2000-07-08      97    97    96    95   100    NA    NA    NA
+ 8 Aaliyah    I Do… 2000-01-29      84    62    51    41    38    35    35    38
+ 9 Aaliyah    Try … 2000-03-18      59    53    38    28    21    18    16    14
+10 Adams, Yo… Open… 2000-08-26      76    76    74    69    68    67    61    58
+# ℹ 307 more rows
+# ℹ 68 more variables: wk9 &lt;dbl&gt;, wk10 &lt;dbl&gt;, wk11 &lt;dbl&gt;, wk12 &lt;dbl&gt;,
+#   wk13 &lt;dbl&gt;, wk14 &lt;dbl&gt;, wk15 &lt;dbl&gt;, wk16 &lt;dbl&gt;, wk17 &lt;dbl&gt;, wk18 &lt;dbl&gt;,
+#   wk19 &lt;dbl&gt;, wk20 &lt;dbl&gt;, wk21 &lt;dbl&gt;, wk22 &lt;dbl&gt;, wk23 &lt;dbl&gt;, wk24 &lt;dbl&gt;,
+#   wk25 &lt;dbl&gt;, wk26 &lt;dbl&gt;, wk27 &lt;dbl&gt;, wk28 &lt;dbl&gt;, wk29 &lt;dbl&gt;, wk30 &lt;dbl&gt;,
+#   wk31 &lt;dbl&gt;, wk32 &lt;dbl&gt;, wk33 &lt;dbl&gt;, wk34 &lt;dbl&gt;, wk35 &lt;dbl&gt;, wk36 &lt;dbl&gt;,
+#   wk37 &lt;dbl&gt;, wk38 &lt;dbl&gt;, wk39 &lt;dbl&gt;, wk40 &lt;dbl&gt;, wk41 &lt;dbl&gt;, wk42 &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>在这个数据集中，每个观测（行）都是一首歌曲。前三列（“artist”、“track”和“date.entered”）是描述歌曲的变量。在此之后的76 列（“wk1”-“wk76”）描述了该歌曲在发行后每周的排名信息（仅在进入前100名时记录名次信息）。因此，对于“wk1”-“wk76”中的数据，<strong>所有的列名是一个变量（周数）</strong>，每个单元格值则是另一个变量（每周的排名）。因此，这个数据集是不符合整洁数据的要求的。</p>
+<p>下面，我们通过<code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer()</a></code>将该数据转换成一个<strong>长数据</strong>，使其符合整洁数据：</p>
+<div class="cell">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">billboard</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"wk"</span><span class="op">)</span>, </span>
+<span>    names_to <span class="op">=</span> <span class="st">"week"</span>, </span>
+<span>    values_to <span class="op">=</span> <span class="st">"rank"</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 24,092 × 5
+   artist track                   date.entered week   rank
+   &lt;chr&gt;  &lt;chr&gt;                   &lt;date&gt;       &lt;chr&gt; &lt;dbl&gt;
+ 1 2 Pac  Baby Don't Cry (Keep... 2000-02-26   wk1      87
+ 2 2 Pac  Baby Don't Cry (Keep... 2000-02-26   wk2      82
+ 3 2 Pac  Baby Don't Cry (Keep... 2000-02-26   wk3      72
+ 4 2 Pac  Baby Don't Cry (Keep... 2000-02-26   wk4      77
+ 5 2 Pac  Baby Don't Cry (Keep... 2000-02-26   wk5      87
+ 6 2 Pac  Baby Don't Cry (Keep... 2000-02-26   wk6      94
+ 7 2 Pac  Baby Don't Cry (Keep... 2000-02-26   wk7      99
+ 8 2 Pac  Baby Don't Cry (Keep... 2000-02-26   wk8      NA
+ 9 2 Pac  Baby Don't Cry (Keep... 2000-02-26   wk9      NA
+10 2 Pac  Baby Don't Cry (Keep... 2000-02-26   wk10     NA
+# ℹ 24,082 more rows</code></pre>
+</div>
+</div>
+<ul>
+<li><p><code>cols</code>：指定需要转换哪些列，即哪些列不是变量。此参数使用与&nbsp;<code><a href="https://dplyr.tidyverse.org/reference/select.html">select()</a></code>相同的语法（见<a href="../r_basic/dplyr.html#sec-select">此前章节</a>），因此在这里我们可以使用&nbsp;<code>!c(artist, track, date.entered)</code>&nbsp;或&nbsp;<code>starts_with("wk")</code>&nbsp;来选择“wk1”到“wk76”列。</p></li>
+<li><p><code>names_to</code>：转换后的列的列名，即新变量名。这里我们将该变量命名为&nbsp;“week”&nbsp;。</p></li>
+<li><p><code>values_to</code>：指定单元格值所代表的变量的变量名。我们将该变量命名为 “rank”。⚠️注意”week”和”rank”加了引号。</p></li>
+</ul>
+<p>现在，让我们聚焦生成的长数据。如果一首歌进入前 100 名的时间少于 76 周，会发生什么情况？以 2 Pac 的《Baby Don’t Cry》为例。上面的输出结果表明，这首歌在前 100 名中只停留了 7 周，其余的周数都是缺失值。这些缺失值其实并不代表未知观测值，而是转换后的长数据集的结构迫使它们存在，因此我们可以通过设置 <code>values_drop_na = TRUE</code> 来要求 <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer()</a></code>去掉它们：</p>
+<div class="cell">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">billboard</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"wk"</span><span class="op">)</span>, </span>
+<span>    names_to <span class="op">=</span> <span class="st">"week"</span>, </span>
+<span>    values_to <span class="op">=</span> <span class="st">"rank"</span>,</span>
+<span>    values_drop_na <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5,307 × 5
+   artist  track                   date.entered week   rank
+   &lt;chr&gt;   &lt;chr&gt;                   &lt;date&gt;       &lt;chr&gt; &lt;dbl&gt;
+ 1 2 Pac   Baby Don't Cry (Keep... 2000-02-26   wk1      87
+ 2 2 Pac   Baby Don't Cry (Keep... 2000-02-26   wk2      82
+ 3 2 Pac   Baby Don't Cry (Keep... 2000-02-26   wk3      72
+ 4 2 Pac   Baby Don't Cry (Keep... 2000-02-26   wk4      77
+ 5 2 Pac   Baby Don't Cry (Keep... 2000-02-26   wk5      87
+ 6 2 Pac   Baby Don't Cry (Keep... 2000-02-26   wk6      94
+ 7 2 Pac   Baby Don't Cry (Keep... 2000-02-26   wk7      99
+ 8 2Ge+her The Hardest Part Of ... 2000-09-02   wk1      91
+ 9 2Ge+her The Hardest Part Of ... 2000-09-02   wk2      87
+10 2Ge+her The Hardest Part Of ... 2000-09-02   wk3      92
+# ℹ 5,297 more rows</code></pre>
+</div>
+</div>
+<p>注意到“week”目前为字符型变量，可以通过readr包中的<code><a href="https://readr.tidyverse.org/reference/parse_number.html">parse_number()</a></code>将其转换成数值型变量（详见<a href="../r_basic/data_input_output.html#sec-定义列类别">此前章节</a>），便于后续分析：</p>
+<div class="cell">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">billboard_longer</span> <span class="op">&lt;-</span> <span class="va">billboard</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"wk"</span><span class="op">)</span>, </span>
+<span>    names_to <span class="op">=</span> <span class="st">"week"</span>, </span>
+<span>    values_to <span class="op">=</span> <span class="st">"rank"</span>,</span>
+<span>    values_drop_na <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
+<span>    week <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_number.html">parse_number</a></span><span class="op">(</span><span class="va">week</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="va">billboard_longer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5,307 × 5
+   artist  track                   date.entered  week  rank
+   &lt;chr&gt;   &lt;chr&gt;                   &lt;date&gt;       &lt;dbl&gt; &lt;dbl&gt;
+ 1 2 Pac   Baby Don't Cry (Keep... 2000-02-26       1    87
+ 2 2 Pac   Baby Don't Cry (Keep... 2000-02-26       2    82
+ 3 2 Pac   Baby Don't Cry (Keep... 2000-02-26       3    72
+ 4 2 Pac   Baby Don't Cry (Keep... 2000-02-26       4    77
+ 5 2 Pac   Baby Don't Cry (Keep... 2000-02-26       5    87
+ 6 2 Pac   Baby Don't Cry (Keep... 2000-02-26       6    94
+ 7 2 Pac   Baby Don't Cry (Keep... 2000-02-26       7    99
+ 8 2Ge+her The Hardest Part Of ... 2000-09-02       1    91
+ 9 2Ge+her The Hardest Part Of ... 2000-09-02       2    87
+10 2Ge+her The Hardest Part Of ... 2000-09-02       3    92
+# ℹ 5,297 more rows</code></pre>
+</div>
+</div>
+<p>现在，我们在一个变量中拥有了所有的周数，在另一个变量中拥有了所有的排名值，这样我们就可以很好地直观显示歌曲排名随时间的变化情况。代码如下，结果如 <a href="#fig-line_graph" class="quarto-xref">Figure&nbsp;2</a> 所示。我们可以看到，很少有歌曲能在前 100 名中停留 20 周以上。</p>
+<div class="cell">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">billboard_longer</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">week</span>, </span>
+<span>             y <span class="op">=</span> <span class="va">rank</span>, </span>
+<span>             group <span class="op">=</span> <span class="va">track</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_reverse</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-line_graph" class="quarto-figure quarto-figure-left quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-line_graph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="tidyr_files/figure-html/fig-line_graph-1.png" class="img-fluid figure-img" width="480">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-line_graph-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: 显示歌曲排名随时间变化的折线图
+</figcaption></figure>
+</div>
+</div>
+</div>
+<section id="pivot_longer的转换原理" class="level2" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="pivot_longer的转换原理">
+<span class="header-section-number">2.1</span> pivot_longer()的转换原理</h2>
+<p>假设我们有三个病人，id 分别为 A、B 和 C，我们为每个病人测量了两次血压。这里我们用在<a href="../r_basic/data_input_output.html#sec-手动生成tibble">此前章节</a>中已经介绍过的 <code><a href="https://tibble.tidyverse.org/reference/tribble.html">tribble()</a></code> 来创建这个数据：</p>
+<div class="cell">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tribble.html">tribble</a></span><span class="op">(</span></span>
+<span>  <span class="op">~</span><span class="va">id</span>,  <span class="op">~</span><span class="va">bp1</span>, <span class="op">~</span><span class="va">bp2</span>,</span>
+<span>   <span class="st">"A"</span>,  <span class="fl">100</span>,  <span class="fl">120</span>,</span>
+<span>   <span class="st">"B"</span>,  <span class="fl">140</span>,  <span class="fl">115</span>,</span>
+<span>   <span class="st">"C"</span>,  <span class="fl">120</span>,  <span class="fl">125</span></span>
+<span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>该数据集的“bp1”和“bp2”列不符合整洁数据的要求。因此，我们通过<code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer()</a></code>将该数据转换成包含三个变量：id（已存在）、measurement（血压测定次数）和 value（血压值）的新数据：</p>
+<div class="cell">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="va">bp1</span><span class="op">:</span><span class="va">bp2</span>,</span>
+<span>    names_to <span class="op">=</span> <span class="st">"measurement"</span>,</span>
+<span>    values_to <span class="op">=</span> <span class="st">"value"</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  id    measurement value
+  &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt;
+1 A     bp1           100
+2 A     bp2           120
+3 B     bp1           140
+4 B     bp2           115
+5 C     bp1           120
+6 C     bp2           125</code></pre>
+</div>
+</div>
+<p>转换是如何进行的呢？如果我们逐列考虑，就会比较容易理解。如下图所示，在原始数据集中已经是变量的一列（id）的值需要重复，重复的次数等于需要转换的列数。这里我们需要转换的列是“bp1”和“bp2”，因此每个“id”需要重复两次。</p>
+<p><img src="images/variables.png" class="img-fluid" width="522"></p>
+<p>旧列名将成为新变量的值，该变量的名称由 <code>names_to</code> 参数定义。</p>
+<p><img src="images/column-names.png" class="img-fluid" width="516"></p>
+<p>单元格值也会变成一个新变量的值，其名称由 <code>values_to</code> 定义。这些值将逐行填充。</p>
+<p><img src="images/cell-values.png" class="img-fluid" width="510"></p>
+</section><section id="包含多个变量信息的列名" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="包含多个变量信息的列名">
+<span class="header-section-number">2.2</span> 包含多个变量信息的列名</h2>
+<p>更具挑战性的情况是，列名中包含了多个变量信息，而我们希望将这些信息分别存储在不同的新变量中。以 who2 数据集为例，该数据集由世界卫生组织收集，记录了肺结核诊断的相关信息：</p>
+<div id="tbl-who2" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-who2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: 肺结核病例信息-列名包含多个变量信息
+</figcaption><div aria-describedby="tbl-who2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">who2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 7,240 × 58
+   country      year sp_m_014 sp_m_1524 sp_m_2534 sp_m_3544 sp_m_4554 sp_m_5564
+   &lt;chr&gt;       &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+ 1 Afghanistan  1980       NA        NA        NA        NA        NA        NA
+ 2 Afghanistan  1981       NA        NA        NA        NA        NA        NA
+ 3 Afghanistan  1982       NA        NA        NA        NA        NA        NA
+ 4 Afghanistan  1983       NA        NA        NA        NA        NA        NA
+ 5 Afghanistan  1984       NA        NA        NA        NA        NA        NA
+ 6 Afghanistan  1985       NA        NA        NA        NA        NA        NA
+ 7 Afghanistan  1986       NA        NA        NA        NA        NA        NA
+ 8 Afghanistan  1987       NA        NA        NA        NA        NA        NA
+ 9 Afghanistan  1988       NA        NA        NA        NA        NA        NA
+10 Afghanistan  1989       NA        NA        NA        NA        NA        NA
+# ℹ 7,230 more rows
+# ℹ 50 more variables: sp_m_65 &lt;dbl&gt;, sp_f_014 &lt;dbl&gt;, sp_f_1524 &lt;dbl&gt;,
+#   sp_f_2534 &lt;dbl&gt;, sp_f_3544 &lt;dbl&gt;, sp_f_4554 &lt;dbl&gt;, sp_f_5564 &lt;dbl&gt;,
+#   sp_f_65 &lt;dbl&gt;, sn_m_014 &lt;dbl&gt;, sn_m_1524 &lt;dbl&gt;, sn_m_2534 &lt;dbl&gt;,
+#   sn_m_3544 &lt;dbl&gt;, sn_m_4554 &lt;dbl&gt;, sn_m_5564 &lt;dbl&gt;, sn_m_65 &lt;dbl&gt;,
+#   sn_f_014 &lt;dbl&gt;, sn_f_1524 &lt;dbl&gt;, sn_f_2534 &lt;dbl&gt;, sn_f_3544 &lt;dbl&gt;,
+#   sn_f_4554 &lt;dbl&gt;, sn_f_5564 &lt;dbl&gt;, sn_f_65 &lt;dbl&gt;, ep_m_014 &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+</figure>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 查看3:56的列名规则</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">who2</span><span class="op">)</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">56</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_split.html">str_split</a></span><span class="op">(</span></span>
+<span>    pattern <span class="op">=</span> <span class="st">"_"</span>, </span>
+<span>    simplify <span class="op">=</span> <span class="cn">T</span></span>
+<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span>MARGIN <span class="op">=</span> <span class="fl">2</span>, <span class="va">unique</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] "sp"  "sn"  "ep"  "rel"
+
+[[2]]
+[1] "m" "f"
+
+[[3]]
+[1] "014"  "1524" "2534" "3544" "4554" "5564" "65"  </code></pre>
+</div>
+</div>
+<p>可以看到，该数据的前两列“country”和“year”是正常的变量。剩余的56列，每一列的名称都由三个部分组成，中间用 “_” 分隔：</p>
+<ul>
+<li><p>第一部分为“sp/rel/ep”，代表采用的诊断方法；</p></li>
+<li><p>第二部分为“m/f” ，代表性别；</p></li>
+<li><p>第三部分为“014/1524/2534/3535/44/4554/5564/65”， 代表年龄范围（例如，014 代表 0-14岁）。</p></li>
+</ul>
+<p>因此，在这种情况下，who2 数据中记录了六条变量信息：国家和年份（已列出）；诊断方法、性别和年龄范围（包含在3-56列的列名中），以及该类别中的患者人数（单元格值）。为了将这六条变量信息转换到六个独立的列中，我们可以通过指定 <code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer()</a></code> 中的 <code>names_sep</code> 参数，按照“_”分隔符将原始变量名分割成若干个字符串：</p>
+<div class="cell">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">who2</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="op">!</span><span class="op">(</span><span class="va">country</span><span class="op">:</span><span class="va">year</span><span class="op">)</span>,</span>
+<span>    names_sep <span class="op">=</span> <span class="st">"_"</span>, <span class="co"># 指定原始列名的分隔符</span></span>
+<span>    names_to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"diagnosis"</span>, <span class="st">"gender"</span>, <span class="st">"age"</span><span class="op">)</span>, </span>
+<span>    values_to <span class="op">=</span> <span class="st">"count"</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 405,440 × 6
+   country      year diagnosis gender age   count
+   &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt;
+ 1 Afghanistan  1980 sp        m      014      NA
+ 2 Afghanistan  1980 sp        m      1524     NA
+ 3 Afghanistan  1980 sp        m      2534     NA
+ 4 Afghanistan  1980 sp        m      3544     NA
+ 5 Afghanistan  1980 sp        m      4554     NA
+ 6 Afghanistan  1980 sp        m      5564     NA
+ 7 Afghanistan  1980 sp        m      65       NA
+ 8 Afghanistan  1980 sp        f      014      NA
+ 9 Afghanistan  1980 sp        f      1524     NA
+10 Afghanistan  1980 sp        f      2534     NA
+# ℹ 405,430 more rows</code></pre>
+</div>
+</div>
+<p>除了用 <code>names_sep</code> ，也可以使用 <code>names_pattern</code> 参数，通过正则表达式来实现上述效果。在这个案例中的数据转换过程参考如下示意图：</p>
+<p><img src="images/multiple-names.png" class="img-fluid" width="460"></p>
+</section><section id="混合了变量名和变量取值的列名" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="混合了变量名和变量取值的列名">
+<span class="header-section-number">2.3</span> 混合了变量名和变量取值的列名</h2>
+<div id="tbl-household" class="cell quarto-float anchored">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-household-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: 家庭数据
+</figcaption><div aria-describedby="tbl-household-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">household</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 5
+  family dob_child1 dob_child2 name_child1 name_child2
+   &lt;int&gt; &lt;date&gt;     &lt;date&gt;     &lt;chr&gt;       &lt;chr&gt;      
+1      1 1998-11-26 2000-01-29 Susan       Jose       
+2      2 1996-06-22 NA         Mark        &lt;NA&gt;       
+3      3 2002-07-11 2004-04-05 Sam         Seth       
+4      4 2004-10-10 2009-08-27 Craig       Khai       
+5      5 2000-12-05 2005-02-28 Parker      Gracie     </code></pre>
+</div>
+</div>
+</figure>
+</div>
+<p>该数据集包含五个家庭的数据，每个家庭最多记录两个孩子的姓名（name_child1、name_child2）和出生日期（dob_child1、dob_child2）。仔细 <a href="#tbl-who2" class="quarto-xref">Table&nbsp;1</a> 和 <a href="#tbl-household" class="quarto-xref">Table&nbsp;2</a> 可以发现 ：<a href="#tbl-who2" class="quarto-xref">Table&nbsp;1</a> 中需要转换的列名均由不同变量的具体取值构成（如“sp_m_014”，我们就可以知道这一列对应的诊断方法为“sp”，性别为“m”，年龄段为0-14岁）；而 <a href="#tbl-household" class="quarto-xref">Table&nbsp;2</a> 的列名既有变量的具体取值，如“child1”告诉我们这是编号为1的child，也有变量的名称，如“dob”（出生日期）和“name”（姓名）。</p>
+<p>为了解决这个问题，我们同样需要根据“_”分隔符分割原始列名，然后向 <code>names_to</code> 提供新变量名。但由于列名混合了变量名和变量取值，我们难以一一对应新旧列名。因此，这时候我们使用特殊的”<strong>.value “字符<strong>，</strong>让分割后的旧列名的第一个元素直接作为新变量的名称；分割后的旧列名的第二个元素（child1或child2）作为新的“child”变量的取值</strong>：</p>
+<div class="cell">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">household</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span></span>
+<span>    cols <span class="op">=</span> <span class="op">!</span><span class="va">family</span>, </span>
+<span>    names_sep <span class="op">=</span> <span class="st">"_"</span>, </span>
+<span>    names_to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">".value"</span>, <span class="st">"child"</span><span class="op">)</span>, </span>
+<span>    values_drop_na <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 4
+  family child  dob        name  
+   &lt;int&gt; &lt;chr&gt;  &lt;date&gt;     &lt;chr&gt; 
+1      1 child1 1998-11-26 Susan 
+2      1 child2 2000-01-29 Jose  
+3      2 child1 1996-06-22 Mark  
+4      3 child1 2002-07-11 Sam   
+5      3 child2 2004-04-05 Seth  
+6      4 child1 2004-10-10 Craig 
+7      4 child2 2009-08-27 Khai  
+8      5 child1 2000-12-05 Parker
+9      5 child2 2005-02-28 Gracie</code></pre>
+</div>
+</div>
+<p>使用 <code>names_to = c(".value", "num")</code> 进行数据转换会将列名分成两部分：第一部分决定输出的列名（x 或 y），第二部分决定 num 列的值。见下面的示意图：</p>
+<p><img src="images/names-and-values.png" class="img-fluid"></p>
+</section></section><section id="pivot_wider转换成宽数据" class="level1" data-number="3"><h1 data-number="3">
+<span class="header-section-number">3</span> pivot_wider()：转换成宽数据</h1>
+<p><code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider()</a></code> 可以通过增加列数和减少行数使数据集变宽。例如在重复测量数据中，一般而言我们会将每次观测作为一个个案，这时候一个对象多个时间点的观测数据分布在多行。这样的数据即为长数据，便于进行各种统计分析。但是如果你想了解每个对象的观测情况，就可以通过<code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider()</a></code> 来将一个对象的多次观测结果合并到一行，即转换为宽数据。这种情况的实际应用场景较少，因此下面我们只简单演示了一个转换宽数据的基本语法，相关详细解释参考<a href="https://r4ds.hadley.nz/data-tidy#widening-data">该链接</a>。</p>
+<div class="cell">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">cms_patient_experience</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 500 × 5
+   org_pac_id org_nm                           measure_cd measure_title prf_rate
+   &lt;chr&gt;      &lt;chr&gt;                            &lt;chr&gt;      &lt;chr&gt;            &lt;dbl&gt;
+ 1 0446157747 USC CARE MEDICAL GROUP INC       CAHPS_GRP… CAHPS for MI…       63
+ 2 0446157747 USC CARE MEDICAL GROUP INC       CAHPS_GRP… CAHPS for MI…       87
+ 3 0446157747 USC CARE MEDICAL GROUP INC       CAHPS_GRP… CAHPS for MI…       86
+ 4 0446157747 USC CARE MEDICAL GROUP INC       CAHPS_GRP… CAHPS for MI…       57
+ 5 0446157747 USC CARE MEDICAL GROUP INC       CAHPS_GRP… CAHPS for MI…       85
+ 6 0446157747 USC CARE MEDICAL GROUP INC       CAHPS_GRP… CAHPS for MI…       24
+ 7 0446162697 ASSOCIATION OF UNIVERSITY PHYSI… CAHPS_GRP… CAHPS for MI…       59
+ 8 0446162697 ASSOCIATION OF UNIVERSITY PHYSI… CAHPS_GRP… CAHPS for MI…       85
+ 9 0446162697 ASSOCIATION OF UNIVERSITY PHYSI… CAHPS_GRP… CAHPS for MI…       83
+10 0446162697 ASSOCIATION OF UNIVERSITY PHYSI… CAHPS_GRP… CAHPS for MI…       63
+# ℹ 490 more rows</code></pre>
+</div>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">cms_patient_experience</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span></span>
+<span>    id_cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">starts_with</a></span><span class="op">(</span><span class="st">"org"</span><span class="op">)</span>, <span class="co"># 哪一列/几列定义了行的唯一标识</span></span>
+<span>    names_from <span class="op">=</span> <span class="va">measure_cd</span>, <span class="co"># 从哪一列（或哪几列）获取输出列的名称</span></span>
+<span>    values_from <span class="op">=</span> <span class="va">prf_rate</span> <span class="co"># 从哪一列（或哪几列）获取单元格值</span></span>
+<span>  <span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 95 × 8
+   org_pac_id org_nm CAHPS_GRP_1 CAHPS_GRP_2 CAHPS_GRP_3 CAHPS_GRP_5 CAHPS_GRP_8
+   &lt;chr&gt;      &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+ 1 0446157747 USC C…          63          87          86          57          85
+ 2 0446162697 ASSOC…          59          85          83          63          88
+ 3 0547164295 BEAVE…          49          NA          75          44          73
+ 4 0749333730 CAPE …          67          84          85          65          82
+ 5 0840104360 ALLIA…          66          87          87          64          87
+ 6 0840109864 REX H…          73          87          84          67          91
+ 7 0840513552 SCL H…          58          83          76          58          78
+ 8 0941545784 GRITM…          46          86          81          54          NA
+ 9 1052612785 COMMU…          65          84          80          58          87
+10 1254237779 OUR L…          61          NA          NA          65          NA
+# ℹ 85 more rows
+# ℹ 1 more variable: CAHPS_GRP_12 &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<hr>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Session Info
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.3.2 (2023-10-31)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.3.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Asia/Shanghai
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] lubridate_1.9.3 forcats_1.0.0   stringr_1.5.1   dplyr_1.1.4    
+ [5] purrr_1.0.2     readr_2.1.5     tidyr_1.3.0     tibble_3.2.1   
+ [9] ggplot2_3.4.4   tidyverse_2.0.0
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.4      jsonlite_1.8.8    compiler_4.3.2    tidyselect_1.2.0 
+ [5] scales_1.3.0      yaml_2.3.8        fastmap_1.1.1     R6_2.5.1         
+ [9] labeling_0.4.3    generics_0.1.3    knitr_1.45        htmlwidgets_1.6.4
+[13] munsell_0.5.0     pillar_1.9.0      tzdb_0.4.0        rlang_1.1.3      
+[17] utf8_1.2.4        stringi_1.8.3     xfun_0.41         timechange_0.2.0 
+[21] cli_3.6.2         withr_3.0.0       magrittr_2.0.3    digest_0.6.34    
+[25] grid_4.3.2        rstudioapi_0.15.0 hms_1.1.3         lifecycle_1.0.4  
+[29] vctrs_0.6.5       evaluate_0.23     glue_1.7.0        farver_2.1.1     
+[33] codetools_0.2-19  fansi_1.0.6       colorspace_2.1-0  rmarkdown_2.25   
+[37] tools_4.3.2       pkgconfig_2.0.3   htmltools_0.5.7  </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- -->
+
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/djhcod\.github\.io\/r-notes\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><script src="https://giscus.app/client.js" data-repo="djhcod/r-notes" data-repo-id="R_kgDOKw7GMg" data-category="General" data-category-id="DIC_kwDOKw7GMs4Cbz4B" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
+</script><input type="hidden" id="giscus-base-theme" value="light"><input type="hidden" id="giscus-alt-theme" value="dark"><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="../r_basic/dplyr.html" class="pagination-link  aria-label=">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">基于dplyr包的数据整理</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../r_basic/data_visualization.html" class="pagination-link" aria-label="数据可视化">
+        <span class="nav-page-text">数据可视化</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb35" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "基于tidyr的长/宽数据转换"</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 参考：</span><span class="ot">&lt;https://r4ds.hadley.nz/data-tidy&gt;</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="al">![](images/logo-02.png)</span><span class="ot">{width="175"}</span><span class="co">](https://tidyr.tidyverse.org)</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Tidyr</span><span class="co">](https://tidyr.tidyverse.org)</span>是tidyverse的核心包之一，其目标是帮助创建整洁的数据。整洁的数据是具有以下特征的数据：</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>每个变量都是一列</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>每个观测值是一行</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>每个值是一个单元格</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a><span class="al">![整洁数据的基本特征](images/tidy-1.png)</span>{#fig-dataset_tidy width="553"}</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a><span class="fu"># 加载包</span></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>这里的案例数据显示了以三种不同方式组织的相同数据。每个数据集都有相同的四个变量：country（国家）、year（年份）、population（总人口）和cases（结核病病例数），但每个数据集以不同的方式组织这些值。</span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>table1</span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>table2</span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a>table3</span>
+<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-36"><a href="#cb35-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-37"><a href="#cb35-37" aria-hidden="true" tabindex="-1"></a>table1中的数据符合\@fig-dataset_tidy 中的整洁数据规范。</span>
+<span id="cb35-38"><a href="#cb35-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-39"><a href="#cb35-39" aria-hidden="true" tabindex="-1"></a><span class="fu"># pivot_longer()：转换成长数据</span></span>
+<span id="cb35-40"><a href="#cb35-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-41"><a href="#cb35-41" aria-hidden="true" tabindex="-1"></a>这里我们以billboard数据集为例。该数据记录了 2000 年歌曲在广告牌上的排名情况：</span>
+<span id="cb35-42"><a href="#cb35-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-45"><a href="#cb35-45" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-46"><a href="#cb35-46" aria-hidden="true" tabindex="-1"></a>billboard</span>
+<span id="cb35-47"><a href="#cb35-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-48"><a href="#cb35-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-49"><a href="#cb35-49" aria-hidden="true" tabindex="-1"></a>在这个数据集中，每个观测（行）都是一首歌曲。前三列（“artist”、“track”和“date.entered”）是描述歌曲的变量。在此之后的76 列（“wk1”-“wk76”）描述了该歌曲在发行后每周的排名信息（仅在进入前100名时记录名次信息）。因此，对于“wk1”-“wk76”中的数据，**所有的列名是一个变量（周数）**，每个单元格值则是另一个变量（每周的排名）。因此，这个数据集是不符合整洁数据的要求的。</span>
+<span id="cb35-50"><a href="#cb35-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-51"><a href="#cb35-51" aria-hidden="true" tabindex="-1"></a>下面，我们通过<span class="in">`pivot_longer()`</span>将该数据转换成一个**长数据**，使其符合整洁数据：</span>
+<span id="cb35-52"><a href="#cb35-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-55"><a href="#cb35-55" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-56"><a href="#cb35-56" aria-hidden="true" tabindex="-1"></a>billboard <span class="sc">|&gt;</span> </span>
+<span id="cb35-57"><a href="#cb35-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb35-58"><a href="#cb35-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"wk"</span>), </span>
+<span id="cb35-59"><a href="#cb35-59" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"week"</span>, </span>
+<span id="cb35-60"><a href="#cb35-60" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rank"</span></span>
+<span id="cb35-61"><a href="#cb35-61" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-62"><a href="#cb35-62" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-63"><a href="#cb35-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-64"><a href="#cb35-64" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`cols`</span>：指定需要转换哪些列，即哪些列不是变量。此参数使用与&nbsp;<span class="in">`select()`</span>相同的语法（见<span class="co">[</span><span class="ot">此前章节</span><span class="co">](/r_basic/dplyr.qmd#sec-select)</span>），因此在这里我们可以使用&nbsp;<span class="in">`!c(artist, track, date.entered)`</span>&nbsp;或&nbsp;<span class="in">`starts_with("wk")`</span>&nbsp;来选择“wk1”到“wk76”列。</span>
+<span id="cb35-65"><a href="#cb35-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-66"><a href="#cb35-66" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`names_to`</span>：转换后的列的列名，即新变量名。这里我们将该变量命名为&nbsp;“week”&nbsp;。</span>
+<span id="cb35-67"><a href="#cb35-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-68"><a href="#cb35-68" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`values_to`</span>：指定单元格值所代表的变量的变量名。我们将该变量命名为 “rank”。⚠️注意"week"和"rank"加了引号。</span>
+<span id="cb35-69"><a href="#cb35-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-70"><a href="#cb35-70" aria-hidden="true" tabindex="-1"></a>现在，让我们聚焦生成的长数据。如果一首歌进入前 100 名的时间少于 76 周，会发生什么情况？以 2 Pac 的《Baby Don't Cry》为例。上面的输出结果表明，这首歌在前 100 名中只停留了 7 周，其余的周数都是缺失值。这些缺失值其实并不代表未知观测值，而是转换后的长数据集的结构迫使它们存在，因此我们可以通过设置 <span class="in">`values_drop_na = TRUE`</span> 来要求 <span class="in">`pivot_longer()`</span>去掉它们：</span>
+<span id="cb35-71"><a href="#cb35-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-74"><a href="#cb35-74" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-75"><a href="#cb35-75" aria-hidden="true" tabindex="-1"></a>billboard <span class="sc">|&gt;</span> </span>
+<span id="cb35-76"><a href="#cb35-76" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb35-77"><a href="#cb35-77" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"wk"</span>), </span>
+<span id="cb35-78"><a href="#cb35-78" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"week"</span>, </span>
+<span id="cb35-79"><a href="#cb35-79" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rank"</span>,</span>
+<span id="cb35-80"><a href="#cb35-80" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_drop_na =</span> <span class="cn">TRUE</span></span>
+<span id="cb35-81"><a href="#cb35-81" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-82"><a href="#cb35-82" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-83"><a href="#cb35-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-84"><a href="#cb35-84" aria-hidden="true" tabindex="-1"></a>注意到“week”目前为字符型变量，可以通过readr包中的<span class="in">`parse_number()`</span>将其转换成数值型变量（详见<span class="co">[</span><span class="ot">此前章节</span><span class="co">](/r_basic/data_input_output.qmd#sec-定义列类别)</span>），便于后续分析：</span>
+<span id="cb35-85"><a href="#cb35-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-88"><a href="#cb35-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-89"><a href="#cb35-89" aria-hidden="true" tabindex="-1"></a>billboard_longer <span class="ot">&lt;-</span> billboard <span class="sc">|&gt;</span> </span>
+<span id="cb35-90"><a href="#cb35-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb35-91"><a href="#cb35-91" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"wk"</span>), </span>
+<span id="cb35-92"><a href="#cb35-92" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"week"</span>, </span>
+<span id="cb35-93"><a href="#cb35-93" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"rank"</span>,</span>
+<span id="cb35-94"><a href="#cb35-94" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_drop_na =</span> <span class="cn">TRUE</span></span>
+<span id="cb35-95"><a href="#cb35-95" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb35-96"><a href="#cb35-96" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb35-97"><a href="#cb35-97" aria-hidden="true" tabindex="-1"></a>    <span class="at">week =</span> <span class="fu">parse_number</span>(week)</span>
+<span id="cb35-98"><a href="#cb35-98" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-99"><a href="#cb35-99" aria-hidden="true" tabindex="-1"></a>billboard_longer</span>
+<span id="cb35-100"><a href="#cb35-100" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-101"><a href="#cb35-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-102"><a href="#cb35-102" aria-hidden="true" tabindex="-1"></a>现在，我们在一个变量中拥有了所有的周数，在另一个变量中拥有了所有的排名值，这样我们就可以很好地直观显示歌曲排名随时间的变化情况。代码如下，结果如 @fig-line_graph 所示。我们可以看到，很少有歌曲能在前 100 名中停留 20 周以上。</span>
+<span id="cb35-103"><a href="#cb35-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-106"><a href="#cb35-106" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-107"><a href="#cb35-107" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: 显示歌曲排名随时间变化的折线图</span></span>
+<span id="cb35-108"><a href="#cb35-108" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-line_graph</span></span>
+<span id="cb35-109"><a href="#cb35-109" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-width: 5</span></span>
+<span id="cb35-110"><a href="#cb35-110" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-height: 4</span></span>
+<span id="cb35-111"><a href="#cb35-111" aria-hidden="true" tabindex="-1"></a>billboard_longer <span class="sc">|&gt;</span> </span>
+<span id="cb35-112"><a href="#cb35-112" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> week, </span>
+<span id="cb35-113"><a href="#cb35-113" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> rank, </span>
+<span id="cb35-114"><a href="#cb35-114" aria-hidden="true" tabindex="-1"></a>             <span class="at">group =</span> track)) <span class="sc">+</span> </span>
+<span id="cb35-115"><a href="#cb35-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">alpha =</span> <span class="fl">0.25</span>) <span class="sc">+</span> </span>
+<span id="cb35-116"><a href="#cb35-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_reverse</span>() <span class="sc">+</span></span>
+<span id="cb35-117"><a href="#cb35-117" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb35-118"><a href="#cb35-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-119"><a href="#cb35-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-120"><a href="#cb35-120" aria-hidden="true" tabindex="-1"></a><span class="fu">## pivot_longer()的转换原理</span></span>
+<span id="cb35-121"><a href="#cb35-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-122"><a href="#cb35-122" aria-hidden="true" tabindex="-1"></a>假设我们有三个病人，id 分别为 A、B 和 C，我们为每个病人测量了两次血压。这里我们用在<span class="co">[</span><span class="ot">此前章节</span><span class="co">](/r_basic/data_input_output.qmd#sec-手动生成tibble)</span>中已经介绍过的 <span class="in">`tribble()`</span> 来创建这个数据：</span>
+<span id="cb35-123"><a href="#cb35-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-126"><a href="#cb35-126" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-127"><a href="#cb35-127" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb35-128"><a href="#cb35-128" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>id,  <span class="sc">~</span>bp1, <span class="sc">~</span>bp2,</span>
+<span id="cb35-129"><a href="#cb35-129" aria-hidden="true" tabindex="-1"></a>   <span class="st">"A"</span>,  <span class="dv">100</span>,  <span class="dv">120</span>,</span>
+<span id="cb35-130"><a href="#cb35-130" aria-hidden="true" tabindex="-1"></a>   <span class="st">"B"</span>,  <span class="dv">140</span>,  <span class="dv">115</span>,</span>
+<span id="cb35-131"><a href="#cb35-131" aria-hidden="true" tabindex="-1"></a>   <span class="st">"C"</span>,  <span class="dv">120</span>,  <span class="dv">125</span></span>
+<span id="cb35-132"><a href="#cb35-132" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-133"><a href="#cb35-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-134"><a href="#cb35-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-135"><a href="#cb35-135" aria-hidden="true" tabindex="-1"></a>该数据集的“bp1”和“bp2”列不符合整洁数据的要求。因此，我们通过<span class="in">`pivot_longer()`</span>将该数据转换成包含三个变量：id（已存在）、measurement（血压测定次数）和 value（血压值）的新数据：</span>
+<span id="cb35-136"><a href="#cb35-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-139"><a href="#cb35-139" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-140"><a href="#cb35-140" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span> </span>
+<span id="cb35-141"><a href="#cb35-141" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb35-142"><a href="#cb35-142" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> bp1<span class="sc">:</span>bp2,</span>
+<span id="cb35-143"><a href="#cb35-143" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"measurement"</span>,</span>
+<span id="cb35-144"><a href="#cb35-144" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"value"</span></span>
+<span id="cb35-145"><a href="#cb35-145" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-146"><a href="#cb35-146" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-147"><a href="#cb35-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-148"><a href="#cb35-148" aria-hidden="true" tabindex="-1"></a>转换是如何进行的呢？如果我们逐列考虑，就会比较容易理解。如下图所示，在原始数据集中已经是变量的一列（id）的值需要重复，重复的次数等于需要转换的列数。这里我们需要转换的列是“bp1”和“bp2”，因此每个“id”需要重复两次。</span>
+<span id="cb35-149"><a href="#cb35-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-150"><a href="#cb35-150" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/variables.png)</span>{width="522"}</span>
+<span id="cb35-151"><a href="#cb35-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-152"><a href="#cb35-152" aria-hidden="true" tabindex="-1"></a>旧列名将成为新变量的值，该变量的名称由 <span class="in">`names_to`</span> 参数定义。</span>
+<span id="cb35-153"><a href="#cb35-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-154"><a href="#cb35-154" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/column-names.png)</span>{width="516"}</span>
+<span id="cb35-155"><a href="#cb35-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-156"><a href="#cb35-156" aria-hidden="true" tabindex="-1"></a>单元格值也会变成一个新变量的值，其名称由 <span class="in">`values_to`</span> 定义。这些值将逐行填充。</span>
+<span id="cb35-157"><a href="#cb35-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-158"><a href="#cb35-158" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/cell-values.png)</span>{width="510"}</span>
+<span id="cb35-159"><a href="#cb35-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-160"><a href="#cb35-160" aria-hidden="true" tabindex="-1"></a><span class="fu">## 包含多个变量信息的列名</span></span>
+<span id="cb35-161"><a href="#cb35-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-162"><a href="#cb35-162" aria-hidden="true" tabindex="-1"></a>更具挑战性的情况是，列名中包含了多个变量信息，而我们希望将这些信息分别存储在不同的新变量中。以 who2 数据集为例，该数据集由世界卫生组织收集，记录了肺结核诊断的相关信息：</span>
+<span id="cb35-163"><a href="#cb35-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-166"><a href="#cb35-166" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-167"><a href="#cb35-167" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-who2</span></span>
+<span id="cb35-168"><a href="#cb35-168" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: 肺结核病例信息-列名包含多个变量信息</span></span>
+<span id="cb35-169"><a href="#cb35-169" aria-hidden="true" tabindex="-1"></a>who2</span>
+<span id="cb35-170"><a href="#cb35-170" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-171"><a href="#cb35-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-174"><a href="#cb35-174" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-175"><a href="#cb35-175" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看3:56的列名规则</span></span>
+<span id="cb35-176"><a href="#cb35-176" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(who2)[<span class="dv">3</span><span class="sc">:</span><span class="dv">56</span>] <span class="sc">%&gt;%</span> </span>
+<span id="cb35-177"><a href="#cb35-177" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_split</span>(</span>
+<span id="cb35-178"><a href="#cb35-178" aria-hidden="true" tabindex="-1"></a>    <span class="at">pattern =</span> <span class="st">"_"</span>, </span>
+<span id="cb35-179"><a href="#cb35-179" aria-hidden="true" tabindex="-1"></a>    <span class="at">simplify =</span> T</span>
+<span id="cb35-180"><a href="#cb35-180" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-181"><a href="#cb35-181" aria-hidden="true" tabindex="-1"></a>  <span class="fu">apply</span>(<span class="at">MARGIN =</span> <span class="dv">2</span>, unique)</span>
+<span id="cb35-182"><a href="#cb35-182" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-183"><a href="#cb35-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-184"><a href="#cb35-184" aria-hidden="true" tabindex="-1"></a>可以看到，该数据的前两列“country”和“year”是正常的变量。剩余的56列，每一列的名称都由三个部分组成，中间用 “<span class="sc">\_</span>” 分隔：</span>
+<span id="cb35-185"><a href="#cb35-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-186"><a href="#cb35-186" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>第一部分为“sp/rel/ep”，代表采用的诊断方法；</span>
+<span id="cb35-187"><a href="#cb35-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-188"><a href="#cb35-188" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>第二部分为“m/f” ，代表性别；</span>
+<span id="cb35-189"><a href="#cb35-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-190"><a href="#cb35-190" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>第三部分为“014/1524/2534/3535/44/4554/5564/65”， 代表年龄范围（例如，014 代表 0-14岁）。</span>
+<span id="cb35-191"><a href="#cb35-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-192"><a href="#cb35-192" aria-hidden="true" tabindex="-1"></a>因此，在这种情况下，who2 数据中记录了六条变量信息：国家和年份（已列出）；诊断方法、性别和年龄范围（包含在3-56列的列名中），以及该类别中的患者人数（单元格值）。为了将这六条变量信息转换到六个独立的列中，我们可以通过指定 <span class="in">`pivot_longer()`</span> 中的 <span class="in">`names_sep`</span> 参数，按照“<span class="sc">\_</span>”分隔符将原始变量名分割成若干个字符串：</span>
+<span id="cb35-193"><a href="#cb35-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-196"><a href="#cb35-196" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-197"><a href="#cb35-197" aria-hidden="true" tabindex="-1"></a>who2 <span class="sc">|&gt;</span> </span>
+<span id="cb35-198"><a href="#cb35-198" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb35-199"><a href="#cb35-199" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">!</span>(country<span class="sc">:</span>year),</span>
+<span id="cb35-200"><a href="#cb35-200" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span>, <span class="co"># 指定原始列名的分隔符</span></span>
+<span id="cb35-201"><a href="#cb35-201" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"diagnosis"</span>, <span class="st">"gender"</span>, <span class="st">"age"</span>), </span>
+<span id="cb35-202"><a href="#cb35-202" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">"count"</span></span>
+<span id="cb35-203"><a href="#cb35-203" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-204"><a href="#cb35-204" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-205"><a href="#cb35-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-206"><a href="#cb35-206" aria-hidden="true" tabindex="-1"></a>除了用 <span class="in">`names_sep`</span> ，也可以使用 <span class="in">`names_pattern`</span> 参数，通过正则表达式来实现上述效果。在这个案例中的数据转换过程参考如下示意图：</span>
+<span id="cb35-207"><a href="#cb35-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-208"><a href="#cb35-208" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/multiple-names.png)</span>{width="460"}</span>
+<span id="cb35-209"><a href="#cb35-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-210"><a href="#cb35-210" aria-hidden="true" tabindex="-1"></a><span class="fu">## 混合了变量名和变量取值的列名</span></span>
+<span id="cb35-211"><a href="#cb35-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-214"><a href="#cb35-214" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-215"><a href="#cb35-215" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-household</span></span>
+<span id="cb35-216"><a href="#cb35-216" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: 家庭数据</span></span>
+<span id="cb35-217"><a href="#cb35-217" aria-hidden="true" tabindex="-1"></a>household</span>
+<span id="cb35-218"><a href="#cb35-218" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-219"><a href="#cb35-219" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-220"><a href="#cb35-220" aria-hidden="true" tabindex="-1"></a>该数据集包含五个家庭的数据，每个家庭最多记录两个孩子的姓名（name_child1、name_child2）和出生日期（dob_child1、dob_child2）。仔细 @tbl-who2 和 @tbl-household 可以发现 ：@tbl-who2 中需要转换的列名均由不同变量的具体取值构成（如“sp_m_014”，我们就可以知道这一列对应的诊断方法为“sp”，性别为“m”，年龄段为0-14岁）；而 @tbl-household 的列名既有变量的具体取值，如“child1”告诉我们这是编号为1的child，也有变量的名称，如“dob”（出生日期）和“name”（姓名）。</span>
+<span id="cb35-221"><a href="#cb35-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-222"><a href="#cb35-222" aria-hidden="true" tabindex="-1"></a>为了解决这个问题，我们同样需要根据“<span class="sc">\_</span>”分隔符分割原始列名，然后向 <span class="in">`names_to`</span> 提供新变量名。但由于列名混合了变量名和变量取值，我们难以一一对应新旧列名。因此，这时候我们使用特殊的"**.value "字符**，**让分割后的旧列名的第一个元素直接作为新变量的名称；分割后的旧列名的第二个元素（child1或child2）作为新的“child”变量的取值**：</span>
+<span id="cb35-223"><a href="#cb35-223" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-226"><a href="#cb35-226" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-227"><a href="#cb35-227" aria-hidden="true" tabindex="-1"></a>household <span class="sc">|&gt;</span> </span>
+<span id="cb35-228"><a href="#cb35-228" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
+<span id="cb35-229"><a href="#cb35-229" aria-hidden="true" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">!</span>family, </span>
+<span id="cb35-230"><a href="#cb35-230" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"_"</span>, </span>
+<span id="cb35-231"><a href="#cb35-231" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">".value"</span>, <span class="st">"child"</span>), </span>
+<span id="cb35-232"><a href="#cb35-232" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_drop_na =</span> <span class="cn">TRUE</span></span>
+<span id="cb35-233"><a href="#cb35-233" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-234"><a href="#cb35-234" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-235"><a href="#cb35-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-236"><a href="#cb35-236" aria-hidden="true" tabindex="-1"></a>使用 <span class="in">`names_to = c(".value", "num")`</span> 进行数据转换会将列名分成两部分：第一部分决定输出的列名（x 或 y），第二部分决定 num 列的值。见下面的示意图：</span>
+<span id="cb35-237"><a href="#cb35-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-238"><a href="#cb35-238" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/names-and-values.png)</span></span>
+<span id="cb35-239"><a href="#cb35-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-240"><a href="#cb35-240" aria-hidden="true" tabindex="-1"></a><span class="fu"># pivot_wider()：转换成宽数据</span></span>
+<span id="cb35-241"><a href="#cb35-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-242"><a href="#cb35-242" aria-hidden="true" tabindex="-1"></a><span class="in">`pivot_wider()`</span> 可以通过增加列数和减少行数使数据集变宽。例如在重复测量数据中，一般而言我们会将每次观测作为一个个案，这时候一个对象多个时间点的观测数据分布在多行。这样的数据即为长数据，便于进行各种统计分析。但是如果你想了解每个对象的观测情况，就可以通过<span class="in">`pivot_wider()`</span> 来将一个对象的多次观测结果合并到一行，即转换为宽数据。这种情况的实际应用场景较少，因此下面我们只简单演示了一个转换宽数据的基本语法，相关详细解释参考<span class="co">[</span><span class="ot">该链接</span><span class="co">](https://r4ds.hadley.nz/data-tidy#widening-data)</span>。</span>
+<span id="cb35-243"><a href="#cb35-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-246"><a href="#cb35-246" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-247"><a href="#cb35-247" aria-hidden="true" tabindex="-1"></a>cms_patient_experience</span>
+<span id="cb35-248"><a href="#cb35-248" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-249"><a href="#cb35-249" aria-hidden="true" tabindex="-1"></a>cms_patient_experience <span class="sc">|&gt;</span> </span>
+<span id="cb35-250"><a href="#cb35-250" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb35-251"><a href="#cb35-251" aria-hidden="true" tabindex="-1"></a>    <span class="at">id_cols =</span> <span class="fu">starts_with</span>(<span class="st">"org"</span>), <span class="co"># 哪一列/几列定义了行的唯一标识</span></span>
+<span id="cb35-252"><a href="#cb35-252" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> measure_cd, <span class="co"># 从哪一列（或哪几列）获取输出列的名称</span></span>
+<span id="cb35-253"><a href="#cb35-253" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> prf_rate <span class="co"># 从哪一列（或哪几列）获取单元格值</span></span>
+<span id="cb35-254"><a href="#cb35-254" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb35-255"><a href="#cb35-255" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-256"><a href="#cb35-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-257"><a href="#cb35-257" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb35-258"><a href="#cb35-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-259"><a href="#cb35-259" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb35-260"><a href="#cb35-260" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb35-261"><a href="#cb35-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-264"><a href="#cb35-264" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb35-265"><a href="#cb35-265" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb35-266"><a href="#cb35-266" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb35-267"><a href="#cb35-267" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb35-268"><a href="#cb35-268" aria-hidden="true" tabindex="-1"></a>:::</span>
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+      <ul class="footer-items list-unstyled">
+<li class="nav-item">
+ This website was built with Quarto
+  </li>  
+</ul>
+</div>   
+    <div class="nav-footer-center">
+<p>Copyright 2024, Du Junhong</p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/r_basic/tidyr.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+<li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/djhcod">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+</div>
+  </div>
+</footer>
+
+
+</body></html>

@@ -1,0 +1,236 @@
+---
+title: "基于tidyr的长/宽数据转换"
+---
+
+> 参考：<https://r4ds.hadley.nz/data-tidy>
+
+[![](images/logo-02.png){width="175"}](https://tidyr.tidyverse.org)
+
+[Tidyr](https://tidyr.tidyverse.org)是tidyverse的核心包之一，其目标是帮助创建整洁的数据。整洁的数据是具有以下特征的数据：
+
+-   每个变量都是一列
+
+-   每个观测值是一行
+
+-   每个值是一个单元格
+
+![整洁数据的基本特征](images/tidy-1.png){#fig-dataset_tidy width="553"}
+
+# 加载包
+
+```{r}
+library(tidyverse)
+```
+
+这里的案例数据显示了以三种不同方式组织的相同数据。每个数据集都有相同的四个变量：country（国家）、year（年份）、population（总人口）和cases（结核病病例数），但每个数据集以不同的方式组织这些值。
+
+```{r}
+table1
+table2
+table3
+```
+
+table1中的数据符合\@fig-dataset_tidy 中的整洁数据规范。
+
+# pivot_longer()：转换成长数据
+
+这里我们以billboard数据集为例。该数据记录了 2000 年歌曲在广告牌上的排名情况：
+
+```{r}
+billboard
+```
+
+在这个数据集中，每个观测（行）都是一首歌曲。前三列（“artist”、“track”和“date.entered”）是描述歌曲的变量。在此之后的76 列（“wk1”-“wk76”）描述了该歌曲在发行后每周的排名信息（仅在进入前100名时记录名次信息）。因此，对于“wk1”-“wk76”中的数据，**所有的列名是一个变量（周数）**，每个单元格值则是另一个变量（每周的排名）。因此，这个数据集是不符合整洁数据的要求的。
+
+下面，我们通过`pivot_longer()`将该数据转换成一个**长数据**，使其符合整洁数据：
+
+```{r}
+billboard |> 
+  pivot_longer(
+    cols = starts_with("wk"), 
+    names_to = "week", 
+    values_to = "rank"
+  )
+```
+
+-   `cols`：指定需要转换哪些列，即哪些列不是变量。此参数使用与 `select()`相同的语法（见[此前章节](/r_basic/dplyr.qmd#sec-select)），因此在这里我们可以使用 `!c(artist, track, date.entered)` 或 `starts_with("wk")` 来选择“wk1”到“wk76”列。
+
+-   `names_to`：转换后的列的列名，即新变量名。这里我们将该变量命名为 “week” 。
+
+-   `values_to`：指定单元格值所代表的变量的变量名。我们将该变量命名为 “rank”。⚠️注意"week"和"rank"加了引号。
+
+现在，让我们聚焦生成的长数据。如果一首歌进入前 100 名的时间少于 76 周，会发生什么情况？以 2 Pac 的《Baby Don't Cry》为例。上面的输出结果表明，这首歌在前 100 名中只停留了 7 周，其余的周数都是缺失值。这些缺失值其实并不代表未知观测值，而是转换后的长数据集的结构迫使它们存在，因此我们可以通过设置 `values_drop_na = TRUE` 来要求 `pivot_longer()`去掉它们：
+
+```{r}
+billboard |> 
+  pivot_longer(
+    cols = starts_with("wk"), 
+    names_to = "week", 
+    values_to = "rank",
+    values_drop_na = TRUE
+  )
+```
+
+注意到“week”目前为字符型变量，可以通过readr包中的`parse_number()`将其转换成数值型变量（详见[此前章节](/r_basic/data_input_output.qmd#sec-定义列类别)），便于后续分析：
+
+```{r}
+billboard_longer <- billboard |> 
+  pivot_longer(
+    cols = starts_with("wk"), 
+    names_to = "week", 
+    values_to = "rank",
+    values_drop_na = TRUE
+  ) |> 
+  mutate(
+    week = parse_number(week)
+  )
+billboard_longer
+```
+
+现在，我们在一个变量中拥有了所有的周数，在另一个变量中拥有了所有的排名值，这样我们就可以很好地直观显示歌曲排名随时间的变化情况。代码如下，结果如 @fig-line_graph 所示。我们可以看到，很少有歌曲能在前 100 名中停留 20 周以上。
+
+```{r}
+#| fig-cap: 显示歌曲排名随时间变化的折线图
+#| label: fig-line_graph
+#| fig-width: 5
+#| fig-height: 4
+billboard_longer |> 
+  ggplot(aes(x = week, 
+             y = rank, 
+             group = track)) + 
+  geom_line(alpha = 0.25) + 
+  scale_y_reverse() +
+  theme_bw()
+```
+
+## pivot_longer()的转换原理
+
+假设我们有三个病人，id 分别为 A、B 和 C，我们为每个病人测量了两次血压。这里我们用在[此前章节](/r_basic/data_input_output.qmd#sec-手动生成tibble)中已经介绍过的 `tribble()` 来创建这个数据：
+
+```{r}
+df <- tribble(
+  ~id,  ~bp1, ~bp2,
+   "A",  100,  120,
+   "B",  140,  115,
+   "C",  120,  125
+)
+```
+
+该数据集的“bp1”和“bp2”列不符合整洁数据的要求。因此，我们通过`pivot_longer()`将该数据转换成包含三个变量：id（已存在）、measurement（血压测定次数）和 value（血压值）的新数据：
+
+```{r}
+df |> 
+  pivot_longer(
+    cols = bp1:bp2,
+    names_to = "measurement",
+    values_to = "value"
+  )
+```
+
+转换是如何进行的呢？如果我们逐列考虑，就会比较容易理解。如下图所示，在原始数据集中已经是变量的一列（id）的值需要重复，重复的次数等于需要转换的列数。这里我们需要转换的列是“bp1”和“bp2”，因此每个“id”需要重复两次。
+
+![](images/variables.png){width="522"}
+
+旧列名将成为新变量的值，该变量的名称由 `names_to` 参数定义。
+
+![](images/column-names.png){width="516"}
+
+单元格值也会变成一个新变量的值，其名称由 `values_to` 定义。这些值将逐行填充。
+
+![](images/cell-values.png){width="510"}
+
+## 包含多个变量信息的列名
+
+更具挑战性的情况是，列名中包含了多个变量信息，而我们希望将这些信息分别存储在不同的新变量中。以 who2 数据集为例，该数据集由世界卫生组织收集，记录了肺结核诊断的相关信息：
+
+```{r}
+#| label: tbl-who2
+#| tbl-cap: 肺结核病例信息-列名包含多个变量信息
+who2
+```
+
+```{r}
+# 查看3:56的列名规则
+colnames(who2)[3:56] %>% 
+  str_split(
+    pattern = "_", 
+    simplify = T
+    ) %>% 
+  apply(MARGIN = 2, unique)
+```
+
+可以看到，该数据的前两列“country”和“year”是正常的变量。剩余的56列，每一列的名称都由三个部分组成，中间用 “\_” 分隔：
+
+-   第一部分为“sp/rel/ep”，代表采用的诊断方法；
+
+-   第二部分为“m/f” ，代表性别；
+
+-   第三部分为“014/1524/2534/3535/44/4554/5564/65”， 代表年龄范围（例如，014 代表 0-14岁）。
+
+因此，在这种情况下，who2 数据中记录了六条变量信息：国家和年份（已列出）；诊断方法、性别和年龄范围（包含在3-56列的列名中），以及该类别中的患者人数（单元格值）。为了将这六条变量信息转换到六个独立的列中，我们可以通过指定 `pivot_longer()` 中的 `names_sep` 参数，按照“\_”分隔符将原始变量名分割成若干个字符串：
+
+```{r}
+who2 |> 
+  pivot_longer(
+    cols = !(country:year),
+    names_sep = "_", # 指定原始列名的分隔符
+    names_to = c("diagnosis", "gender", "age"), 
+    values_to = "count"
+  )
+```
+
+除了用 `names_sep` ，也可以使用 `names_pattern` 参数，通过正则表达式来实现上述效果。在这个案例中的数据转换过程参考如下示意图：
+
+![](images/multiple-names.png){width="460"}
+
+## 混合了变量名和变量取值的列名
+
+```{r}
+#| label: tbl-household
+#| tbl-cap: 家庭数据
+household
+```
+
+该数据集包含五个家庭的数据，每个家庭最多记录两个孩子的姓名（name_child1、name_child2）和出生日期（dob_child1、dob_child2）。仔细观察 @tbl-who2 和 @tbl-household 可以发现 ：@tbl-who2 中需要转换的列名均由不同变量的具体取值构成（如“sp_m_014”，我们就可以知道这一列对应的诊断方法为“sp”，性别为“m”，年龄段为0-14岁）；而 @tbl-household 的列名既有变量的具体取值，如“child1”告诉我们这是编号为1的child，也有变量的名称，如“dob”（出生日期）和“name”（姓名）。
+
+为了解决这个问题，我们同样需要根据“\_”分隔符分割原始列名，然后向 `names_to` 提供新变量名。但由于列名混合了变量名和变量取值，我们难以一一对应新旧列名。因此，这时候我们使用特殊的"**.value "字符**，**让分割后的旧列名的第一个元素直接作为新变量的名称；分割后的旧列名的第二个元素（child1或child2）作为新的“child”变量的取值**：
+
+```{r}
+household |> 
+  pivot_longer(
+    cols = !family, 
+    names_sep = "_", 
+    names_to = c(".value", "child"), 
+    values_drop_na = TRUE
+  )
+```
+
+使用 `names_to = c(".value", "num")` 进行数据转换会将列名分成两部分：第一部分决定输出的列名（x 或 y），第二部分决定 num 列的值。见下面的示意图：
+
+![](images/names-and-values.png)
+
+# pivot_wider()：转换成宽数据
+
+`pivot_wider()` 可以通过增加列数和减少行数使数据集变宽。例如在重复测量数据中，一般而言我们会将每次观测作为一个个案，这时候一个对象多个时间点的观测数据分布在多行。这样的数据即为长数据，便于进行各种统计分析。但是如果你想了解每个对象的观测情况，就可以通过`pivot_wider()` 来将一个对象的多次观测结果合并到一行，即转换为宽数据。这种情况的实际应用场景较少，因此下面我们只简单演示了一个转换宽数据的基本语法，相关详细解释参考[该链接](https://r4ds.hadley.nz/data-tidy#widening-data)。
+
+```{r}
+cms_patient_experience
+
+cms_patient_experience |> 
+  pivot_wider(
+    id_cols = starts_with("org"), # 哪一列/几列定义了行的唯一标识
+    names_from = measure_cd, # 从哪一列（或哪几列）获取输出列的名称
+    values_from = prf_rate # 从哪一列（或哪几列）获取单元格值
+  )
+```
+
+------------------------------------------------------------------------
+
+::: {.callout-note collapse="true" icon="false"}
+## Session Info
+
+```{r}
+#| echo: false
+sessionInfo()
+```
+:::

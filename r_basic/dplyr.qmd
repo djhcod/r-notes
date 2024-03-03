@@ -1,5 +1,5 @@
 ---
-title: "基于dplyr包的数据处理"
+title: "基于dplyr包的数据整理"
 ---
 
 > 参考：
@@ -292,7 +292,7 @@ distinct(flights)
 distinct(flights, origin, dest)
 ```
 
-可以看到，如果根据某列或某几列为依据来查找非重复值，那么默认只输出这几列，我们可以通过加入`.keep_all = TRUE`参数来保留其他列。`.`表示 `.keep_all` 是函数的一个参数，而不另一个变量的名称。
+可以看到，如果根据某列或某几列为依据来查找非重复值，那么默认只输出这几列，我们可以通过加入`.keep_all = TRUE`参数来保留其他列。`.`表示 `.keep_all` 是函数的一个参数，而不是另一个变量的名称。
 
 ```{r}
 distinct(flights, origin, dest, .keep_all = TRUE)
@@ -341,7 +341,7 @@ mutate(
   flights,
   gain = dep_delay - arr_delay,
   speed = distance / air_time * 60,
-  .after = day # 添加到第一列
+  .after = day # 在 “day” 之后添加新变量
 )
 ```
 
@@ -364,7 +364,7 @@ mutate(
 )
 ```
 
-## `select()`
+## `select()` {#sec-select}
 
 ![](images/截屏2024-02-02%2017.30.02.png){width="201"}
 
@@ -402,7 +402,7 @@ select(flights, tail_num = tailnum)
 
 ## `rename()` {#sec-rename}
 
-重命名列。新变量名在 `=` 的左侧，旧变量名在右侧。
+重命名列。新变量名在 `=` 的左侧，旧变量名在右侧（`new_name = old_name`）。
 
 ```{r}
 rename(
@@ -412,7 +412,9 @@ rename(
   )
 ```
 
-⚠️和其他`dplyr`中的函数一样，`rename`不会对原始数据进行修改，因此需要将`rename`后的数据重新赋值给新的对象或覆盖原来的对象以应用对变量名的修改。
+::: callout-caution
+和其他`dplyr`中的函数一样，`rename`不会对原始数据进行修改，因此需要将`rename`后的数据重新赋值给新的对象或覆盖原来的对象以应用对变量名的修改。
+:::
 
 如果我们有一个提供了重命名依据的字符串向量，那么可以通过`all_of()`来基于这个字符串向量对数据集的列进行重命名：
 
@@ -571,7 +573,7 @@ daily |>
   summarize(flights = n())
 ```
 
-需要注意到结果中的第一行提示我们 `summarise()` 后的数据按照“year”和“month”进行了`group`处理。这是因为`summarise()` 在处理超过一个分组的数据时，输出的结果默认去除最后一个分组依据。这一行为可以通过设定`.groups`参数进行修改：
+需要注意到结果中的第二行提示我们 `summarise()` 后的数据按照“year”和“month”进行了`group`处理。这是因为`summarise()` 在处理超过一个分组的数据时，输出的结果默认去除最后一个分组依据。这一行为可以通过设定`.groups`参数进行修改：
 
 -   `.groups = "drop_last"`：默认。`summarise()`后丢掉最后一个分组依据。
 

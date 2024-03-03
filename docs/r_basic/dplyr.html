@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.4.549">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 基于dplyr包的数据处理</title>
+<title>R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 基于dplyr包的数据整理</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,7 +60,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../r_basic/character.html" rel="next">
+<link href="../r_basic/tidyr.html" rel="next">
 <link href="../r_basic/basic_data_function.html" rel="prev">
 <link href="../images/logo.jpg" rel="icon" type="image/jpeg">
 <script src="../site_libs/quarto-html/quarto.js"></script>
@@ -116,10 +116,10 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
     document.body.classList.add('hypothesis-enabled');
   });
 </script>
-<meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 基于dplyr包的数据处理">
+<meta property="og:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 基于dplyr包的数据整理">
 <meta property="og:description" content="">
 <meta property="og:site_name" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学">
-<meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 基于dplyr包的数据处理">
+<meta name="twitter:title" content="R语言学习笔记：从数据清洗到高级统计学和生物信息学 - 基于dplyr包的数据整理">
 <meta name="twitter:description" content="">
 <meta name="twitter:card" content="summary">
 </head>
@@ -198,7 +198,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../r_basic/r_basics.html">R语言基础</a></li><li class="breadcrumb-item"><a href="../r_basic/dplyr.html">基于dplyr包的数据处理</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../r_basic/r_basics.html">R语言基础</a></li><li class="breadcrumb-item"><a href="../r_basic/dplyr.html">基于dplyr包的数据整理</a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -242,7 +242,19 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../r_basic/dplyr.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">基于dplyr包的数据处理</span></a>
+ <span class="menu-text">基于dplyr包的数据整理</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/tidyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">基于tidyr的长/宽数据转换</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/data_visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">数据可视化</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -548,7 +560,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <a href="#%E5%AF%B9%E5%88%97%E7%9A%84%E6%93%8D%E4%BD%9C" id="toc-对列的操作" class="nav-link" data-scroll-target="#%E5%AF%B9%E5%88%97%E7%9A%84%E6%93%8D%E4%BD%9C"><span class="header-section-number">4</span> 对列的操作</a>
   <ul class="collapse">
 <li><a href="#sec-mutate" id="toc-sec-mutate" class="nav-link" data-scroll-target="#sec-mutate"><span class="header-section-number">4.1</span> <code>mutate()</code></a></li>
-  <li><a href="#select" id="toc-select" class="nav-link" data-scroll-target="#select"><span class="header-section-number">4.2</span> <code>select()</code></a></li>
+  <li><a href="#sec-select" id="toc-sec-select" class="nav-link" data-scroll-target="#sec-select"><span class="header-section-number">4.2</span> <code>select()</code></a></li>
   <li>
 <a href="#sec-rename" id="toc-sec-rename" class="nav-link" data-scroll-target="#sec-rename"><span class="header-section-number">4.3</span> <code>rename()</code></a>
   <ul class="collapse">
@@ -572,8 +584,8 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/r_basic/dplyr.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../r_basic/r_basics.html">R语言基础</a></li><li class="breadcrumb-item"><a href="../r_basic/dplyr.html">基于dplyr包的数据处理</a></li></ol></nav><div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">基于dplyr包的数据处理</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../r_basic/r_basics.html">R语言基础</a></li><li class="breadcrumb-item"><a href="../r_basic/dplyr.html">基于dplyr包的数据整理</a></li></ol></nav><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">基于dplyr包的数据整理</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -1056,7 +1068,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 # ℹ 214 more rows</code></pre>
 </div>
 </div>
-<p>可以看到，如果根据某列或某几列为依据来查找非重复值，那么默认只输出这几列，我们可以通过加入<code>.keep_all = TRUE</code>参数来保留其他列。<code>.</code>表示 <code>.keep_all</code> 是函数的一个参数，而不另一个变量的名称。</p>
+<p>可以看到，如果根据某列或某几列为依据来查找非重复值，那么默认只输出这几列，我们可以通过加入<code>.keep_all = TRUE</code>参数来保留其他列。<code>.</code>表示 <code>.keep_all</code> 是函数的一个参数，而不是另一个变量的名称。</p>
 <div class="cell">
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html">distinct</a></span><span class="op">(</span><span class="va">flights</span>, <span class="va">origin</span>, <span class="va">dest</span>, .keep_all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1168,7 +1180,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 <span>  <span class="va">flights</span>,</span>
 <span>  gain <span class="op">=</span> <span class="va">dep_delay</span> <span class="op">-</span> <span class="va">arr_delay</span>,</span>
 <span>  speed <span class="op">=</span> <span class="va">distance</span> <span class="op">/</span> <span class="va">air_time</span> <span class="op">*</span> <span class="fl">60</span>,</span>
-<span>  .after <span class="op">=</span> <span class="va">day</span> <span class="co"># 添加到第一列</span></span>
+<span>  .after <span class="op">=</span> <span class="va">day</span> <span class="co"># 在 “day” 之后添加新变量</span></span>
 <span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 336,776 × 21
@@ -1221,7 +1233,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 # ℹ 336,766 more rows</code></pre>
 </div>
 </div>
-</section><section id="select" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="select">
+</section><section id="sec-select" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="sec-select">
 <span class="header-section-number">4.2</span> <code>select()</code>
 </h2>
 <p><img src="images/截屏2024-02-02 17.30.02.png" class="img-fluid" width="201"></p>
@@ -1332,7 +1344,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </section><section id="sec-rename" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="sec-rename">
 <span class="header-section-number">4.3</span> <code>rename()</code>
 </h2>
-<p>重命名列。新变量名在 <code>=</code> 的左侧，旧变量名在右侧。</p>
+<p>重命名列。新变量名在 <code>=</code> 的左侧，旧变量名在右侧（<code>new_name = old_name</code>）。</p>
 <div class="cell">
 <div class="sourceCode" id="cb78"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span></span>
 <span>  <span class="va">flights</span>, </span>
@@ -1359,7 +1371,19 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 #   hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 </div>
 </div>
-<p>⚠️和其他<code>dplyr</code>中的函数一样，<code>rename</code>不会对原始数据进行修改，因此需要将<code>rename</code>后的数据重新赋值给新的对象或覆盖原来的对象以应用对变量名的修改。</p>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>和其他<code>dplyr</code>中的函数一样，<code>rename</code>不会对原始数据进行修改，因此需要将<code>rename</code>后的数据重新赋值给新的对象或覆盖原来的对象以应用对变量名的修改。</p>
+</div>
+</div>
 <p>如果我们有一个提供了重命名依据的字符串向量，那么可以通过<code><a href="https://tidyselect.r-lib.org/reference/all_of.html">all_of()</a></code>来基于这个字符串向量对数据集的列进行重命名：</p>
 <div class="cell">
 <div class="sourceCode" id="cb80"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">lookup</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
@@ -1781,7 +1805,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 # ℹ 355 more rows</code></pre>
 </div>
 </div>
-<p>需要注意到结果中的第一行提示我们 <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> 后的数据按照“year”和“month”进行了<code>group</code>处理。这是因为<code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> 在处理超过一个分组的数据时，输出的结果默认去除最后一个分组依据。这一行为可以通过设定<code>.groups</code>参数进行修改：</p>
+<p>需要注意到结果中的第二行提示我们 <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> 后的数据按照“year”和“month”进行了<code>group</code>处理。这是因为<code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> 在处理超过一个分组的数据时，输出的结果默认去除最后一个分组依据。这一行为可以通过设定<code>.groups</code>参数进行修改：</p>
 <ul>
 <li><p><code>.groups = "drop_last"</code>：默认。<code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code>后丢掉最后一个分组依据。</p></li>
 <li><p><code>.groups = "drop"</code>：<code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code>后取消分组。</p></li>
@@ -1935,7 +1959,7 @@ row3 22.8    4  108   93 3.85 22.8    4  108   93 3.85</code></pre>
 </div>
 <hr>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1944,7 +1968,7 @@ Session Info
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -2591,13 +2615,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../r_basic/character.html" class="pagination-link" aria-label="字符的处理">
-        <span class="nav-page-text">字符的处理</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../r_basic/tidyr.html" class="pagination-link" aria-label="基于tidyr的长/宽数据转换">
+        <span class="nav-page-text">基于tidyr的长/宽数据转换</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="sourceCode" id="cb128" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "基于dplyr包的数据处理"</span></span>
+<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "基于dplyr包的数据整理"</span></span>
 <span id="cb128-3"><a href="#cb128-3" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb128-4"><a href="#cb128-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb128-5"><a href="#cb128-5" aria-hidden="true" tabindex="-1"></a><span class="at">&gt; 参考：</span></span>
@@ -2890,7 +2914,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb128-336"><a href="#cb128-336" aria-hidden="true" tabindex="-1"></a><span class="fu">distinct</span>(flights, origin, dest)</span>
 <span id="cb128-337"><a href="#cb128-337" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-338"><a href="#cb128-338" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-339"><a href="#cb128-339" aria-hidden="true" tabindex="-1"></a>可以看到，如果根据某列或某几列为依据来查找非重复值，那么默认只输出这几列，我们可以通过加入<span class="in">`.keep_all = TRUE`</span>参数来保留其他列。<span class="in">`.`</span>表示 <span class="in">`.keep_all`</span> 是函数的一个参数，而不另一个变量的名称。</span>
+<span id="cb128-339"><a href="#cb128-339" aria-hidden="true" tabindex="-1"></a>可以看到，如果根据某列或某几列为依据来查找非重复值，那么默认只输出这几列，我们可以通过加入<span class="in">`.keep_all = TRUE`</span>参数来保留其他列。<span class="in">`.`</span>表示 <span class="in">`.keep_all`</span> 是函数的一个参数，而不是另一个变量的名称。</span>
 <span id="cb128-340"><a href="#cb128-340" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb128-343"><a href="#cb128-343" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb128-344"><a href="#cb128-344" aria-hidden="true" tabindex="-1"></a><span class="fu">distinct</span>(flights, origin, dest, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
@@ -2939,7 +2963,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb128-395"><a href="#cb128-395" aria-hidden="true" tabindex="-1"></a>  flights,</span>
 <span id="cb128-396"><a href="#cb128-396" aria-hidden="true" tabindex="-1"></a>  <span class="at">gain =</span> dep_delay <span class="sc">-</span> arr_delay,</span>
 <span id="cb128-397"><a href="#cb128-397" aria-hidden="true" tabindex="-1"></a>  <span class="at">speed =</span> distance <span class="sc">/</span> air_time <span class="sc">*</span> <span class="dv">60</span>,</span>
-<span id="cb128-398"><a href="#cb128-398" aria-hidden="true" tabindex="-1"></a>  <span class="at">.after =</span> day <span class="co"># 添加到第一列</span></span>
+<span id="cb128-398"><a href="#cb128-398" aria-hidden="true" tabindex="-1"></a>  <span class="at">.after =</span> day <span class="co"># 在 “day” 之后添加新变量</span></span>
 <span id="cb128-399"><a href="#cb128-399" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb128-400"><a href="#cb128-400" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-401"><a href="#cb128-401" aria-hidden="true" tabindex="-1"></a></span>
@@ -2962,7 +2986,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb128-420"><a href="#cb128-420" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb128-421"><a href="#cb128-421" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-422"><a href="#cb128-422" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-423"><a href="#cb128-423" aria-hidden="true" tabindex="-1"></a><span class="fu">## `select()`</span></span>
+<span id="cb128-423"><a href="#cb128-423" aria-hidden="true" tabindex="-1"></a><span class="fu">## `select()` {#sec-select}</span></span>
 <span id="cb128-424"><a href="#cb128-424" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb128-425"><a href="#cb128-425" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-02-02%2017.30.02.png)</span>{width="201"}</span>
 <span id="cb128-426"><a href="#cb128-426" aria-hidden="true" tabindex="-1"></a></span>
@@ -3000,7 +3024,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb128-462"><a href="#cb128-462" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb128-463"><a href="#cb128-463" aria-hidden="true" tabindex="-1"></a><span class="fu">## `rename()` {#sec-rename}</span></span>
 <span id="cb128-464"><a href="#cb128-464" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-465"><a href="#cb128-465" aria-hidden="true" tabindex="-1"></a>重命名列。新变量名在 <span class="in">`=`</span> 的左侧，旧变量名在右侧。</span>
+<span id="cb128-465"><a href="#cb128-465" aria-hidden="true" tabindex="-1"></a>重命名列。新变量名在 <span class="in">`=`</span> 的左侧，旧变量名在右侧（<span class="in">`new_name = old_name`</span>）。</span>
 <span id="cb128-466"><a href="#cb128-466" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb128-469"><a href="#cb128-469" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb128-470"><a href="#cb128-470" aria-hidden="true" tabindex="-1"></a><span class="fu">rename</span>(</span>
@@ -3010,247 +3034,249 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb128-474"><a href="#cb128-474" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb128-475"><a href="#cb128-475" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-476"><a href="#cb128-476" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-477"><a href="#cb128-477" aria-hidden="true" tabindex="-1"></a>⚠️和其他<span class="in">`dplyr`</span>中的函数一样，<span class="in">`rename`</span>不会对原始数据进行修改，因此需要将<span class="in">`rename`</span>后的数据重新赋值给新的对象或覆盖原来的对象以应用对变量名的修改。</span>
-<span id="cb128-478"><a href="#cb128-478" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-479"><a href="#cb128-479" aria-hidden="true" tabindex="-1"></a>如果我们有一个提供了重命名依据的字符串向量，那么可以通过<span class="in">`all_of()`</span>来基于这个字符串向量对数据集的列进行重命名：</span>
+<span id="cb128-477"><a href="#cb128-477" aria-hidden="true" tabindex="-1"></a>::: callout-caution</span>
+<span id="cb128-478"><a href="#cb128-478" aria-hidden="true" tabindex="-1"></a>和其他<span class="in">`dplyr`</span>中的函数一样，<span class="in">`rename`</span>不会对原始数据进行修改，因此需要将<span class="in">`rename`</span>后的数据重新赋值给新的对象或覆盖原来的对象以应用对变量名的修改。</span>
+<span id="cb128-479"><a href="#cb128-479" aria-hidden="true" tabindex="-1"></a>:::</span>
 <span id="cb128-480"><a href="#cb128-480" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-483"><a href="#cb128-483" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-484"><a href="#cb128-484" aria-hidden="true" tabindex="-1"></a>lookup <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb128-485"><a href="#cb128-485" aria-hidden="true" tabindex="-1"></a>  <span class="at">years =</span> <span class="st">"year"</span>, </span>
-<span id="cb128-486"><a href="#cb128-486" aria-hidden="true" tabindex="-1"></a>  <span class="at">months =</span> <span class="st">"month"</span></span>
-<span id="cb128-487"><a href="#cb128-487" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb128-488"><a href="#cb128-488" aria-hidden="true" tabindex="-1"></a><span class="fu">rename</span>(flights, <span class="fu">all_of</span>(lookup))</span>
-<span id="cb128-489"><a href="#cb128-489" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-490"><a href="#cb128-490" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-491"><a href="#cb128-491" aria-hidden="true" tabindex="-1"></a>如果提供重命名依据的字符串向量中有的变量是原数据集中不存在的，那么可以用 <span class="in">`any_of()`</span>代替 <span class="in">`all_of()`</span> 来实现：</span>
+<span id="cb128-481"><a href="#cb128-481" aria-hidden="true" tabindex="-1"></a>如果我们有一个提供了重命名依据的字符串向量，那么可以通过<span class="in">`all_of()`</span>来基于这个字符串向量对数据集的列进行重命名：</span>
+<span id="cb128-482"><a href="#cb128-482" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-485"><a href="#cb128-485" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-486"><a href="#cb128-486" aria-hidden="true" tabindex="-1"></a>lookup <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb128-487"><a href="#cb128-487" aria-hidden="true" tabindex="-1"></a>  <span class="at">years =</span> <span class="st">"year"</span>, </span>
+<span id="cb128-488"><a href="#cb128-488" aria-hidden="true" tabindex="-1"></a>  <span class="at">months =</span> <span class="st">"month"</span></span>
+<span id="cb128-489"><a href="#cb128-489" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb128-490"><a href="#cb128-490" aria-hidden="true" tabindex="-1"></a><span class="fu">rename</span>(flights, <span class="fu">all_of</span>(lookup))</span>
+<span id="cb128-491"><a href="#cb128-491" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-492"><a href="#cb128-492" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-495"><a href="#cb128-495" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-496"><a href="#cb128-496" aria-hidden="true" tabindex="-1"></a>lookup <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb128-497"><a href="#cb128-497" aria-hidden="true" tabindex="-1"></a>  <span class="at">years =</span> <span class="st">"year"</span>, </span>
-<span id="cb128-498"><a href="#cb128-498" aria-hidden="true" tabindex="-1"></a>  <span class="at">months =</span> <span class="st">"month"</span>,</span>
-<span id="cb128-499"><a href="#cb128-499" aria-hidden="true" tabindex="-1"></a>  <span class="at">new =</span> <span class="st">"unknown"</span></span>
-<span id="cb128-500"><a href="#cb128-500" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb128-501"><a href="#cb128-501" aria-hidden="true" tabindex="-1"></a><span class="fu">rename</span>(flights, <span class="fu">any_of</span>(lookup))</span>
-<span id="cb128-502"><a href="#cb128-502" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-503"><a href="#cb128-503" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-504"><a href="#cb128-504" aria-hidden="true" tabindex="-1"></a><span class="fu">### `rename_with()`</span></span>
+<span id="cb128-493"><a href="#cb128-493" aria-hidden="true" tabindex="-1"></a>如果提供重命名依据的字符串向量中有的变量是原数据集中不存在的，那么可以用 <span class="in">`any_of()`</span>代替 <span class="in">`all_of()`</span> 来实现：</span>
+<span id="cb128-494"><a href="#cb128-494" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-497"><a href="#cb128-497" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-498"><a href="#cb128-498" aria-hidden="true" tabindex="-1"></a>lookup <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb128-499"><a href="#cb128-499" aria-hidden="true" tabindex="-1"></a>  <span class="at">years =</span> <span class="st">"year"</span>, </span>
+<span id="cb128-500"><a href="#cb128-500" aria-hidden="true" tabindex="-1"></a>  <span class="at">months =</span> <span class="st">"month"</span>,</span>
+<span id="cb128-501"><a href="#cb128-501" aria-hidden="true" tabindex="-1"></a>  <span class="at">new =</span> <span class="st">"unknown"</span></span>
+<span id="cb128-502"><a href="#cb128-502" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb128-503"><a href="#cb128-503" aria-hidden="true" tabindex="-1"></a><span class="fu">rename</span>(flights, <span class="fu">any_of</span>(lookup))</span>
+<span id="cb128-504"><a href="#cb128-504" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-505"><a href="#cb128-505" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-506"><a href="#cb128-506" aria-hidden="true" tabindex="-1"></a>根据函数批量重命名列。</span>
+<span id="cb128-506"><a href="#cb128-506" aria-hidden="true" tabindex="-1"></a><span class="fu">### `rename_with()`</span></span>
 <span id="cb128-507"><a href="#cb128-507" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-510"><a href="#cb128-510" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-511"><a href="#cb128-511" aria-hidden="true" tabindex="-1"></a><span class="co"># 将所有列名变为大写</span></span>
-<span id="cb128-512"><a href="#cb128-512" aria-hidden="true" tabindex="-1"></a><span class="fu">rename_with</span>(flights, toupper)</span>
-<span id="cb128-513"><a href="#cb128-513" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-514"><a href="#cb128-514" aria-hidden="true" tabindex="-1"></a><span class="co"># 将所有以“dep_"开头的列名转换为大写</span></span>
-<span id="cb128-515"><a href="#cb128-515" aria-hidden="true" tabindex="-1"></a><span class="fu">rename_with</span>(flights, toupper, <span class="at">.cols =</span> <span class="fu">starts_with</span>(<span class="st">"dep_"</span>))</span>
-<span id="cb128-516"><a href="#cb128-516" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-517"><a href="#cb128-517" aria-hidden="true" tabindex="-1"></a><span class="co"># 将列名中所有的"_"替换成“.”，并将所有列名转换成大写</span></span>
-<span id="cb128-518"><a href="#cb128-518" aria-hidden="true" tabindex="-1"></a><span class="fu">rename_with</span>(</span>
-<span id="cb128-519"><a href="#cb128-519" aria-hidden="true" tabindex="-1"></a>  flights, </span>
-<span id="cb128-520"><a href="#cb128-520" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) {</span>
-<span id="cb128-521"><a href="#cb128-521" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gsub</span>(<span class="at">pattern =</span> <span class="st">"_"</span>, <span class="at">replacement =</span> <span class="st">"."</span>, <span class="at">x =</span> x) <span class="sc">%&gt;%</span> </span>
-<span id="cb128-522"><a href="#cb128-522" aria-hidden="true" tabindex="-1"></a>    <span class="fu">toupper</span>()</span>
-<span id="cb128-523"><a href="#cb128-523" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb128-524"><a href="#cb128-524" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb128-525"><a href="#cb128-525" aria-hidden="true" tabindex="-1"></a><span class="co"># 匿名函数形式</span></span>
-<span id="cb128-526"><a href="#cb128-526" aria-hidden="true" tabindex="-1"></a><span class="fu">rename_with</span>(flights, <span class="sc">~</span> <span class="fu">gsub</span>(<span class="at">pattern =</span> <span class="st">"_"</span>, <span class="at">replacement =</span> <span class="st">"."</span>, <span class="at">x=</span> .x) <span class="sc">%&gt;%</span> <span class="fu">toupper</span>())</span>
-<span id="cb128-527"><a href="#cb128-527" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-528"><a href="#cb128-528" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-529"><a href="#cb128-529" aria-hidden="true" tabindex="-1"></a><span class="fu">## `relocate()`</span></span>
+<span id="cb128-508"><a href="#cb128-508" aria-hidden="true" tabindex="-1"></a>根据函数批量重命名列。</span>
+<span id="cb128-509"><a href="#cb128-509" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-512"><a href="#cb128-512" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-513"><a href="#cb128-513" aria-hidden="true" tabindex="-1"></a><span class="co"># 将所有列名变为大写</span></span>
+<span id="cb128-514"><a href="#cb128-514" aria-hidden="true" tabindex="-1"></a><span class="fu">rename_with</span>(flights, toupper)</span>
+<span id="cb128-515"><a href="#cb128-515" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-516"><a href="#cb128-516" aria-hidden="true" tabindex="-1"></a><span class="co"># 将所有以“dep_"开头的列名转换为大写</span></span>
+<span id="cb128-517"><a href="#cb128-517" aria-hidden="true" tabindex="-1"></a><span class="fu">rename_with</span>(flights, toupper, <span class="at">.cols =</span> <span class="fu">starts_with</span>(<span class="st">"dep_"</span>))</span>
+<span id="cb128-518"><a href="#cb128-518" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-519"><a href="#cb128-519" aria-hidden="true" tabindex="-1"></a><span class="co"># 将列名中所有的"_"替换成“.”，并将所有列名转换成大写</span></span>
+<span id="cb128-520"><a href="#cb128-520" aria-hidden="true" tabindex="-1"></a><span class="fu">rename_with</span>(</span>
+<span id="cb128-521"><a href="#cb128-521" aria-hidden="true" tabindex="-1"></a>  flights, </span>
+<span id="cb128-522"><a href="#cb128-522" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) {</span>
+<span id="cb128-523"><a href="#cb128-523" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gsub</span>(<span class="at">pattern =</span> <span class="st">"_"</span>, <span class="at">replacement =</span> <span class="st">"."</span>, <span class="at">x =</span> x) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-524"><a href="#cb128-524" aria-hidden="true" tabindex="-1"></a>    <span class="fu">toupper</span>()</span>
+<span id="cb128-525"><a href="#cb128-525" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb128-526"><a href="#cb128-526" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb128-527"><a href="#cb128-527" aria-hidden="true" tabindex="-1"></a><span class="co"># 匿名函数形式</span></span>
+<span id="cb128-528"><a href="#cb128-528" aria-hidden="true" tabindex="-1"></a><span class="fu">rename_with</span>(flights, <span class="sc">~</span> <span class="fu">gsub</span>(<span class="at">pattern =</span> <span class="st">"_"</span>, <span class="at">replacement =</span> <span class="st">"."</span>, <span class="at">x=</span> .x) <span class="sc">%&gt;%</span> <span class="fu">toupper</span>())</span>
+<span id="cb128-529"><a href="#cb128-529" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-530"><a href="#cb128-530" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-531"><a href="#cb128-531" aria-hidden="true" tabindex="-1"></a>调整列的顺序。</span>
+<span id="cb128-531"><a href="#cb128-531" aria-hidden="true" tabindex="-1"></a><span class="fu">## `relocate()`</span></span>
 <span id="cb128-532"><a href="#cb128-532" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-535"><a href="#cb128-535" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-536"><a href="#cb128-536" aria-hidden="true" tabindex="-1"></a><span class="co"># 将“day”和“year”放到最前面</span></span>
-<span id="cb128-537"><a href="#cb128-537" aria-hidden="true" tabindex="-1"></a><span class="fu">relocate</span>(flights, day, year)</span>
-<span id="cb128-538"><a href="#cb128-538" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-539"><a href="#cb128-539" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-540"><a href="#cb128-540" aria-hidden="true" tabindex="-1"></a>也可以和上面的<span class="sc">\[</span>mutate()<span class="sc">\]</span>一样通过<span class="in">`.before`</span>&nbsp;和&nbsp;<span class="in">`.after`</span>&nbsp;参数指定放置位置：</span>
+<span id="cb128-533"><a href="#cb128-533" aria-hidden="true" tabindex="-1"></a>调整列的顺序。</span>
+<span id="cb128-534"><a href="#cb128-534" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-537"><a href="#cb128-537" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-538"><a href="#cb128-538" aria-hidden="true" tabindex="-1"></a><span class="co"># 将“day”和“year”放到最前面</span></span>
+<span id="cb128-539"><a href="#cb128-539" aria-hidden="true" tabindex="-1"></a><span class="fu">relocate</span>(flights, day, year)</span>
+<span id="cb128-540"><a href="#cb128-540" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-541"><a href="#cb128-541" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-544"><a href="#cb128-544" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-545"><a href="#cb128-545" aria-hidden="true" tabindex="-1"></a><span class="co"># 将“year”和“dep_time”及其之间的列放到“sched_dep_time”之后</span></span>
-<span id="cb128-546"><a href="#cb128-546" aria-hidden="true" tabindex="-1"></a><span class="fu">relocate</span>(flights, year<span class="sc">:</span>dep_time, <span class="at">.after =</span> sched_dep_time)</span>
-<span id="cb128-547"><a href="#cb128-547" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-548"><a href="#cb128-548" aria-hidden="true" tabindex="-1"></a><span class="co"># 将所有以“dep_”开头的列放到“sched_dep_time”之前</span></span>
-<span id="cb128-549"><a href="#cb128-549" aria-hidden="true" tabindex="-1"></a><span class="fu">relocate</span>(flights, <span class="fu">starts_with</span>(<span class="st">"dep_"</span>), <span class="at">.before =</span> sched_dep_time)</span>
-<span id="cb128-550"><a href="#cb128-550" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-551"><a href="#cb128-551" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-552"><a href="#cb128-552" aria-hidden="true" tabindex="-1"></a><span class="fu"># 分组统计</span></span>
+<span id="cb128-542"><a href="#cb128-542" aria-hidden="true" tabindex="-1"></a>也可以和上面的<span class="sc">\[</span>mutate()<span class="sc">\]</span>一样通过<span class="in">`.before`</span>&nbsp;和&nbsp;<span class="in">`.after`</span>&nbsp;参数指定放置位置：</span>
+<span id="cb128-543"><a href="#cb128-543" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-546"><a href="#cb128-546" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-547"><a href="#cb128-547" aria-hidden="true" tabindex="-1"></a><span class="co"># 将“year”和“dep_time”及其之间的列放到“sched_dep_time”之后</span></span>
+<span id="cb128-548"><a href="#cb128-548" aria-hidden="true" tabindex="-1"></a><span class="fu">relocate</span>(flights, year<span class="sc">:</span>dep_time, <span class="at">.after =</span> sched_dep_time)</span>
+<span id="cb128-549"><a href="#cb128-549" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-550"><a href="#cb128-550" aria-hidden="true" tabindex="-1"></a><span class="co"># 将所有以“dep_”开头的列放到“sched_dep_time”之前</span></span>
+<span id="cb128-551"><a href="#cb128-551" aria-hidden="true" tabindex="-1"></a><span class="fu">relocate</span>(flights, <span class="fu">starts_with</span>(<span class="st">"dep_"</span>), <span class="at">.before =</span> sched_dep_time)</span>
+<span id="cb128-552"><a href="#cb128-552" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-553"><a href="#cb128-553" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-554"><a href="#cb128-554" aria-hidden="true" tabindex="-1"></a><span class="fu">## `group_by()`</span></span>
+<span id="cb128-554"><a href="#cb128-554" aria-hidden="true" tabindex="-1"></a><span class="fu"># 分组统计</span></span>
 <span id="cb128-555"><a href="#cb128-555" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-556"><a href="#cb128-556" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-02-02%2017.26.52.png)</span>{width="240"}</span>
+<span id="cb128-556"><a href="#cb128-556" aria-hidden="true" tabindex="-1"></a><span class="fu">## `group_by()`</span></span>
 <span id="cb128-557"><a href="#cb128-557" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-558"><a href="#cb128-558" aria-hidden="true" tabindex="-1"></a>根据某一列或几列将数据分组，便于后续的分组统计/运算。</span>
+<span id="cb128-558"><a href="#cb128-558" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/截屏2024-02-02%2017.26.52.png)</span>{width="240"}</span>
 <span id="cb128-559"><a href="#cb128-559" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-562"><a href="#cb128-562" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-563"><a href="#cb128-563" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(flights, month)</span>
-<span id="cb128-564"><a href="#cb128-564" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-565"><a href="#cb128-565" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-566"><a href="#cb128-566" aria-hidden="true" tabindex="-1"></a><span class="in">`group_by()`</span>本身不会改变数据，除了在输出结果中出现了<span class="in">`# Groups: month [12]`</span>，提示我们该数据集进行了分组。这意味着随后的操作将按不同的月份分别进行。<span class="in">`group_by()`</span>向数据添加了这个分组特性（称为类），从而改变了接下来对数据应用的函数的行为。</span>
+<span id="cb128-560"><a href="#cb128-560" aria-hidden="true" tabindex="-1"></a>根据某一列或几列将数据分组，便于后续的分组统计/运算。</span>
+<span id="cb128-561"><a href="#cb128-561" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-564"><a href="#cb128-564" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-565"><a href="#cb128-565" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(flights, month)</span>
+<span id="cb128-566"><a href="#cb128-566" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-567"><a href="#cb128-567" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-568"><a href="#cb128-568" aria-hidden="true" tabindex="-1"></a><span class="fu">## `summarize()`</span></span>
+<span id="cb128-568"><a href="#cb128-568" aria-hidden="true" tabindex="-1"></a><span class="in">`group_by()`</span>本身不会改变数据，除了在输出结果中出现了<span class="in">`# Groups: month [12]`</span>，提示我们该数据集进行了分组。这意味着随后的操作将按不同的月份分别进行。<span class="in">`group_by()`</span>向数据添加了这个分组特性（称为类），从而改变了接下来对数据应用的函数的行为。</span>
 <span id="cb128-569"><a href="#cb128-569" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-570"><a href="#cb128-570" aria-hidden="true" tabindex="-1"></a>分组汇总数据。根据某列或某几列的数据汇总一个包含了统计数据的新表。</span>
+<span id="cb128-570"><a href="#cb128-570" aria-hidden="true" tabindex="-1"></a><span class="fu">## `summarize()`</span></span>
 <span id="cb128-571"><a href="#cb128-571" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-574"><a href="#cb128-574" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-575"><a href="#cb128-575" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每月的平均起飞延误时间</span></span>
-<span id="cb128-576"><a href="#cb128-576" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(flights, month) <span class="sc">|&gt;</span> </span>
-<span id="cb128-577"><a href="#cb128-577" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay))</span>
-<span id="cb128-578"><a href="#cb128-578" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-579"><a href="#cb128-579" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-580"><a href="#cb128-580" aria-hidden="true" tabindex="-1"></a>可以看到，这里出现了问题，所有的结果都是“NA”。这是因为一些航班在延误时间（dep_delay）列中有缺失数据，所以当我们计算包括这些缺失值的平均值时，得到了一个NA结果。所以需要在mean()中设置参数 <span class="in">`na.rm = TRUE`</span> 来忽略所有缺失值：</span>
+<span id="cb128-572"><a href="#cb128-572" aria-hidden="true" tabindex="-1"></a>分组汇总数据。根据某列或某几列的数据汇总一个包含了统计数据的新表。</span>
+<span id="cb128-573"><a href="#cb128-573" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-576"><a href="#cb128-576" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-577"><a href="#cb128-577" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每月的平均起飞延误时间</span></span>
+<span id="cb128-578"><a href="#cb128-578" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(flights, month) <span class="sc">|&gt;</span> </span>
+<span id="cb128-579"><a href="#cb128-579" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay))</span>
+<span id="cb128-580"><a href="#cb128-580" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-581"><a href="#cb128-581" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-584"><a href="#cb128-584" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-585"><a href="#cb128-585" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每月的平均起飞延误时间</span></span>
-<span id="cb128-586"><a href="#cb128-586" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(flights, month) <span class="sc">|&gt;</span> </span>
-<span id="cb128-587"><a href="#cb128-587" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb128-588"><a href="#cb128-588" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-589"><a href="#cb128-589" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-590"><a href="#cb128-590" aria-hidden="true" tabindex="-1"></a>可以在单次对summarize()的调用中创建任意数量的数据汇总。但其中一个非常有用的汇总函数是<span class="in">`n()`</span>，它返回每个组中行数：</span>
+<span id="cb128-582"><a href="#cb128-582" aria-hidden="true" tabindex="-1"></a>可以看到，这里出现了问题，所有的结果都是“NA”。这是因为一些航班在延误时间（dep_delay）列中有缺失数据，所以当我们计算包括这些缺失值的平均值时，得到了一个NA结果。所以需要在mean()中设置参数 <span class="in">`na.rm = TRUE`</span> 来忽略所有缺失值：</span>
+<span id="cb128-583"><a href="#cb128-583" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-586"><a href="#cb128-586" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-587"><a href="#cb128-587" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每月的平均起飞延误时间</span></span>
+<span id="cb128-588"><a href="#cb128-588" aria-hidden="true" tabindex="-1"></a><span class="fu">group_by</span>(flights, month) <span class="sc">|&gt;</span> </span>
+<span id="cb128-589"><a href="#cb128-589" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb128-590"><a href="#cb128-590" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-591"><a href="#cb128-591" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-594"><a href="#cb128-594" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-595"><a href="#cb128-595" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每月的平均起飞延误时间和延误航班数量</span></span>
-<span id="cb128-596"><a href="#cb128-596" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span> </span>
-<span id="cb128-597"><a href="#cb128-597" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span> </span>
-<span id="cb128-598"><a href="#cb128-598" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb128-599"><a href="#cb128-599" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb128-600"><a href="#cb128-600" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>()</span>
-<span id="cb128-601"><a href="#cb128-601" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb128-602"><a href="#cb128-602" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-603"><a href="#cb128-603" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-604"><a href="#cb128-604" aria-hidden="true" tabindex="-1"></a><span class="fu">## `slice_`系列函数</span></span>
+<span id="cb128-592"><a href="#cb128-592" aria-hidden="true" tabindex="-1"></a>可以在单次对summarize()的调用中创建任意数量的数据汇总。但其中一个非常有用的汇总函数是<span class="in">`n()`</span>，它返回每个组中行数：</span>
+<span id="cb128-593"><a href="#cb128-593" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-596"><a href="#cb128-596" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-597"><a href="#cb128-597" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算每月的平均起飞延误时间和延误航班数量</span></span>
+<span id="cb128-598"><a href="#cb128-598" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span> </span>
+<span id="cb128-599"><a href="#cb128-599" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span> </span>
+<span id="cb128-600"><a href="#cb128-600" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb128-601"><a href="#cb128-601" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb128-602"><a href="#cb128-602" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>()</span>
+<span id="cb128-603"><a href="#cb128-603" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb128-604"><a href="#cb128-604" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-605"><a href="#cb128-605" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-606"><a href="#cb128-606" aria-hidden="true" tabindex="-1"></a>分组提取数据。</span>
+<span id="cb128-606"><a href="#cb128-606" aria-hidden="true" tabindex="-1"></a><span class="fu">## `slice_`系列函数</span></span>
 <span id="cb128-607"><a href="#cb128-607" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-608"><a href="#cb128-608" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`df |&gt; slice_head(n = 1)`</span>&nbsp;从每一组中取前n行数据.</span>
+<span id="cb128-608"><a href="#cb128-608" aria-hidden="true" tabindex="-1"></a>分组提取数据。</span>
 <span id="cb128-609"><a href="#cb128-609" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-610"><a href="#cb128-610" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`df |&gt; slice_tail(n = 1)`</span>&nbsp;从每一组中取后n行数据.</span>
+<span id="cb128-610"><a href="#cb128-610" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`df |&gt; slice_head(n = 1)`</span>&nbsp;从每一组中取前n行数据.</span>
 <span id="cb128-611"><a href="#cb128-611" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-612"><a href="#cb128-612" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`df |&gt; slice_min(x, n = 1)`</span>&nbsp;从每一组中取<span class="in">`x`</span>列的值最小的n行数据.</span>
+<span id="cb128-612"><a href="#cb128-612" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`df |&gt; slice_tail(n = 1)`</span>&nbsp;从每一组中取后n行数据.</span>
 <span id="cb128-613"><a href="#cb128-613" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-614"><a href="#cb128-614" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`df |&gt; slice_max(x, n = 1)`</span>&nbsp;从每一组中取<span class="in">`x`</span>列的值最大的n行数据.</span>
+<span id="cb128-614"><a href="#cb128-614" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`df |&gt; slice_min(x, n = 1)`</span>&nbsp;从每一组中取<span class="in">`x`</span>列的值最小的n行数据.</span>
 <span id="cb128-615"><a href="#cb128-615" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-616"><a href="#cb128-616" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`df |&gt; slice_sample(n = 1)`</span>&nbsp;从每一组中随机取n行数据.</span>
+<span id="cb128-616"><a href="#cb128-616" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`df |&gt; slice_max(x, n = 1)`</span>&nbsp;从每一组中取<span class="in">`x`</span>列的值最大的n行数据.</span>
 <span id="cb128-617"><a href="#cb128-617" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-618"><a href="#cb128-618" aria-hidden="true" tabindex="-1"></a>其中的<span class="in">`n`</span>参数指定需要提取的行数，同时，也可以用<span class="in">`prop`</span>参数指定从每组中提取多少比例的行。例如，<span class="in">`prop = 0.1`</span> 表示从每组中提取10%的行。</span>
+<span id="cb128-618"><a href="#cb128-618" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`df |&gt; slice_sample(n = 1)`</span>&nbsp;从每一组中随机取n行数据.</span>
 <span id="cb128-619"><a href="#cb128-619" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-622"><a href="#cb128-622" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-623"><a href="#cb128-623" aria-hidden="true" tabindex="-1"></a><span class="co"># 找出到达每个目的地的延误最严重的航班</span></span>
-<span id="cb128-624"><a href="#cb128-624" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">%&gt;%</span></span>
-<span id="cb128-625"><a href="#cb128-625" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dest) <span class="sc">%&gt;%</span> </span>
-<span id="cb128-626"><a href="#cb128-626" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(<span class="at">order_by =</span> arr_delay, <span class="at">n =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb128-627"><a href="#cb128-627" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(dest, arr_delay) <span class="sc">%T&gt;%</span> </span>
-<span id="cb128-628"><a href="#cb128-628" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb128-629"><a href="#cb128-629" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span>
-<span id="cb128-630"><a href="#cb128-630" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-631"><a href="#cb128-631" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(flights)</span>
-<span id="cb128-632"><a href="#cb128-632" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-633"><a href="#cb128-633" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-634"><a href="#cb128-634" aria-hidden="true" tabindex="-1"></a>上面的例子中，<span class="in">`relocate()`</span>函数后用到了分支管道<span class="sc">\[</span>%T<span class="sc">\&gt;</span>%<span class="sc">\]</span>，先通过<span class="in">`print()`</span>把分组统计的结果打印出来，然后通过<span class="in">`nrow()`</span>返回分组统计数据的行数。结果发现有108行，和原来数据的105行不符合，这是因为有的目的地可能有几架次并列延误最严重的航班。例如，第22行和23行的航班信息：</span>
+<span id="cb128-620"><a href="#cb128-620" aria-hidden="true" tabindex="-1"></a>其中的<span class="in">`n`</span>参数指定需要提取的行数，同时，也可以用<span class="in">`prop`</span>参数指定从每组中提取多少比例的行。例如，<span class="in">`prop = 0.1`</span> 表示从每组中提取10%的行。</span>
+<span id="cb128-621"><a href="#cb128-621" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-624"><a href="#cb128-624" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-625"><a href="#cb128-625" aria-hidden="true" tabindex="-1"></a><span class="co"># 找出到达每个目的地的延误最严重的航班</span></span>
+<span id="cb128-626"><a href="#cb128-626" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">%&gt;%</span></span>
+<span id="cb128-627"><a href="#cb128-627" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dest) <span class="sc">%&gt;%</span> </span>
+<span id="cb128-628"><a href="#cb128-628" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(<span class="at">order_by =</span> arr_delay, <span class="at">n =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb128-629"><a href="#cb128-629" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(dest, arr_delay) <span class="sc">%T&gt;%</span> </span>
+<span id="cb128-630"><a href="#cb128-630" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb128-631"><a href="#cb128-631" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span>
+<span id="cb128-632"><a href="#cb128-632" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-633"><a href="#cb128-633" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(flights)</span>
+<span id="cb128-634"><a href="#cb128-634" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-635"><a href="#cb128-635" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-638"><a href="#cb128-638" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-639"><a href="#cb128-639" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span> </span>
-<span id="cb128-640"><a href="#cb128-640" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dest) <span class="sc">|&gt;</span> </span>
-<span id="cb128-641"><a href="#cb128-641" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(<span class="at">order_by =</span> arr_delay, <span class="at">n =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb128-642"><a href="#cb128-642" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(dest, arr_delay) <span class="sc">|&gt;</span> </span>
-<span id="cb128-643"><a href="#cb128-643" aria-hidden="true" tabindex="-1"></a>  _[<span class="dv">22</span><span class="sc">:</span><span class="dv">23</span>,]</span>
-<span id="cb128-644"><a href="#cb128-644" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-645"><a href="#cb128-645" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-646"><a href="#cb128-646" aria-hidden="true" tabindex="-1"></a><span class="fu">## 多变量分组统计</span></span>
+<span id="cb128-636"><a href="#cb128-636" aria-hidden="true" tabindex="-1"></a>上面的例子中，<span class="in">`relocate()`</span>函数后用到了分支管道<span class="sc">\[</span>%T<span class="sc">\&gt;</span>%<span class="sc">\]</span>，先通过<span class="in">`print()`</span>把分组统计的结果打印出来，然后通过<span class="in">`nrow()`</span>返回分组统计数据的行数。结果发现有108行，和原来数据的105行不符合，这是因为有的目的地可能有几架次并列延误最严重的航班。例如，第22行和23行的航班信息：</span>
+<span id="cb128-637"><a href="#cb128-637" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-640"><a href="#cb128-640" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-641"><a href="#cb128-641" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span> </span>
+<span id="cb128-642"><a href="#cb128-642" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(dest) <span class="sc">|&gt;</span> </span>
+<span id="cb128-643"><a href="#cb128-643" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(<span class="at">order_by =</span> arr_delay, <span class="at">n =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb128-644"><a href="#cb128-644" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(dest, arr_delay) <span class="sc">|&gt;</span> </span>
+<span id="cb128-645"><a href="#cb128-645" aria-hidden="true" tabindex="-1"></a>  _[<span class="dv">22</span><span class="sc">:</span><span class="dv">23</span>,]</span>
+<span id="cb128-646"><a href="#cb128-646" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-647"><a href="#cb128-647" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-648"><a href="#cb128-648" aria-hidden="true" tabindex="-1"></a>例如分别统计每个日期（年+月+日）的航班数量：</span>
+<span id="cb128-648"><a href="#cb128-648" aria-hidden="true" tabindex="-1"></a><span class="fu">## 多变量分组统计</span></span>
 <span id="cb128-649"><a href="#cb128-649" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-652"><a href="#cb128-652" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-653"><a href="#cb128-653" aria-hidden="true" tabindex="-1"></a>daily <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span>  </span>
-<span id="cb128-654"><a href="#cb128-654" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, month, day)</span>
-<span id="cb128-655"><a href="#cb128-655" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-656"><a href="#cb128-656" aria-hidden="true" tabindex="-1"></a>daily <span class="sc">|&gt;</span> </span>
-<span id="cb128-657"><a href="#cb128-657" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">flights =</span> <span class="fu">n</span>())</span>
-<span id="cb128-658"><a href="#cb128-658" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-659"><a href="#cb128-659" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-660"><a href="#cb128-660" aria-hidden="true" tabindex="-1"></a>需要注意到结果中的第一行提示我们 <span class="in">`summarise()`</span> 后的数据按照“year”和“month”进行了<span class="in">`group`</span>处理。这是因为<span class="in">`summarise()`</span> 在处理超过一个分组的数据时，输出的结果默认去除最后一个分组依据。这一行为可以通过设定<span class="in">`.groups`</span>参数进行修改：</span>
+<span id="cb128-650"><a href="#cb128-650" aria-hidden="true" tabindex="-1"></a>例如分别统计每个日期（年+月+日）的航班数量：</span>
+<span id="cb128-651"><a href="#cb128-651" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-654"><a href="#cb128-654" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-655"><a href="#cb128-655" aria-hidden="true" tabindex="-1"></a>daily <span class="ot">&lt;-</span> flights <span class="sc">|&gt;</span>  </span>
+<span id="cb128-656"><a href="#cb128-656" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, month, day)</span>
+<span id="cb128-657"><a href="#cb128-657" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-658"><a href="#cb128-658" aria-hidden="true" tabindex="-1"></a>daily <span class="sc">|&gt;</span> </span>
+<span id="cb128-659"><a href="#cb128-659" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">flights =</span> <span class="fu">n</span>())</span>
+<span id="cb128-660"><a href="#cb128-660" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-661"><a href="#cb128-661" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-662"><a href="#cb128-662" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`.groups = "drop_last"`</span>：默认。<span class="in">`summarise()`</span>后丢掉最后一个分组依据。</span>
+<span id="cb128-662"><a href="#cb128-662" aria-hidden="true" tabindex="-1"></a>需要注意到结果中的第二行提示我们 <span class="in">`summarise()`</span> 后的数据按照“year”和“month”进行了<span class="in">`group`</span>处理。这是因为<span class="in">`summarise()`</span> 在处理超过一个分组的数据时，输出的结果默认去除最后一个分组依据。这一行为可以通过设定<span class="in">`.groups`</span>参数进行修改：</span>
 <span id="cb128-663"><a href="#cb128-663" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-664"><a href="#cb128-664" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`.groups = "drop"`</span>：<span class="in">`summarise()`</span>后取消分组。</span>
+<span id="cb128-664"><a href="#cb128-664" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`.groups = "drop_last"`</span>：默认。<span class="in">`summarise()`</span>后丢掉最后一个分组依据。</span>
 <span id="cb128-665"><a href="#cb128-665" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-666"><a href="#cb128-666" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`.groups = "keep"`</span>：<span class="in">`summarise()`</span>后保留原分组。</span>
+<span id="cb128-666"><a href="#cb128-666" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`.groups = "drop"`</span>：<span class="in">`summarise()`</span>后取消分组。</span>
 <span id="cb128-667"><a href="#cb128-667" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-670"><a href="#cb128-670" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-671"><a href="#cb128-671" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span>  </span>
-<span id="cb128-672"><a href="#cb128-672" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, month, day) <span class="sc">|&gt;</span> </span>
-<span id="cb128-673"><a href="#cb128-673" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb128-674"><a href="#cb128-674" aria-hidden="true" tabindex="-1"></a>    <span class="at">flights =</span> <span class="fu">n</span>(),</span>
-<span id="cb128-675"><a href="#cb128-675" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"keep"</span></span>
-<span id="cb128-676"><a href="#cb128-676" aria-hidden="true" tabindex="-1"></a>    ) </span>
-<span id="cb128-677"><a href="#cb128-677" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-678"><a href="#cb128-678" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-679"><a href="#cb128-679" aria-hidden="true" tabindex="-1"></a><span class="fu">## `ungroup()`</span></span>
+<span id="cb128-668"><a href="#cb128-668" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`.groups = "keep"`</span>：<span class="in">`summarise()`</span>后保留原分组。</span>
+<span id="cb128-669"><a href="#cb128-669" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-672"><a href="#cb128-672" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-673"><a href="#cb128-673" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span>  </span>
+<span id="cb128-674"><a href="#cb128-674" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year, month, day) <span class="sc">|&gt;</span> </span>
+<span id="cb128-675"><a href="#cb128-675" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb128-676"><a href="#cb128-676" aria-hidden="true" tabindex="-1"></a>    <span class="at">flights =</span> <span class="fu">n</span>(),</span>
+<span id="cb128-677"><a href="#cb128-677" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"keep"</span></span>
+<span id="cb128-678"><a href="#cb128-678" aria-hidden="true" tabindex="-1"></a>    ) </span>
+<span id="cb128-679"><a href="#cb128-679" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-680"><a href="#cb128-680" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-681"><a href="#cb128-681" aria-hidden="true" tabindex="-1"></a>取消分组。</span>
+<span id="cb128-681"><a href="#cb128-681" aria-hidden="true" tabindex="-1"></a><span class="fu">## `ungroup()`</span></span>
 <span id="cb128-682"><a href="#cb128-682" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-685"><a href="#cb128-685" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-686"><a href="#cb128-686" aria-hidden="true" tabindex="-1"></a>daily <span class="sc">|&gt;</span> </span>
-<span id="cb128-687"><a href="#cb128-687" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
-<span id="cb128-688"><a href="#cb128-688" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb128-689"><a href="#cb128-689" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb128-690"><a href="#cb128-690" aria-hidden="true" tabindex="-1"></a>    <span class="at">flights =</span> <span class="fu">n</span>()</span>
-<span id="cb128-691"><a href="#cb128-691" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb128-692"><a href="#cb128-692" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-693"><a href="#cb128-693" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-694"><a href="#cb128-694" aria-hidden="true" tabindex="-1"></a><span class="fu">## `.by`</span></span>
+<span id="cb128-683"><a href="#cb128-683" aria-hidden="true" tabindex="-1"></a>取消分组。</span>
+<span id="cb128-684"><a href="#cb128-684" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-687"><a href="#cb128-687" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-688"><a href="#cb128-688" aria-hidden="true" tabindex="-1"></a>daily <span class="sc">|&gt;</span> </span>
+<span id="cb128-689"><a href="#cb128-689" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb128-690"><a href="#cb128-690" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb128-691"><a href="#cb128-691" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb128-692"><a href="#cb128-692" aria-hidden="true" tabindex="-1"></a>    <span class="at">flights =</span> <span class="fu">n</span>()</span>
+<span id="cb128-693"><a href="#cb128-693" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb128-694"><a href="#cb128-694" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-695"><a href="#cb128-695" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-696"><a href="#cb128-696" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="al">![](images/截屏2024-02-02%2017.05.04.png)</span><span class="ot">{width="147"}</span><span class="co">](https://lifecycle.r-lib.org/articles/stages.html#experimental)</span></span>
+<span id="cb128-696"><a href="#cb128-696" aria-hidden="true" tabindex="-1"></a><span class="fu">## `.by`</span></span>
 <span id="cb128-697"><a href="#cb128-697" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-698"><a href="#cb128-698" aria-hidden="true" tabindex="-1"></a>dplyr从1.1.0版本开始包括了一个新的实验性语法，用于直接在统计函数中指定分组依据，即 <span class="in">`.by`</span> 参数。<span class="in">`group_by()`</span> 和 <span class="in">`ungroup()`</span> 不会消失，但现在也可以使用 <span class="in">`.by`</span> 参数来在单个操作中进行分组：</span>
+<span id="cb128-698"><a href="#cb128-698" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="al">![](images/截屏2024-02-02%2017.05.04.png)</span><span class="ot">{width="147"}</span><span class="co">](https://lifecycle.r-lib.org/articles/stages.html#experimental)</span></span>
 <span id="cb128-699"><a href="#cb128-699" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-702"><a href="#cb128-702" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-703"><a href="#cb128-703" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span> </span>
-<span id="cb128-704"><a href="#cb128-704" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb128-705"><a href="#cb128-705" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb128-706"><a href="#cb128-706" aria-hidden="true" tabindex="-1"></a>    <span class="at">flights =</span> <span class="fu">n</span>(),</span>
-<span id="cb128-707"><a href="#cb128-707" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> month <span class="co"># 按“month”分组统计</span></span>
-<span id="cb128-708"><a href="#cb128-708" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb128-709"><a href="#cb128-709" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(month)</span>
-<span id="cb128-710"><a href="#cb128-710" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-711"><a href="#cb128-711" aria-hidden="true" tabindex="-1"></a><span class="co"># 等价于:</span></span>
-<span id="cb128-712"><a href="#cb128-712" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span> </span>
-<span id="cb128-713"><a href="#cb128-713" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span> </span>
-<span id="cb128-714"><a href="#cb128-714" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb128-715"><a href="#cb128-715" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb128-716"><a href="#cb128-716" aria-hidden="true" tabindex="-1"></a>    <span class="at">flights =</span> <span class="fu">n</span>()</span>
-<span id="cb128-717"><a href="#cb128-717" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb128-718"><a href="#cb128-718" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-719"><a href="#cb128-719" aria-hidden="true" tabindex="-1"></a><span class="co"># 支持指定多个分组依据</span></span>
-<span id="cb128-720"><a href="#cb128-720" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span> </span>
-<span id="cb128-721"><a href="#cb128-721" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb128-722"><a href="#cb128-722" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb128-723"><a href="#cb128-723" aria-hidden="true" tabindex="-1"></a>    <span class="at">flights =</span> <span class="fu">n</span>(),</span>
-<span id="cb128-724"><a href="#cb128-724" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> <span class="fu">c</span>(origin, dest)</span>
-<span id="cb128-725"><a href="#cb128-725" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb128-726"><a href="#cb128-726" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(origin, dest)</span>
-<span id="cb128-727"><a href="#cb128-727" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-728"><a href="#cb128-728" aria-hidden="true" tabindex="-1"></a><span class="co"># 等价于：</span></span>
-<span id="cb128-729"><a href="#cb128-729" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span> </span>
-<span id="cb128-730"><a href="#cb128-730" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(origin, dest) <span class="sc">|&gt;</span> </span>
-<span id="cb128-731"><a href="#cb128-731" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
-<span id="cb128-732"><a href="#cb128-732" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb128-733"><a href="#cb128-733" aria-hidden="true" tabindex="-1"></a>    <span class="at">flights =</span> <span class="fu">n</span>()</span>
-<span id="cb128-734"><a href="#cb128-734" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb128-735"><a href="#cb128-735" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb128-736"><a href="#cb128-736" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-737"><a href="#cb128-737" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-738"><a href="#cb128-738" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb128-700"><a href="#cb128-700" aria-hidden="true" tabindex="-1"></a>dplyr从1.1.0版本开始包括了一个新的实验性语法，用于直接在统计函数中指定分组依据，即 <span class="in">`.by`</span> 参数。<span class="in">`group_by()`</span> 和 <span class="in">`ungroup()`</span> 不会消失，但现在也可以使用 <span class="in">`.by`</span> 参数来在单个操作中进行分组：</span>
+<span id="cb128-701"><a href="#cb128-701" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-704"><a href="#cb128-704" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-705"><a href="#cb128-705" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span> </span>
+<span id="cb128-706"><a href="#cb128-706" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb128-707"><a href="#cb128-707" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb128-708"><a href="#cb128-708" aria-hidden="true" tabindex="-1"></a>    <span class="at">flights =</span> <span class="fu">n</span>(),</span>
+<span id="cb128-709"><a href="#cb128-709" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> month <span class="co"># 按“month”分组统计</span></span>
+<span id="cb128-710"><a href="#cb128-710" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb128-711"><a href="#cb128-711" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(month)</span>
+<span id="cb128-712"><a href="#cb128-712" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-713"><a href="#cb128-713" aria-hidden="true" tabindex="-1"></a><span class="co"># 等价于:</span></span>
+<span id="cb128-714"><a href="#cb128-714" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span> </span>
+<span id="cb128-715"><a href="#cb128-715" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(month) <span class="sc">|&gt;</span> </span>
+<span id="cb128-716"><a href="#cb128-716" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb128-717"><a href="#cb128-717" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb128-718"><a href="#cb128-718" aria-hidden="true" tabindex="-1"></a>    <span class="at">flights =</span> <span class="fu">n</span>()</span>
+<span id="cb128-719"><a href="#cb128-719" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb128-720"><a href="#cb128-720" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-721"><a href="#cb128-721" aria-hidden="true" tabindex="-1"></a><span class="co"># 支持指定多个分组依据</span></span>
+<span id="cb128-722"><a href="#cb128-722" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span> </span>
+<span id="cb128-723"><a href="#cb128-723" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb128-724"><a href="#cb128-724" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb128-725"><a href="#cb128-725" aria-hidden="true" tabindex="-1"></a>    <span class="at">flights =</span> <span class="fu">n</span>(),</span>
+<span id="cb128-726"><a href="#cb128-726" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> <span class="fu">c</span>(origin, dest)</span>
+<span id="cb128-727"><a href="#cb128-727" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb128-728"><a href="#cb128-728" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(origin, dest)</span>
+<span id="cb128-729"><a href="#cb128-729" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-730"><a href="#cb128-730" aria-hidden="true" tabindex="-1"></a><span class="co"># 等价于：</span></span>
+<span id="cb128-731"><a href="#cb128-731" aria-hidden="true" tabindex="-1"></a>flights <span class="sc">|&gt;</span> </span>
+<span id="cb128-732"><a href="#cb128-732" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(origin, dest) <span class="sc">|&gt;</span> </span>
+<span id="cb128-733"><a href="#cb128-733" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb128-734"><a href="#cb128-734" aria-hidden="true" tabindex="-1"></a>    <span class="at">avg_delay =</span> <span class="fu">mean</span>(dep_delay, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb128-735"><a href="#cb128-735" aria-hidden="true" tabindex="-1"></a>    <span class="at">flights =</span> <span class="fu">n</span>()</span>
+<span id="cb128-736"><a href="#cb128-736" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb128-737"><a href="#cb128-737" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb128-738"><a href="#cb128-738" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb128-739"><a href="#cb128-739" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-740"><a href="#cb128-740" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb128-741"><a href="#cb128-741" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
-<span id="cb128-742"><a href="#cb128-742" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb128-745"><a href="#cb128-745" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb128-746"><a href="#cb128-746" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb128-747"><a href="#cb128-747" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb128-748"><a href="#cb128-748" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb128-749"><a href="#cb128-749" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb128-740"><a href="#cb128-740" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb128-741"><a href="#cb128-741" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-742"><a href="#cb128-742" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb128-743"><a href="#cb128-743" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb128-744"><a href="#cb128-744" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-747"><a href="#cb128-747" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb128-748"><a href="#cb128-748" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb128-749"><a href="#cb128-749" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb128-750"><a href="#cb128-750" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb128-751"><a href="#cb128-751" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

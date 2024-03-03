@@ -242,7 +242,19 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../r_basic/dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">基于dplyr包的数据处理</span></a>
+ <span class="menu-text">基于dplyr包的数据整理</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/tidyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">基于tidyr的长/宽数据转换</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/data_visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">数据可视化</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -546,13 +558,13 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <a href="#%E8%AF%BB%E5%8F%96.csv%E6%96%87%E4%BB%B6" id="toc-读取.csv文件" class="nav-link" data-scroll-target="#%E8%AF%BB%E5%8F%96.csv%E6%96%87%E4%BB%B6"><span class="header-section-number">2.1</span> 读取.csv文件</a>
   <ul class="collapse">
 <li><a href="#%E5%AE%9A%E4%B9%89%E7%BC%BA%E5%A4%B1%E5%80%BC" id="toc-定义缺失值" class="nav-link" data-scroll-target="#%E5%AE%9A%E4%B9%89%E7%BC%BA%E5%A4%B1%E5%80%BC">定义缺失值</a></li>
-  <li><a href="#%E5%AE%9A%E4%B9%89%E5%88%97%E7%B1%BB%E5%88%AB" id="toc-定义列类别" class="nav-link" data-scroll-target="#%E5%AE%9A%E4%B9%89%E5%88%97%E7%B1%BB%E5%88%AB">定义列类别</a></li>
+  <li><a href="#sec-%E5%AE%9A%E4%B9%89%E5%88%97%E7%B1%BB%E5%88%AB" id="toc-sec-定义列类别" class="nav-link" data-scroll-target="#sec-%E5%AE%9A%E4%B9%89%E5%88%97%E7%B1%BB%E5%88%AB">定义列类别</a></li>
   <li><a href="#%E9%9D%9E%E6%A0%87%E5%87%86%E6%95%B0%E6%8D%AE%E7%9A%84%E8%AF%BB%E5%8F%96" id="toc-非标准数据的读取" class="nav-link" data-scroll-target="#%E9%9D%9E%E6%A0%87%E5%87%86%E6%95%B0%E6%8D%AE%E7%9A%84%E8%AF%BB%E5%8F%96">非标准数据的读取</a></li>
   </ul>
 </li>
   <li><a href="#%E5%85%B6%E4%BB%96%E7%B1%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6%E7%9A%84%E8%AF%BB%E5%8F%96" id="toc-其他类型数据文件的读取" class="nav-link" data-scroll-target="#%E5%85%B6%E4%BB%96%E7%B1%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E6%96%87%E4%BB%B6%E7%9A%84%E8%AF%BB%E5%8F%96"><span class="header-section-number">2.2</span> 其他类型数据文件的读取</a></li>
   <li><a href="#%E4%BB%8E%E5%A4%9A%E4%B8%AA%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE" id="toc-从多个文件读取数据" class="nav-link" data-scroll-target="#%E4%BB%8E%E5%A4%9A%E4%B8%AA%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%95%B0%E6%8D%AE"><span class="header-section-number">2.3</span> 从多个文件读取数据</a></li>
-  <li><a href="#%E6%89%8B%E5%8A%A8%E7%94%9F%E6%88%90tibble" id="toc-手动生成tibble" class="nav-link" data-scroll-target="#%E6%89%8B%E5%8A%A8%E7%94%9F%E6%88%90tibble"><span class="header-section-number">2.4</span> 手动生成tibble</a></li>
+  <li><a href="#sec-%E6%89%8B%E5%8A%A8%E7%94%9F%E6%88%90tibble" id="toc-sec-手动生成tibble" class="nav-link" data-scroll-target="#sec-%E6%89%8B%E5%8A%A8%E7%94%9F%E6%88%90tibble"><span class="header-section-number">2.4</span> 手动生成tibble</a></li>
   </ul>
 </li>
   <li>
@@ -831,7 +843,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 6            6 Güvenç Attila    Ice cream          Lunch only          6    </code></pre>
 </div>
 </div>
-</section><section id="定义列类别" class="level3"><h3 class="anchored" data-anchor-id="定义列类别">定义列类别</h3>
+</section><section id="sec-定义列类别" class="level3"><h3 class="anchored" data-anchor-id="sec-定义列类别">定义列类别</h3>
 <p>读入数据后的另一个常见操作是更改变量/列类型。例如，这个数据中“favourite_food”，“meal_plan”应该是因子型变量；“age”应该是数值型变量，因此我们需要对其进行转换。</p>
 <p>这里我们使用管道符<code>|&gt;</code>来简化代码，对其的详细说明参考<a href="../r_basic/dplyr.html#sec-管道操作符">后续章节</a>。<code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code>的作用是根据现有列计算并添加新列（见<a href="../r_basic/dplyr.html#sec-mutate">基于dplyr包的数据处理-<code>mutate()</code></a>）。对于因子变量的转换，使用<code>base</code>包的<code><a href="https://rdrr.io/r/base/factor.html">factor()</a></code>，转换后的变量仍命名为“meal_plan”，所以它会覆盖原有的“meal_plan”变量。对于数值型变量的转换，这里用<code>readr</code>中的<code><a href="https://readr.tidyverse.org/reference/parse_number.html">parse_number()</a></code>函数：</p>
 <div class="cell">
@@ -1098,7 +1110,7 @@ Tip
 </div>
 </div>
 <p>这些数据可以从<a href="https://pos.it/r4ds-01-sales" class="uri">https://pos.it/r4ds-01-sales</a>,&nbsp;<a href="https://pos.it/r4ds-02-sales" class="uri">https://pos.it/r4ds-02-sales</a>, <a href="https://pos.it/r4ds-03-sales" class="uri">https://pos.it/r4ds-03-sales</a>下载。下载后的数据被翻到了”data”文件夹下的“r_basic”子文件夹内。因此，我们可以通过<code><a href="https://rdrr.io/r/base/list.files.html">list.files()</a></code>并结合<code>pattern</code>参数列出我们需要的销售数据文件，<code>pattern</code>中应用了正则表达式，这在接下来的章节中会详细说明。<code>read_csv</code>中的<code>id</code>参数会在结果数据中添加一个新列，用于标识数据来自哪个文件。</p>
-</section><section id="手动生成tibble" class="level2" data-number="2.4"><h2 data-number="2.4" class="anchored" data-anchor-id="手动生成tibble">
+</section><section id="sec-手动生成tibble" class="level2" data-number="2.4"><h2 data-number="2.4" class="anchored" data-anchor-id="sec-手动生成tibble">
 <span class="header-section-number">2.4</span> 手动生成tibble</h2>
 <p>有时需要在R脚本中“手动”输入一些数据来生成一个tibble。有两个函数可以做到这一点，这两个函数的不同之处在于是按列还是按行布局tibble。其中 <code><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble()</a></code>&nbsp;按列工作，类似于base包中的<a href="#sec-%E6%89%8B%E5%8A%A8%E7%94%9F%E6%88%90%E6%95%B0%E6%8D%AE%E6%A1%86"><code>data.fram()</code></a>：</p>
 <div class="cell">
@@ -2114,7 +2126,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb77-280"><a href="#cb77-280" aria-hidden="true" tabindex="-1"></a>students</span>
 <span id="cb77-281"><a href="#cb77-281" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb77-282"><a href="#cb77-282" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-283"><a href="#cb77-283" aria-hidden="true" tabindex="-1"></a><span class="fu">### 定义列类别</span></span>
+<span id="cb77-283"><a href="#cb77-283" aria-hidden="true" tabindex="-1"></a><span class="fu">### 定义列类别 {#sec-定义列类别}</span></span>
 <span id="cb77-284"><a href="#cb77-284" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb77-285"><a href="#cb77-285" aria-hidden="true" tabindex="-1"></a>读入数据后的另一个常见操作是更改变量/列类型。例如，这个数据中“favourite_food”，“meal_plan”应该是因子型变量；“age”应该是数值型变量，因此我们需要对其进行转换。</span>
 <span id="cb77-286"><a href="#cb77-286" aria-hidden="true" tabindex="-1"></a></span>
@@ -2156,230 +2168,229 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb77-326"><a href="#cb77-326" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_factor(x, levels = animals)</span></span>
 <span id="cb77-327"><a href="#cb77-327" aria-hidden="true" tabindex="-1"></a><span class="in">    ```</span></span>
 <span id="cb77-328"><a href="#cb77-328" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-329"><a href="#cb77-329" aria-hidden="true" tabindex="-1"></a><span class="in">```{=html}</span></span>
-<span id="cb77-330"><a href="#cb77-330" aria-hidden="true" tabindex="-1"></a><span class="in">&lt;!-- --&gt;</span></span>
-<span id="cb77-331"><a href="#cb77-331" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-332"><a href="#cb77-332" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`parse_number()`</span>：转换数值型变量。这个函数会解析它找到的第一个数字，然后删除第一个数字之前的所有非数字字符和第一个数字之后的所有字符，同时也会忽略千分位分隔符“,”。</span>
-<span id="cb77-333"><a href="#cb77-333" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-334"><a href="#cb77-334" aria-hidden="true" tabindex="-1"></a>    <span class="in">```{r}</span></span>
-<span id="cb77-335"><a href="#cb77-335" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_number("$1,000") # leading `$` and grouping character `,` ignored</span></span>
-<span id="cb77-336"><a href="#cb77-336" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_number("euro1,000") # leading non-numeric euro ignored</span></span>
-<span id="cb77-337"><a href="#cb77-337" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_number("t1000t1000") # only parses first number found</span></span>
-<span id="cb77-338"><a href="#cb77-338" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_number("1,234.56")</span></span>
-<span id="cb77-339"><a href="#cb77-339" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-340"><a href="#cb77-340" aria-hidden="true" tabindex="-1"></a><span class="in">    # explicit locale specifying European grouping and decimal marks</span></span>
-<span id="cb77-341"><a href="#cb77-341" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_number("1.234,56", locale = locale(decimal_mark = ",", grouping_mark = "."))</span></span>
-<span id="cb77-342"><a href="#cb77-342" aria-hidden="true" tabindex="-1"></a><span class="in">    # SI/ISO 31-0 standard spaces for number grouping</span></span>
-<span id="cb77-343"><a href="#cb77-343" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_number("1 234.56", locale = locale(decimal_mark = ".", grouping_mark = " "))</span></span>
-<span id="cb77-344"><a href="#cb77-344" aria-hidden="true" tabindex="-1"></a><span class="in">    ```</span></span>
-<span id="cb77-345"><a href="#cb77-345" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-346"><a href="#cb77-346" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`parse_integer()`</span>：转换整数型变量。较少使用，因为整数型变量和数值型变量或称doubles型变量的本质是一样的。</span>
-<span id="cb77-347"><a href="#cb77-347" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-348"><a href="#cb77-348" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`parse_datetime()`</span>：转换日期/时间变量。</span>
-<span id="cb77-349"><a href="#cb77-349" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-350"><a href="#cb77-350" aria-hidden="true" tabindex="-1"></a>    <span class="in">```{r}</span></span>
-<span id="cb77-351"><a href="#cb77-351" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_datetime("01/02/2010", "%d/%m/%Y")</span></span>
-<span id="cb77-352"><a href="#cb77-352" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_datetime("01/02/2010", "%m/%d/%Y")</span></span>
-<span id="cb77-353"><a href="#cb77-353" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_datetime("2010/01/01 12:00 US/Central", "%Y/%m/%d %H:%M %Z")</span></span>
-<span id="cb77-354"><a href="#cb77-354" aria-hidden="true" tabindex="-1"></a><span class="in">    ```</span></span>
-<span id="cb77-355"><a href="#cb77-355" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-356"><a href="#cb77-356" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
-<span id="cb77-357"><a href="#cb77-357" aria-hidden="true" tabindex="-1"></a>这些变量类型转换函数都通过了缺失值定义参数，如：</span>
-<span id="cb77-358"><a href="#cb77-358" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-361"><a href="#cb77-361" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-362"><a href="#cb77-362" aria-hidden="true" tabindex="-1"></a><span class="co"># Specifying strings for NAs</span></span>
-<span id="cb77-363"><a href="#cb77-363" aria-hidden="true" tabindex="-1"></a><span class="fu">parse_number</span>(<span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span>, <span class="st">"NA"</span>))</span>
-<span id="cb77-364"><a href="#cb77-364" aria-hidden="true" tabindex="-1"></a><span class="fu">parse_number</span>(<span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span>, <span class="st">"NA"</span>, <span class="st">"Nothing"</span>), <span class="at">na =</span> <span class="fu">c</span>(<span class="st">"NA"</span>, <span class="st">"Nothing"</span>))</span>
-<span id="cb77-365"><a href="#cb77-365" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-366"><a href="#cb77-366" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-367"><a href="#cb77-367" aria-hidden="true" tabindex="-1"></a>因此，既可以像上面的<span class="co">[</span><span class="ot">定义缺失值</span><span class="co">](#定义缺失值)</span>中一样在数据读取时就定义数据集中的缺失值，也可以在转换变量类型时分别定义每一列的缺失值。</span>
-<span id="cb77-368"><a href="#cb77-368" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb77-369"><a href="#cb77-369" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-370"><a href="#cb77-370" aria-hidden="true" tabindex="-1"></a><span class="fu">### 非标准数据的读取</span></span>
-<span id="cb77-371"><a href="#cb77-371" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-372"><a href="#cb77-372" aria-hidden="true" tabindex="-1"></a>通常，<span class="in">`read_csv()`</span>使用数据的第一行作为列名，这是一种非常常见的约定。但在有时候数据的顶部可能包含几行元数据。这时候可以通过添加<span class="in">`skip`</span>参数让<span class="in">`read_csv()`</span>跳过前n行，也可以通过<span class="in">`comment`</span>参数让其跳过以特定字符（例如“#”）开头的所有行。</span>
-<span id="cb77-373"><a href="#cb77-373" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-376"><a href="#cb77-376" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-377"><a href="#cb77-377" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(</span>
-<span id="cb77-378"><a href="#cb77-378" aria-hidden="true" tabindex="-1"></a>  <span class="st">"The first line of metadata</span></span>
-<span id="cb77-379"><a href="#cb77-379" aria-hidden="true" tabindex="-1"></a><span class="st">  The second line of metadata</span></span>
-<span id="cb77-380"><a href="#cb77-380" aria-hidden="true" tabindex="-1"></a><span class="st">  x,y,z</span></span>
-<span id="cb77-381"><a href="#cb77-381" aria-hidden="true" tabindex="-1"></a><span class="st">  1,2,3"</span>,</span>
-<span id="cb77-382"><a href="#cb77-382" aria-hidden="true" tabindex="-1"></a>  <span class="at">skip =</span> <span class="dv">2</span> </span>
-<span id="cb77-383"><a href="#cb77-383" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb77-384"><a href="#cb77-384" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-385"><a href="#cb77-385" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(</span>
-<span id="cb77-386"><a href="#cb77-386" aria-hidden="true" tabindex="-1"></a>  <span class="st">"# A comment I want to skip</span></span>
-<span id="cb77-387"><a href="#cb77-387" aria-hidden="true" tabindex="-1"></a><span class="st">  x,y,z</span></span>
-<span id="cb77-388"><a href="#cb77-388" aria-hidden="true" tabindex="-1"></a><span class="st">  1,2,3"</span>,</span>
-<span id="cb77-389"><a href="#cb77-389" aria-hidden="true" tabindex="-1"></a>  <span class="at">comment =</span> <span class="st">"#"</span> <span class="co"># 跳过以“#”开头的行</span></span>
-<span id="cb77-390"><a href="#cb77-390" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb77-391"><a href="#cb77-391" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-392"><a href="#cb77-392" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-393"><a href="#cb77-393" aria-hidden="true" tabindex="-1"></a>在其他情况下，数据可能没有列名。可以使用&nbsp;<span class="in">`col_names = FALSE`</span>&nbsp;告知&nbsp;<span class="co">[</span><span class="ot">`read_csv()`</span><span class="co">](https://readr.tidyverse.org/reference/read_delim.html)</span>&nbsp;不要将第一行视为列名，而是按从&nbsp;“X1”&nbsp;到&nbsp;“Xn”&nbsp;的顺序标记它们：</span>
-<span id="cb77-394"><a href="#cb77-394" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-397"><a href="#cb77-397" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-398"><a href="#cb77-398" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(</span>
-<span id="cb77-399"><a href="#cb77-399" aria-hidden="true" tabindex="-1"></a>  <span class="st">"1,2,3</span></span>
-<span id="cb77-400"><a href="#cb77-400" aria-hidden="true" tabindex="-1"></a><span class="st">  4,5,6"</span>,</span>
-<span id="cb77-401"><a href="#cb77-401" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_names =</span> <span class="cn">FALSE</span></span>
-<span id="cb77-402"><a href="#cb77-402" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb77-403"><a href="#cb77-403" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-404"><a href="#cb77-404" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-405"><a href="#cb77-405" aria-hidden="true" tabindex="-1"></a>或者，可以用&nbsp;<span class="in">`col_names`</span>&nbsp;参数以包含列名的字符向量来自定义列名：</span>
-<span id="cb77-406"><a href="#cb77-406" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-409"><a href="#cb77-409" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-410"><a href="#cb77-410" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(</span>
-<span id="cb77-411"><a href="#cb77-411" aria-hidden="true" tabindex="-1"></a>  <span class="st">"1,2,3</span></span>
-<span id="cb77-412"><a href="#cb77-412" aria-hidden="true" tabindex="-1"></a><span class="st">  4,5,6"</span>,</span>
-<span id="cb77-413"><a href="#cb77-413" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"z"</span>)</span>
-<span id="cb77-414"><a href="#cb77-414" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb77-415"><a href="#cb77-415" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-416"><a href="#cb77-416" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-417"><a href="#cb77-417" aria-hidden="true" tabindex="-1"></a><span class="fu">## 其他类型数据文件的读取</span></span>
-<span id="cb77-418"><a href="#cb77-418" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-419"><a href="#cb77-419" aria-hidden="true" tabindex="-1"></a>一旦掌握了<span class="in">`read_csv()`</span>的语法，其他数据格式的读取只需调用特定的函数即可，语法和<span class="in">`read_csv()`</span>类似：</span>
-<span id="cb77-420"><a href="#cb77-420" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-421"><a href="#cb77-421" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`read_csv2()`</span>：读取以分号“;”分隔的数据。</span>
-<span id="cb77-422"><a href="#cb77-422" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-423"><a href="#cb77-423" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/截屏2024-02-03%2019.18.08.png)</span>{width="278"}</span>
-<span id="cb77-424"><a href="#cb77-424" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-425"><a href="#cb77-425" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`read_tsv()`</span>和<span class="in">`read_table()`</span>：读取以制表符分隔的数据。</span>
-<span id="cb77-426"><a href="#cb77-426" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-427"><a href="#cb77-427" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`read_fwf()`</span>：读取固定宽度数据文件，其中列以空格分隔。</span>
-<span id="cb77-428"><a href="#cb77-428" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-429"><a href="#cb77-429" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/截屏2024-02-03%2019.18.59.png)</span>{width="269"}</span>
-<span id="cb77-430"><a href="#cb77-430" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-431"><a href="#cb77-431" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`read_delim()`</span>：读取以任意分隔符（例如“\|”）分隔的数据。如果没有指定分隔符那么<span class="in">`read_delim()`</span>会尝试自动猜测分隔符。</span>
-<span id="cb77-432"><a href="#cb77-432" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-433"><a href="#cb77-433" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/截屏2024-02-03%2019.20.31.png)</span>{width="274"}</span>
-<span id="cb77-434"><a href="#cb77-434" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-435"><a href="#cb77-435" aria-hidden="true" tabindex="-1"></a><span class="fu">## 从多个文件读取数据</span></span>
-<span id="cb77-436"><a href="#cb77-436" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-437"><a href="#cb77-437" aria-hidden="true" tabindex="-1"></a>有时，数据会拆分到多个文件中，而不是包含在单个文件中。例如，假设这里有多个月的销售数据，每个月的数据都在一个单独的文件中，分别是：&nbsp;1月的销售数据“01-sales.csv”、2月的销售数据“02-sales.csv”和三月的销售数据“03-sales.csv”。通过使用&nbsp;<span class="in">`read_csv()`</span>&nbsp;，可以一次读取这些数据，并合并成一个数据。</span>
-<span id="cb77-438"><a href="#cb77-438" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-441"><a href="#cb77-441" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-442"><a href="#cb77-442" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(</span>
-<span id="cb77-443"><a href="#cb77-443" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/r_basic"</span>, </span>
-<span id="cb77-444"><a href="#cb77-444" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">"sales</span><span class="sc">\\</span><span class="st">.csv$"</span>, </span>
-<span id="cb77-445"><a href="#cb77-445" aria-hidden="true" tabindex="-1"></a>  <span class="at">full.names =</span> <span class="cn">TRUE</span></span>
-<span id="cb77-446"><a href="#cb77-446" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
-<span id="cb77-447"><a href="#cb77-447" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_csv</span>(<span class="at">id =</span> <span class="st">"file"</span>)</span>
-<span id="cb77-448"><a href="#cb77-448" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-449"><a href="#cb77-449" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-450"><a href="#cb77-450" aria-hidden="true" tabindex="-1"></a>这些数据可以从<span class="ot">&lt;https://pos.it/r4ds-01-sales&gt;</span>,&nbsp;<span class="ot">&lt;https://pos.it/r4ds-02-sales&gt;</span>, <span class="ot">&lt;https://pos.it/r4ds-03-sales&gt;</span>下载。下载后的数据被翻到了"data”文件夹下的“r_basic"子文件夹内。因此，我们可以通过<span class="in">`list.files()`</span>并结合<span class="in">`pattern`</span>参数列出我们需要的销售数据文件，<span class="in">`pattern`</span>中应用了正则表达式，这在接下来的章节中会详细说明。<span class="in">`read_csv`</span>中的<span class="in">`id`</span>参数会在结果数据中添加一个新列，用于标识数据来自哪个文件。</span>
-<span id="cb77-451"><a href="#cb77-451" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-452"><a href="#cb77-452" aria-hidden="true" tabindex="-1"></a><span class="fu">## 手动生成tibble</span></span>
-<span id="cb77-453"><a href="#cb77-453" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-454"><a href="#cb77-454" aria-hidden="true" tabindex="-1"></a>有时需要在R脚本中“手动”输入一些数据来生成一个tibble。有两个函数可以做到这一点，这两个函数的不同之处在于是按列还是按行布局tibble。其中 <span class="in">`tibble()`</span>&nbsp;按列工作，类似于base包中的<span class="co">[</span><span class="ot">`data.fram()`</span><span class="co">](#sec-手动生成数据框)</span>：</span>
-<span id="cb77-455"><a href="#cb77-455" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-458"><a href="#cb77-458" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-459"><a href="#cb77-459" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
-<span id="cb77-460"><a href="#cb77-460" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>), </span>
-<span id="cb77-461"><a href="#cb77-461" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"h"</span>, <span class="st">"m"</span>, <span class="st">"g"</span>),</span>
-<span id="cb77-462"><a href="#cb77-462" aria-hidden="true" tabindex="-1"></a>  <span class="at">z =</span> <span class="fu">c</span>(<span class="fl">0.08</span>, <span class="fl">0.83</span>, <span class="fl">0.60</span>)</span>
-<span id="cb77-463"><a href="#cb77-463" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb77-464"><a href="#cb77-464" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-465"><a href="#cb77-465" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-466"><a href="#cb77-466" aria-hidden="true" tabindex="-1"></a>按列布局数据很难看到行之间是如何关联的，因此可以选择&nbsp;<span class="in">`tribble()`</span>&nbsp;，这是“Transsposed Tibble”的缩写，它允许逐行布局数据。列标题以&nbsp;<span class="in">`~`</span>&nbsp;开头，条目之间用逗号分隔。这使得以易于阅读的形式布局少量数据成为可能：</span>
-<span id="cb77-467"><a href="#cb77-467" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-470"><a href="#cb77-470" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-471"><a href="#cb77-471" aria-hidden="true" tabindex="-1"></a><span class="fu">tribble</span>(</span>
-<span id="cb77-472"><a href="#cb77-472" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>x, <span class="sc">~</span>y, <span class="sc">~</span>z,</span>
-<span id="cb77-473"><a href="#cb77-473" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="st">"h"</span>, <span class="fl">0.08</span>,</span>
-<span id="cb77-474"><a href="#cb77-474" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>, <span class="st">"m"</span>, <span class="fl">0.83</span>,</span>
-<span id="cb77-475"><a href="#cb77-475" aria-hidden="true" tabindex="-1"></a>  <span class="dv">5</span>, <span class="st">"g"</span>, <span class="fl">0.60</span></span>
-<span id="cb77-476"><a href="#cb77-476" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb77-477"><a href="#cb77-477" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-478"><a href="#cb77-478" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-479"><a href="#cb77-479" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb77-480"><a href="#cb77-480" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-481"><a href="#cb77-481" aria-hidden="true" tabindex="-1"></a><span class="fu"># 数据的导出</span></span>
-<span id="cb77-482"><a href="#cb77-482" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-483"><a href="#cb77-483" aria-hidden="true" tabindex="-1"></a><span class="fu">## 基于base包的数据导出</span></span>
-<span id="cb77-484"><a href="#cb77-484" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-485"><a href="#cb77-485" aria-hidden="true" tabindex="-1"></a><span class="fu">### 导出.csv文件</span></span>
-<span id="cb77-486"><a href="#cb77-486" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-489"><a href="#cb77-489" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-490"><a href="#cb77-490" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb77-491"><a href="#cb77-491" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(</span>
-<span id="cb77-492"><a href="#cb77-492" aria-hidden="true" tabindex="-1"></a>  mydata,</span>
-<span id="cb77-493"><a href="#cb77-493" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names =</span> F,<span class="co">#是否输出行名称</span></span>
-<span id="cb77-494"><a href="#cb77-494" aria-hidden="true" tabindex="-1"></a>  <span class="st">"mydata.csv"</span></span>
-<span id="cb77-495"><a href="#cb77-495" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb77-496"><a href="#cb77-496" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-497"><a href="#cb77-497" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-498"><a href="#cb77-498" aria-hidden="true" tabindex="-1"></a><span class="fu">### 导出.xlsx/.xls文件</span></span>
-<span id="cb77-499"><a href="#cb77-499" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-502"><a href="#cb77-502" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-503"><a href="#cb77-503" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb77-504"><a href="#cb77-504" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openxlsx2)</span>
-<span id="cb77-505"><a href="#cb77-505" aria-hidden="true" tabindex="-1"></a><span class="fu">write_xlsx</span>(</span>
-<span id="cb77-506"><a href="#cb77-506" aria-hidden="true" tabindex="-1"></a>  coxtable1,</span>
-<span id="cb77-507"><a href="#cb77-507" aria-hidden="true" tabindex="-1"></a>  <span class="st">"coxtable1.xlsx"</span></span>
-<span id="cb77-508"><a href="#cb77-508" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb77-509"><a href="#cb77-509" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-510"><a href="#cb77-510" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-511"><a href="#cb77-511" aria-hidden="true" tabindex="-1"></a><span class="fu">### 储存为.Rdata/.RDS文件</span></span>
-<span id="cb77-512"><a href="#cb77-512" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-513"><a href="#cb77-513" aria-hidden="true" tabindex="-1"></a>在R中保存数据的更好的方法是通过<span class="in">`save()`</span>将数据导出为.Rdata文件或通过<span class="in">`saveRDS()`</span>保存为.RDS文件，它们以R的定制二进制格式存储数据。这意味着当重新加载这些对象时，加载的是与当时存储时的完全相同的R对象。它们能够最大程度的保持数据的原貌，如对变量类型的定义，同时可以将图像、列表等对象导出。</span>
-<span id="cb77-514"><a href="#cb77-514" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-517"><a href="#cb77-517" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-518"><a href="#cb77-518" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb77-519"><a href="#cb77-519" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存为.Rdata文件</span></span>
-<span id="cb77-520"><a href="#cb77-520" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(object1, object2, <span class="at">file =</span> <span class="st">"filepath/name.rdata"</span>)</span>
-<span id="cb77-521"><a href="#cb77-521" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存目前环境中的所有对象</span></span>
-<span id="cb77-522"><a href="#cb77-522" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(<span class="at">list =</span> <span class="fu">ls</span>(), <span class="at">file =</span> <span class="st">"filepath/name.rdata"</span>)</span>
-<span id="cb77-523"><a href="#cb77-523" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-524"><a href="#cb77-524" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存为.RDS文件</span></span>
-<span id="cb77-525"><a href="#cb77-525" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(object, <span class="at">file =</span> <span class="st">"filepath/name.rds"</span>)</span>
-<span id="cb77-526"><a href="#cb77-526" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-527"><a href="#cb77-527" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-528"><a href="#cb77-528" aria-hidden="true" tabindex="-1"></a><span class="in">`save()`</span>和<span class="in">`saveRDS()`</span>的区别在于：</span>
-<span id="cb77-529"><a href="#cb77-529" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-530"><a href="#cb77-530" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`save()`</span>支持同时保存多个对象，而<span class="in">`saveRDS()`</span>一次只能保存一个对象</span>
-<span id="cb77-531"><a href="#cb77-531" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-532"><a href="#cb77-532" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>.Rdata文件的读取是通过load()函数，该函数不能对读取的对象重命名，它会保留当时在储存这些对象时原本的名称；而读取.RDS文件是通过<span class="in">`readRDS()`</span>函数，支持重命名：</span>
-<span id="cb77-533"><a href="#cb77-533" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-536"><a href="#cb77-536" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-537"><a href="#cb77-537" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb77-538"><a href="#cb77-538" aria-hidden="true" tabindex="-1"></a><span class="co"># 载入.Rdata文件</span></span>
-<span id="cb77-539"><a href="#cb77-539" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"filepath/name.rdata"</span>)</span>
-<span id="cb77-540"><a href="#cb77-540" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-541"><a href="#cb77-541" aria-hidden="true" tabindex="-1"></a><span class="co"># 载入.RDS文件</span></span>
-<span id="cb77-542"><a href="#cb77-542" aria-hidden="true" tabindex="-1"></a>new_object <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"filepath/name.rds"</span>)</span>
-<span id="cb77-543"><a href="#cb77-543" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-544"><a href="#cb77-544" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-545"><a href="#cb77-545" aria-hidden="true" tabindex="-1"></a><span class="fu">## 基于readr包的数据导出</span></span>
-<span id="cb77-546"><a href="#cb77-546" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-547"><a href="#cb77-547" aria-hidden="true" tabindex="-1"></a><span class="fu">### 导出.csv/.txt文件</span></span>
-<span id="cb77-548"><a href="#cb77-548" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-549"><a href="#cb77-549" aria-hidden="true" tabindex="-1"></a><span class="in">`Readr`</span>提供了两个用于将数据写回磁盘的函数：&nbsp;<span class="in">`write_csv()`</span>&nbsp;和&nbsp;<span class="in">`write_tsv()`</span>&nbsp;。这些函数最重要的参数是&nbsp;<span class="in">`x`</span>&nbsp;(要保存的数据集的名字)和&nbsp;<span class="in">`file`</span>&nbsp;(要保存的位置)。还可以使用&nbsp;<span class="in">`na`</span>&nbsp;指定如何写入缺失值，以及通过&nbsp;<span class="in">`append`</span>&nbsp;定义是否覆盖写入现有文件。</span>
-<span id="cb77-550"><a href="#cb77-550" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-551"><a href="#cb77-551" aria-hidden="true" tabindex="-1"></a>现在我们将之前的“students”数据导出，然后重新读取：</span>
-<span id="cb77-552"><a href="#cb77-552" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-555"><a href="#cb77-555" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-556"><a href="#cb77-556" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(students, <span class="at">file =</span> <span class="st">"output/r_basic/students.csv"</span>)</span>
-<span id="cb77-557"><a href="#cb77-557" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(<span class="st">"output/r_basic/students.csv"</span>)</span>
-<span id="cb77-558"><a href="#cb77-558" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-559"><a href="#cb77-559" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-560"><a href="#cb77-560" aria-hidden="true" tabindex="-1"></a>用这种方式导出的文件无法保留我们定义的变量类型信息。因此，更好的方式是和上面一样保存为.Rdata文件或.RDS文件。和<span class="in">`base`</span>包的<span class="in">`saveRDS()`</span>和<span class="in">`readRDS()`</span>对应的，<span class="in">`readr`</span>包中也有两个函数，<span class="in">`write_rds()`</span>&nbsp;和&nbsp;<span class="in">`read_rds()`</span>：</span>
-<span id="cb77-561"><a href="#cb77-561" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-564"><a href="#cb77-564" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-565"><a href="#cb77-565" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(students, <span class="st">"output/r_basic/students.rds"</span>)</span>
-<span id="cb77-566"><a href="#cb77-566" aria-hidden="true" tabindex="-1"></a>students <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"output/r_basic/students.rds"</span>)</span>
-<span id="cb77-567"><a href="#cb77-567" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-568"><a href="#cb77-568" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-569"><a href="#cb77-569" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
-<span id="cb77-570"><a href="#cb77-570" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-571"><a href="#cb77-571" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
-<span id="cb77-572"><a href="#cb77-572" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
-<span id="cb77-573"><a href="#cb77-573" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-576"><a href="#cb77-576" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb77-577"><a href="#cb77-577" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
-<span id="cb77-578"><a href="#cb77-578" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb77-579"><a href="#cb77-579" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb77-580"><a href="#cb77-580" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb77-329"><a href="#cb77-329" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- --&gt;</span></span>
+<span id="cb77-330"><a href="#cb77-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-331"><a href="#cb77-331" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`parse_number()`</span>：转换数值型变量。这个函数会解析它找到的第一个数字，然后删除第一个数字之前的所有非数字字符和第一个数字之后的所有字符，同时也会忽略千分位分隔符“,”。</span>
+<span id="cb77-332"><a href="#cb77-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-333"><a href="#cb77-333" aria-hidden="true" tabindex="-1"></a>    <span class="in">```{r}</span></span>
+<span id="cb77-334"><a href="#cb77-334" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_number("$1,000") # leading `$` and grouping character `,` ignored</span></span>
+<span id="cb77-335"><a href="#cb77-335" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_number("euro1,000") # leading non-numeric euro ignored</span></span>
+<span id="cb77-336"><a href="#cb77-336" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_number("t1000t1000") # only parses first number found</span></span>
+<span id="cb77-337"><a href="#cb77-337" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_number("1,234.56")</span></span>
+<span id="cb77-338"><a href="#cb77-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-339"><a href="#cb77-339" aria-hidden="true" tabindex="-1"></a><span class="in">    # explicit locale specifying European grouping and decimal marks</span></span>
+<span id="cb77-340"><a href="#cb77-340" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_number("1.234,56", locale = locale(decimal_mark = ",", grouping_mark = "."))</span></span>
+<span id="cb77-341"><a href="#cb77-341" aria-hidden="true" tabindex="-1"></a><span class="in">    # SI/ISO 31-0 standard spaces for number grouping</span></span>
+<span id="cb77-342"><a href="#cb77-342" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_number("1 234.56", locale = locale(decimal_mark = ".", grouping_mark = " "))</span></span>
+<span id="cb77-343"><a href="#cb77-343" aria-hidden="true" tabindex="-1"></a><span class="in">    ```</span></span>
+<span id="cb77-344"><a href="#cb77-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-345"><a href="#cb77-345" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`parse_integer()`</span>：转换整数型变量。较少使用，因为整数型变量和数值型变量或称doubles型变量的本质是一样的。</span>
+<span id="cb77-346"><a href="#cb77-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-347"><a href="#cb77-347" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`parse_datetime()`</span>：转换日期/时间变量。</span>
+<span id="cb77-348"><a href="#cb77-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-349"><a href="#cb77-349" aria-hidden="true" tabindex="-1"></a>    <span class="in">```{r}</span></span>
+<span id="cb77-350"><a href="#cb77-350" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_datetime("01/02/2010", "%d/%m/%Y")</span></span>
+<span id="cb77-351"><a href="#cb77-351" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_datetime("01/02/2010", "%m/%d/%Y")</span></span>
+<span id="cb77-352"><a href="#cb77-352" aria-hidden="true" tabindex="-1"></a><span class="in">    parse_datetime("2010/01/01 12:00 US/Central", "%Y/%m/%d %H:%M %Z")</span></span>
+<span id="cb77-353"><a href="#cb77-353" aria-hidden="true" tabindex="-1"></a><span class="in">    ```</span></span>
+<span id="cb77-354"><a href="#cb77-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-355"><a href="#cb77-355" aria-hidden="true" tabindex="-1"></a>::: callout-tip</span>
+<span id="cb77-356"><a href="#cb77-356" aria-hidden="true" tabindex="-1"></a>这些变量类型转换函数都通过了缺失值定义参数，如：</span>
+<span id="cb77-357"><a href="#cb77-357" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-360"><a href="#cb77-360" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-361"><a href="#cb77-361" aria-hidden="true" tabindex="-1"></a><span class="co"># Specifying strings for NAs</span></span>
+<span id="cb77-362"><a href="#cb77-362" aria-hidden="true" tabindex="-1"></a><span class="fu">parse_number</span>(<span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span>, <span class="st">"NA"</span>))</span>
+<span id="cb77-363"><a href="#cb77-363" aria-hidden="true" tabindex="-1"></a><span class="fu">parse_number</span>(<span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>, <span class="st">"3"</span>, <span class="st">"NA"</span>, <span class="st">"Nothing"</span>), <span class="at">na =</span> <span class="fu">c</span>(<span class="st">"NA"</span>, <span class="st">"Nothing"</span>))</span>
+<span id="cb77-364"><a href="#cb77-364" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-365"><a href="#cb77-365" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-366"><a href="#cb77-366" aria-hidden="true" tabindex="-1"></a>因此，既可以像上面的<span class="co">[</span><span class="ot">定义缺失值</span><span class="co">](#定义缺失值)</span>中一样在数据读取时就定义数据集中的缺失值，也可以在转换变量类型时分别定义每一列的缺失值。</span>
+<span id="cb77-367"><a href="#cb77-367" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb77-368"><a href="#cb77-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-369"><a href="#cb77-369" aria-hidden="true" tabindex="-1"></a><span class="fu">### 非标准数据的读取</span></span>
+<span id="cb77-370"><a href="#cb77-370" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-371"><a href="#cb77-371" aria-hidden="true" tabindex="-1"></a>通常，<span class="in">`read_csv()`</span>使用数据的第一行作为列名，这是一种非常常见的约定。但在有时候数据的顶部可能包含几行元数据。这时候可以通过添加<span class="in">`skip`</span>参数让<span class="in">`read_csv()`</span>跳过前n行，也可以通过<span class="in">`comment`</span>参数让其跳过以特定字符（例如“#”）开头的所有行。</span>
+<span id="cb77-372"><a href="#cb77-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-375"><a href="#cb77-375" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-376"><a href="#cb77-376" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(</span>
+<span id="cb77-377"><a href="#cb77-377" aria-hidden="true" tabindex="-1"></a>  <span class="st">"The first line of metadata</span></span>
+<span id="cb77-378"><a href="#cb77-378" aria-hidden="true" tabindex="-1"></a><span class="st">  The second line of metadata</span></span>
+<span id="cb77-379"><a href="#cb77-379" aria-hidden="true" tabindex="-1"></a><span class="st">  x,y,z</span></span>
+<span id="cb77-380"><a href="#cb77-380" aria-hidden="true" tabindex="-1"></a><span class="st">  1,2,3"</span>,</span>
+<span id="cb77-381"><a href="#cb77-381" aria-hidden="true" tabindex="-1"></a>  <span class="at">skip =</span> <span class="dv">2</span> </span>
+<span id="cb77-382"><a href="#cb77-382" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb77-383"><a href="#cb77-383" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-384"><a href="#cb77-384" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(</span>
+<span id="cb77-385"><a href="#cb77-385" aria-hidden="true" tabindex="-1"></a>  <span class="st">"# A comment I want to skip</span></span>
+<span id="cb77-386"><a href="#cb77-386" aria-hidden="true" tabindex="-1"></a><span class="st">  x,y,z</span></span>
+<span id="cb77-387"><a href="#cb77-387" aria-hidden="true" tabindex="-1"></a><span class="st">  1,2,3"</span>,</span>
+<span id="cb77-388"><a href="#cb77-388" aria-hidden="true" tabindex="-1"></a>  <span class="at">comment =</span> <span class="st">"#"</span> <span class="co"># 跳过以“#”开头的行</span></span>
+<span id="cb77-389"><a href="#cb77-389" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb77-390"><a href="#cb77-390" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-391"><a href="#cb77-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-392"><a href="#cb77-392" aria-hidden="true" tabindex="-1"></a>在其他情况下，数据可能没有列名。可以使用&nbsp;<span class="in">`col_names = FALSE`</span>&nbsp;告知&nbsp;<span class="co">[</span><span class="ot">`read_csv()`</span><span class="co">](https://readr.tidyverse.org/reference/read_delim.html)</span>&nbsp;不要将第一行视为列名，而是按从&nbsp;“X1”&nbsp;到&nbsp;“Xn”&nbsp;的顺序标记它们：</span>
+<span id="cb77-393"><a href="#cb77-393" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-396"><a href="#cb77-396" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-397"><a href="#cb77-397" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(</span>
+<span id="cb77-398"><a href="#cb77-398" aria-hidden="true" tabindex="-1"></a>  <span class="st">"1,2,3</span></span>
+<span id="cb77-399"><a href="#cb77-399" aria-hidden="true" tabindex="-1"></a><span class="st">  4,5,6"</span>,</span>
+<span id="cb77-400"><a href="#cb77-400" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_names =</span> <span class="cn">FALSE</span></span>
+<span id="cb77-401"><a href="#cb77-401" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb77-402"><a href="#cb77-402" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-403"><a href="#cb77-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-404"><a href="#cb77-404" aria-hidden="true" tabindex="-1"></a>或者，可以用&nbsp;<span class="in">`col_names`</span>&nbsp;参数以包含列名的字符向量来自定义列名：</span>
+<span id="cb77-405"><a href="#cb77-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-408"><a href="#cb77-408" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-409"><a href="#cb77-409" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(</span>
+<span id="cb77-410"><a href="#cb77-410" aria-hidden="true" tabindex="-1"></a>  <span class="st">"1,2,3</span></span>
+<span id="cb77-411"><a href="#cb77-411" aria-hidden="true" tabindex="-1"></a><span class="st">  4,5,6"</span>,</span>
+<span id="cb77-412"><a href="#cb77-412" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"z"</span>)</span>
+<span id="cb77-413"><a href="#cb77-413" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb77-414"><a href="#cb77-414" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-415"><a href="#cb77-415" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-416"><a href="#cb77-416" aria-hidden="true" tabindex="-1"></a><span class="fu">## 其他类型数据文件的读取</span></span>
+<span id="cb77-417"><a href="#cb77-417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-418"><a href="#cb77-418" aria-hidden="true" tabindex="-1"></a>一旦掌握了<span class="in">`read_csv()`</span>的语法，其他数据格式的读取只需调用特定的函数即可，语法和<span class="in">`read_csv()`</span>类似：</span>
+<span id="cb77-419"><a href="#cb77-419" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-420"><a href="#cb77-420" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`read_csv2()`</span>：读取以分号“;”分隔的数据。</span>
+<span id="cb77-421"><a href="#cb77-421" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-422"><a href="#cb77-422" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/截屏2024-02-03%2019.18.08.png)</span>{width="278"}</span>
+<span id="cb77-423"><a href="#cb77-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-424"><a href="#cb77-424" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`read_tsv()`</span>和<span class="in">`read_table()`</span>：读取以制表符分隔的数据。</span>
+<span id="cb77-425"><a href="#cb77-425" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-426"><a href="#cb77-426" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`read_fwf()`</span>：读取固定宽度数据文件，其中列以空格分隔。</span>
+<span id="cb77-427"><a href="#cb77-427" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-428"><a href="#cb77-428" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/截屏2024-02-03%2019.18.59.png)</span>{width="269"}</span>
+<span id="cb77-429"><a href="#cb77-429" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-430"><a href="#cb77-430" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`read_delim()`</span>：读取以任意分隔符（例如“\|”）分隔的数据。如果没有指定分隔符那么<span class="in">`read_delim()`</span>会尝试自动猜测分隔符。</span>
+<span id="cb77-431"><a href="#cb77-431" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-432"><a href="#cb77-432" aria-hidden="true" tabindex="-1"></a>    <span class="al">![](images/截屏2024-02-03%2019.20.31.png)</span>{width="274"}</span>
+<span id="cb77-433"><a href="#cb77-433" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-434"><a href="#cb77-434" aria-hidden="true" tabindex="-1"></a><span class="fu">## 从多个文件读取数据</span></span>
+<span id="cb77-435"><a href="#cb77-435" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-436"><a href="#cb77-436" aria-hidden="true" tabindex="-1"></a>有时，数据会拆分到多个文件中，而不是包含在单个文件中。例如，假设这里有多个月的销售数据，每个月的数据都在一个单独的文件中，分别是：&nbsp;1月的销售数据“01-sales.csv”、2月的销售数据“02-sales.csv”和三月的销售数据“03-sales.csv”。通过使用&nbsp;<span class="in">`read_csv()`</span>&nbsp;，可以一次读取这些数据，并合并成一个数据。</span>
+<span id="cb77-437"><a href="#cb77-437" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-440"><a href="#cb77-440" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-441"><a href="#cb77-441" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(</span>
+<span id="cb77-442"><a href="#cb77-442" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/r_basic"</span>, </span>
+<span id="cb77-443"><a href="#cb77-443" aria-hidden="true" tabindex="-1"></a>  <span class="at">pattern =</span> <span class="st">"sales</span><span class="sc">\\</span><span class="st">.csv$"</span>, </span>
+<span id="cb77-444"><a href="#cb77-444" aria-hidden="true" tabindex="-1"></a>  <span class="at">full.names =</span> <span class="cn">TRUE</span></span>
+<span id="cb77-445"><a href="#cb77-445" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> </span>
+<span id="cb77-446"><a href="#cb77-446" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_csv</span>(<span class="at">id =</span> <span class="st">"file"</span>)</span>
+<span id="cb77-447"><a href="#cb77-447" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-448"><a href="#cb77-448" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-449"><a href="#cb77-449" aria-hidden="true" tabindex="-1"></a>这些数据可以从<span class="ot">&lt;https://pos.it/r4ds-01-sales&gt;</span>,&nbsp;<span class="ot">&lt;https://pos.it/r4ds-02-sales&gt;</span>, <span class="ot">&lt;https://pos.it/r4ds-03-sales&gt;</span>下载。下载后的数据被翻到了"data”文件夹下的“r_basic"子文件夹内。因此，我们可以通过<span class="in">`list.files()`</span>并结合<span class="in">`pattern`</span>参数列出我们需要的销售数据文件，<span class="in">`pattern`</span>中应用了正则表达式，这在接下来的章节中会详细说明。<span class="in">`read_csv`</span>中的<span class="in">`id`</span>参数会在结果数据中添加一个新列，用于标识数据来自哪个文件。</span>
+<span id="cb77-450"><a href="#cb77-450" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-451"><a href="#cb77-451" aria-hidden="true" tabindex="-1"></a><span class="fu">## 手动生成tibble {#sec-手动生成tibble}</span></span>
+<span id="cb77-452"><a href="#cb77-452" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-453"><a href="#cb77-453" aria-hidden="true" tabindex="-1"></a>有时需要在R脚本中“手动”输入一些数据来生成一个tibble。有两个函数可以做到这一点，这两个函数的不同之处在于是按列还是按行布局tibble。其中 <span class="in">`tibble()`</span>&nbsp;按列工作，类似于base包中的<span class="co">[</span><span class="ot">`data.fram()`</span><span class="co">](#sec-手动生成数据框)</span>：</span>
+<span id="cb77-454"><a href="#cb77-454" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-457"><a href="#cb77-457" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-458"><a href="#cb77-458" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb77-459"><a href="#cb77-459" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>), </span>
+<span id="cb77-460"><a href="#cb77-460" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="st">"h"</span>, <span class="st">"m"</span>, <span class="st">"g"</span>),</span>
+<span id="cb77-461"><a href="#cb77-461" aria-hidden="true" tabindex="-1"></a>  <span class="at">z =</span> <span class="fu">c</span>(<span class="fl">0.08</span>, <span class="fl">0.83</span>, <span class="fl">0.60</span>)</span>
+<span id="cb77-462"><a href="#cb77-462" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb77-463"><a href="#cb77-463" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-464"><a href="#cb77-464" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-465"><a href="#cb77-465" aria-hidden="true" tabindex="-1"></a>按列布局数据很难看到行之间是如何关联的，因此可以选择&nbsp;<span class="in">`tribble()`</span>&nbsp;，这是“Transsposed Tibble”的缩写，它允许逐行布局数据。列标题以&nbsp;<span class="in">`~`</span>&nbsp;开头，条目之间用逗号分隔。这使得以易于阅读的形式布局少量数据成为可能：</span>
+<span id="cb77-466"><a href="#cb77-466" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-469"><a href="#cb77-469" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-470"><a href="#cb77-470" aria-hidden="true" tabindex="-1"></a><span class="fu">tribble</span>(</span>
+<span id="cb77-471"><a href="#cb77-471" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>x, <span class="sc">~</span>y, <span class="sc">~</span>z,</span>
+<span id="cb77-472"><a href="#cb77-472" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span>, <span class="st">"h"</span>, <span class="fl">0.08</span>,</span>
+<span id="cb77-473"><a href="#cb77-473" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span>, <span class="st">"m"</span>, <span class="fl">0.83</span>,</span>
+<span id="cb77-474"><a href="#cb77-474" aria-hidden="true" tabindex="-1"></a>  <span class="dv">5</span>, <span class="st">"g"</span>, <span class="fl">0.60</span></span>
+<span id="cb77-475"><a href="#cb77-475" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb77-476"><a href="#cb77-476" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-477"><a href="#cb77-477" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-478"><a href="#cb77-478" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb77-479"><a href="#cb77-479" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-480"><a href="#cb77-480" aria-hidden="true" tabindex="-1"></a><span class="fu"># 数据的导出</span></span>
+<span id="cb77-481"><a href="#cb77-481" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-482"><a href="#cb77-482" aria-hidden="true" tabindex="-1"></a><span class="fu">## 基于base包的数据导出</span></span>
+<span id="cb77-483"><a href="#cb77-483" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-484"><a href="#cb77-484" aria-hidden="true" tabindex="-1"></a><span class="fu">### 导出.csv文件</span></span>
+<span id="cb77-485"><a href="#cb77-485" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-488"><a href="#cb77-488" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-489"><a href="#cb77-489" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb77-490"><a href="#cb77-490" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(</span>
+<span id="cb77-491"><a href="#cb77-491" aria-hidden="true" tabindex="-1"></a>  mydata,</span>
+<span id="cb77-492"><a href="#cb77-492" aria-hidden="true" tabindex="-1"></a>  <span class="at">row.names =</span> F,<span class="co">#是否输出行名称</span></span>
+<span id="cb77-493"><a href="#cb77-493" aria-hidden="true" tabindex="-1"></a>  <span class="st">"mydata.csv"</span></span>
+<span id="cb77-494"><a href="#cb77-494" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb77-495"><a href="#cb77-495" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-496"><a href="#cb77-496" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-497"><a href="#cb77-497" aria-hidden="true" tabindex="-1"></a><span class="fu">### 导出.xlsx/.xls文件</span></span>
+<span id="cb77-498"><a href="#cb77-498" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-501"><a href="#cb77-501" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-502"><a href="#cb77-502" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb77-503"><a href="#cb77-503" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(openxlsx2)</span>
+<span id="cb77-504"><a href="#cb77-504" aria-hidden="true" tabindex="-1"></a><span class="fu">write_xlsx</span>(</span>
+<span id="cb77-505"><a href="#cb77-505" aria-hidden="true" tabindex="-1"></a>  coxtable1,</span>
+<span id="cb77-506"><a href="#cb77-506" aria-hidden="true" tabindex="-1"></a>  <span class="st">"coxtable1.xlsx"</span></span>
+<span id="cb77-507"><a href="#cb77-507" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb77-508"><a href="#cb77-508" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-509"><a href="#cb77-509" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-510"><a href="#cb77-510" aria-hidden="true" tabindex="-1"></a><span class="fu">### 储存为.Rdata/.RDS文件</span></span>
+<span id="cb77-511"><a href="#cb77-511" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-512"><a href="#cb77-512" aria-hidden="true" tabindex="-1"></a>在R中保存数据的更好的方法是通过<span class="in">`save()`</span>将数据导出为.Rdata文件或通过<span class="in">`saveRDS()`</span>保存为.RDS文件，它们以R的定制二进制格式存储数据。这意味着当重新加载这些对象时，加载的是与当时存储时的完全相同的R对象。它们能够最大程度的保持数据的原貌，如对变量类型的定义，同时可以将图像、列表等对象导出。</span>
+<span id="cb77-513"><a href="#cb77-513" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-516"><a href="#cb77-516" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-517"><a href="#cb77-517" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb77-518"><a href="#cb77-518" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存为.Rdata文件</span></span>
+<span id="cb77-519"><a href="#cb77-519" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(object1, object2, <span class="at">file =</span> <span class="st">"filepath/name.rdata"</span>)</span>
+<span id="cb77-520"><a href="#cb77-520" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存目前环境中的所有对象</span></span>
+<span id="cb77-521"><a href="#cb77-521" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(<span class="at">list =</span> <span class="fu">ls</span>(), <span class="at">file =</span> <span class="st">"filepath/name.rdata"</span>)</span>
+<span id="cb77-522"><a href="#cb77-522" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-523"><a href="#cb77-523" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存为.RDS文件</span></span>
+<span id="cb77-524"><a href="#cb77-524" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(object, <span class="at">file =</span> <span class="st">"filepath/name.rds"</span>)</span>
+<span id="cb77-525"><a href="#cb77-525" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-526"><a href="#cb77-526" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-527"><a href="#cb77-527" aria-hidden="true" tabindex="-1"></a><span class="in">`save()`</span>和<span class="in">`saveRDS()`</span>的区别在于：</span>
+<span id="cb77-528"><a href="#cb77-528" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-529"><a href="#cb77-529" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span><span class="in">`save()`</span>支持同时保存多个对象，而<span class="in">`saveRDS()`</span>一次只能保存一个对象</span>
+<span id="cb77-530"><a href="#cb77-530" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-531"><a href="#cb77-531" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>.Rdata文件的读取是通过load()函数，该函数不能对读取的对象重命名，它会保留当时在储存这些对象时原本的名称；而读取.RDS文件是通过<span class="in">`readRDS()`</span>函数，支持重命名：</span>
+<span id="cb77-532"><a href="#cb77-532" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-535"><a href="#cb77-535" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-536"><a href="#cb77-536" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb77-537"><a href="#cb77-537" aria-hidden="true" tabindex="-1"></a><span class="co"># 载入.Rdata文件</span></span>
+<span id="cb77-538"><a href="#cb77-538" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"filepath/name.rdata"</span>)</span>
+<span id="cb77-539"><a href="#cb77-539" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-540"><a href="#cb77-540" aria-hidden="true" tabindex="-1"></a><span class="co"># 载入.RDS文件</span></span>
+<span id="cb77-541"><a href="#cb77-541" aria-hidden="true" tabindex="-1"></a>new_object <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"filepath/name.rds"</span>)</span>
+<span id="cb77-542"><a href="#cb77-542" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-543"><a href="#cb77-543" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-544"><a href="#cb77-544" aria-hidden="true" tabindex="-1"></a><span class="fu">## 基于readr包的数据导出</span></span>
+<span id="cb77-545"><a href="#cb77-545" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-546"><a href="#cb77-546" aria-hidden="true" tabindex="-1"></a><span class="fu">### 导出.csv/.txt文件</span></span>
+<span id="cb77-547"><a href="#cb77-547" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-548"><a href="#cb77-548" aria-hidden="true" tabindex="-1"></a><span class="in">`Readr`</span>提供了两个用于将数据写回磁盘的函数：&nbsp;<span class="in">`write_csv()`</span>&nbsp;和&nbsp;<span class="in">`write_tsv()`</span>&nbsp;。这些函数最重要的参数是&nbsp;<span class="in">`x`</span>&nbsp;(要保存的数据集的名字)和&nbsp;<span class="in">`file`</span>&nbsp;(要保存的位置)。还可以使用&nbsp;<span class="in">`na`</span>&nbsp;指定如何写入缺失值，以及通过&nbsp;<span class="in">`append`</span>&nbsp;定义是否覆盖写入现有文件。</span>
+<span id="cb77-549"><a href="#cb77-549" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-550"><a href="#cb77-550" aria-hidden="true" tabindex="-1"></a>现在我们将之前的“students”数据导出，然后重新读取：</span>
+<span id="cb77-551"><a href="#cb77-551" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-554"><a href="#cb77-554" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-555"><a href="#cb77-555" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(students, <span class="at">file =</span> <span class="st">"output/r_basic/students.csv"</span>)</span>
+<span id="cb77-556"><a href="#cb77-556" aria-hidden="true" tabindex="-1"></a><span class="fu">read_csv</span>(<span class="st">"output/r_basic/students.csv"</span>)</span>
+<span id="cb77-557"><a href="#cb77-557" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-558"><a href="#cb77-558" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-559"><a href="#cb77-559" aria-hidden="true" tabindex="-1"></a>用这种方式导出的文件无法保留我们定义的变量类型信息。因此，更好的方式是和上面一样保存为.Rdata文件或.RDS文件。和<span class="in">`base`</span>包的<span class="in">`saveRDS()`</span>和<span class="in">`readRDS()`</span>对应的，<span class="in">`readr`</span>包中也有两个函数，<span class="in">`write_rds()`</span>&nbsp;和&nbsp;<span class="in">`read_rds()`</span>：</span>
+<span id="cb77-560"><a href="#cb77-560" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-563"><a href="#cb77-563" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-564"><a href="#cb77-564" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(students, <span class="st">"output/r_basic/students.rds"</span>)</span>
+<span id="cb77-565"><a href="#cb77-565" aria-hidden="true" tabindex="-1"></a>students <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"output/r_basic/students.rds"</span>)</span>
+<span id="cb77-566"><a href="#cb77-566" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-567"><a href="#cb77-567" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-568"><a href="#cb77-568" aria-hidden="true" tabindex="-1"></a>------------------------------------------------------------------------</span>
+<span id="cb77-569"><a href="#cb77-569" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-570"><a href="#cb77-570" aria-hidden="true" tabindex="-1"></a>::: {.callout-note collapse="true" icon="false"}</span>
+<span id="cb77-571"><a href="#cb77-571" aria-hidden="true" tabindex="-1"></a><span class="fu">## Session Info</span></span>
+<span id="cb77-572"><a href="#cb77-572" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb77-575"><a href="#cb77-575" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb77-576"><a href="#cb77-576" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb77-577"><a href="#cb77-577" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb77-578"><a href="#cb77-578" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb77-579"><a href="#cb77-579" aria-hidden="true" tabindex="-1"></a>:::</span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

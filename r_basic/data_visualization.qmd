@@ -1,0 +1,230 @@
+---
+title: "数据可视化"
+---
+
+> 参考：<https://r4ds.hadley.nz/data-visualize>
+
+本章介绍基于ggplot2包的数据可视化基本语法，主要介绍几个常用图形的语法。
+
+# 加载包
+
+```{r}
+library(tidyverse)
+library(palmerpenguins) # 提供案例数据
+library(ggthemes) # 提供调色板
+```
+
+案例数据为Palmer Archipelago三个岛屿上企鹅的身体测量数据，这是一个tibble类型的数据集：
+
+```{r}
+penguins
+```
+
+# ggplot基本语法
+
+下面我们通过相关性散点图可视化企鹅的鳍长度和体重之间的关系，并通过不同的颜色和形状标注企鹅的种类。
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+ggplot(
+  penguins,
+  aes(x = flipper_length_mm, 
+      y = body_mass_g, 
+      color = species,
+      shape = species)
+) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+::: callout-tip
+`aes()` 函数定义了如何将数据集中的变量映射到绘图的可视化属性（即美学，aesthetics）上。
+:::
+
+可以看到，它给每个不同的企鹅类型都拟合了一条相关性趋势线。如果我们需要在整个数据集中拟合一条趋势线，则需要将区分企鹅类型的`color = species`和`shape = species`参数从全局的`ggplot()`中移动到`geom_point()`中：
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+ggplot(
+  data = penguins,
+  aes(x = flipper_length_mm, 
+      y = body_mass_g)
+) +
+  geom_point(aes(color = species, shape = species)) +
+  geom_smooth(method = "lm")
+```
+
+这是因为在`ggplot()`中定义了全局级别的美学映射后，这些映射会向下传递到绘图的每个后续geom层。不过，ggplot2 中的每个 geom 函数也可以接受一个映射参数，这样就可以在局部层级添加美学映射，并将其添加到从全局层级继承的映射中。由于我们希望根据企鹅种类定义每个点的颜色和形状，但不希望分别为每个企鹅种类绘制拟合线，因此我们应该只为 `geom_point()`指定 `color = species`和`shape = species`。
+
+最后，为其添加文字并调用调色板：
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+ggplot(
+  penguins,
+  aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point(aes(color = species, shape = species)) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper length (mm)", 
+    y = "Body mass (g)",
+  ) +
+  scale_color_colorblind()
+```
+
+# 可视化分布
+
+## 可视化分类变量的分布
+
+用**条形图**可视化企鹅类型的分布：
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+ggplot(penguins, 
+       aes(x = species)) +
+  geom_bar(fill = "red")
+```
+
+按照每个类型企鹅数量的多少**重新排序条形图**。可以通过`fct_infreq()`对“species”按照其频数重新排序：
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+ggplot(penguins, 
+       aes(x = fct_infreq(species))) +
+  geom_bar(fill = "red")
+```
+
+## 可视化数值变量的分布
+
+通过**直方图**可视化企鹅体重对分布情况：
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+ggplot(penguins, 
+       aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 200, 
+                 fill = "darkblue") 
+```
+
+**密度图**是数值变量分布的另一种可视化方式。密度图是直方图的平滑化版本，与直方图相比，它显示的细节较少，但能让人更容易快速了解分布的形状。
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+ggplot(penguins, 
+       aes(x = body_mass_g)) +
+  geom_density(color = "darkblue")
+```
+
+# 可视化关系
+
+## 一个数值变量和一个分类变量
+
+通过**箱型图**比较不同种类企鹅的体重：
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+ggplot(penguins, 
+       aes(x = species, 
+           y = body_mass_g)) +
+  geom_boxplot()
+```
+
+![箱型图的解释](images/EDA-boxplot.png){width="597"}
+
+密度图：
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+ggplot(penguins, 
+       aes(x = body_mass_g, 
+           color = species, 
+           fill = species)) +
+  geom_density(alpha = 0.5)
+```
+
+## 两个分类变量
+
+通过堆叠条形图比价不同岛屿上的企鹅类型分布情况：
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+ggplot(penguins, 
+       aes(x = island, 
+           fill = species)) +
+  geom_bar()
+```
+
+可以通过在 geom 中设置 `position = "fill"`（填充）绘制**相对频率图**，**它更适用于比较各岛屿的物种分布情况，因为它不会受到各岛屿企鹅数量不等的影响**。
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+ggplot(penguins, 
+       aes(x = island, 
+           fill = species)) +
+  geom_bar(position = "fill")
+```
+
+## 两个数值变量
+
+在上面的[ggplot基本语法]中我们已经介绍了通过**散点图**展示两个数值型变量关系的语法：
+
+```{r}
+#| fig-width: 5
+#| fig-height: 4
+ggplot(
+  penguins,
+  aes(x = flipper_length_mm, 
+      y = body_mass_g)
+) +
+  geom_point() +
+  geom_smooth(method = "lm") 
+```
+
+## 两个以上变量
+
+正如我们在[ggplot基本语法]中所看到的，我们可以通过将更多变量映射到其他美学元素中，从而将更多变量整合到散点图中。例如，在下面的散点图中，点的颜色代表企鹅种类，点的形状代表所在岛屿：
+
+```{r}
+ggplot(penguins, 
+       aes(x = flipper_length_mm, 
+           y = body_mass_g)) +
+  geom_point(aes(color = species, 
+                 shape = island))
+```
+
+然而，在绘图中添加过多的美学映射会使绘图变得杂乱无章，难以理解。另一种方法对分类变量尤为有用，那就是通过`facet_wrap()`绘制**分面图**，即分别显示一个数据子集的子绘图。
+
+```{r}
+ggplot(penguins, 
+       aes(x = flipper_length_mm, 
+           y = body_mass_g)) +
+  geom_point(aes(color = species, 
+                 shape = species)) +
+  geom_smooth(method = "lm") +
+  facet_wrap(~island)
+```
+
+------------------------------------------------------------------------
+
+::: {.callout-note collapse="true" icon="false"}
+## Session Info
+
+```{r}
+#| echo: false
+sessionInfo()
+```
+:::
