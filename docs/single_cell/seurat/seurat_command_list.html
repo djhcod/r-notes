@@ -253,20 +253,32 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../r_basic/data_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">数据可视化</span></a>
+  <a href="../../r_basic/vector_transform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">不同类型向量的处理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../r_basic/character.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">字符的处理</span></a>
+  <a href="../../r_basic/stringr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">基于stringr的字符串处理</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/regular_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">正则表达式</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../r_basic/loop.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">循环</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../r_basic/data_visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">数据可视化</span></a>
   </div>
 </li>
       </ul>
@@ -535,28 +547,28 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <li>
 <a href="#%E6%A0%87%E5%87%86seurat%E6%B5%81%E7%A8%8B%E5%9F%BA%E6%9C%AC%E5%87%BD%E6%95%B0" id="toc-标准seurat流程基本函数" class="nav-link active" data-scroll-target="#%E6%A0%87%E5%87%86seurat%E6%B5%81%E7%A8%8B%E5%9F%BA%E6%9C%AC%E5%87%BD%E6%95%B0"><span class="header-section-number">1</span> 标准Seurat流程基本函数</a>
   <ul class="collapse">
-<li><a href="#%E9%87%87%E7%94%A8sctransform%E6%A0%87%E5%87%86%E5%8C%96%E6%97%B6%E7%9A%84%E6%B5%81%E7%A8%8B" id="toc-采用sctransform标准化时的流程" class="nav-link" data-scroll-target="#%E9%87%87%E7%94%A8sctransform%E6%A0%87%E5%87%86%E5%8C%96%E6%97%B6%E7%9A%84%E6%B5%81%E7%A8%8B">采用<code>SCtransform</code>标准化时的流程：</a></li>
+<li><a href="#%E9%87%87%E7%94%A8sctransform%E6%A0%87%E5%87%86%E5%8C%96%E6%97%B6%E7%9A%84%E6%B5%81%E7%A8%8B" id="toc-采用sctransform标准化时的流程" class="nav-link" data-scroll-target="#%E9%87%87%E7%94%A8sctransform%E6%A0%87%E5%87%86%E5%8C%96%E6%97%B6%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="header-section-number">1.1</span> 采用<code>SCtransform</code>标准化时的流程：</a></li>
   </ul>
 </li>
   <li>
 <a href="#%E6%8F%90%E5%8F%96seurat%E5%AF%B9%E8%B1%A1%E5%86%85%E7%9A%84%E5%90%84%E6%95%B0%E6%8D%AE" id="toc-提取seurat对象内的各数据" class="nav-link" data-scroll-target="#%E6%8F%90%E5%8F%96seurat%E5%AF%B9%E8%B1%A1%E5%86%85%E7%9A%84%E5%90%84%E6%95%B0%E6%8D%AE"><span class="header-section-number">2</span> 提取<code>Seurat</code>对象内的各数据</a>
   <ul class="collapse">
-<li><a href="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E5%9F%BA%E5%9B%A0assayslayers%E5%90%8D%E7%A7%B0" id="toc-获取细胞基因assayslayers名称" class="nav-link" data-scroll-target="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E5%9F%BA%E5%9B%A0assayslayers%E5%90%8D%E7%A7%B0">获取细胞、基因、assays、layers名称</a></li>
-  <li><a href="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E6%B3%A8%E9%87%8A%E4%BF%A1%E6%81%AFcell-identities" id="toc-获取细胞注释信息cell-identities" class="nav-link" data-scroll-target="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E6%B3%A8%E9%87%8A%E4%BF%A1%E6%81%AFcell-identities">获取细胞注释信息（cell identities）</a></li>
-  <li><a href="#%E8%8E%B7%E5%8F%96meta.data" id="toc-获取meta.data" class="nav-link" data-scroll-target="#%E8%8E%B7%E5%8F%96meta.data">获取meta.data</a></li>
-  <li><a href="#%E8%8E%B7%E5%8F%96%E8%A1%A8%E8%BE%BE%E9%87%8F%E4%BF%A1%E6%81%AF-stored-as-layers-in-seurat-v5" id="toc-获取表达量信息-stored-as-layers-in-seurat-v5" class="nav-link" data-scroll-target="#%E8%8E%B7%E5%8F%96%E8%A1%A8%E8%BE%BE%E9%87%8F%E4%BF%A1%E6%81%AF-stored-as-layers-in-seurat-v5">获取表达量信息 (stored as layers in Seurat v5)</a></li>
-  <li><a href="#%E8%8E%B7%E5%8F%96pca%E9%99%8D%E7%BB%B4%E4%BF%A1%E6%81%AF" id="toc-获取pca降维信息" class="nav-link" data-scroll-target="#%E8%8E%B7%E5%8F%96pca%E9%99%8D%E7%BB%B4%E4%BF%A1%E6%81%AF">获取PCA降维信息</a></li>
-  <li><a href="#%E9%80%9A%E8%BF%87fetchdata%E4%BB%8Eseurat%E5%AF%B9%E8%B1%A1%E4%B8%AD%E8%8E%B7%E5%8F%96%E4%BB%BB%E6%84%8F%E4%BF%A1%E6%81%AF" id="toc-通过fetchdata从seurat对象中获取任意信息" class="nav-link" data-scroll-target="#%E9%80%9A%E8%BF%87fetchdata%E4%BB%8Eseurat%E5%AF%B9%E8%B1%A1%E4%B8%AD%E8%8E%B7%E5%8F%96%E4%BB%BB%E6%84%8F%E4%BF%A1%E6%81%AF">通过<code>FetchData</code>从Seurat对象中获取任意信息</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E5%9F%BA%E5%9B%A0assayslayers%E5%90%8D%E7%A7%B0" id="toc-获取细胞基因assayslayers名称" class="nav-link" data-scroll-target="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E5%9F%BA%E5%9B%A0assayslayers%E5%90%8D%E7%A7%B0"><span class="header-section-number">2.1</span> 获取细胞、基因、assays、layers名称</a></li>
+  <li><a href="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E6%B3%A8%E9%87%8A%E4%BF%A1%E6%81%AFcell-identities" id="toc-获取细胞注释信息cell-identities" class="nav-link" data-scroll-target="#%E8%8E%B7%E5%8F%96%E7%BB%86%E8%83%9E%E6%B3%A8%E9%87%8A%E4%BF%A1%E6%81%AFcell-identities"><span class="header-section-number">2.2</span> 获取细胞注释信息（cell identities）</a></li>
+  <li><a href="#%E8%8E%B7%E5%8F%96meta.data" id="toc-获取meta.data" class="nav-link" data-scroll-target="#%E8%8E%B7%E5%8F%96meta.data"><span class="header-section-number">2.3</span> 获取meta.data</a></li>
+  <li><a href="#%E8%8E%B7%E5%8F%96%E8%A1%A8%E8%BE%BE%E9%87%8F%E4%BF%A1%E6%81%AF-stored-as-layers-in-seurat-v5" id="toc-获取表达量信息-stored-as-layers-in-seurat-v5" class="nav-link" data-scroll-target="#%E8%8E%B7%E5%8F%96%E8%A1%A8%E8%BE%BE%E9%87%8F%E4%BF%A1%E6%81%AF-stored-as-layers-in-seurat-v5"><span class="header-section-number">2.4</span> 获取表达量信息 (stored as layers in Seurat v5)</a></li>
+  <li><a href="#%E8%8E%B7%E5%8F%96pca%E9%99%8D%E7%BB%B4%E4%BF%A1%E6%81%AF" id="toc-获取pca降维信息" class="nav-link" data-scroll-target="#%E8%8E%B7%E5%8F%96pca%E9%99%8D%E7%BB%B4%E4%BF%A1%E6%81%AF"><span class="header-section-number">2.5</span> 获取PCA降维信息</a></li>
+  <li><a href="#%E9%80%9A%E8%BF%87fetchdata%E4%BB%8Eseurat%E5%AF%B9%E8%B1%A1%E4%B8%AD%E8%8E%B7%E5%8F%96%E4%BB%BB%E6%84%8F%E4%BF%A1%E6%81%AF" id="toc-通过fetchdata从seurat对象中获取任意信息" class="nav-link" data-scroll-target="#%E9%80%9A%E8%BF%87fetchdata%E4%BB%8Eseurat%E5%AF%B9%E8%B1%A1%E4%B8%AD%E8%8E%B7%E5%8F%96%E4%BB%BB%E6%84%8F%E4%BF%A1%E6%81%AF"><span class="header-section-number">2.6</span> 通过<code>FetchData</code>从Seurat对象中获取任意信息</a></li>
   </ul>
 </li>
   <li>
 <a href="#seurat%E5%AF%B9%E8%B1%A1%E5%8F%96%E5%AD%90%E9%9B%86%E5%92%8C%E5%90%88%E5%B9%B6" id="toc-seurat对象取子集和合并" class="nav-link" data-scroll-target="#seurat%E5%AF%B9%E8%B1%A1%E5%8F%96%E5%AD%90%E9%9B%86%E5%92%8C%E5%90%88%E5%B9%B6"><span class="header-section-number">3</span> Seurat对象取子集和合并</a>
   <ul class="collapse">
-<li><a href="#sec-subset_seurat" id="toc-sec-subset_seurat" class="nav-link" data-scroll-target="#sec-subset_seurat">取子集</a></li>
-  <li><a href="#%E5%88%86%E5%89%B2layers" id="toc-分割layers" class="nav-link" data-scroll-target="#%E5%88%86%E5%89%B2layers">分割layers</a></li>
-  <li><a href="#%E5%88%86%E5%89%B2seurat" id="toc-分割seurat" class="nav-link" data-scroll-target="#%E5%88%86%E5%89%B2seurat">分割Seurat</a></li>
-  <li><a href="#merge-objects-without-integration" id="toc-merge-objects-without-integration" class="nav-link" data-scroll-target="#merge-objects-without-integration">Merge objects (without integration)</a></li>
-  <li><a href="#merge-objects-with-integration" id="toc-merge-objects-with-integration" class="nav-link" data-scroll-target="#merge-objects-with-integration">Merge objects (with integration)</a></li>
+<li><a href="#sec-subset_seurat" id="toc-sec-subset_seurat" class="nav-link" data-scroll-target="#sec-subset_seurat"><span class="header-section-number">3.1</span> 取子集</a></li>
+  <li><a href="#%E5%88%86%E5%89%B2layers" id="toc-分割layers" class="nav-link" data-scroll-target="#%E5%88%86%E5%89%B2layers"><span class="header-section-number">3.2</span> 分割layers</a></li>
+  <li><a href="#%E5%88%86%E5%89%B2seurat" id="toc-分割seurat" class="nav-link" data-scroll-target="#%E5%88%86%E5%89%B2seurat"><span class="header-section-number">3.3</span> 分割Seurat</a></li>
+  <li><a href="#merge-objects-without-integration" id="toc-merge-objects-without-integration" class="nav-link" data-scroll-target="#merge-objects-without-integration"><span class="header-section-number">3.4</span> Merge objects (without integration)</a></li>
+  <li><a href="#merge-objects-with-integration" id="toc-merge-objects-with-integration" class="nav-link" data-scroll-target="#merge-objects-with-integration"><span class="header-section-number">3.5</span> Merge objects (with integration)</a></li>
   </ul>
 </li>
   </ul><div class="toc-actions"><ul><li><a href="https://github.com/djhcod/r-notes/blob/main/single_cell/seurat/seurat_command_list.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li><li><a href="https://github.com/djhcod/r-notes/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -614,7 +626,8 @@ Active assay: RNA (13714 features, 0 variable features)
 <span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunUMAP.html">RunUMAP</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://satijalab.org/seurat/reference/DimPlot.html">DimPlot</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc</span>, reduction <span class="op">=</span> <span class="st">"umap"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="采用sctransform标准化时的流程" class="level3"><h3 class="anchored" data-anchor-id="采用sctransform标准化时的流程">采用<code>SCtransform</code>标准化时的流程：</h3>
+<section id="采用sctransform标准化时的流程" class="level3" data-number="1.1"><h3 data-number="1.1" class="anchored" data-anchor-id="采用sctransform标准化时的流程">
+<span class="header-section-number">1.1</span> 采用<code>SCtransform</code>标准化时的流程：</h3>
 <p>详见<a href="../../single_cell/seurat/sctransform.html">基于SCTransform的单细胞数据标准化</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-3_94829bdebb7cdd258023c347f0d18034">
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/SCTransform.html">SCTransform</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>
@@ -640,7 +653,8 @@ Active assay: RNA (13714 features, 0 variable features)
 </div>
 <hr></section></section><section id="提取seurat对象内的各数据" class="level2" data-number="2"><h2 data-number="2" class="anchored" data-anchor-id="提取seurat对象内的各数据">
 <span class="header-section-number">2</span> 提取<code>Seurat</code>对象内的各数据</h2>
-<section id="获取细胞基因assayslayers名称" class="level3"><h3 class="anchored" data-anchor-id="获取细胞基因assayslayers名称">获取细胞、基因、assays、layers名称</h3>
+<section id="获取细胞基因assayslayers名称" class="level3" data-number="2.1"><h3 data-number="2.1" class="anchored" data-anchor-id="获取细胞基因assayslayers名称">
+<span class="header-section-number">2.1</span> 获取细胞、基因、assays、layers名称</h3>
 <section id="获取细胞的barcode" class="level4"><h4 class="anchored" data-anchor-id="获取细胞的barcode">获取细胞的barcode：</h4>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-5_df7d5228c2b22455ec7fffe44c97c73e">
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">pbmc</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -802,7 +816,8 @@ Active assay: integrated (3000 features, 3000 variable features)
 <span><span class="va">pbmc</span><span class="op">[[</span><span class="st">"RNA3"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/methods/as.html">as</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span>, Class <span class="op">=</span> <span class="st">"Assay"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="images/截屏2024-01-15 20.01.30.png" class="img-fluid"></p>
-</section></section><section id="获取细胞注释信息cell-identities" class="level3"><h3 class="anchored" data-anchor-id="获取细胞注释信息cell-identities">获取细胞注释信息（cell identities）</h3>
+</section></section><section id="获取细胞注释信息cell-identities" class="level3" data-number="2.2"><h3 data-number="2.2" class="anchored" data-anchor-id="获取细胞注释信息cell-identities">
+<span class="header-section-number">2.2</span> 获取细胞注释信息（cell identities）</h3>
 <section id="查看cell-identities" class="level4"><h4 class="anchored" data-anchor-id="查看cell-identities">查看cell identities：</h4>
 <p>即<strong>细胞的类型</strong>，在Seurat对象中，细胞可能有好几种不同方法注释的类型，但是在某一时刻，只有一种细胞类型是默认激活的。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-18_ef2356ab7a3add763984f5bbe139ae59">
@@ -863,7 +878,8 @@ Levels: 0 1 2 3 4 5 6 7 8 9 10 11 12</code></pre>
 13 Levels: B cell pDC Mk DC CD14 Mono CD16 Mono B Activated CD8 T ... epi</code></pre>
 </div>
 </div>
-</section></section><section id="获取meta.data" class="level3"><h3 class="anchored" data-anchor-id="获取meta.data">获取meta.data</h3>
+</section></section><section id="获取meta.data" class="level3" data-number="2.3"><h3 data-number="2.3" class="anchored" data-anchor-id="获取meta.data">
+<span class="header-section-number">2.3</span> 获取meta.data</h3>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-22_7149756d0df88e88ddef6ada31e0bce2">
 <div class="sourceCode" id="cb57"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># View metadata data frame, stored in object@meta.data</span></span>
 <span><span class="va">pbmc</span><span class="op">@</span><span class="va">meta.data</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -974,7 +990,8 @@ AAACCGTGTATGCG-1        980          521</code></pre>
 <span>                         <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="st">"Control"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">pbmc</span><span class="op">@</span><span class="va">meta.data</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">pbmc</span><span class="op">$</span><span class="va">groups</span> <span class="op">&lt;-</span> <span class="va">random_group_labels</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="获取表达量信息-stored-as-layers-in-seurat-v5" class="level3"><h3 class="anchored" data-anchor-id="获取表达量信息-stored-as-layers-in-seurat-v5">获取表达量信息 (stored as layers in Seurat v5)</h3>
+</section><section id="获取表达量信息-stored-as-layers-in-seurat-v5" class="level3" data-number="2.4"><h3 data-number="2.4" class="anchored" data-anchor-id="获取表达量信息-stored-as-layers-in-seurat-v5">
+<span class="header-section-number">2.4</span> 获取表达量信息 (stored as layers in Seurat v5)</h3>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-23_8a591efdb8f3cb711afe2f1c622eddb5">
 <div class="sourceCode" id="cb68"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Retrieve data in an expression matrix RNA counts matrix</span></span>
 <span><span class="va">pbmc</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">counts</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1017,7 +1034,8 @@ LINC00115                    .                .</code></pre>
 <span><span class="co"># 或</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/Layers.html">LayerData</a></span><span class="op">(</span><span class="va">pbmc</span>, assay <span class="op">=</span> <span class="st">"RNA"</span>, layer <span class="op">=</span> <span class="st">"counts"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">new.data</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="获取pca降维信息" class="level3"><h3 class="anchored" data-anchor-id="获取pca降维信息">获取PCA降维信息</h3>
+</section><section id="获取pca降维信息" class="level3" data-number="2.5"><h3 data-number="2.5" class="anchored" data-anchor-id="获取pca降维信息">
+<span class="header-section-number">2.5</span> 获取PCA降维信息</h3>
 <p>实际应用场景见<a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html#sec-Effect_of_pcs_clustering">分析主成分（PCs）对细胞分群的影响</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-25_737ae6108ab650570e0451c92206859a">
 <div class="sourceCode" id="cb73"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 获取细胞在所有主成分上的评分（坐标）</span></span>
@@ -1076,7 +1094,8 @@ Negative:  HLA-DRA, CD74, CD79A, HLA-DPB1, HLA-DQA1 </code></pre>
 <span><span class="co"># 或</span></span>
 <span><span class="va">pbmc</span><span class="op">[[</span><span class="st">"custom_pca"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">new_reduction</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="通过fetchdata从seurat对象中获取任意信息" class="level3"><h3 class="anchored" data-anchor-id="通过fetchdata从seurat对象中获取任意信息">通过<code>FetchData</code>从Seurat对象中获取任意信息</h3>
+</section><section id="通过fetchdata从seurat对象中获取任意信息" class="level3" data-number="2.6"><h3 data-number="2.6" class="anchored" data-anchor-id="通过fetchdata从seurat对象中获取任意信息">
+<span class="header-section-number">2.6</span> 通过<code>FetchData</code>从Seurat对象中获取任意信息</h3>
 <p><code>FetchData</code> can access anything from expression matrices, cell embeddings, or metadata use the previously listed commands to access entire matrices。通过FetchData可以提取包括表达量数据、PCA分数以及meta.data内的任何变量并形成一个数据框。实际应用场景见<a href="../../single_cell/scRNA-seq_online/08_SC_clustering_quality_control.html#sec-Effect_of_pcs_clustering">分析主成分（PCs）对细胞分群的影响</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-27_e36cad597f5681a89194c475ba7c9c54">
 <div class="sourceCode" id="cb84"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/FetchData.html">FetchData</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">pbmc</span>, </span>
@@ -1094,7 +1113,8 @@ AAACGCACTGGTAC-1  -6.559842          781     0</code></pre>
 </div>
 <hr></section></section><section id="seurat对象取子集和合并" class="level2" data-number="3"><h2 data-number="3" class="anchored" data-anchor-id="seurat对象取子集和合并">
 <span class="header-section-number">3</span> Seurat对象取子集和合并</h2>
-<section id="sec-subset_seurat" class="level3"><h3 class="anchored" data-anchor-id="sec-subset_seurat">取子集</h3>
+<section id="sec-subset_seurat" class="level3" data-number="3.1"><h3 data-number="3.1" class="anchored" data-anchor-id="sec-subset_seurat">
+<span class="header-section-number">3.1</span> 取子集</h3>
 <p>实际应用见<a href="../../single_cell/seurat/seurat_tutorial.html#过滤细胞">过滤细胞</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-28_0f28cc7428d41467006114da8558ba24">
 <div class="sourceCode" id="cb86"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># 根据meta data中的信息取子集</span></span>
@@ -1167,7 +1187,8 @@ Active assay: SCT (12572 features, 3000 variable features)
  2 dimensional reductions calculated: pca, umap</code></pre>
 </div>
 </div>
-</section><section id="分割layers" class="level3"><h3 class="anchored" data-anchor-id="分割layers">分割layers</h3>
+</section><section id="分割layers" class="level3" data-number="3.2"><h3 data-number="3.2" class="anchored" data-anchor-id="分割layers">
+<span class="header-section-number">3.2</span> 分割layers</h3>
 <p>In Seurat v5, users can now split in object directly into different layers keeps expression data in one object, but splits multiple samples into layers can proceed directly to integration workflow after splitting layers。实际应用场景见<a href="../../single_cell/seurat/integration.html">数据整合</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-29_aef074e8b80b100366c842b0f3661071">
 <div class="sourceCode" id="cb100"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/DefaultAssay.html">DefaultAssay</a></span><span class="op">(</span><span class="va">pbmc</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"RNA"</span></span>
@@ -1179,7 +1200,8 @@ Active assay: SCT (12572 features, 3000 variable features)
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-30_2077ea7cbbe8494df2ca044dc71149bf">
 <div class="sourceCode" id="cb101"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">pbmc</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SeuratObject/man/SplitLayers.html">JoinLayers</a></span><span class="op">(</span><span class="va">pbmc</span><span class="op">[[</span><span class="st">"RNA"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="分割seurat" class="level3"><h3 class="anchored" data-anchor-id="分割seurat">分割Seurat</h3>
+</section><section id="分割seurat" class="level3" data-number="3.3"><h3 data-number="3.3" class="anchored" data-anchor-id="分割seurat">
+<span class="header-section-number">3.3</span> 分割Seurat</h3>
 <p>In line with prior workflows, you can also split your Seurat object into a <strong>list</strong> of multiple objects based on a metadata column creates a list of two objects。通过<code><a href="https://satijalab.org/seurat/reference/SplitObject.html">SplitObject()</a></code>分割Seurat之后生成的是包含多个Seurat对象的列表。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-31_33d585cce23aa8cbbb5ff751f0f0ae5e">
 <div class="sourceCode" id="cb102"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">seurat_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/SplitObject.html">SplitObject</a></span><span class="op">(</span><span class="va">pbmc</span>, split.by <span class="op">=</span> <span class="st">"groups"</span><span class="op">)</span></span>
@@ -1203,7 +1225,8 @@ Active assay: RNA (13714 features, 0 variable features)
 </div>
 </div>
 <p><img src="images/截屏2024-01-15 18.42.35.png" class="img-fluid"></p>
-</section><section id="merge-objects-without-integration" class="level3"><h3 class="anchored" data-anchor-id="merge-objects-without-integration">Merge objects (without integration)</h3>
+</section><section id="merge-objects-without-integration" class="level3" data-number="3.4"><h3 data-number="3.4" class="anchored" data-anchor-id="merge-objects-without-integration">
+<span class="header-section-number">3.4</span> Merge objects (without integration)</h3>
 <p>In Seurat v5, merging creates a single object, but <strong>keeps the expression information split into different layers</strong> for integration. If not proceeding with integration, rejoin the layers after merging. 实际应用场景，见<a href="../../single_cell/sc_supplementary/read_sc_data.html">后续章节</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-32_35d961575e80807e389eea91ff224a6b">
 <div class="sourceCode" id="cb104"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Merge two Seurat objects</span></span>
@@ -1216,7 +1239,8 @@ Active assay: RNA (13714 features, 0 variable features)
 <span><span class="fu"><a href="https://rdrr.io/r/base/merge.html">merge</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">pbmc1</span>, </span>
 <span>      y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">pbmc2</span>, <span class="va">pbmc3</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="merge-objects-with-integration" class="level3"><h3 class="anchored" data-anchor-id="merge-objects-with-integration">Merge objects (with integration)</h3>
+</section><section id="merge-objects-with-integration" class="level3" data-number="3.5"><h3 data-number="3.5" class="anchored" data-anchor-id="merge-objects-with-integration">
+<span class="header-section-number">3.5</span> Merge objects (with integration)</h3>
 <p>关于单细胞数据的整合，参考<a href="../../single_cell/seurat/integration.html">后续章节</a>。</p>
 <div class="cell" data-hash="seurat_command_list_cache/html/unnamed-chunk-34_dfcb66e922a2af7fec707258a75d3a80">
 <div class="sourceCode" id="cb106"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">merged_pbmc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">merged_pbmc</span>, verbose <span class="op">=</span> <span class="cn">F</span><span class="op">)</span></span>

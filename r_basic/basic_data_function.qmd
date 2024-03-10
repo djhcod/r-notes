@@ -2,6 +2,13 @@
 title: "数据处理基本函数"
 ---
 
+# 加载包
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+```
+
 # 数据展示
 
 载入示例数据：
@@ -43,6 +50,7 @@ print(paste0("该数据集有 ",dim(mydata)[1]," 个样本； ",dim(mydata)[2],"
 
 ```{r}
 colnames(mydata)
+
 #或者通过dput函数将所有变量名输出为向量
 dput(names(mydata))
 ```
@@ -59,63 +67,7 @@ rownames(mydata)
 
 ```{r}
 table(mydata$his)
-hist(mydata$age,col="coral")#以直方图的形式展示
-```
-
-## 展示缺失值的构成
-
-加载案例数据：这里用VIM包内自带的sleep数据集为例进行演示。该数据集显示了两种安眠药对10名患者的影响(与对照组相比，睡眠时间的增加量)。其中就包含了很多缺失值。
-
-```{r}
-data(sleep, package="VIM")
-head(sleep)
-```
-
-首先展示缺失值的比例。
-
--   左侧直方图展示单个变量的缺失比例，其中NonD缺失比例大于20%。
-
--   右侧直方图展示各个变量的缺失模式。如第一行表示NonD、Dream和Span 3个变量共同缺失的比例为1.6%。NonD的缺失比例=1.6%+3.2%+3.2%+14.5%=22.5%。所有变量均无缺失值的个案占67.7%
-
-输出的结果部分同样展示了各个变量缺失的具体比例
-
-```{r}
-library(VIM)
-aggr_plot<-aggr(sleep,
-                prop=T,
-                numbers=T,
-                sortVars=TRUE,
-                gap=2,
-                ylab=c("Histogram of missing data","Pattern"))
-```
-
-展示缺失值的数量。输出的结果部分展示了各个变量缺失的具体数量。
-
-```{r}
-aggr_plot<-aggr(sleep,
-                prop=F,
-                numbers=T,
-                sortVars=TRUE,
-                gap=2,
-                ylab=c("Histogram of missing data","Pattern"))
-```
-
-以表格的形式展示各个变量的缺失模式（同右侧图形）
-
-```{r}
-summary(aggr_plot)
-```
-
-通过marginplot分析缺失值。空心的湖蓝色圆圈表示非缺失值，红色实心圆圈表示缺失值，深红色实心圆圈表示两个变量均缺失。图左侧的红色箱型图显示了在保留NonD缺失值的情况下Dream的分布，蓝色箱型图显示了删除NonD缺失值后Dream的分布。图表底部的框图正好相反，反映了在保留和删除Dreamq缺失值的情况下NonD的分布情况。如果数据是完全随机缺失(MCAR : missing completely at random)，那么红色和蓝色箱型图将十分接近
-
-```{r}
-marginplot(sleep[3:4])
-```
-
-删除所有缺失值
-
-```{r}
-sleep<-na.omit(sleep)
+hist(mydata$age, col="coral")#以直方图的形式展示
 ```
 
 # 数据整理
@@ -272,24 +224,6 @@ library(dplyr)
 mydata <- distinct(mydata, # 需要去重的数据集名称
                    ID, # 按照哪一列去重（可为多个条件）
                    .keep_all = T) # 去重后保留所有列
-mydata
-```
-
-## 变量的赋值/替换
-
-```{r}
-#| eval: false
-savdata$low <- ifelse(savdata$low =="低出生体重", 1, 0)#将结局变量low赋值为0和1
-mydata[is.na(mydata)] <- "Unknown"#替换缺失值
-```
-
-当需要对一个数据集的多个变量进行转换时，可通过`within(data, {expression})`函数将括号内的操作限定到当前数据集中，避免"\$"的反复使用，简化代码。函数`within()`与函数`with()`类似，不同的是`within()`允许你修改数据框:
-
-```{r}
-mydata <- within(mydata, {
-  ID <- ifelse(ID < 5, "A", "B")
-  y <- ifelse(y < 0, "A", "B")
-})
 mydata
 ```
 

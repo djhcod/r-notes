@@ -20,6 +20,7 @@ title: "基于tidyr的长/宽数据转换"
 
 ```{r}
 library(tidyverse)
+library(nycflights13)
 ```
 
 这里的案例数据显示了以三种不同方式组织的相同数据。每个数据集都有相同的四个变量：country（国家）、year（年份）、population（总人口）和cases（结核病病例数），但每个数据集以不同的方式组织这些值。
@@ -30,9 +31,11 @@ table2
 table3
 ```
 
-table1中的数据符合\@fig-dataset_tidy 中的整洁数据规范。
+table1中的数据符合 @fig-dataset_tidy 中的整洁数据规范。
 
-# pivot_longer()：转换成长数据
+# `pivot_longer()`：转换成长数据
+
+![](images/截屏2024-03-10%2012.26.37.png)
 
 这里我们以billboard数据集为例。该数据记录了 2000 年歌曲在广告牌上的排名情况：
 
@@ -103,7 +106,7 @@ billboard_longer |>
   theme_bw()
 ```
 
-## pivot_longer()的转换原理
+## `pivot_longer()`的转换原理
 
 假设我们有三个病人，id 分别为 A、B 和 C，我们为每个病人测量了两次血压。这里我们用在[此前章节](/r_basic/data_input_output.qmd#sec-手动生成tibble)中已经介绍过的 `tribble()` 来创建这个数据：
 
@@ -209,7 +212,9 @@ household |>
 
 ![](images/names-and-values.png)
 
-# pivot_wider()：转换成宽数据
+# `pivot_wider()`：转换成宽数据
+
+![](images/截屏2024-03-10%2012.26.43.png)
 
 `pivot_wider()` 可以通过增加列数和减少行数使数据集变宽。例如在重复测量数据中，一般而言我们会将每次观测作为一个个案，这时候一个对象多个时间点的观测数据分布在多行。这样的数据即为长数据，便于进行各种统计分析。但是如果你想了解每个对象的观测情况，就可以通过`pivot_wider()` 来将一个对象的多次观测结果合并到一行，即转换为宽数据。这种情况的实际应用场景较少，因此下面我们只简单演示了一个转换宽数据的基本语法，相关详细解释参考[该链接](https://r4ds.hadley.nz/data-tidy#widening-data)。
 
@@ -223,6 +228,59 @@ cms_patient_experience |>
     values_from = prf_rate # 从哪一列（或哪几列）获取单元格值
   )
 ```
+
+# 拆分/合并列
+
+![](images/截屏2024-03-10%2012.25.19.png)
+
+## `unite()`：合并多列
+
+`unite(data, col, ..., sep, remove, na.rm)` 可以将多列中的字符粘贴起来构成新的一列。其中：
+
+-   `data`：目标数据集。
+
+-   `col`：新列的名称。
+
+-   `...`：需要合并的列名(若用“:”连接则表示合并两列及之间的所有列)。
+
+-   `sep`：指定连接符。
+
+-   `remove`：是否移除原始列。
+
+-   `na.rm`：如果为“True”，则在合并每个值之前将删除缺失值。
+
+```{r}
+flights %>% 
+  unite(
+    col = "date", 
+    sep = "/", 
+    year, month, day, 
+    na.rm = T
+  )
+```
+
+也可以用 `str_c()` 或 `str_glue()` （见[基于tidyr的字符串处理-拼接字符串](/r_basic/stringr.qmd#sec-拼接字符串)）实现同样的效果：
+
+```{r}
+flights %>% 
+  mutate(
+    date = str_c(year, month, day, sep = "/"),
+    .before = year
+  )
+```
+
+```{r}
+#| eval: false
+flights %>% 
+  mutate(
+    date = str_glue("{year}/{month}/{day}"),
+    .before = year
+  )
+```
+
+## 拆分列
+
+在 `tidyr` 中，`separate_wider_position()` 、 `separate_wider_delim()` 以及 `separate_wider_regex()` 可以将某一列根据分割符（`separate_wider_delim()`）、固定宽度（`separate_wider_position()`）或正则表达式（`separate_wider_regex()`）拆分为多列。把这些函数中的“wider”替换成“longer”就构成了另外三个类似函数，用于将某一列根据分割符、固定宽度或正则表达式拆分为多行（不常用）。因为涉及到字串的处理以及正则表达式，我们在[基于tidyr的字符串处理-拼接字符串](/r_basic/stringr.qmd#sec-拼接字符串)中对这些函数进行了详细介绍。
 
 ------------------------------------------------------------------------
 

@@ -1,0 +1,309 @@
+---
+title: "正则表达式"
+---
+
+> 参考：<https://r4ds.hadley.nz/regexps>
+
+正则表达式是一种简洁而强大的语言，用于描述字符串中的模式。正则表达式（regular expressions）有时被缩写为 “regex” 或 “regexp”。
+
+```{r}
+library(tidyverse)
+```
+
+# 轮流匹配（alternas）
+
+![](images/截屏2024-03-10%2011.16.05.png)
+
+用于模糊匹配。
+
+## `"ab|d"`
+
+`"ab|d"` 匹配“ab”或“d”：
+
+```{r}
+alternas <- c("abc", "abcde", "acbde")
+
+str_view(alternas, "ab|d")
+```
+
+## `"[abd]"`
+
+`"[abd]"` 匹配“a”、“b”和“c”中的任意一个：
+
+```{r}
+str_view(alternas, "[abc]")
+```
+
+## `"[a-c]"`
+
+`"[a-c]"` 匹配包含“a”到“c”及其之间字母的字符，即匹配“a”、“b”或“c”：
+
+```{r}
+str_view(alternas, "[a-c]")
+```
+
+## `"[^abc]"`
+
+`"[^abc]"` 匹配不包含“a”、“b”及“c”的字符：
+
+```{r}
+str_view(alternas, "[^abc]")
+```
+
+::: {.callout-caution collapse="true"}
+###### 区分大小写
+
+正则表达式是需要区分大小写的，例如：
+
+```{r}
+str_view(alternas, "[ABc]")
+```
+
+如果我们不需要区分大小写，有以下三种方法可以使用：
+
+1.  将大小写字母同时列出：
+
+    ```{r}
+    str_view(alternas, "[ABCabc]")
+    ```
+
+2.  告诉正则表达式忽略大小写。在 `stringr` 中，可以通过将正则表达式封装到 `regex()` 中，从而调用一些参数来控制正则表达式的行为。例如通过添加 `ignore_case = TRUE`，就可以实现忽略大小写。其他编程语言中，这些参数通常被称为“**flag**”。
+
+    ```{r}
+    str_view(alternas, regex("[ABC]", ignore_case = TRUE))
+    ```
+
+3.  使用 `str_to_lower()` 将待匹配字符全部转换为小写：
+
+    ```{r}
+    alternas %>% 
+      str_to_lower() %>% 
+      str_view("[abc]")
+    ```
+
+在具体应用中可根据实际情况选择其中一种方法。
+:::
+
+# 定量匹配（quantifiers）
+
+![](images/截屏2024-03-10%2011.12.45.png)
+
+## `"a."`
+
+`"a."` 匹配包含 "a" 和另**一个**任意字符的字符串：
+
+```{r}
+str_view(c("a", "ab", "ae", "bd", "ea", "eab"), "a.")
+
+# 匹配开头为“a”，最后为”e”，并且中间包含任意三个字符的字符串：
+str_view(fruit, "a...e")
+
+# 如果只写一个点"."则只要有任意字符（包括空格）的对象都会被匹配到，而空对象不会被匹配到：
+str_view(c("", "a ", "a b", "ae", "bd", "ea", "eab", "%"), ".")
+```
+
+## `"ab?"`
+
+`"ab?"` 匹配 “a"或“ab”：
+
+```{r}
+str_view(c("a", "ac", "ab", "abb", "abc", "abcd"), "ab?")
+```
+
+## `"ab+"`
+
+`"ab+"` 匹配“ab”、“abb”、“abbb”……，即“a”后至少一个“b”：
+
+```{r}
+str_view(c("a", "ac", "ab", "abb", "abc", "abcd"), "ab+")
+```
+
+## `"ab*"`
+
+"ab\*" 匹配“a”、“ab”、“abb”、“abbb”……，即“a”或“a”后加任意数量的“b”：
+
+```{r}
+str_view(c("ab", "ac", "ab", "abb", "abc", "abcd"), "ab*")
+```
+
+::: callout-tip
+匹配“ab”或以“a”开头“b”结尾的字符：
+
+```{r}
+str_view(c("ab", "acb", "a b", "acdb"), "a.*b")
+```
+:::
+
+## `"a{n}"`
+
+除了上面任意数量字符的匹配，我们还可以使用 `{}` 精确指定字符的匹配数量：
+
+```{r}
+chr <- c("a", "aab", "aba", "aaa.b", "aaaabc")
+
+# 匹配“aa”
+str_view(chr, "a{2}")
+# 等价于
+str_view(chr, "aa")
+```
+
+## `"a{n,}"`
+
+`"a{2,}"` 匹配“aa”、“aaa”、“aaaa”……，即匹配连续**≥2次**“a”的字符：
+
+```{r}
+str_view(chr, "a{2,}")
+```
+
+## `"a{n,m}"`
+
+`"a{n,m}"` 匹配连续n-m个“a”：
+
+```{r}
+# 匹配“aaa”和“aaaa”
+str_view(chr, "a{3,4}")
+```
+
+# 锚点匹配（anchors）
+
+![](images/截屏2024-03-10%2013.06.57.png){width="573"}
+
+## `"^a"` 和 `"a$"`
+
+给匹配字符加上了位置锚点，只匹配开头（`"^a"`）或结尾（"`a$`"）字符：
+
+```{r}
+str_view(fruit, "^a")
+str_view(fruit, "a$")
+
+# 强制完全匹配
+str_view(fruit, "^apple$")
+```
+
+## `"\\b"`
+
+`"\\b"` 是**字符边界标志**，匹配单词之间的边界（即单词的开始或结束）。例如，我们要匹配以“The”开头的对象，如果直接写 `"^The"`，则还会匹配到“These”、“There”、“Their”等单词，所以这个时候我们可以在“The”的后面加上边界标志 `"\\b"` ，表示这是一个独立的单词：
+
+```{r}
+chr <- sentences[1:10]
+chr
+str_view(chr, "^The")
+str_view(chr, "^The\\b")
+
+# 或者限定“The”后面必须有至少一个空格
+str_view(chr, "^The\\s+")
+```
+
+# 转译符（escape）
+
+以上的这些符号称为**元字符（metacharacters）**，它们在正则表达式中起到类似函数名的作用，不参与字面匹配。所有的元字符包括：`.^$\|*+?{}[]()`。如果我们想匹配元字符本身时应该怎么做呢？这时候就需要引入**转译符（escape）**。**有两种转译符：`"\\"` 和 `"[]"`：**
+
+```{r}
+chr <- c("abc", "a.bc", "a^bc", "a|bc", "a*bc", "a?bc", "a\\bc", "a\bc")
+str_view(chr, "a\\.b")
+str_view(chr, "a\\^b")
+str_view(chr, "a\\|b")
+str_view(chr, "a\\*b")
+str_view(chr, "a\\?b")
+str_view(chr, "\\\\") 
+```
+
+**`"[]"`** 的的效果和上面一样，但是它不能用于匹配转译符`"//"`：
+
+```{r}
+#| eval: false
+str_view(chr, "a[.]b")
+str_view(chr, "a[*]b")
+str_view(chr, "a[?]b")
+```
+
+# 字符类别（character class/character set）匹配
+
+匹配某种类型的字符，如 `[a-z]` 匹配任何小写字母， `[0-9]` 匹配任何数字。比较特殊的有：
+
+## `"\\d+"`
+
+匹配任意数字字符：
+
+```{r}
+chr <- "abcd ABCD  12345 -!@#%."
+str_view(chr, "\\d+")
+
+# 等价
+str_view(chr, "[0-9]+")
+```
+
+## `"\\D+"`
+
+匹配任何非数字字符：
+
+```{r}
+str_view(chr, "\\D+")
+```
+
+## `"\\s+"`
+
+匹配空格（whitespaces），包括制表和换行符：
+
+```{r}
+str_view(chr, "\\s+")
+# 或者直接输入空格
+str_view(chr, " +")
+```
+
+## `"\\S+"`
+
+匹配任何非空格字符：
+
+```{r}
+str_view(chr, "\\S+")
+```
+
+::: {.callout-caution collapse="true"}
+###### 区分 `"\\S+"` 和 `".+"`
+
+`".+"` ：非空匹配，即只要有任意字符**及空格**的对象都会被匹配到，而**空对象**不会被匹配到：
+
+```{r}
+chr2 <- c("", "  ", "a ", "a b", "ae", "bd", "ea", "eab", " %")
+str_view(chr2, ".+")
+str_view(chr2, "\\S+")
+```
+
+注意第二个对象 `"  "` 为只包含了空格的对象，`".+"` 会匹配到该对象，而 `"\S+"` 则不会。
+:::
+
+## `"\\w+"`
+
+匹配任何单词字符，即字母和数字：
+
+```{r}
+str_view(chr, "\\w+")
+```
+
+## `"\\W+"`
+
+匹配任何“非单词”字符，即一些特殊字符：
+
+```{r}
+str_view(chr, "\\W+")
+```
+
+------------------------------------------------------------------------
+
+::: callout-tip
+###### 实践
+
+《R for Data Science》的 ”Regular expressions“ 一章的最后部分有几个[案例](https://r4ds.hadley.nz/regexps#practice)帮助进一步熟练掌握正则表达式的应用，可以参考。
+:::
+
+------------------------------------------------------------------------
+
+::: {.callout-note collapse="true" icon="false"}
+## Session Info
+
+```{r}
+#| echo: false
+sessionInfo()
+```
+:::

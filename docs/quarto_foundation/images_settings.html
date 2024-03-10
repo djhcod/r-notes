@@ -253,20 +253,32 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../r_basic/data_visualization.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">数据可视化</span></a>
+  <a href="../r_basic/vector_transform.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">不同类型向量的处理</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../r_basic/character.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">字符的处理</span></a>
+  <a href="../r_basic/stringr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">基于stringr的字符串处理</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/regular_expressions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">正则表达式</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../r_basic/loop.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">循环</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../r_basic/data_visualization.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">数据可视化</span></a>
   </div>
 </li>
       </ul>
@@ -545,7 +557,7 @@ gtag('config', 'G-G2HZEXHNCE', { 'anonymize_ip': true});
 <li>
 <a href="#%E4%BB%A3%E7%A0%81%E5%9D%97%E7%BB%84%E5%9B%BE%E8%BE%93%E5%87%BA%E8%AE%BE%E7%BD%AE" id="toc-代码块组图输出设置" class="nav-link" data-scroll-target="#%E4%BB%A3%E7%A0%81%E5%9D%97%E7%BB%84%E5%9B%BE%E8%BE%93%E5%87%BA%E8%AE%BE%E7%BD%AE"><span class="header-section-number">2.1</span> 代码块组图输出设置</a>
   <ul class="collapse">
-<li><a href="#%E7%94%A8layout%E8%BF%9B%E8%A1%8C%E5%A4%8D%E6%9D%82%E6%8E%92%E7%89%88" id="toc-用layout进行复杂排版" class="nav-link" data-scroll-target="#%E7%94%A8layout%E8%BF%9B%E8%A1%8C%E5%A4%8D%E6%9D%82%E6%8E%92%E7%89%88">用<code>layout</code>进行复杂排版</a></li>
+<li><a href="#%E7%94%A8layout%E8%BF%9B%E8%A1%8C%E5%A4%8D%E6%9D%82%E6%8E%92%E7%89%88" id="toc-用layout进行复杂排版" class="nav-link" data-scroll-target="#%E7%94%A8layout%E8%BF%9B%E8%A1%8C%E5%A4%8D%E6%9D%82%E6%8E%92%E7%89%88"><span class="header-section-number">2.1.1</span> 用<code>layout</code>进行复杂排版</a></li>
   </ul>
 </li>
   </ul>
@@ -754,7 +766,7 @@ Figure&nbsp;3: 38种流行车型的城市和高速公路里程
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="in">plot(cars)</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="in">plot(pressure)</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell quarto-layout-panel" data-layout-ncol="2" data-hash="images_settings_cache/html/fig-组图输出_a6670e65e7748dc953ede5bc57491f06">
+<div class="cell quarto-layout-panel" data-hash="images_settings_cache/html/fig-组图输出_a6670e65e7748dc953ede5bc57491f06" data-layout-ncol="2">
 <div class="quarto-layout-row">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div id="fig-组图输出-1" class="quarto-figure quarto-figure-left quarto-float anchored">
@@ -823,7 +835,8 @@ Figure&nbsp;5: 汽压与温度的关系
 Figure&nbsp;6: 小标题组图输出
 </figcaption></figure>
 </div>
-<section id="用layout进行复杂排版" class="level3"><h3 class="anchored" data-anchor-id="用layout进行复杂排版">用<code>layout</code>进行复杂排版</h3>
+<section id="用layout进行复杂排版" class="level3" data-number="2.1.1"><h3 data-number="2.1.1" class="anchored" data-anchor-id="用layout进行复杂排版">
+<span class="header-section-number">2.1.1</span> 用<code>layout</code>进行复杂排版</h3>
 <p><code>layout</code>属性是一个二维数组，其中第一维定义行，第二维定义列。如<code>layout: "[[1，1]，[1]]</code>表示：创建两行，第一行有两列大小相等的列，第二行只有一列。</p>
 <div class="cell" data-layout="[[1],[1,1]]" data-hash="images_settings_cache/html/fig-输出复杂排版图片_099448e113591e632c23671110a6c5b0">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>

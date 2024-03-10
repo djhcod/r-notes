@@ -1,0 +1,558 @@
+---
+title: "不同类型向量的处理"
+---
+
+> 参考：<https://r4ds.hadley.nz/transform>
+
+本章按照数据处理中不同的变量类型分别介绍常用的一些函数。这些函数大部分来自`base`包，但是为了保持一致性和贴合实际场景，本章的语法仍遵循`tidyverse`风格。
+
+# 加载包和案例数据
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+library(VIM)
+```
+
+# 逻辑向量（**logical vectors**）
+
+用 `nycflights13` 包内“flights”数据集为例，该数据集包含 2013 年从纽约市起飞的所有 336,776 次航班的信息。下面是一个简单的生成逻辑向量的例子，在“flights”中新增两列，判断航班是否在白天起飞（新列命名为“daytime”），是否准时到达（到达延误\<20 min，新列命名为“approx_ontime”）：
+
+```{r}
+flights
+
+flights |> 
+  mutate(
+    daytime = dep_time > 600 & dep_time < 2000,
+    approx_ontime = abs(arr_delay) < 20,
+    .keep = "used"
+  )
+```
+
+## 逻辑摘要
+
+-   `any(x)`：相当于 `|`。如果“x”中有任何“TRUE”，则返回“TRUE”。
+
+-   `all(x)`：相当于 `&`。只有当“x”中所有值均为“TRUE”时，才返回“TRUE”。
+
+例如，我们可以使用 `all()` 和 `any()` 来判断所有航班的起飞延误是否都在一个小时以内，以及是否有任何航班在到达时延误了五个小时或以上。通过使用 `group_by()`，我们可以按月来统计：
+
+```{r}
+flights |> 
+  group_by(year, month, day) |> 
+  summarize(
+    all_delayed = all(dep_delay <= 60, na.rm = TRUE),
+    any_long_delay = any(arr_delay >= 300, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+## 逻辑向量计数
+
+在数学计算中使用逻辑向量时，“TRUE” 变为 1，“FALSE” 变为 0。因此，我们可以通过 `sum()` 和 `mean()` 来计数逻辑向量。`sum()` 可以给出 “TRUE” 的个数，而 `mean()` 可以给出 “TRUE” 的比例（因为 `mean(x)` = `sum(x)` ÷ `length(x)`）。
+
+例如，我们可以统计每个月起飞延误在一小时以内的航班比例，以及抵达时延误五小时或以上的航班数量：
+
+```{r}
+flights |> 
+  group_by(year, month) |> 
+  summarize(
+    proportion_delayed = mean(dep_delay <= 60, na.rm = TRUE),
+    count_long_delay = sum(arr_delay >= 300, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+## 条件转换
+
+逻辑向量最重要的应用之一是用于条件转换，即对条件 x 做一件事，而对条件 y 做另一件事。可以通过 `base` 包的 `ifelse()` 函数实现。而在 `tidyverse` 中的函数为：`if_else()` 和 `case_when()`。
+
+`if_else()` 与 `ifelse()` 的使用基本相同。`if_else()` 可以通过指定 `missing` 参数来定义缺失值的表示形式，并且在确定输出类型时总是将 true、false 和 missing 考虑在内：
+
+```{r}
+x <- c(1:3, NA, 4, 5, NA)
+ifelse(x <3, "<3", "≥3")
+if_else(x <3, "<3", "≥3", missing = "Unknown")
+```
+
+在统计分析中 `ifelse()` 和 `if_else()` 的一个十分常见的应用场景就是**对变量进行赋值或替换已有赋值**。例如我们可以根据到达延误时间（“arr_delay”）生成一个新变量“arr_2”，如果到达延误时间在30 min以内，赋值为“undelayed”，否则就为“delayed”：
+
+```{r}
+# 新根据到达延误时间
+flights %>%  
+  mutate(
+    arr_2 = if_else(arr_delay <= 30, "undelayed", "delayed"), 
+    .after = dep_delay
+  ) 
+```
+
+如果需要进行多重逻辑判断的话需要嵌套使用 `if_else()` 。如：
+
+```{r}
+flights %>%
+  mutate(
+    status = if_else(
+      is.na(arr_delay), "cancelled",
+      if_else(
+        arr_delay < -30, "very early",
+        if_else(
+          arr_delay < -15, "early",
+          if_else(
+            arr_delay <= 15, "on time",
+            if_else(
+              arr_delay < 60, "late", "very late"
+            )
+          )
+        )
+      )
+    ),
+    .after = dep_delay
+  ) %>%
+  select(status) %>%
+  table()
+```
+
+这种情况我们可以使用 `case_when()` 来避免 `if_else()` 的反复嵌套使用，让代码更简洁易懂。case_when() 受到了 SQL 的 CASE 语句的启发，提供了一种针对不同条件执行不同计算的灵活方式。它有一个特殊的语法：`condition ~ output`。其中 `condition` 必须是逻辑向量；当 `condition` 为 “TRUE” 时，将输出 `output` 。
+
+```{r}
+flights %>% 
+  mutate(
+    status = case_when(
+      is.na(arr_delay)      ~ "cancelled",
+      arr_delay < -30       ~ "very early",
+      arr_delay < -15       ~ "early",
+      arr_delay <= 15       ~ "on time",
+      arr_delay < 60        ~ "late",
+      arr_delay < Inf       ~ "very late",
+    ),
+    .after = dep_delay
+  ) %>%
+  select(status) %>%
+  table()
+```
+
+我们还可以通过添加 `.default` 参数，来指定默认的输出结果，当某个个案不满足所有列出的条件时就输出这个默认结果。在上面的例子中，如果我们添加了 `.default = "very late"` ，就不需要写 `arr_delay < Inf ~ "very late"` 了：
+
+```{r}
+#| eval: false
+flights %>% 
+  mutate(
+    status = case_when(
+      is.na(arr_delay)      ~ "cancelled",
+      arr_delay < -30       ~ "very early",
+      arr_delay < -15       ~ "early",
+      arr_delay <= 15       ~ "on time",
+      arr_delay < 60        ~ "late",
+      .default = "very late"
+    ),
+    .after = dep_delay
+  ) %>%
+  select(status) %>%
+  table()
+```
+
+## 缺失值
+
+### 判断缺失值
+
+```{r}
+is.na(c(TRUE, NA, FALSE))
+is.na(c(1, NA, 3))
+is.na(c("a", NA, "b"))
+```
+
+我们可以使用 `is.na()` 查找缺失了“dep_time”的所有行：
+
+```{r}
+flights |> 
+  filter(is.na(dep_time))
+```
+
+`is.na()` 在 `arrange()` 中也很有用。用 `arrange()` 基于某列排序时默认会将该列的所有缺失值放在最后，但可以先用 `is.na()` 进行降序排序，从而让缺失值在最前面显示：
+
+```{r}
+# 按照“dep_time”排序
+flights |> 
+  filter(month == 1, day == 1) |> 
+  arrange(dep_time)
+
+# 按照“dep_time”排序，同时将缺失值放到最前面
+flights |> 
+  filter(month == 1, day == 1) |> 
+  arrange(desc(is.na(dep_time)), dep_time)
+```
+
+### 删除缺失值
+
+```{r}
+# 删除缺失“dep_time”的所有行
+flights %>% 
+  filter(is.na(dep_time) == FALSE) 
+
+# 删除flights数据集中包含缺失值的所有行
+flights %>% 
+  na.omit()
+```
+
+::: {.callout-tip collapse="true"}
+###### VIM 包：可视化缺失模式
+
+加载案例数据：这里用 `VIM` 包内自带的 `sleep` 数据集为例进行演示。该数据集显示了两种安眠药对10名患者的影响(与对照组相比，睡眠时间的增加量)。其中就包含了很多缺失值。
+
+```{r}
+data(sleep, package="VIM")
+head(sleep)
+
+# 为了和其他内容一致，我们将其转换成tibble
+sleep <- as_tibble(sleep)
+sleep
+```
+
+**【展示缺失值的比例】**
+
+```{r}
+sleep %>%
+  aggr(
+    prop = T,
+    numbers = T,
+    sortVars = TRUE,
+    gap = 2,
+    ylab = c("Histogram of missing data", "Pattern")
+  )
+```
+
+-   左侧条形图以及输出的数值结果展示了单个变量的缺失比例。例如“NonD”缺失比例大于20%，从数值结果中可以看到具体为22.58%。
+
+-   右侧直方图展示各个变量的缺失模式。如第一行表示“NonD”、“Dream”和“Span” 3个变量共同缺失的比例为1.6%。“NonD”的缺失比例 = 1.6% + 3.2% + 3.2% + 14.5% = 22.5%，和左侧条形图一致。所有变量均无缺失值的个案占67.7%。
+
+**【展示缺失值的数量】**
+
+```{r}
+aggr_plot <- sleep %>%
+  aggr(
+    prop = F,
+    numbers = T,
+    sortVars = TRUE,
+    gap = 2,
+    ylab = c("Histogram of missing data", "Pattern")
+  )
+```
+
+以表格的形式展示各个变量的缺失模式（同右侧图形）
+
+```{r}
+summary(aggr_plot)
+```
+
+**【通过 `marginplot()` 分析缺失值】**
+
+```{r}
+# 分析“NonD”和“Span”的缺失关系
+sleep %>% 
+  select(NonD, Span) %>% 
+  marginplot()
+```
+
+-   空心的湖蓝色圆圈表示非缺失值，红色实心圆圈表示缺失值，深红色实心圆圈表示两个变量均缺失。
+
+-   图左侧的红色箱型图显示了在保留“NonD”缺失值的情况下“Span”的分布，蓝色箱型图显示了删除“NonD”缺失值后“Span”的分布。
+
+-   图表底部的框图正好相反，反映了在保留和删除“Span”缺失值的情况下“NonD”的分布情况。
+
+-   如果数据是**完全随机缺失（MCAR : missing completely at random）**，那么红色和蓝色箱型图将十分接近
+:::
+
+# 数值向量（numeric vectors）
+
+## 转换数值向量
+
+R 中的数值有两种类型：整数（integer）或双倍精度（double）。但有些时候由于导入数据的格式问题等原因数值会以字符串的形式保存。`readr` 提供了两个将字符串解析为数字常用函数：`parse_double()` 和 `parse_number()`。`parse_number()` 涵盖了`parse_double()` 的功能，同时能够进行数值解析。`parse_number()`会解析它找到的第一个数字，然后删除第一个数字之前的所有非数字字符和第一个数字之后的所有字符，同时也会忽略千分位分隔符“,”。所以在实际场景中主要使用 `parse_number()` 。
+
+```{r}
+# 字符转数值。开头的非数值字符被忽略
+c("euro1,000", "euro2,000") %>% 
+  parse_number()
+
+# 字符转数值。只输出找到的第一个数值
+c("t1000t1000", "t2000t2000") %>% 
+  parse_number()
+
+# 小数点会被保留
+c("1,234.56", "t1,234.56") %>% 
+  parse_number()
+
+# 货币转换。开头的“$”和千分位分隔符“,”被忽略
+c("$1,000", "$1,500") %>% 
+  parse_number() 
+
+# 可以通过locale参数指定在待转换向量中千分位分隔符(grouping_mark)和小数点(decimal_mark)的表示方法
+c("1 234.56") %T>% 
+  parse_number() %T>% print() %>%  
+  parse_number(locale = locale(decimal_mark = ".", grouping_mark = " "))
+```
+
+## 计数 {#sec-计数}
+
+只需使用计数和一些基本算术，就能完成大量数据科学工作，因此 `dplyr` 努力通过 `count()` 使计数变得尽可能简单。这个函数非常适合在分析过程中进行快速探索和检查：
+
+```{r}
+# 统计各个目的地的航班数
+flights |> count(dest, sort = TRUE)
+```
+
+记住，如果想查看所有值，可以使用 `|> View()` 或 `|> print(n = Inf)`。
+
+::: {.callout-note appearance="minimal" icon="false"}
+在 `base` 包中能够实现类似效果的是 `table()` 函数：
+
+```{r}
+table(flights$dest) %>% head()
+```
+:::
+
+可以使用 `group_by()`、`summarize()` 和 `n()` "手动 "执行相同的计算。这在需要同时计算其他数据摘要时十分有用。例如，我们除了要统计各个目的地的航班数之外还需要统计到的各个目的地航班的平均延误时间：
+
+```{r}
+flights |> 
+  group_by(dest) |> 
+  summarize(
+    n = n(),
+    delay = mean(arr_delay, na.rm = TRUE)
+  )
+```
+
+::: callout-warning
+`n()` 是一个特殊的摘要函数，不需要任何参数，而是访问 "当前 " group 的信息。这意味着它只能在 `dplyr` 语句，如`summarize()` 、 `mutate()` 、 `filter()` 和 `group_by()` 等函数的内部使用。
+:::
+
+### `n()` 和 `count()` 的变体
+
+#### 计数唯一值
+
+`n_distinct()` 计算一个或多个变量的唯一值的数量。例如，我们可以推荐每个目的地有多少家航空公司提供服务：
+
+```{r}
+flights |> 
+  group_by(dest) |> 
+  summarize(carriers = n_distinct(carrier)) |> 
+  arrange(desc(carriers))
+```
+
+::: {.callout-note appearance="minimal" icon="false"}
+`n_distinct(flights$carrier)` 等价于：
+
+```{r}
+unique(flights$carrier) %>% length()
+```
+:::
+
+练习：查找由至少两家航空公司（“carrier”）运营的目的地（“dest”），并在每个目的地中挑选最优的一家航空公司，挑选标准为平均出发延误时间（“dep_delay”）和到达延误时间（“arr_delay”）最短的公司：
+
+```{r}
+flights %>% 
+  group_by(dest) %>% 
+  mutate(
+    carrier_count = n_distinct(carrier)
+  ) %>% 
+  filter(carrier_count >= 2) %>% 
+  group_by(dest, carrier) %>% 
+  summarise(
+    mean_delay = mean(arr_delay, na.rm = T) + mean(dep_delay, na.rm = T)
+  ) %>% 
+  slice_min(mean_delay, n = 1) 
+```
+
+#### 加权计数 {#sec-wt}
+
+加权计数是分组计算总和（`sum()`）。例如，统计每个航线飞机飞行的总里程数：
+
+```{r}
+flights |> 
+  group_by(tailnum) |> 
+  summarize(miles = sum(distance))
+```
+
+加权计数经常使用，因此 count() 有一个 wt 参数，可以实现同样的目的：
+
+```{r}
+# 统计每个航线飞行的次数
+flights %>% count(tailnum)
+
+# 统计每个航线飞行的总里程数
+flights |> count(tailnum, wt = distance)
+```
+
+实际上如果指定了 `wt` 参数，就是对其分组进行 `sum(wt)` 操作。理解加权计数的作用的另一个很好的例子参考[后面的章节](/r_basic/character.qmd#sec-str_length)。
+
+#### 计数缺失值
+
+结合 `sum()` 和 `is.na()` 可以计数缺失值。例如统计每个目的地取消的航班数：
+
+```{r}
+flights |> 
+  group_by(dest) |> 
+  summarize(n_cancelled = sum(is.na(dep_time)))
+```
+
+## 查找最大值和最小值
+
+两个重要函数是 `pmin()` 和 `pmax()`，当给定两个或多个变量时，它们将返回**每一行**中最小或最大值：
+
+```{r}
+df <- tribble(
+  ~x, ~y,
+  1,  3,
+  5,  2,
+  7, NA,
+)
+
+df |> 
+  mutate(
+    min = pmin(x, y, na.rm = TRUE),
+    max = pmax(x, y, na.rm = TRUE)
+  )
+```
+
+请注意， `pmin()` 和 `pmax()`不同于汇总函数 `min()` 和 `max()`，当给定两个或多个变量时，后者只**返回单一值，即所有变量**的最大值或最小值。在本例中，如果所有行的最小值和最大值都相同，就说明使用了错误的形式：
+
+```{r}
+df |> 
+  mutate(
+    min = min(x, y, na.rm = TRUE),
+    max = max(x, y, na.rm = TRUE)
+  )
+```
+
+如果要用 `min()` 和 `max()` 实现同样的目的需要如下代码：
+
+```{r}
+min <- apply(df, MARGIN = 1, min, na.rm = TRUE)
+max <- apply(df, MARGIN = 1, max, na.rm = TRUE)
+df %>% 
+  mutate(min, max)
+```
+
+## 数学计算
+
+### 整除和余数（modular arithmetic）
+
+```{r}
+# 返回整除结果
+1:10 %/% 3
+
+# 返回余数
+1:10 %% 3
+```
+
+### 对数
+
+在 R 中，有三种对数可供选择：
+
+-   `log()`：默认以 e 为底数
+
+-   `log2()`：以 2 为底数
+
+-   `log10()`：以 10 为底数
+
+建议使用 `log2()` 或 `log10()`。`log2()` 容易解释，因为对数刻度上的差值为 1 相当于原始刻度的两倍，差值为-1 相当于减半；而 `log10()` 容易推算原始数值，例如 3 是 10\^3 = 1000。`log()` 的倒数是 `exp()`；要计算 `log2()` 或 `log10()` 的原始数值，需要使用 `2^` 或 `10^`。
+
+### 四舍五入
+
+`round()` 函数。第二个参数控制保留的小数位数：
+
+```{r}
+# 保留两位小数
+round(123.456, 2) 
+
+# 四舍五入到最接近的十位数
+round(123.456, -1) 
+
+# 四舍五入到最接近的百位数
+round(123.456, -2) 
+```
+
+如果一个小数正好位于两个整数之间，即\*.5的形式，`round()` 这时候会返回比较奇怪的结果（例如下面的例子）。这是因为 `round()` 使用了所谓的 "**四舍五入，半为偶数** "或**银行家四舍五入法（Banker’s roundin）**：即对于一个.5的小数，它将被**四舍五入为离它最近的一个偶数**。这是一种很好的策略，因为它能保持在对多个数值进行四舍五入后能够不偏不倚：\*.5 小数的一半向上舍入，一半向下舍入。
+
+```{r}
+round(c(1.4, 1.5, 2.5, 3.5, 4.5, 4.6))
+```
+
+另外两个取整函数：
+
+-   `ceiling()`：始终向上取整
+
+-   `floor()`：始终向下取整（删除小数）
+
+```{r}
+x <- 123.456
+
+floor(x)
+ceiling(x)
+```
+
+## 切割数值向量
+
+可以使用 `cut()` 将数值向量按照不同的截断值切割（又称bin）为不同的分段：
+
+```{r}
+x <- c(-1, NA, 0, 1, 2, 5, 10, 15, 20, 50)
+cut(x, breaks = c(0, 5, 15, 20))
+cut(x, breaks = c(-Inf, 5, 15, Inf))
+cut(x, breaks = c(0, 5, 15, 20), include.lowest = T)
+cut(x, breaks = c(0, 5, 15, 20), include.lowest = T, right = F)
+```
+
+-   `cut()` 返回的结果是一个因子型向量
+
+-   “NA”以及任何超出截断值范围的值都将变为 “NA”
+
+-   `include.lowest`：是否包括下截断值（默认为“FALSE”）
+
+-   `right`：是否包括上截断值（默认为“TRUE”）
+
+-   `labels`：给不同的分段打标签。注意，标签数应该比截断点少一个：
+
+    ```{r}
+    c(1, 2, 5, 10, 15, 20) %>% 
+      cut(
+        breaks = c(0, 5, 10, 15, 20), 
+        labels = c("sm", "md", "lg", "xl")
+        )
+    ```
+
+## 数值排名
+
+`dplyr` 提供了许多受 SQL 启发的排名函数，例如 `min_rank()` ，它使用典型的方法来处理并列关系: 1st, 2nd, 2nd, 4th：
+
+```{r}
+x <- c(1, 2, 2, 2, 3, 4, NA)
+min_rank(x)
+
+# 通过 desc() 按从高到低排名
+min_rank(desc(x))
+```
+
+如果 `min_rank()` 无法满足需求，`dplyr` 还提供了很多变体排名函数：
+
+-   `row_number()` : 为向量中的每个对象生成连续数字。**`row_number()` 可以不带任何参数，这种情况下常用于生成行号。**
+
+-   `dense_rank()`：类似于 `min_rank()` ，但是生成连续排名，如：1st, 2nd, 2nd, 3th
+
+-   `percent_rank()`：`percent_rank(x)` 计算小于 x~i~ 的值的总数 ÷ (x的总数 -1)
+
+-   `cume_dist()`：`cume_dist(x)` 计算小于或等于 x~i~ 的值的总数 ÷ x的总数
+
+以上所有函数会忽略缺失值。
+
+```{r}
+df <- tibble(x)
+df |> 
+  mutate(
+    row_number = row_number(),
+    row_number_x = row_number(x),
+    min_rank = min_rank(x),
+    dense_rank = dense_rank(x),
+    percent_rank = percent_rank(x),
+    cume_dist = cume_dist(x)
+  )
+```

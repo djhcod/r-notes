@@ -284,8 +284,6 @@ students
     parse_factor(x, levels = animals)
     ```
 
-<!-- -->
-
 -   `parse_number()`：转换数值型变量。这个函数会解析它找到的第一个数字，然后删除第一个数字之前的所有非数字字符和第一个数字之后的所有字符，同时也会忽略千分位分隔符“,”。
 
     ```{r}
@@ -486,6 +484,7 @@ new_object <- readRDS("filepath/name.rds")
 现在我们将之前的“students”数据导出，然后重新读取：
 
 ```{r}
+#| eval: false
 write_csv(students, file = "output/r_basic/students.csv")
 read_csv("output/r_basic/students.csv")
 ```
@@ -493,6 +492,7 @@ read_csv("output/r_basic/students.csv")
 用这种方式导出的文件无法保留我们定义的变量类型信息。因此，更好的方式是和上面一样保存为.Rdata文件或.RDS文件。和`base`包的`saveRDS()`和`readRDS()`对应的，`readr`包中也有两个函数，`write_rds()` 和 `read_rds()`：
 
 ```{r}
+#| eval: false
 write_rds(students, "output/r_basic/students.rds")
 students <- read_rds("output/r_basic/students.rds")
 ```
